@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="5" />
+	<Project>
+		<Option title="sqlite3" />
+		<Option pch_mode="2" />
+		<Option default_target="" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="" />
+		<Build>
+			<Target title="sqlite3">
+				<Option output="..\lib\msw_gcc\sqlite3.dll" />
+				<Option object_output="obj\msw_gcc" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-DNO_TCL" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="sqlite3;" />
+		</VirtualTargets>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-pipe" />
+			<Add option="-mthreads" />
+			<Add option="-fmessage-length=0" />
+		</Compiler>
+		<Unit filename="..\alter.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\analyze.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\attach.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\auth.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\btree.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\btree.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\build.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\callback.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\complete.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\date.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\delete.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\expr.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\func.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\hash.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\hash.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\insert.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\keywordhash.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\legacy.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\main.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\opcodes.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\opcodes.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\os.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\os.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\os_common.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\os_os2.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\os_unix.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\os_win.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\pager.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\pager.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\parse.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\parse.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\pragma.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\prepare.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\printf.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\random.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\select.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\shell.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\sqlite3.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\sqliteInt.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\table.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\tclsqlite.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\tokenize.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\trigger.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\update.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\utf.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\util.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\vacuum.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\vdbe.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\vdbe.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\vdbeInt.h">
+			<Option compilerVar="CPP" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\vdbeapi.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\vdbeaux.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\vdbefifo.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\vdbemem.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Unit filename="..\where.c">
+			<Option compilerVar="CC" />
+			<Option target="sqlite3" />
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

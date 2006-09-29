@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="CodeLiteEditor">
+		<Project filename="CodeLiteEditor_Debug_wxdll_u.cbp" active="1" />
+		<Project filename="CodeLiteEditor_Release_wxdll_u.cbp" />
+		<Project filename="CodeLiteEditor_Release_wxdll.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>
