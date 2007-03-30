@@ -1,0 +1,152 @@
+//--------------------------------------------
+// g++ on Linux
+//--------------------------------------------
+The Linux build uses the makefile named: makefile.linux.
+
+To build CodeLite with the g++ on Linux, follow the following steps:
+0. make sure you have downloaded and installed wxWidgets
+(http://www.wxwidgets.org)
+1. make sure you have 'make' utility somewhere in your path
+2. make sure you have wx-config somewhere in your path, if not build it
+from sdk,
+   it is required for the makefile
+
+debug:
+ make -f makefile.linux type=debug [clean]
+
+debug unicode:
+ make -f makefile.linux type=debug_unicode [clean]
+
+release:
+ make -f makefile.linux type=release [clean]
+
+release unicode:
+ make -f makefile.linux type=release_unicode [clean]
+
+//--------------------------------------------
+// g++ / MinGW / wxWidgets static library (Windows)
+//--------------------------------------------
+
+To build CodeLite with the g++/mingw, follow the following steps:
+
+1. make sure you have 'make' utility somewhere in your path
+2. make sure you have built wxWidgets as static library in the 
+   desired configuration (unicode lib, unicode debug lib, debug lib , release lib)
+3. make sure you have wx-config.exe somewhere in your path, if not build it from sdk, 
+   it is required for the makefile
+4. set WXWIN environment variable to point to your base wxWidgets installation, 
+   (e.g. C:\wxWidgets-2.6.3) to run the makefile
+
+debug: 
+ make type=debug [clean]
+ 
+debug unicode: 
+ make type=debug_unicode [clean]
+ 
+release: 
+ make type=release [clean]
+ 
+release unicode: 
+ make type=release_unicode [clean]
+
+
+
+//--------------------------------------------
+// g++ / MinGW /   using   Code::Blocks IDE
+//--------------------------------------------
+
+Code::Blocks (CB) workspace and project files are supplied
+
+! two build methods are supplied !
+
+1. CodeLite.workspace 
+    contains the CB-projects
+    * sdk\wxconfig\wx-config-win.cbp
+    * sdk\ctags\build\ctags.cbp
+    * sdk\sqlite3\build\sqlite3.cbp
+    * sdk\wxsqlite3\build\wxsqlite3_wxsqlite3.cbp
+    * CodeLite\CodeLite.cbp
+    * sdk\wxscintilla\build\wxscintilla.cbp
+    * LiteEditor\LiteEditor.cbp
+
+    it needs building of wx-config first, because all projects
+    which are using wxWidgets library needs this to build, read 
+    sdk\wxconfig\README.txt and sdk\wxconfig\INSTALL.txt how to use.
+
+    after installation of wx-config the other projects can be built
+    in the given order. This has to be done manually, "build workspace"
+    doesn't work because the Target-names of the very projects don't
+    match (at the time of writing).
+
+    With this build method, Targets are used for different builds
+    i.e. Release build, Debug build, ... (similar to M$ VC philosophy)
+    The type of the used wxWidgets library (ansi, unicode, static or dll
+    or any combination of these) is selected by the configuration
+    of wx-config.
+
+
+2. CodeLiteEditor.workspace
+    contains the CB-projects
+    * CodeLiteEditor_Debug_wxdll_u.cbp        - Debug version - wxdll unicode
+    * CodeLiteEditor_Release_wxdll_u.cbp      - Release - wxdll unicode
+    * CodeLiteEditor_Release_wxdll.cbp        - Release - wxdll ansi
+
+
+    Each project file, which is using CB global variables, defines 
+    ctags, sqlite3, wxsqlite3, wxscintilla, CodeLite and LiteEditor as Targets.
+
+    The current configuration expects a wxWidgets-shared-unicode-release (= wxdll unicode) 
+    and a wxWidgets-shared-ansi-release (= wxdll ansi) library for all builds. 
+    The path to your local installed and built wx-library is specified by using the global 
+    variable wx  ( $(#wx) ) of the CB-IDE.
+    The usage of precompiled header is enabled (needed some macro tricks to get it to work).
+
+    Building of any project is done by selecting first the project, then select
+    target "All" and Build (Ctrl-F9).
+
+    This method has the advantage of easier building and maintaining than a 
+    workspace with six projects at the price of less flexibility for different
+    builds.
+
+    Normally all development is done with the debug project. It is not necessary
+    to load the workspace, just open the Debug project with CodeBlocks.
+    With this project file all libraries and binaries are built with debug-info,
+    so that the CB integrated debugger interface to gdb-6.3 can be used
+    to debug the application. (don't be confused about using the wx-widgets
+    dll-unicode-release library, since we don't want to debug wxWidgets)
+
+    For different builds (e.g. Release and/or different wx-Widgets library)
+    it is proposed to copy the project file with a new name and then the common 
+    project setup has to be edited to match the library. Specifiy also the
+    global variable OUTDIR in order to have different output directories for
+    each build.
+
+    For example a Release unicode (XP) and a Release ansi (Win98) project file
+    were added.
+
+    enjoy, tiwag   (2006-09-08)
+
+
+    
+//----------------------------------------------
+// VC71
+//----------------------------------------------
+For VC71, you need to build each component separately (wxScintilla, wxSQLite3) 
+both can be obtained from either the sdk or from http://wxcode.sourceforge.net
+
+1. Open the provided workspace (CodeLite.sln)
+2. Select the requested configuration 
+3. Hit F7 :)
+
+--------------------------------------------------------------------------
+Notes:
+--------------------------------------------------------------------------
+ - To run it you will need sqlite3.dll which is provided under sdk/sqlite3/lib/msw_vc
+ - If you get an error (when running LiteEditor) "file 'liteeditor.xml' cant be found", 
+   copy it from LiteEditor/liteeditor.xml to the executable directory LiteEditor/bin//msw_vc
+   
+   
+Enjoy,
+Eran
+
+   

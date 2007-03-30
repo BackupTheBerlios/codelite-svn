@@ -1,0 +1,82 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiteEditor", "LiteEditor\LiteEditor.vcproj", "{33133335-3996-408B-81E2-2FA20E5E4F64}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14} = {E8E7D604-D0FC-423A-81EF-70C182B40C14}
+		{A40B2D50-077C-4D9E-8052-2D3A2576B27B} = {A40B2D50-077C-4D9E-8052-2D3A2576B27B}
+		{C441CED4-C175-4944-B4AC-775A0568ED2F} = {C441CED4-C175-4944-B4AC-775A0568ED2F}
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999} = {DC3A9951-C351-4C62-BF0C-37F7A2178999}
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08} = {F9550C0D-30DA-45C5-A08F-C41B14495A08}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CodeLite", "CodeLite\CodeLite.vcproj", "{E8E7D604-D0FC-423A-81EF-70C182B40C14}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxFlatNotebook", "sdk\wxflatnotebook\build\wxFlatNotebook\wxFlatNotebook.vcproj", "{F9550C0D-30DA-45C5-A08F-C41B14495A08}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxsqlite3", "sdk\wxsqlite3\build\wxsqlite3_wxsqlite3.vcproj", "{DC3A9951-C351-4C62-BF0C-37F7A2178999}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxscintilla", "sdk\wxscintilla\build\wxscintilla.vcproj", "{C441CED4-C175-4944-B4AC-775A0568ED2F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Modules", "Modules\Modules.vcproj", "{A40B2D50-077C-4D9E-8052-2D3A2576B27B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Unicode|Win32 = Debug Unicode|Win32
+		Debug|Win32 = Debug|Win32
+		Release Unicode|Win32 = Release Unicode|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Debug Unicode|Win32.ActiveCfg = Debug Unicode|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Debug Unicode|Win32.Build.0 = Debug Unicode|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Debug|Win32.ActiveCfg = Debug|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Debug|Win32.Build.0 = Debug|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release Unicode|Win32.ActiveCfg = Debug Unicode|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release Unicode|Win32.Build.0 = Debug Unicode|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release|Win32.ActiveCfg = Release|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release|Win32.Build.0 = Release|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Debug Unicode|Win32.ActiveCfg = Debug Unicode|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Debug Unicode|Win32.Build.0 = Debug Unicode|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Debug|Win32.Build.0 = Debug|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release Unicode|Win32.ActiveCfg = Debug Unicode|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release Unicode|Win32.Build.0 = Debug Unicode|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release|Win32.ActiveCfg = Release|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release|Win32.Build.0 = Release|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Debug Unicode|Win32.ActiveCfg = Debug Unicode|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Debug Unicode|Win32.Build.0 = Debug Unicode|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Debug|Win32.Build.0 = Debug|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Release Unicode|Win32.ActiveCfg = Release Unicode|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Release Unicode|Win32.Build.0 = Release Unicode|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Release|Win32.ActiveCfg = Release|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Release|Win32.Build.0 = Release|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Debug Unicode|Win32.ActiveCfg = Unicode Debug Multilib|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Debug Unicode|Win32.Build.0 = Unicode Debug Multilib|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Debug|Win32.ActiveCfg = Debug Multilib|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Debug|Win32.Build.0 = Debug Multilib|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Release Unicode|Win32.ActiveCfg = Unicode Release Multilib|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Release Unicode|Win32.Build.0 = Unicode Release Multilib|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Release|Win32.ActiveCfg = Release Multilib|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Release|Win32.Build.0 = Release Multilib|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Debug Unicode|Win32.ActiveCfg = DebugUnicode|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Debug Unicode|Win32.Build.0 = DebugUnicode|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Debug|Win32.Build.0 = Debug|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Release Unicode|Win32.ActiveCfg = ReleaseUnicode|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Release Unicode|Win32.Build.0 = ReleaseUnicode|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Release|Win32.ActiveCfg = Release|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Release|Win32.Build.0 = Release|Win32
+		{A40B2D50-077C-4D9E-8052-2D3A2576B27B}.Debug Unicode|Win32.ActiveCfg = Debug|Win32
+		{A40B2D50-077C-4D9E-8052-2D3A2576B27B}.Debug Unicode|Win32.Build.0 = Debug|Win32
+		{A40B2D50-077C-4D9E-8052-2D3A2576B27B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A40B2D50-077C-4D9E-8052-2D3A2576B27B}.Debug|Win32.Build.0 = Debug|Win32
+		{A40B2D50-077C-4D9E-8052-2D3A2576B27B}.Release Unicode|Win32.ActiveCfg = Release|Win32
+		{A40B2D50-077C-4D9E-8052-2D3A2576B27B}.Release Unicode|Win32.Build.0 = Release|Win32
+		{A40B2D50-077C-4D9E-8052-2D3A2576B27B}.Release|Win32.ActiveCfg = Release|Win32
+		{A40B2D50-077C-4D9E-8052-2D3A2576B27B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

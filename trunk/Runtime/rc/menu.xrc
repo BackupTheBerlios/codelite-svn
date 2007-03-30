@@ -1,0 +1,60 @@
+<resource>
+    <!-- 
+        Create and define the menu bar  
+    -->
+    <object class="wxMenuBar" name="main_menu">
+    <style>wxMB_DOCKABLE</style>
+        
+        <!-- 
+            File menu 
+         -->
+        <object class="wxMenu" name="file_tool_or_menuitem">
+            <label>&amp;File</label>
+            <style>wxMENU_TEAROFF</style>
+            <object class="wxMenuItem" name="wxID_NEW">
+                <label>&amp;New File\tCtrl-N</label>
+                <help>Create an empty new file</help>
+            </object>
+            <object class="wxMenuItem" name="wxID_OPEN">
+                <label>&amp;Open file\tCtrl-O</label>
+                <help>Open an existing file</help>
+            </object>
+
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            
+            <object class="wxMenuItem" name="wxID_SAVE">
+                <label>&amp;Save file\tCtrl-S</label>
+                <help>Save the existing file</help>
+            </object>
+            
+            <object class="wxMenuItem" name="wxID_SAVEAS">
+                <label>&amp;Save &amp;As</label>
+                <help>Save current file as ...</help>
+            </object>
+            
+            <object class="wxMenuItem" name="save_all">
+                <label>Save all files</label>
+                <help>Save all open files</help>
+            </object>
+            
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            
+            <!-- we use wxID_EXIT name here to get the default menu item stock icon -->
+            <object class="wxMenuItem" name="wxID_EXIT">
+                <label>E&amp;xit\tAlt-X</label>
+                <help>Close LiteEditor</help>
+            </object>
+        </object>
+        
+        <!-- 
+            Help menu 
+         -->
+        <object class="wxMenu" name="help_menu">
+            <label>&amp;Help</label>
+            <style>wxMENU_TEAROFF</style>
+            <object class="wxMenuItem" name="about">
+                <label>&amp;About ...</label>
+            </object>
+        </object>
+    </object>
+</resource>

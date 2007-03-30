@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="sdk\wxconfig\wx-config-win.cbp" />
+		<Project filename="sdk\ctags\build\ctags.cbp" />
+		<Project filename="sdk\sqlite3\build\sqlite3.cbp" />
+		<Project filename="sdk\wxsqlite3\build\wxsqlite3_wxsqlite3.cbp" />
+		<Project filename="CodeLite\CodeLite.cbp" />
+		<Project filename="sdk\wxscintilla\build\wxscintilla.cbp" />
+		<Project filename="LiteEditor\LiteEditor.cbp" active="1" />
+	</Workspace>
+</CodeBlocks_workspace_file>
