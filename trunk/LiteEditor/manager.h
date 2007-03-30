@@ -6,6 +6,8 @@
 class Manager
 {
 	friend class Singleton<Manager>;
+public:
+	bool IsWorkspaceOpen() const;
 
 private:
 	Manager(void);

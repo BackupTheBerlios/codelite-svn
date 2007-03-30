@@ -7,6 +7,7 @@
 #include "ctags_manager.h"
 #include "language.h"
 #include "editor_config.h"
+#include "manager.h"
 
 #ifdef USE_TRACE
 #define DEBUG_START_TIMER(msg) { wxString logmsg; m_watch.Start(); wxLogMessage(logmsg << _T("Timer started ===> ") << msg); }
@@ -70,8 +71,11 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 	SetProperties();
 
 	// If file name is provided, open it
-	if(false == m_fileName.IsEmpty())
-		OpenFile(m_fileName, m_project);
+	if(	false == m_fileName.GetFullPath().IsEmpty() &&		// valid file name was passed
+		m_fileName.GetFullPath().Find(wxT("Untitled")) == -1)	// file name does not contain 'Untitiled'
+	{
+		OpenFile(m_fileName.GetFullPath(), m_project);
+	}
 }
 
 LEditor::~LEditor()
@@ -205,22 +209,25 @@ void LEditor::SetProperties()
 
 void LEditor::OnCharAdded(wxScintillaEvent& event)
 {
-	switch( event.GetKey() )
+	if(false == GetProjectName().IsEmpty())
 	{
-	case '.':
-	case '>':
-	case ':':
-	case '(':
-		CodeComplete();
-		break;
-	case ')':
+		switch( event.GetKey() )
 		{
-			CallTipCancel();
-			m_tipKind = TipNone;
+		case '.':
+		case '>':
+		case ':':
+		case '(':
+			CodeComplete();
+			break;
+		case ')':
+			{
+				CallTipCancel();
+				m_tipKind = TipNone;
+				break;
+			}
+		default:
 			break;
 		}
-	default:
-		break;
 	}
 	event.Skip();
 }
@@ -246,8 +253,15 @@ void LEditor::DefineMarker(int marker, int markerType, wxColor fore, wxColor bac
 	MarkerSetBackground(marker, back);
 }
 
-void LEditor::SaveFile()
+bool LEditor::SaveFile()
 {
+	// first save the file content
+	if( !SaveToFile(m_fileName) )
+		return false;
+
+	if( GetProjectName().IsEmpty() )
+		return true;
+
 	//-------------------------------------------------------------------
 	// Using the CodeParser library, enforces us to notify the parsing
 	// thread once the file is saved. ctags accepts file name, so we
@@ -255,21 +269,51 @@ void LEditor::SaveFile()
 	// point in notifying the parsing thread on, for example, OnCharAdded
 	// event, since the actual file on the disk was not modified
 	//-------------------------------------------------------------------
-	wxFFile file(m_fileName.GetData(), _T("wb"));
+
+	// Put a request on the parsing thread to update the GUI tree for this file
+	wxFileName fn = TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName();
+	ParseThreadST::Get()->Add(m_fileName.GetFullPath(), m_project, fn.GetFullPath());
+	return true;
+}
+
+bool LEditor::SaveFileAs()
+{
+	// Prompt the user for a new file name
+	const wxString ALL(_T("All Files (*.*)|*.*"));
+	wxFileDialog *dlg = new wxFileDialog(this, _("Save As"), wxEmptyString, wxEmptyString, ALL, 
+											wxFD_SAVE | wxFD_OVERWRITE_PROMPT , 
+											wxDefaultPosition);
+
+	if (dlg->ShowModal() == wxID_OK)
+	{
+		// get the path
+		wxFileName name(dlg->GetPath());
+		if( !SaveToFile(name) )
+		{
+			wxMessageBox(wxT("Failed to save file"), wxT("Error"), wxOK | wxICON_ERROR);
+			return false;
+		}
+		m_fileName = name;
+	}
+
+	dlg->Destroy();
+	return true;
+}
+
+bool LEditor::SaveToFile(const wxFileName &fileName)
+{
+	wxFFile file(fileName.GetFullPath().GetData(), _T("wb"));
 	if(file.IsOpened() == false)
 	{
 		// Nothing to be done
-		wxString msg = wxString::Format(_("Failed to open file %s"), m_fileName.GetData());
+		wxString msg = wxString::Format(_("Failed to open file %s"), fileName.GetFullPath().GetData());
 		wxMessageBox( msg );
-		return;
+		return false;
 	}
 
 	file.Write(GetText());
 	file.Close();
-
-	// Put a request on the parsing thread to update the GUI tree for this file
-	wxFileName fn = TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName();
-	ParseThreadST::Get()->Add(m_fileName, m_project, fn.GetFullPath());
+	return true;
 }
 
 void LEditor::OpenFile(const wxString &fileName, const wxString &project)
@@ -318,7 +362,7 @@ void LEditor::GetWordAndScope(wxString& word, wxString &scope, wxString& scopeNa
 	TagEntry tag;
 
 	int line = 1;
-	if( TagsManagerST::Get()->FunctionByLine(LineFromPosition(start), m_fileName, m_project, tag) )
+	if( TagsManagerST::Get()->FunctionByLine(LineFromPosition(start), m_fileName.GetFullName(), m_project, tag) )
 		line = tag.GetLine();
 
 	long scopeStartPos = PositionFromLine(line - 1/* wxScintilla counts line from zero */);
@@ -436,7 +480,7 @@ void LEditor::CodeComplete()
 	// good idea of the scope we are in it
 	if( TagsManagerST::Get()->FunctionByLine(LineFromPosition(start)+1,	// scintilla are counting from zero,
 																		// while ctags are counting from one
-												m_fileName, m_project, tag) )
+												m_fileName.GetFullName(), m_project, tag) )
 	{
 		line = tag.GetLine();
 	}
@@ -520,7 +564,7 @@ void LEditor::GotoDefinition()
 		// Remember this position before skipping to the next one
 		TagEntry history;
 		history.SetLine(LineFromPosition(GetCurrentPos())+1 /** scintilla counts from zero, while tagentry from 1**/);
-		history.SetFile(m_fileName);
+		history.SetFile(m_fileName.GetFullPath());
 		history.SetProject(m_project);
 
 		// Just open the file and set the cursor on the match we found
@@ -556,6 +600,10 @@ void LEditor::GotoPreviousDefintion()
 
 void LEditor::OnDwellStart(wxScintillaEvent & event)
 {
+	// Handle dewell only if a project is opened
+	if( GetProjectName().IsEmpty())
+		return;
+
 	int start;
 	int line = 1;
 	long pos = event.GetPosition();
@@ -589,7 +637,7 @@ void LEditor::OnDwellStart(wxScintillaEvent & event)
 	// good idea of the scope we are in it
 	TagEntry tag;
 	if( TagsManagerST::Get()->FunctionByLine(LineFromPosition(start)+1,	// scintilla are counting from zero, while ctags are counting from one
-	        								 m_fileName, m_project, tag) )
+	        								 m_fileName.GetFullName(), m_project, tag) )
 	{
 		line = tag.GetLine();
 	}

@@ -20,21 +20,10 @@
 #include <wx/confbase.h>
 #include "../Modules/pluggable.h"
 
-#define ID_ADD_SOURCE_FILE		10001
-#define ID_BUILD_FROM_DATABASE	10002
-#define ID_COMPLETE_WORD		10003
 #define ID_CTAGS_GLOBAL_ID		10500
 #define ID_CTAGS_LOCAL_ID		10501
-#define ID_GOTO_DEFINTION		10502
-#define ID_GOTO_PREV_DEFINTION	10503
-#define ID_DELETE_PROJECT		10504
-#define ID_BUILD_EXTERNAL_DB	10505
-#define ID_USE_EXTERNAL_DB		10506
-#define ID_PARSE_COMMENTS		10507
-#define ID_ABOUT				10600
 
 extern wxImageList* CreateSymbolTreeImages();
-
 //----------------------------------------------------------------
 // Our main frame
 //----------------------------------------------------------------
@@ -44,11 +33,15 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_END_PROCESS(ID_CTAGS_LOCAL_ID, Frame::OnCtagsEnd)
 	EVT_MENU(wxID_EXIT, Frame::OnQuit)
 	EVT_MENU(wxID_SAVE, Frame::OnSave)
+	EVT_MENU(wxID_SAVEAS, Frame::OnSaveAs)
 	EVT_MENU(XRCID("about"), Frame::OnAbout)
+	EVT_MENU(wxID_NEW, Frame::OnFileNew)
+
 	
+	EVT_MENU(XRCID("add_file_to_project"), Frame::OnAddSourceFile)
+	EVT_MENU(XRCID("open_workspace"), Frame::OnBuildFromDatabase)
+
 	/*
-	EVT_MENU(ID_ADD_SOURCE_FILE, Frame::OnAddSourceFile)
-	EVT_MENU(ID_BUILD_FROM_DATABASE, Frame::OnBuildFromDatabase)
 	EVT_MENU(ID_COMPLETE_WORD, Frame::OnCompleteWord)
 	EVT_MENU(ID_GOTO_DEFINTION, Frame::OnGotoDefinition)
 	EVT_MENU(ID_GOTO_PREV_DEFINTION, Frame::OnGotoPreviousDefinition)
@@ -59,7 +52,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	*/
 	EVT_CLOSE(Frame::OnClose)
 END_EVENT_TABLE()
-
 Frame* Frame::m_theFrame = NULL;
 
 Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
@@ -116,36 +108,6 @@ void Frame::CreateGUIControls(void)
 	m_mgr.SetManagedWindow(this);
 	m_mgr.SetFlags(m_mgr.GetFlags() | wxAUI_MGR_ALLOW_ACTIVE_PANE);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);
-
-/*
-	wxMenu *menuFile = new wxMenu;
-	menuFile->Append( ID_ADD_SOURCE_FILE, _("&Add Source File\tCtrl+F") );
-	menuFile->Append( ID_BUILD_FROM_DATABASE, _("&Build Tree From Database\tCtrl+B") );
-	menuFile->Append( ID_BUILD_EXTERNAL_DB, _("Build &External Database\tCtrl+E") );
-	menuFile->Append( ID_USE_EXTERNAL_DB, _("&Use External Database\tCtrl+U") );
-
-	menuFile->AppendSeparator();
-	menuFile->Append( wxID_SAVE, _("&Save file\tCtrl+S") );
-	menuFile->AppendSeparator();
-	menuFile->Append( ID_DELETE_PROJECT, _("Delete Project") );
-	menuFile->AppendSeparator();
-	menuFile->Append( wxID_CLOSE, _("E&xit\tAlt+X") );
-	
-	wxMenu *menuView = new wxMenu;
-	menuView->Append( ID_COMPLETE_WORD, _("&Complete Word\tCtrl+Space") );
-	menuView->Append( ID_GOTO_DEFINTION, _("Goto &Definition\tCtrl+D") );
-	menuView->Append( ID_GOTO_PREV_DEFINTION, _("Goto &Previous Definition\tCtrl+P") );
-	menuView->Append( ID_PARSE_COMMENTS, _("Parse Co&mments\tCtrl+M"), wxEmptyString, wxITEM_CHECK );
-
-	wxMenu *helpMenu = new wxMenu;
-	helpMenu->Append( ID_ABOUT, _("&About"), wxEmptyString, wxITEM_NORMAL );
-
-	wxMenuBar *menuBar = new wxMenuBar;
-	menuBar->Append( menuFile, _("&File") );
-	menuBar->Append( menuView, _("&View") );
-	menuBar->Append( helpMenu, _("&Help") );
-	SetMenuBar( menuBar );
-	*/
 
 	// Load the menubar from XRC and set this frame's menubar to it.
     SetMenuBar(wxXmlResource::Get()->LoadMenuBar(wxT("main_menu")));
@@ -375,7 +337,29 @@ void Frame::OnSave(wxCommandEvent& WXUNUSED(event))
 	LEditor* editor = static_cast<LEditor*>(m_notebook->GetCurrentPage());
 	if( !editor )
 		return;
-	editor->SaveFile();
+
+	if(editor->GetFileName().GetFullName().Find("Untitled") != -1){
+		if( editor->SaveFileAs() ){
+			// save was ok, change the tab name to the actual file name
+			int curPage = m_notebook->GetSelection();
+			m_notebook->SetPageText(curPage, wxT(editor->GetFileName().GetFullName()) );
+		}
+	} else {
+		editor->SaveFile();
+	}
+}
+
+void Frame::OnSaveAs(wxCommandEvent& WXUNUSED(event))
+{
+	LEditor* editor = static_cast<LEditor*>(m_notebook->GetCurrentPage());
+	if( !editor )
+		return;
+
+	if( editor->SaveFileAs() ) {
+		// save was ok, change the tab name to the actual file name
+		int curPage = m_notebook->GetSelection();
+		m_notebook->SetPageText(curPage, wxT(editor->GetFileName().GetFullName()) );
+	}
 }
 
 void Frame::OnBuildFromDatabase(wxCommandEvent& WXUNUSED(event))
@@ -534,3 +518,25 @@ void Frame::OnParseComments(wxCommandEvent &event)
 {
 	TagsManagerST::Get()->ParseComments( event.IsChecked() );
 }
+
+// Open new file
+void Frame::OnFileNew(wxCommandEvent &event)
+{
+	static int fileCounter = 0;
+
+	wxUnusedVar(event);
+	wxString fileNameStr(wxT("Untitled"));
+	fileNameStr << ++fileCounter;
+
+	wxFileName fileName(fileNameStr);
+
+	// Create new editor and add it to the notebook
+	m_notebook->Freeze();
+	LEditor *editor = new LEditor(this, wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), wxEmptyString);
+	m_notebook->AddPage(editor, fileName.GetFullName(), true);
+	m_notebook->Thaw();
+
+	editor->SetFocus ();
+}
+
+

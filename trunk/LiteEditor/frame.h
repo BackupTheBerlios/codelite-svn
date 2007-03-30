@@ -5,6 +5,7 @@
 #include <wx/dcbuffer.h>
 #include <wx/process.h>
 #include "wx/aui/aui.h"
+#include "wx/frame.h"
 
 // forward decls
 class SymbolTree;
@@ -42,15 +43,13 @@ private:
 	void CreateGUIControls(void);
 	wxString GetStringFromUser(const wxString& msg);
 
-	// Any class wishing to process wxWindows events must use this macro
-	DECLARE_EVENT_TABLE()
-
 	void OnQuit(wxCommandEvent& WXUNUSED(event));
 	void OnClose(wxCloseEvent &event);
 	void OnAddSourceFile(wxCommandEvent& event);
 	void OnBuildFromDatabase(wxCommandEvent& event);
 	void OnCtagsEnd(wxProcessEvent& event);
 	void OnSave(wxCommandEvent& event);
+	void OnSaveAs(wxCommandEvent& event);
 	void OnCompleteWord(wxCommandEvent& event);
 	void OnGotoDefinition(wxCommandEvent& event);
 	void OnGotoPreviousDefinition(wxCommandEvent& event);
@@ -59,6 +58,11 @@ private:
 	void OnUseExternalDatabase(wxCommandEvent& event);
 	void OnParseComments(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
+	void OnFileNew(wxCommandEvent &event);
+
+	// Any class wishing to process wxWindows events must use this macro
+	DECLARE_EVENT_TABLE()
+
 };
 
 #endif // LITEEDITOR_FRAME_H

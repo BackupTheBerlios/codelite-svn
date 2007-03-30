@@ -38,14 +38,59 @@
             </object>
             
             <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+
+            <object class="wxMenuItem" name="wxID_CLOSE">
+                <label>Close\tCtrl-W</label>
+                <help>Close Current File</help>
+            </object> 
             
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>            
             <!-- we use wxID_EXIT name here to get the default menu item stock icon -->
             <object class="wxMenuItem" name="wxID_EXIT">
                 <label>E&amp;xit\tAlt-X</label>
                 <help>Close LiteEditor</help>
             </object>
         </object>
+        <!-- 
+            Edit menu 
+         -->
+        <object class="wxMenu" name="edit_menu">
+            <label>&amp;Edit</label>
+            <style>wxMENU_TEAROFF</style>
+            <object class="wxMenuItem" name="wxID_UNDO">
+                <label>&amp;Undo\tCtrl-Z</label>
+            </object>
+            <object class="wxMenuItem" name="wxID_REDO">
+                <label>&amp;Redo\tCtrl-Y</label>
+            </object>
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>            
+            <object class="wxMenuItem" name="wxID_CUT">
+                <label>Cut\tCtrl-X</label>
+            </object>
+            <object class="wxMenuItem" name="wxID_COPY">
+                <label>&amp;Copy\tCtrl-C</label>
+            </object>
+            <object class="wxMenuItem" name="wxID_PASTE">
+                <label>&amp;Paste\tCtrl-V</label>
+            </object>
+            <object class="wxMenuItem" name="wxID_DUPLICATE">
+                <label>&amp;Duplicate\tCtrl-D</label>
+            </object>
+            <object class="wxMenuItem" name="wxID_SELECTALL">
+                <label>&amp;Select All\tCtrl-A</label>
+            </object>            
+        </object>
         
+        <object class="wxMenu" name="project_menu">
+            <label>&amp;Project</label>
+            <style>wxMENU_TEAROFF</style>
+            <object class="wxMenuItem" name="add_file_to_project">
+                <label>Add &amp;File to project</label>
+            </object>
+            <object class="wxMenuItem" name="open_workspace">
+                <label>Load &amp;workspace</label>
+            </object>
+        </object>
         <!-- 
             Help menu 
          -->

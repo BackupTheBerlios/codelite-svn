@@ -5,6 +5,7 @@
 #include <stack>
 #include "entry.h"
 #include "calltip.h"
+#include "wx/filename.h"
 
 //------------------------------------------------------------------------------
 // The editor:
@@ -14,7 +15,7 @@
 
 class LEditor : public wxScintilla
 {
-	wxString m_fileName;
+	wxFileName m_fileName;
 	wxString m_project;
 	wxStopWatch m_watch;
 	std::map<wxString, int> m_propertyInt;
@@ -47,12 +48,16 @@ public:
 	virtual ~LEditor();
 	
 	// Save the editor data into file
-	void SaveFile();
+	bool SaveFile();
+
+	// Save content of the editor to a given file (Save As...)
+	// this function prompts the user for selecting file name
+	bool SaveFileAs();
 
 	void CompleteWord();
 	
 	// Return the file name opened in this editor
-	const wxString& GetFileName() const { return m_fileName; }
+	const wxFileName& GetFileName() const { return m_fileName; }
 
 	// Attempt to display a list of members 
 	// after a '.' or '->' operator has been inserted into 
@@ -68,6 +73,9 @@ public:
 	// Load a file 
 	void OpenFile(const wxString& fileName, const wxString& project);
 
+	// Setters / Getters
+	const wxString &GetProjectName() const { return m_project; }
+
 protected:
 
 	// Util function
@@ -81,6 +89,7 @@ private:
 	void DefineMarker(int marker, int markerType, wxColor fore, wxColor back);
 	void GetWordAndScope(wxString& word, wxString &scope, wxString &scopeName);
 	void SetLineNumberWidth();
+	bool SaveToFile(const wxFileName &fileName);
 
 	DECLARE_EVENT_TABLE()
 	void OnCharAdded(wxScintillaEvent& event);

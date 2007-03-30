@@ -801,17 +801,23 @@ void TagsManager::GetTagsBySQL(const wxString& sql, std::vector<TagEntry> &tags,
 {
 	wxSQLite3ResultSet rs = m_pDb->Query( sql );
 
-	while( rs.NextRow() )
+	try{
+		while( rs.NextRow() )
+		{
+			TagEntry entry( rs );
+			if(excludePrefix.IsEmpty() == false && entry.GetName().StartsWith(excludePrefix.GetData()))
+				continue;
+
+			// Do we need filter out a tag by kind?
+			if(entry.GetKind() == kindToFilter)
+				continue;
+
+			tags.push_back( entry );
+		}
+	}
+	catch(wxSQLite3Exception &e)
 	{
-		TagEntry entry( rs );
-		if(excludePrefix.IsEmpty() == false && entry.GetName().StartsWith(excludePrefix.GetData()))
-			continue;
-
-		// Do we need filter out a tag by kind?
-		if(entry.GetKind() == kindToFilter)
-			continue;
-
-		tags.push_back( entry );
+		DEBUG_MSG(e.GetMessage())
 	}
 
 	// We have an external database as well, use it
