@@ -7,7 +7,7 @@
  * \date 08-23-2006
  * \author eran
  */
-template <typename T>
+template <class T>
 class Singleton
 {
 	static T* ms_instance;
@@ -34,20 +34,20 @@ protected:
 	 */
 	virtual ~Singleton();
 };
-template <typename T>
+template <class T>
 T* Singleton<T>::ms_instance = 0;
 
-template <typename T>
+template <class T>
 Singleton<T>::Singleton()
 {
 }
 
-template <typename T>
+template <class T>
 Singleton<T>::~Singleton()
 {
 }
 
-template <typename T>
+template <class T>
 T* Singleton<T>::Get()
 {
 	if(!ms_instance)
@@ -55,7 +55,7 @@ T* Singleton<T>::Get()
 	return ms_instance;
 }
 
-template <typename T>
+template <class T>
 void Singleton<T>::Free()
 {
 	if( ms_instance )

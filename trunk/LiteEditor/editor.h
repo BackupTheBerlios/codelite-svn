@@ -75,7 +75,6 @@ public:
 
 	// Setters / Getters
 	const wxString &GetProjectName() const { return m_project; }
-
 protected:
 
 	// Util function
@@ -83,6 +82,7 @@ protected:
 	wxChar NextChar(const int& pos, int &foundPos);
 	int  FindString (const wxString &str, int flags, const bool down, long pos);
 	bool IsCommentOrString(long pos);
+	void SetDirty(bool dirty);
 
 private:
 	void SetProperties();
@@ -98,6 +98,7 @@ private:
 	void OnDwellStart(wxScintillaEvent& event);
 	void OnDwellEnd(wxScintillaEvent& event);
 	void OnCallTipClick(wxScintillaEvent& event);
+	void OnModified(wxScintillaEvent& event);
 	
 };
 

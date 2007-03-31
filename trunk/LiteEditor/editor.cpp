@@ -1,4 +1,3 @@
-#include "frame.h"
 #include "editor.h"
 #include <wx/ffile.h>
 #include <wx/tooltip.h>
@@ -36,6 +35,7 @@ EVT_SCI_MARGINCLICK(wxID_ANY, LEditor::OnMarginClick)
 EVT_SCI_DWELLSTART(wxID_ANY, LEditor::OnDwellStart)
 EVT_SCI_CALLTIP_CLICK(wxID_ANY, LEditor::OnCallTipClick)
 EVT_SCI_DWELLEND(wxID_ANY, LEditor::OnDwellEnd)
+EVT_SCI_MODIFIED(wxID_ANY, LEditor::OnModified)
 END_EVENT_TABLE()
 
 std::stack<TagEntry> LEditor::m_history;
@@ -159,7 +159,7 @@ void LEditor::SetProperties()
 
 	// no local configfile found, check if there is one in the installPath
     if(!ConfigFileFound) {
-        wxString installPath = Frame::Get()->GetInstallPath();
+		wxString installPath = Manager::Get()->GetInstallPath();
         ConfigFileName = wxFileName(installPath, ConfigFileName.GetFullName());
         ConfigFileFound = ConfigFileName.FileExists();
     }
@@ -207,8 +207,22 @@ void LEditor::SetProperties()
 	AutoCompSetIgnoreCase(true);
 }
 
+void LEditor::SetDirty(bool dirty)
+{
+	if( dirty ){
+		if( !Manager::Get()->GetActivePageTitle().StartsWith(wxT("*")) ){
+			Manager::Get()->SetActivePageTitle(wxT("*") + Manager::Get()->GetActivePageTitle());
+		}
+	} else {
+		Manager::Get()->SetActivePageTitle(GetFileName().GetFullName());
+	}
+}
+
 void LEditor::OnCharAdded(wxScintillaEvent& event)
 {
+	// set the page title as dirty
+	SetDirty(true);
+	
 	if(false == GetProjectName().IsEmpty())
 	{
 		switch( event.GetKey() )
@@ -255,6 +269,11 @@ void LEditor::DefineMarker(int marker, int markerType, wxColor fore, wxColor bac
 
 bool LEditor::SaveFile()
 {
+	if(GetFileName().GetFullName().Find(wxT("Untitled")) != -1)
+	{
+		return SaveFileAs();
+	}
+
 	// first save the file content
 	if( !SaveToFile(m_fileName) )
 		return false;
@@ -295,11 +314,12 @@ bool LEditor::SaveFileAs()
 		}
 		m_fileName = name;
 	}
-
-	dlg->Destroy();
+	
+	delete dlg;
 	return true;
 }
 
+// an internal function that does the actual file writing to disk
 bool LEditor::SaveToFile(const wxFileName &fileName)
 {
 	wxFFile file(fileName.GetFullPath().GetData(), _T("wb"));
@@ -313,6 +333,10 @@ bool LEditor::SaveToFile(const wxFileName &fileName)
 
 	file.Write(GetText());
 	file.Close();
+	SetSavePoint();
+
+	// update the file name (remove the star from the file name)
+	Manager::Get()->SetActivePageTitle(fileName.GetFullName());
 	return true;
 }
 
@@ -568,7 +592,7 @@ void LEditor::GotoDefinition()
 		history.SetProject(m_project);
 
 		// Just open the file and set the cursor on the match we found
-		Frame::Get()->OpenFile(tags[0]);
+		Manager::Get()->OpenFile(tags[0]);
 		m_history.push(history);
 	}
 	else
@@ -592,7 +616,7 @@ void LEditor::GotoPreviousDefintion()
 
 	// Get the last tag visited
 	TagEntry tag(m_history.top());
-	Frame::Get()->OpenFile(tag);
+	Manager::Get()->OpenFile(tag);
 
 	// remove it from the stack
 	m_history.pop();
@@ -694,6 +718,28 @@ void LEditor::OnCallTipClick(wxScintillaEvent& event)
 		break;
 	case Elsewhere:
 		break;
+	}
+}
+
+void LEditor::OnModified(wxScintillaEvent& event)
+{
+	if(event.GetModificationType() & wxSCI_MOD_INSERTTEXT) {
+		SetDirty(true);
+	}
+
+	if(event.GetModificationType() & wxSCI_MOD_DELETETEXT) {
+		SetDirty(true);
+	}
+
+	if(event.GetModificationType() & wxSCI_PERFORMED_UNDO) {
+		if(GetModify() == false){
+			SetDirty(false);
+		}
+	}
+
+	if(event.GetModificationType() & wxSCI_PERFORMED_REDO) 
+	{
+		SetDirty(true);
 	}
 }
 

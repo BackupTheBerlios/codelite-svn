@@ -19,6 +19,7 @@
 #include <wx/config.h>
 #include <wx/confbase.h>
 #include "../Modules/pluggable.h"
+#include "manager.h"
 
 #define ID_CTAGS_GLOBAL_ID		10500
 #define ID_CTAGS_LOCAL_ID		10501
@@ -40,6 +41,9 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	
 	EVT_MENU(XRCID("add_file_to_project"), Frame::OnAddSourceFile)
 	EVT_MENU(XRCID("open_workspace"), Frame::OnBuildFromDatabase)
+	EVT_MENU(wxID_OPEN, Frame::OnFileOpen)
+	EVT_FLATNOTEBOOK_PAGE_CLOSING(-1, Frame::OnFileClosing)
+	EVT_MENU(wxID_CLOSE, Frame::OnFileClose)
 
 	/*
 	EVT_MENU(ID_COMPLETE_WORD, Frame::OnCompleteWord)
@@ -69,6 +73,7 @@ Frame::~Frame(void)
 	TagsManagerST::Free();
 	LanguageST::Free();
 	EditorConfigST::Free();
+	Manager::Free();
 
 	//-----------------------------------------------------
 	// Stop the parser thread and release its resources
@@ -338,15 +343,8 @@ void Frame::OnSave(wxCommandEvent& WXUNUSED(event))
 	if( !editor )
 		return;
 
-	if(editor->GetFileName().GetFullName().Find("Untitled") != -1){
-		if( editor->SaveFileAs() ){
-			// save was ok, change the tab name to the actual file name
-			int curPage = m_notebook->GetSelection();
-			m_notebook->SetPageText(curPage, wxT(editor->GetFileName().GetFullName()) );
-		}
-	} else {
-		editor->SaveFile();
-	}
+	// SaveFile contains the logic of "Untiltled" files
+	editor->SaveFile();
 }
 
 void Frame::OnSaveAs(wxCommandEvent& WXUNUSED(event))
@@ -355,11 +353,7 @@ void Frame::OnSaveAs(wxCommandEvent& WXUNUSED(event))
 	if( !editor )
 		return;
 
-	if( editor->SaveFileAs() ) {
-		// save was ok, change the tab name to the actual file name
-		int curPage = m_notebook->GetSelection();
-		m_notebook->SetPageText(curPage, wxT(editor->GetFileName().GetFullName()) );
-	}
+	editor->SaveFileAs();
 }
 
 void Frame::OnBuildFromDatabase(wxCommandEvent& WXUNUSED(event))
@@ -539,4 +533,81 @@ void Frame::OnFileNew(wxCommandEvent &event)
 	editor->SetFocus ();
 }
 
+void Frame::OnFileOpen(wxCommandEvent & WXUNUSED(event))
+{
+	const wxString ALL(	_T("All Files (*.*)|*.*"));
+	wxFileDialog *dlg = new wxFileDialog(this, _("Open File"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST , wxDefaultPosition);
+	if (dlg->ShowModal() == wxID_OK)
+	{
+		// get the path
+		wxFileName fname(dlg->GetPath());
+		m_notebook->Freeze();
+		LEditor *editor = new LEditor(this, wxID_ANY, wxSize(1, 1), fname.GetFullPath(), wxEmptyString);
+		m_notebook->AddPage(editor, fname.GetFullName(), true);
+		m_notebook->Thaw();
+		editor->SetFocus ();
+	}
+	dlg->Destroy();	
+}
 
+void Frame::OnFileClose(wxCommandEvent &event)
+{
+	wxUnusedVar( event );
+	LEditor* editor = static_cast<LEditor*>(m_notebook->GetCurrentPage());
+	if( !editor )
+		return;
+	
+	bool veto;
+	ClosePage(editor, m_notebook->GetSelection(), true, veto);
+}
+
+void Frame::OnFileClosing(wxFlatNotebookEvent &event)
+{
+	// get the page that is now closing
+	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(event.GetSelection()));
+	if( !editor )
+		return;	
+
+	bool veto;
+	ClosePage(editor, event.GetSelection(), false, veto);
+	if( veto ) event.Veto();
+	event.Skip();
+}
+
+void Frame::ClosePage(LEditor *editor, int index, bool doDelete, bool &veto)
+{
+	veto = false;
+	if( editor->GetModify() ) 
+	{
+		// prompt user to save file
+		wxString msg;
+		msg << wxT("Save changes to '") << editor->GetFileName().GetFullName() << wxT("' ?");
+		int answer = wxMessageBox(msg, wxT("Confirm"),wxYES_NO | wxCANCEL);
+		switch( answer ) 
+		{
+		case wxYES:
+			{
+				// try to save the file, if an error occured, return without
+				// closing the tab
+				if( !editor->SaveFile() ) {
+					return;
+				} else {
+					if( doDelete ) m_notebook->DeletePage(index, false);
+				}
+			}
+			break;
+		case wxCANCEL:
+			veto = true;
+			return; // do nothing
+		case wxNO:
+			// just delete the tab without saving the changes
+			if( doDelete ) m_notebook->DeletePage(index, false);
+			break;
+		}
+	} 
+	else 
+	{
+		// file is not modified, just remove the tab
+		if( doDelete ) m_notebook->DeletePage(index, false);
+	}
+}
