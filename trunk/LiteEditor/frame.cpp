@@ -50,6 +50,14 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(wxID_CUT, Frame::DispatchCommandEvent)
 	EVT_MENU(wxID_COPY, Frame::DispatchCommandEvent)
 	EVT_MENU(wxID_PASTE, Frame::DispatchCommandEvent)
+	EVT_MENU(wxID_UNDO, Frame::DispatchCommandEvent)
+	EVT_MENU(wxID_REDO, Frame::DispatchCommandEvent)
+
+	EVT_UPDATE_UI(wxID_CUT, Frame::DispatchUpdateUIEvent)
+	EVT_UPDATE_UI(wxID_COPY, Frame::DispatchUpdateUIEvent)
+	EVT_UPDATE_UI(wxID_PASTE, Frame::DispatchUpdateUIEvent)
+	EVT_UPDATE_UI(wxID_UNDO, Frame::DispatchUpdateUIEvent)
+	EVT_UPDATE_UI(wxID_REDO, Frame::DispatchUpdateUIEvent)
 
 	/*
 	EVT_MENU(ID_COMPLETE_WORD, Frame::OnCompleteWord)
@@ -213,7 +221,7 @@ void Frame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void Frame::DispatchCommandEvent(wxCommandEvent &event)
 {
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(event.GetSelection()));
+	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
 	if( !editor )
 		return;	
 
@@ -222,9 +230,11 @@ void Frame::DispatchCommandEvent(wxCommandEvent &event)
 
 void Frame::DispatchUpdateUIEvent(wxUpdateUIEvent &event)
 {
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(event.GetSelection()));
-	if( !editor )
+	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
+	if( !editor ){ 
+		event.Enable(false);
 		return;	
+	}
 
 	editor->OnUpdateUI(event);
 }

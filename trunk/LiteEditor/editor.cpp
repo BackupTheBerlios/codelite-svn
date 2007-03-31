@@ -747,13 +747,11 @@ void LEditor::OnModified(wxScintillaEvent& event)
 void LEditor::OnMenuCommand(wxCommandEvent &event)
 {
 	MenuManager::Get()->GetHandler(event.GetId())->ProcessCommandEvent(this, event);
-	event.Skip();
 }
 
 void LEditor::OnUpdateUI(wxUpdateUIEvent &event)
 {
 	MenuManager::Get()->GetHandler(event.GetId())->ProcessUpdateUIEvent(this, event);
-	event.Skip();
 }
 
 //-----------------------------------------------------------------------
