@@ -210,11 +210,11 @@ void LEditor::SetProperties()
 void LEditor::SetDirty(bool dirty)
 {
 	if( dirty ){
-		if( !Manager::Get()->GetActivePageTitle().StartsWith(wxT("*")) ){
-			Manager::Get()->SetActivePageTitle(wxT("*") + Manager::Get()->GetActivePageTitle());
+		if( !Manager::Get()->GetPageTitle(this).StartsWith(wxT("*")) ){
+			Manager::Get()->SetPageTitle(this, wxT("*") + Manager::Get()->GetPageTitle(this));
 		}
 	} else {
-		Manager::Get()->SetActivePageTitle(GetFileName().GetFullName());
+		Manager::Get()->SetPageTitle(this, GetFileName().GetFullName());
 	}
 }
 
@@ -299,7 +299,7 @@ bool LEditor::SaveFileAs()
 {
 	// Prompt the user for a new file name
 	const wxString ALL(_T("All Files (*.*)|*.*"));
-	wxFileDialog *dlg = new wxFileDialog(this, _("Save As"), wxEmptyString, wxEmptyString, ALL, 
+	wxFileDialog *dlg = new wxFileDialog(this, _("Save As"), m_fileName.GetPath(), m_fileName.GetFullName(), ALL, 
 											wxFD_SAVE | wxFD_OVERWRITE_PROMPT , 
 											wxDefaultPosition);
 
@@ -336,7 +336,7 @@ bool LEditor::SaveToFile(const wxFileName &fileName)
 	SetSavePoint();
 
 	// update the file name (remove the star from the file name)
-	Manager::Get()->SetActivePageTitle(fileName.GetFullName());
+	Manager::Get()->SetPageTitle(this, fileName.GetFullName());
 	return true;
 }
 

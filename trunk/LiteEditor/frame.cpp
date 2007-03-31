@@ -38,12 +38,12 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("about"), Frame::OnAbout)
 	EVT_MENU(wxID_NEW, Frame::OnFileNew)
 
-	
 	EVT_MENU(XRCID("add_file_to_project"), Frame::OnAddSourceFile)
 	EVT_MENU(XRCID("open_workspace"), Frame::OnBuildFromDatabase)
 	EVT_MENU(wxID_OPEN, Frame::OnFileOpen)
 	EVT_FLATNOTEBOOK_PAGE_CLOSING(-1, Frame::OnFileClosing)
 	EVT_MENU(wxID_CLOSE, Frame::OnFileClose)
+	EVT_MENU(XRCID("save_all"), Frame::OnFileSaveAll)
 
 	/*
 	EVT_MENU(ID_COMPLETE_WORD, Frame::OnCompleteWord)
@@ -572,6 +572,12 @@ void Frame::OnFileClosing(wxFlatNotebookEvent &event)
 	ClosePage(editor, event.GetSelection(), false, veto);
 	if( veto ) event.Veto();
 	event.Skip();
+}
+
+void Frame::OnFileSaveAll(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	Manager::Get()->SaveAll();
 }
 
 void Frame::ClosePage(LEditor *editor, int index, bool doDelete, bool &veto)
