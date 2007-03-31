@@ -20,6 +20,7 @@
 #include <wx/confbase.h>
 #include "../Modules/pluggable.h"
 #include "manager.h"
+#include "menumanager.h"
 
 #define ID_CTAGS_GLOBAL_ID		10500
 #define ID_CTAGS_LOCAL_ID		10501
@@ -44,6 +45,11 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_FLATNOTEBOOK_PAGE_CLOSING(-1, Frame::OnFileClosing)
 	EVT_MENU(wxID_CLOSE, Frame::OnFileClose)
 	EVT_MENU(XRCID("save_all"), Frame::OnFileSaveAll)
+
+	// Handler command events
+	EVT_MENU(wxID_CUT, Frame::DispatchCommandEvent)
+	EVT_MENU(wxID_COPY, Frame::DispatchCommandEvent)
+	EVT_MENU(wxID_PASTE, Frame::DispatchCommandEvent)
 
 	/*
 	EVT_MENU(ID_COMPLETE_WORD, Frame::OnCompleteWord)
@@ -86,6 +92,7 @@ Frame::~Frame(void)
 	ParseThreadST::Get()->Stop();
 	ParseThreadST::Free();
 	wxFlatNotebook::CleanUp();
+	MenuManager::Free();
 
 	if(m_config)
 		delete m_config;
@@ -202,6 +209,24 @@ void Frame::CreateGUIControls(void)
 void Frame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
 	Close();
+}
+
+void Frame::DispatchCommandEvent(wxCommandEvent &event)
+{
+	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(event.GetSelection()));
+	if( !editor )
+		return;	
+
+	editor->OnMenuCommand(event);
+}
+
+void Frame::DispatchUpdateUIEvent(wxUpdateUIEvent &event)
+{
+	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(event.GetSelection()));
+	if( !editor )
+		return;	
+
+	editor->OnUpdateUI(event);
 }
 
 void Frame::OnAbout(wxCommandEvent& WXUNUSED(event))

@@ -312,6 +312,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\menu_event_handlers.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\menumanager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\resources.cpp"
 				>
 			</File>
@@ -342,6 +350,14 @@
 			</File>
 			<File
 				RelativePath=".\manager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\menu_event_handlers.h"
+				>
+			</File>
+			<File
+				RelativePath=".\menumanager.h"
 				>
 			</File>
 			<File

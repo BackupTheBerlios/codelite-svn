@@ -75,6 +75,13 @@ public:
 
 	// Setters / Getters
 	const wxString &GetProjectName() const { return m_project; }
+
+	// Callback function for UI events 
+	void OnUpdateUI(wxUpdateUIEvent &event);
+
+	// Callback function for menu command events
+	void OnMenuCommand(wxCommandEvent &event);
+
 protected:
 
 	// Util function

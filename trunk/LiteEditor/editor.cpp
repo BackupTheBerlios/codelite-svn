@@ -7,6 +7,7 @@
 #include "language.h"
 #include "editor_config.h"
 #include "manager.h"
+#include "menumanager.h"
 
 #ifdef USE_TRACE
 #define DEBUG_START_TIMER(msg) { wxString logmsg; m_watch.Start(); wxLogMessage(logmsg << _T("Timer started ===> ") << msg); }
@@ -741,6 +742,18 @@ void LEditor::OnModified(wxScintillaEvent& event)
 	{
 		SetDirty(true);
 	}
+}
+
+void LEditor::OnMenuCommand(wxCommandEvent &event)
+{
+	MenuManager::Get()->GetHandler(event.GetId())->ProcessCommandEvent(this, event);
+	event.Skip();
+}
+
+void LEditor::OnUpdateUI(wxUpdateUIEvent &event)
+{
+	MenuManager::Get()->GetHandler(event.GetId())->ProcessUpdateUIEvent(this, event);
+	event.Skip();
 }
 
 //-----------------------------------------------------------------------

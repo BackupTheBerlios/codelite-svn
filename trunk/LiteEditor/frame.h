@@ -52,6 +52,8 @@ private:
 	void CreateGUIControls(void);
 	wxString GetStringFromUser(const wxString& msg);
 	void ClosePage(LEditor *editor, int index, bool doDelete, bool &veto);
+	void DispatchCommandEvent(wxCommandEvent &event);
+	void DispatchUpdateUIEvent(wxUpdateUIEvent &event);
 
 protected:
 	// event handlers
