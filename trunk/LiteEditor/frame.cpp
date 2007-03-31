@@ -121,9 +121,9 @@ void Frame::CreateGUIControls(void)
 	// Add log window
 	//---------------------------------------------
 	wxTextCtrl *text = new wxTextCtrl(this, wxID_ANY, _T(""),
-                            wxPoint(0, 250), wxSize(600, 200), wxTE_MULTILINE);
+                            wxDefaultPosition, wxSize(-1, 200), wxTE_MULTILINE);
 	m_mgr.AddPane(text, wxAuiPaneInfo().Name(wxT("Debug Window")).
-					Caption(wxT("Debug Window")).Bottom().Layer(1).Position(1).MaximizeButton(true).CloseButton(false));
+		Caption(wxT("Debug Window")).Bottom().Layer(1).Position(1).MaximizeButton(true).CloseButton(true));
 
 	m_logTargetOld = wxLog::SetActiveTarget(new wxLogTextCtrl(text));
 
