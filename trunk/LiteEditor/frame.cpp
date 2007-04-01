@@ -18,7 +18,6 @@
 #include "editor_config.h"
 #include <wx/config.h>
 #include <wx/confbase.h>
-#include "../Modules/pluggable.h"
 #include "manager.h"
 #include "menumanager.h"
 
