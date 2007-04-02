@@ -55,6 +55,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(wxID_DUPLICATE, Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("select_to_brace"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("match_brace"), Frame::DispatchCommandEvent)
+	EVT_MENU(wxID_FIND, Frame::DispatchCommandEvent)
 
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
@@ -69,8 +70,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(wxID_DUPLICATE, Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(XRCID("select_to_brace"), Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(XRCID("match_brace"), Frame::DispatchUpdateUIEvent)
-
 	EVT_UPDATE_UI(XRCID("complete_word"), Frame::OnCompleteWordUpdateUI)
+	EVT_UPDATE_UI(wxID_FIND, Frame::OnFileExistUpdateUI)
 
 	/*
 	EVT_MENU(ID_COMPLETE_WORD, Frame::OnCompleteWord)

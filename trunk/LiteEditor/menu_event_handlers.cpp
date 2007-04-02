@@ -132,3 +132,20 @@ void BraceMatchHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &e
 	LEditor *editor = static_cast<LEditor*>(owner);
 	event.Enable(editor->GetLength() > 0);
 }
+
+
+//------------------------------------
+// Find / Replace
+//------------------------------------
+void FindReplaceHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	LEditor *editor = static_cast<LEditor*>(owner);
+	editor->DoFindAndReplace();
+}
+
+void FindReplaceHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
+{
+	wxUnusedVar(event);
+	wxUnusedVar(owner);
+}

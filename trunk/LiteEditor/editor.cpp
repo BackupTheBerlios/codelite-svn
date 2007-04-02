@@ -1,5 +1,5 @@
 #include "editor.h"
-#include <wx/ffile.h>
+#include <wx/ffile.h> 
 #include <wx/tooltip.h>
 #include <wx/settings.h>
 #include "parse_thread.h"
@@ -8,6 +8,8 @@
 #include "editor_config.h"
 #include "manager.h"
 #include "menumanager.h"
+#include <wx/fdrepdlg.h>
+#include "findreplacedlg.h"
 
 #ifdef USE_TRACE
 #define DEBUG_START_TIMER(msg) { wxString logmsg; m_watch.Start(); wxLogMessage(logmsg << _T("Timer started ===> ") << msg); }
@@ -38,6 +40,14 @@ EVT_SCI_CALLTIP_CLICK(wxID_ANY, LEditor::OnCallTipClick)
 EVT_SCI_DWELLEND(wxID_ANY, LEditor::OnDwellEnd)
 EVT_SCI_MODIFIED(wxID_ANY, LEditor::OnModified)
 EVT_SCI_UPDATEUI(wxID_ANY, LEditor::OnSciUpdateUI)
+
+// Find and replace dialog
+EVT_COMMAND(wxID_ANY, wxEVT_FRD_FIND_NEXT, LEditor::OnFindDialog)
+EVT_COMMAND(wxID_ANY, wxEVT_FRD_REPLACE, LEditor::OnFindDialog)
+EVT_COMMAND(wxID_ANY, wxEVT_FRD_REPLACEALL, LEditor::OnFindDialog)
+EVT_COMMAND(wxID_ANY, wxEVT_FRD_BOOKMARKALL, LEditor::OnFindDialog)
+EVT_COMMAND(wxID_ANY, wxEVT_FRD_CLOSE, LEditor::OnFindDialog)
+
 END_EVENT_TABLE()
 
 std::stack<TagEntry> LEditor::m_history;
@@ -47,6 +57,8 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 , m_fileName(fileName)
 , m_project(project)
 , m_tipKind(TipNone)
+, m_findReplaceDlg(NULL)
+, m_lastMatchPos(0)
 {
 	// Initialise the map between a macro of proerpty and its value
 	m_propertyInt[_T("wxSCI_C_DEFAULT")] = 0;
@@ -1101,5 +1113,74 @@ void LEditor::BraceMatch(const bool& bSelRegion)
 			SetCurrentPos(endPos);
 		}
 		EnsureCaretVisible();
+	}
+}
+
+// Popup a Find/Replace dialog
+void LEditor::DoFindAndReplace()
+{
+	if( m_findReplaceDlg == NULL ) 
+	{
+		// Create the dialog
+		m_findReplaceDlg = new FindReplaceDialog(this, m_findReplaceData);
+	}
+
+	// the search always starts from the current line
+	m_lastMatchPos = GetCurrentPos();
+	m_findReplaceDlg->Show();
+}
+
+void LEditor::OnFindDialog(wxCommandEvent& event)
+{
+	wxEventType type = event.GetEventType();
+	if( type == wxEVT_FRD_FIND_NEXT )
+	{
+		bool dirDown = ! (m_findReplaceDlg->GetData().GetFlags() & wxFRD_SEARCHUP ? true : false);
+		if( !FindAndSelect() ) {
+			if(dirDown){
+				if( wxMessageBox(wxT("CodeLite reached the end of the document, Search again from the start?"), wxT("Confirm"), wxYES_NO, m_findReplaceDlg) == wxYES){
+					FindAndSelect();
+				} 
+			} else {
+				if( wxMessageBox(wxT("CodeLite reached the start of the document, Search again from the end?"), wxT("Confirm"), wxYES_NO, m_findReplaceDlg) == wxYES){
+					FindAndSelect();
+				}
+			}
+		}
+	}
+}
+
+// do the actual find action and select the match if found
+bool LEditor::FindAndSelect()
+{
+	bool dirDown = ! (m_findReplaceDlg->GetData().GetFlags() & wxFRD_SEARCHUP ? true : false);
+	size_t flags = 0;
+	size_t wxflags = m_findReplaceDlg->GetData().GetFlags();
+	wxflags & wxFRD_MATCHWHOLEWORD ? flags |= wxSCI_FIND_WHOLEWORD : flags = flags;
+	wxflags & wxFRD_MATCHCASE ? flags |= wxSCI_FIND_MATCHCASE : flags = flags;
+	wxflags & wxFRD_REGULAREXPRESSION ? flags |= wxSCI_FIND_REGEXP : flags = flags;
+
+	int pos = FindString(m_findReplaceDlg->GetData().GetFindString(), (int)flags, dirDown, m_lastMatchPos);
+	if (pos >= 0) 
+	{
+		EnsureCaretVisible();
+		SetSelection (pos, pos + (int)m_findReplaceDlg->GetData().GetFindString().Length());
+
+		if( dirDown ) {
+			m_lastMatchPos = pos + (int)m_findReplaceDlg->GetData().GetFindString().Length();
+		} else {
+			m_lastMatchPos = pos - (int)m_findReplaceDlg->GetData().GetFindString().Length();
+		}
+		return true;
+	}
+	else
+	{
+		// No match was found
+		if( dirDown ) {
+			m_lastMatchPos = 0;
+		} else {
+			m_lastMatchPos = GetLength();
+		}
+		return false;
 	}
 }

@@ -143,4 +143,18 @@ public:
 	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
 	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
 };
+
+//------------------------------------
+// Find / Repalce dialog
+//------------------------------------
+class FindReplaceHandler : public MenuEventHandler 
+{
+public:
+	FindReplaceHandler(int id) : MenuEventHandler(id){};
+	virtual ~FindReplaceHandler(){};
+
+public:
+	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
+	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
+};
 #endif // MENU_EVENT_HANDLERS_H

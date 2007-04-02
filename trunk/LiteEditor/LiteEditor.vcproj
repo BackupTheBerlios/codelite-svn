@@ -304,6 +304,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\findreplacedlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\frame.cpp"
 				>
 			</File>
@@ -342,6 +346,10 @@
 			</File>
 			<File
 				RelativePath=".\editor_config.h"
+				>
+			</File>
+			<File
+				RelativePath=".\findreplacedlg.h"
 				>
 			</File>
 			<File

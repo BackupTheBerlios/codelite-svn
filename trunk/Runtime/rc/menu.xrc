@@ -63,7 +63,7 @@
             </object>
             <object class="wxMenuItem" name="wxID_REDO">
                 <label>&amp;Redo\tCtrl+Y</label>
-            </object>
+            </object>Courier New
             <object class="wxMenuItem" name="wxID_SEPARATOR"/>            
             <object class="wxMenuItem" name="wxID_CUT">
                 <label>Cut\tCtrl+X</label>
@@ -93,7 +93,7 @@
             </object>                        
             <object class="wxMenuItem" name="wxID_SEPARATOR"/>            
             <object class="wxMenuItem" name="wxID_FIND">
-                <label>Find And Replace...\tCtrl+F, Ctrl+H</label>
+                <label>Find And Replace...\tCtrl+F</label>
             </object>
         </object>
         

@@ -6,12 +6,14 @@
 #include "entry.h"
 #include "calltip.h"
 #include "wx/filename.h"
+#include "findreplacedlg.h"
 
 //------------------------------------------------------------------------------
 // The editor:
 // I tried to provide a real life example for using the AutoCompletion
 // mechanism, so i derived a class from wxScintilla
 //------------------------------------------------------------------------------
+class wxFindReplaceDialog;
 
 class LEditor : public wxScintilla
 {
@@ -39,6 +41,9 @@ class LEditor : public wxScintilla
 	};
 
 	TipKind m_tipKind;
+	FindReplaceDialog *m_findReplaceDlg;
+	FindReplaceData m_findReplaceData;
+	int m_lastMatchPos;
 
 public:
 	/// Construct a LEditor object
@@ -87,6 +92,9 @@ public:
 
 	// try to match a brace from the current caret pos and select the region
 	void MatchBraceAndSelect(bool selRegion);
+
+	// Popup a find/replace dialog
+	void DoFindAndReplace();
 protected:
 
 	// Util function
@@ -95,6 +103,7 @@ protected:
 	int  FindString (const wxString &str, int flags, const bool down, long pos);
 	bool IsCommentOrString(long pos);
 	void SetDirty(bool dirty);
+	bool FindAndSelect();
 
 private:
 	void SetProperties();
@@ -116,6 +125,7 @@ private:
 	void OnCallTipClick(wxScintillaEvent& event);
 	void OnModified(wxScintillaEvent& event);
 	void OnSciUpdateUI(wxScintillaEvent &event);
+	void OnFindDialog(wxCommandEvent &event);
 	
 };
 

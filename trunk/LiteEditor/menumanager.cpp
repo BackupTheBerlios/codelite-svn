@@ -11,6 +11,7 @@ MenuManager::MenuManager(void)
 	PushHandler(new DuplicateLineHandler(wxID_DUPLICATE));
 	PushHandler(new BraceMatchHandler(XRCID("select_to_brace")));
 	PushHandler(new BraceMatchHandler(XRCID("match_brace")));
+	PushHandler(new FindReplaceHandler(wxID_FIND));
 }
 
 MenuManager::~MenuManager(void)
