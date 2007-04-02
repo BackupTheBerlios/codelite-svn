@@ -14,10 +14,7 @@ void CopyHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 void CopyHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
 	LEditor *editor = static_cast<LEditor*>(owner);
-	if( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 )
-		event.Enable(true);
-	else
-		event.Enable(false);
+	event.Enable(( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 ));
 }
 
 //------------------------------------
@@ -33,10 +30,7 @@ void CutHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 void CutHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
 	LEditor *editor = static_cast<LEditor*>(owner);
-	if( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 )
-		event.Enable(true);
-	else
-		event.Enable(false);
+	event.Enable(( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 ));
 }
 
 //------------------------------------
@@ -52,10 +46,7 @@ void PasteHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 void PasteHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
 	LEditor *editor = static_cast<LEditor*>(owner);
-	if(editor->CanPaste())
-		event.Enable(true);
-	else
-		event.Enable(false);
+	event.Enable(editor->CanPaste());
 }
 
 //------------------------------------
@@ -71,10 +62,7 @@ void UndoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 void UndoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
 	LEditor *editor = static_cast<LEditor*>(owner);
-	if(editor->CanUndo())
-		event.Enable(true);
-	else
-		event.Enable(false);
+	event.Enable(editor->CanUndo());
 }
 
 //------------------------------------
@@ -90,8 +78,57 @@ void RedoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 void RedoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
 	LEditor *editor = static_cast<LEditor*>(owner);
-	if(editor->CanRedo())
-		event.Enable(true);
-	else
-		event.Enable(false);
+	event.Enable(editor->CanRedo());
+}
+
+//------------------------------------
+// SelectAll
+//------------------------------------
+void SelectAllHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	LEditor *editor = static_cast<LEditor*>(owner);
+	editor->SelectAll();
+}
+
+void SelectAllHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
+{
+	LEditor *editor = static_cast<LEditor*>(owner);
+	event.Enable(editor->GetLength() > 0);
+}
+
+//------------------------------------
+// duplicate line
+//------------------------------------
+void DuplicateLineHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	LEditor *editor = static_cast<LEditor*>(owner);
+	editor->LineDuplicate();
+}
+
+void DuplicateLineHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
+{
+	wxUnusedVar(owner);
+	event.Enable(true);
+}
+
+//------------------------------------
+// brace matching
+//------------------------------------
+void BraceMatchHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
+{
+	LEditor *editor = static_cast<LEditor*>(owner);
+
+	if(event.GetId() == XRCID("select_to_brace")){
+		editor->MatchBraceAndSelect(true);
+	} else {
+		editor->MatchBraceAndSelect(false);
+	}
+}
+
+void BraceMatchHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
+{
+	LEditor *editor = static_cast<LEditor*>(owner);
+	event.Enable(editor->GetLength() > 0);
 }

@@ -23,7 +23,9 @@ public:
 
 	MenuEventHandlerPtr GetHandler(int id) {
 		std::map<wxEventType, MenuEventHandlerPtr>::iterator iter = m_handlers.find(id);
-		return iter->second;
+		if( iter != m_handlers.end() )
+			return iter->second;
+		return NULL;
 	};
 
 private:

@@ -82,6 +82,11 @@ public:
 	// Callback function for menu command events
 	void OnMenuCommand(wxCommandEvent &event);
 
+	// Return the word under the caret
+	wxString GetWordUnderCursor();
+
+	// try to match a brace from the current caret pos and select the region
+	void MatchBraceAndSelect(bool selRegion);
 protected:
 
 	// Util function
@@ -97,6 +102,10 @@ private:
 	void GetWordAndScope(wxString& word, wxString &scope, wxString &scopeName);
 	void SetLineNumberWidth();
 	bool SaveToFile(const wxFileName &fileName);
+	void AutoIndent(const wxChar& nChar);
+	bool MatchBraceBack(const wxChar& chCloseBrace, const long &pos, long &matchedPos);
+	void BraceMatch(const bool& bSelRegion);
+	
 
 	DECLARE_EVENT_TABLE()
 	void OnCharAdded(wxScintillaEvent& event);
@@ -106,6 +115,7 @@ private:
 	void OnDwellEnd(wxScintillaEvent& event);
 	void OnCallTipClick(wxScintillaEvent& event);
 	void OnModified(wxScintillaEvent& event);
+	void OnSciUpdateUI(wxScintillaEvent &event);
 	
 };
 

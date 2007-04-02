@@ -37,6 +37,7 @@ EVT_SCI_DWELLSTART(wxID_ANY, LEditor::OnDwellStart)
 EVT_SCI_CALLTIP_CLICK(wxID_ANY, LEditor::OnCallTipClick)
 EVT_SCI_DWELLEND(wxID_ANY, LEditor::OnDwellEnd)
 EVT_SCI_MODIFIED(wxID_ANY, LEditor::OnModified)
+EVT_SCI_UPDATEUI(wxID_ANY, LEditor::OnSciUpdateUI)
 END_EVENT_TABLE()
 
 std::stack<TagEntry> LEditor::m_history;
@@ -187,7 +188,7 @@ void LEditor::SetProperties()
 		wxString face = styles[i].GetFaceName();
 		bool bold = styles[i].IsBold();
 
-		wxFont font(size, wxTELETYPE, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
+		wxFont font(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
 		font.SetFaceName(face);
 
 		StyleSetFont(iter->second, font);
@@ -206,6 +207,9 @@ void LEditor::SetProperties()
 	AutoCompSetSeparator(static_cast<int>('@'));	// set the separator to be non valid language wxChar
 	AutoCompSetChooseSingle(true);					// If only one match, insert it automatically
 	AutoCompSetIgnoreCase(true);
+	SetIndent(8);
+
+	StyleSetBold(wxSCI_STYLE_BRACELIGHT, true);
 }
 
 void LEditor::SetDirty(bool dirty)
@@ -224,13 +228,17 @@ void LEditor::OnCharAdded(wxScintillaEvent& event)
 	// set the page title as dirty
 	SetDirty(true);
 	
+	// Always do auto-indentation
+	if(event.GetKey() == ':' || event.GetKey() == '}' || event.GetKey() == '\n')
+		AutoIndent(event.GetKey());
+
 	if(false == GetProjectName().IsEmpty())
 	{
 		switch( event.GetKey() )
 		{
+		case ':': 
 		case '.':
 		case '>':
-		case ':':
 		case '(':
 			CodeComplete();
 			break;
@@ -240,11 +248,23 @@ void LEditor::OnCharAdded(wxScintillaEvent& event)
 				m_tipKind = TipNone;
 				break;
 			}
+		case '\n':
+			{
+				// incase we are typing in a folded line, make sure it is visible
+				int  nLineNumber = LineFromPosition(GetCurrentPos());
+				EnsureVisible(nLineNumber+1);
+				break;
+			}
 		default:
 			break;
 		}
 	}
 	event.Skip();
+}
+
+void LEditor::OnSciUpdateUI(wxScintillaEvent &event)
+{
+	wxUnusedVar(event);
 }
 
 void LEditor::SetLineNumberWidth()
@@ -367,6 +387,15 @@ void LEditor::OpenFile(const wxString &fileName, const wxString &project)
 	// Keep the file name and the project
 	m_fileName = fileName;
 	m_project = project;
+}
+
+wxString LEditor::GetWordUnderCursor() 
+{
+	// Get the partial word that we have
+	long pos = GetCurrentPos();
+	long start = WordStartPosition(pos, true);
+	long end   = WordEndPosition(pos, true);
+	return GetTextRange(start, end);
 }
 
 void LEditor::GetWordAndScope(wxString& word, wxString &scope, wxString& scopeName)
@@ -746,12 +775,24 @@ void LEditor::OnModified(wxScintillaEvent& event)
 
 void LEditor::OnMenuCommand(wxCommandEvent &event)
 {
-	MenuManager::Get()->GetHandler(event.GetId())->ProcessCommandEvent(this, event);
+	MenuEventHandlerPtr handler = MenuManager::Get()->GetHandler(event.GetId());
+	
+	if( !handler ) {
+		// do nothing
+	} else {
+		handler->ProcessCommandEvent(this, event);
+	}
 }
 
 void LEditor::OnUpdateUI(wxUpdateUIEvent &event)
 {
-	MenuManager::Get()->GetHandler(event.GetId())->ProcessUpdateUIEvent(this, event);
+	MenuEventHandlerPtr handler = MenuManager::Get()->GetHandler(event.GetId());
+
+	if( !handler ) {
+		// do nothing
+	} else {
+		handler->ProcessUpdateUIEvent(this, event);
+	}
 }
 
 //-----------------------------------------------------------------------
@@ -846,4 +887,219 @@ bool LEditor::IsCommentOrString(long pos)
 			style == wxSCI_C_STRING					||
 			style == wxSCI_C_STRINGEOL				||
 			style == wxSCI_C_CHARACTER);
+}
+
+void LEditor::AutoIndent(const wxChar& nChar)
+{
+	int nPos = PositionBefore(GetCurrentPos());
+	int nLine = LineFromPosition(nPos);
+	int lineIndent = GetLineIndentation(nLine);	// Default line indentation
+	int savedLineIndent = lineIndent;
+	int indentSize = GetIndent();
+	int newPos;
+
+	// Find the previous types char, if it is '{' 
+	// then increase the indentation level
+	// if not, the indentation level is the same as 
+	// previous line
+	int prevPos = nPos;
+	long nMatchPos;
+	bool bFirstCharOfDoc = true;
+	wxChar ch;
+	switch(nChar)
+	{
+	case '\n':
+		if(prevPos == 0) 
+			// Probably we are at the firs line of the document
+			bFirstCharOfDoc = true;
+
+		while(PositionBefore(prevPos) || bFirstCharOfDoc)
+		{
+			prevPos = PositionBefore(prevPos);
+			bFirstCharOfDoc = false;
+			if((GetCharAt(prevPos) != '\r') &&
+				(GetCharAt(prevPos) != '\t') &&
+				(GetCharAt(prevPos) != '\v') &&
+				(GetCharAt(prevPos) != ' ') )
+			{
+				ch = GetCharAt(prevPos);
+				if(ch == '{')
+				{
+					// Make sure that this char is not in a comment
+					// Check the style at the char position
+					if(IsCommentOrString(prevPos))
+						continue;
+					lineIndent = GetLineIndentation(LineFromPosition(prevPos)) + indentSize;
+					break;
+				}
+				else if(ch == ':')
+				{
+					if(IsCommentOrString(prevPos))
+						continue;
+					lineIndent = GetLineIndentation(LineFromPosition(prevPos)) - indentSize;
+
+					// Keep indentation positive
+					lineIndent = (lineIndent > 0) ? lineIndent : 0;
+
+					// Reduce the line indentation for this line
+					SetLineIndentation(LineFromPosition(prevPos), lineIndent);
+
+					// Restore the line number
+					if(lineIndent == 0)
+						lineIndent = indentSize;
+					else
+						lineIndent = savedLineIndent;
+					break;
+				}
+				else
+					break;
+			}
+		}
+
+		// Set the new indentation and postion the cursor
+		SetLineIndentation(nLine + 1, lineIndent);
+		newPos = GetLineEndPosition(nLine + 1);
+		SetCurrentPos(newPos);
+		SetSelectionStart(newPos);
+		SetSelectionEnd(newPos);
+		break;
+	case '}':
+		if(IsCommentOrString(prevPos))
+			break;
+
+		// Find the matching OPENING brace
+		if(!MatchBraceBack('}', prevPos, nMatchPos))
+			return;
+
+		lineIndent = GetLineIndentation(LineFromPosition(nMatchPos));
+		//lineIndent -= indentSize;
+		if(lineIndent<0)
+			lineIndent=0;
+
+		// Set the new indentation and postion the cursor
+		SetLineIndentation(nLine, lineIndent);
+		newPos = GetLineEndPosition(nLine);
+		SetCurrentPos(newPos);
+		SetSelectionStart(newPos);
+		SetSelectionEnd(newPos);
+		break;
+	default:
+		// Do nothing
+		break;
+	}
+}
+
+bool LEditor::MatchBraceBack(const wxChar& chCloseBrace, const long &pos, long &matchedPos)
+{
+	if(pos<=0)
+		return false;
+
+	wxChar chOpenBrace;
+
+	switch(chCloseBrace)
+	{
+	case '}': chOpenBrace = '{'; break;
+	case ')': chOpenBrace = '('; break;
+	case ']': chOpenBrace = '['; break;
+	case '>': chOpenBrace = '<'; break;
+	default: return false;
+	}
+
+	long nPrevPos = pos;
+	wxChar ch;
+	int depth = 1;
+
+	// We go backward
+	while(true)
+	{
+		if(nPrevPos == 0)
+			break;
+		nPrevPos = PositionBefore(nPrevPos);
+
+		// Make sure we are not in a comment
+		if(IsCommentOrString(nPrevPos))
+			continue;
+
+		ch = GetCharAt(nPrevPos);
+		if(ch == chOpenBrace)
+		{
+			// Dec the depth level 
+			depth--;
+			if(depth == 0)
+			{
+				matchedPos = nPrevPos;
+				return true;
+			}
+		}
+		else if(ch == chCloseBrace)
+		{
+			// Inc depth level
+			depth++;
+		}
+	}
+	return false;
+}
+
+//--------------------------------------------------------
+// Brace match
+//--------------------------------------------------------
+void LEditor::MatchBraceAndSelect(bool selRegion)
+{
+	// Get current position
+	long pos = GetCurrentPos();
+
+	if(GetCharAt(pos) == '{' && !IsCommentOrString(pos))
+	{
+		BraceMatch(selRegion);
+		return;
+	}
+
+	if(GetCharAt(PositionBefore(pos)) == '{' && !IsCommentOrString(PositionBefore(pos)))
+	{
+		SetCurrentPos(PositionBefore(pos));
+		BraceMatch(selRegion);
+		return;
+	}
+
+	if(GetCharAt(pos) == '}' && !IsCommentOrString(pos))
+	{
+		BraceMatch(selRegion);
+		return;
+	}
+
+	if(GetCharAt(PositionBefore(pos)) == '}' && !IsCommentOrString(PositionBefore(pos)))
+	{
+		SetCurrentPos(PositionBefore(pos));
+		BraceMatch(selRegion);
+		return;
+	}
+}
+
+void LEditor::BraceMatch(const bool& bSelRegion)
+{
+	// Check if we have a match
+	long endPos = wxScintilla::BraceMatch(GetCurrentPos());
+	if(endPos != wxSCI_INVALID_POSITION)
+	{
+		// Highlight indent guide if exist
+		long startPos = GetCurrentPos();
+		if(bSelRegion)
+		{
+			// Select the range
+			if(endPos > startPos) {
+				SetSelectionEnd(PositionAfter(endPos));
+				SetSelectionStart(startPos);
+			} else {
+				SetSelectionEnd(PositionAfter(startPos));
+				SetSelectionStart(endPos);
+			}
+		}
+		else 
+		{
+			SetSelectionEnd(endPos);
+			SetSelectionStart(endPos);
+			SetCurrentPos(endPos);
+		}
+		EnsureCaretVisible();
+	}
 }

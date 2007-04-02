@@ -20,6 +20,7 @@
 #include <wx/confbase.h>
 #include "manager.h"
 #include "menumanager.h"
+#include <wx/aboutdlg.h>
 
 #define ID_CTAGS_GLOBAL_ID		10500
 #define ID_CTAGS_LOCAL_ID		10501
@@ -32,31 +33,44 @@ extern wxImageList* CreateSymbolTreeImages();
 BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_END_PROCESS(ID_CTAGS_GLOBAL_ID, Frame::OnCtagsEnd)
 	EVT_END_PROCESS(ID_CTAGS_LOCAL_ID, Frame::OnCtagsEnd)
+
+	// Handler menu events
 	EVT_MENU(wxID_EXIT, Frame::OnQuit)
 	EVT_MENU(wxID_SAVE, Frame::OnSave)
 	EVT_MENU(wxID_SAVEAS, Frame::OnSaveAs)
 	EVT_MENU(XRCID("about"), Frame::OnAbout)
 	EVT_MENU(wxID_NEW, Frame::OnFileNew)
-
 	EVT_MENU(XRCID("add_file_to_project"), Frame::OnAddSourceFile)
 	EVT_MENU(XRCID("open_workspace"), Frame::OnBuildFromDatabase)
 	EVT_MENU(wxID_OPEN, Frame::OnFileOpen)
 	EVT_FLATNOTEBOOK_PAGE_CLOSING(-1, Frame::OnFileClosing)
 	EVT_MENU(wxID_CLOSE, Frame::OnFileClose)
 	EVT_MENU(XRCID("save_all"), Frame::OnFileSaveAll)
-
-	// Handler command events
 	EVT_MENU(wxID_CUT, Frame::DispatchCommandEvent)
 	EVT_MENU(wxID_COPY, Frame::DispatchCommandEvent)
 	EVT_MENU(wxID_PASTE, Frame::DispatchCommandEvent)
 	EVT_MENU(wxID_UNDO, Frame::DispatchCommandEvent)
 	EVT_MENU(wxID_REDO, Frame::DispatchCommandEvent)
+	EVT_MENU(wxID_SELECTALL, Frame::DispatchCommandEvent)
+	EVT_MENU(wxID_DUPLICATE, Frame::DispatchCommandEvent)
+	EVT_MENU(XRCID("select_to_brace"), Frame::DispatchCommandEvent)
+	EVT_MENU(XRCID("match_brace"), Frame::DispatchCommandEvent)
 
+	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(wxID_CLOSE, Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(XRCID("save_all"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CUT, Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(wxID_COPY, Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(wxID_PASTE, Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(wxID_UNDO, Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(wxID_REDO, Frame::DispatchUpdateUIEvent)
+	EVT_UPDATE_UI(wxID_SELECTALL, Frame::DispatchUpdateUIEvent)
+	EVT_UPDATE_UI(wxID_DUPLICATE, Frame::DispatchUpdateUIEvent)
+	EVT_UPDATE_UI(XRCID("select_to_brace"), Frame::DispatchUpdateUIEvent)
+	EVT_UPDATE_UI(XRCID("match_brace"), Frame::DispatchUpdateUIEvent)
+
+	EVT_UPDATE_UI(XRCID("complete_word"), Frame::OnCompleteWordUpdateUI)
 
 	/*
 	EVT_MENU(ID_COMPLETE_WORD, Frame::OnCompleteWord)
@@ -67,6 +81,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(ID_USE_EXTERNAL_DB, Frame::OnUseExternalDatabase)
 	EVT_MENU(ID_PARSE_COMMENTS, Frame::OnParseComments)
 	*/
+
 	EVT_CLOSE(Frame::OnClose)
 END_EVENT_TABLE()
 Frame* Frame::m_theFrame = NULL;
@@ -238,9 +253,24 @@ void Frame::DispatchUpdateUIEvent(wxUpdateUIEvent &event)
 	editor->OnUpdateUI(event);
 }
 
+void Frame::OnFileExistUpdateUI(wxUpdateUIEvent &event)
+{
+	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
+	if( !editor ){ 
+		event.Enable(false);
+	} else {
+		event.Enable(true);
+	}
+}
+
 void Frame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-	wxMessageBox(wxT("LiteEditor by Eran Ifrah, a desmostration program for CodeLite library (https://opensvn.cise.org/CodeLite)"));
+	wxAboutDialogInfo info;
+    info.SetName(wxT("CodeLite"));
+    info.SetVersion(wxT("0.1 Alpha"));
+    info.SetDescription(wxT("A lighweight cross-platform editor for C/C++ "));
+    info.SetCopyright(wxT("(C) 2007 By Eran Ifrah <eran.ifrah@gmail.com>"));
+    wxAboutBox(info);
 }
 
 void Frame::OnClose(wxCloseEvent& event)
@@ -612,6 +642,15 @@ void Frame::OnFileSaveAll(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 	Manager::Get()->SaveAll();
+}
+
+void Frame::OnCompleteWordUpdateUI(wxUpdateUIEvent &event)
+{
+	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
+
+	// This menu item is enabled only if the current editor
+	// belongs to a project 
+	event.Enable(editor && !editor->GetProjectName().IsEmpty());
 }
 
 void Frame::ClosePage(LEditor *editor, int index, bool doDelete, bool &veto)

@@ -83,7 +83,7 @@ void EditorConfig::LoadStyle(const wxFileName& fileName, const wxString& lexer, 
 					wxString name = prop->GetPropVal(_T("name"), _T("wxSCI_C_DEFAULT"));
 					wxString bold = prop->GetPropVal(_T("bold"), _T("no"));
 					wxString size = prop->GetPropVal(_T("size"), _T("10"));
-					wxString face = prop->GetPropVal(_T("face"), _T("Courier New"));
+					wxString face = prop->GetPropVal(_T("face"), _T("Courier"));
 
 					size.ToLong(&fontSize);
 					colour = prop->GetPropVal(_T("colour"), _T("black"));

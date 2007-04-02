@@ -76,6 +76,8 @@ protected:
 	void OnFileOpen(wxCommandEvent &event);
 	void OnFileClose(wxCommandEvent &event);
 	void OnFileSaveAll(wxCommandEvent &event);
+	void OnFileExistUpdateUI(wxUpdateUIEvent &event);
+	void OnCompleteWordUpdateUI(wxUpdateUIEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

@@ -2,11 +2,15 @@
 
 MenuManager::MenuManager(void)
 {
-	PushHandler(new CopyHandler());
-	PushHandler(new CutHandler());
-	PushHandler(new PasteHandler());
-	PushHandler(new UndoHandler());
-	PushHandler(new RedoHandler());
+	PushHandler(new CopyHandler(wxID_COPY));
+	PushHandler(new CutHandler(wxID_CUT));
+	PushHandler(new PasteHandler(wxID_PASTE));
+	PushHandler(new UndoHandler(wxID_UNDO));
+	PushHandler(new RedoHandler(wxID_REDO));
+	PushHandler(new SelectAllHandler(wxID_SELECTALL));
+	PushHandler(new DuplicateLineHandler(wxID_DUPLICATE));
+	PushHandler(new BraceMatchHandler(XRCID("select_to_brace")));
+	PushHandler(new BraceMatchHandler(XRCID("match_brace")));
 }
 
 MenuManager::~MenuManager(void)

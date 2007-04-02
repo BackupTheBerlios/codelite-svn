@@ -30,7 +30,7 @@ public:
 		: m_fgColour(_T("BLACK"))
 		, m_fontSize(10)
 		, m_name(wxEmptyString)
-		, m_faceName(_T("Courier New"))
+		, m_faceName(_T("Courier"))
 		, m_bold(false)
 	{
 	};

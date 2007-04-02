@@ -3,6 +3,7 @@
 
 #include "wx/event.h"
 #include "smart_ptr.h"
+#include <wx/xrc/xmlres.h>
 
 /**
  * The interface for menu event handler classes
@@ -13,7 +14,7 @@ protected:
 	int m_id;
 
 public:
-	MenuEventHandler(){};
+	MenuEventHandler(int id) : m_id(id) {};
 	virtual ~MenuEventHandler(){};
 
 	// handle an event
@@ -37,7 +38,7 @@ typedef SmartPtr<MenuEventHandler> MenuEventHandlerPtr;
 class CopyHandler : public MenuEventHandler 
 {
 public:
-	CopyHandler() { m_id = wxID_COPY; };
+	CopyHandler(int id) : MenuEventHandler(id){};
 	virtual ~CopyHandler(){};
 
 public:
@@ -51,7 +52,7 @@ public:
 class CutHandler : public MenuEventHandler 
 {
 public:
-	CutHandler(){m_id = wxID_CUT;};
+	CutHandler(int id) : MenuEventHandler(id){};
 	virtual ~CutHandler(){};
 
 public:
@@ -65,7 +66,7 @@ public:
 class PasteHandler : public MenuEventHandler 
 {
 public:
-	PasteHandler(){m_id = wxID_PASTE;};
+	PasteHandler(int id) : MenuEventHandler(id){};
 	virtual ~PasteHandler(){};
 
 public:
@@ -79,7 +80,7 @@ public:
 class UndoHandler : public MenuEventHandler 
 {
 public:
-	UndoHandler(){m_id = wxID_UNDO;};
+	UndoHandler(int id) : MenuEventHandler(id){};
 	virtual ~UndoHandler(){};
 
 public:
@@ -93,8 +94,50 @@ public:
 class RedoHandler : public MenuEventHandler 
 {
 public:
-	RedoHandler(){m_id = wxID_REDO;};
+	RedoHandler(int id) : MenuEventHandler(id){};
 	virtual ~RedoHandler(){};
+
+public:
+	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
+	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
+};
+
+//------------------------------------
+// Redo
+//------------------------------------
+class SelectAllHandler : public MenuEventHandler 
+{
+public:
+	SelectAllHandler(int id) : MenuEventHandler(id){};
+	virtual ~SelectAllHandler(){};
+
+public:
+	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
+	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
+};
+
+//------------------------------------
+// Redo
+//------------------------------------
+class DuplicateLineHandler : public MenuEventHandler 
+{
+public:
+	DuplicateLineHandler(int id) : MenuEventHandler(id){};
+	virtual ~DuplicateLineHandler(){};
+
+public:
+	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
+	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
+};
+
+//------------------------------------
+// Brace matching
+//------------------------------------
+class BraceMatchHandler : public MenuEventHandler 
+{
+public:
+	BraceMatchHandler(int id) : MenuEventHandler(id){};
+	virtual ~BraceMatchHandler(){};
 
 public:
 	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
