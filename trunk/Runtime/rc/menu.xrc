@@ -91,9 +91,34 @@
             <object class="wxMenuItem" name="complete_word">
                 <label>&amp;Complete Word\tCtrl+Space</label>
             </object>                        
-            <object class="wxMenuItem" name="wxID_SEPARATOR"/>            
+        </object>
+        
+        <object class="wxMenu" name="search_menu">
+            <label>&amp;Search</label>
+            <style>wxMENU_TEAROFF</style>
             <object class="wxMenuItem" name="wxID_FIND">
                 <label>Find And Replace...\tCtrl+F</label>
+            </object>
+            <object class="wxMenuItem" name="find_next">
+                <label>Find &amp;Next\tF3</label>
+            </object>
+            <object class="wxMenuItem" name="find_previous">
+                <label>Find &amp;Previous\tShift+F3</label>
+            </object>
+            
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            
+            <object class="wxMenuItem" name="toggle_bookmark">
+                <label>To&amp;ggle Bookmark\tCtrl+F2</label>
+            </object>
+            <object class="wxMenuItem" name="next_bookmark">
+                <label>Next Book&amp;mark\tF2</label>
+            </object>
+            <object class="wxMenuItem" name="previous_bookmark">
+                <label>Pre&amp;vious Bookmark\tShift+F2</label>
+            </object>
+            <object class="wxMenuItem" name="removeall_bookmarks">
+                <label>Remove &amp;All Bookmarks\tAlt+F2</label>
             </object>
         </object>
         

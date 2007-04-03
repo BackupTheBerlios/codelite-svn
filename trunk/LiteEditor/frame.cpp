@@ -44,6 +44,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("open_workspace"), Frame::OnBuildFromDatabase)
 	EVT_MENU(wxID_OPEN, Frame::OnFileOpen)
 	EVT_FLATNOTEBOOK_PAGE_CLOSING(-1, Frame::OnFileClosing)
+	EVT_FLATNOTEBOOK_PAGE_CHANGED(-1, Frame::OnPageChanged)
 	EVT_MENU(wxID_CLOSE, Frame::OnFileClose)
 	EVT_MENU(XRCID("save_all"), Frame::OnFileSaveAll)
 	EVT_MENU(wxID_CUT, Frame::DispatchCommandEvent)
@@ -55,6 +56,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(wxID_DUPLICATE, Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("select_to_brace"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("match_brace"), Frame::DispatchCommandEvent)
+	EVT_MENU(XRCID("find_next"), Frame::DispatchCommandEvent)
+	EVT_MENU(XRCID("find_previous"), Frame::DispatchCommandEvent)
 	EVT_MENU(wxID_FIND, Frame::DispatchCommandEvent)
 
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
@@ -71,6 +74,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("select_to_brace"), Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(XRCID("match_brace"), Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(XRCID("complete_word"), Frame::OnCompleteWordUpdateUI)
+	EVT_UPDATE_UI(XRCID("find_next"), Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(XRCID("find_previous"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_FIND, Frame::OnFileExistUpdateUI)
 
 	/*
@@ -636,6 +641,14 @@ void Frame::OnFileClosing(wxFlatNotebookEvent &event)
 	bool veto;
 	ClosePage(editor, event.GetSelection(), false, veto);
 	if( veto ) event.Veto();
+	event.Skip();
+}
+
+void Frame::OnPageChanged(wxFlatNotebookEvent &event)
+{
+	// pass the event to the editor
+	LEditor *editor = static_cast<LEditor*>(m_notebook->GetPage(event.GetSelection()));
+	editor->SetActive();
 	event.Skip();
 }
 

@@ -50,14 +50,16 @@ EVT_COMMAND(wxID_ANY, wxEVT_FRD_CLOSE, LEditor::OnFindDialog)
 
 END_EVENT_TABLE()
 
+// Instantiate statics
 std::stack<TagEntry> LEditor::m_history;
+FindReplaceDialog* LEditor::m_findReplaceDlg = NULL;
+FindReplaceData LEditor::m_findReplaceData;
 
 LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxString& fileName, const wxString& project)
 : wxScintilla(parent, id, wxDefaultPosition, size)
 , m_fileName(fileName)
 , m_project(project)
 , m_tipKind(TipNone)
-, m_findReplaceDlg(NULL)
 , m_lastMatchPos(0)
 {
 	// Initialise the map between a macro of proerpty and its value
@@ -1116,13 +1118,33 @@ void LEditor::BraceMatch(const bool& bSelRegion)
 	}
 }
 
+void LEditor::SetActive()
+{
+	// if the find and replace dialog is opened, set ourself 
+	// as the event owners
+	if( m_findReplaceDlg ) {
+		m_findReplaceDlg->SetEventOwner(GetEventHandler());
+	}
+	SetFocus();
+}
+
 // Popup a Find/Replace dialog
 void LEditor::DoFindAndReplace()
 {
 	if( m_findReplaceDlg == NULL ) 
 	{
 		// Create the dialog
-		m_findReplaceDlg = new FindReplaceDialog(this, m_findReplaceData);
+		m_findReplaceDlg = new FindReplaceDialog(Manager::Get()->GetMainFrame(), m_findReplaceData);
+		m_findReplaceDlg->SetEventOwner(this->GetEventHandler());
+	}
+	
+	if( m_findReplaceDlg->IsShown() )
+	{
+		// make sure that dialog has focus and that this instace
+		// of LEditor is the owner for the events
+		m_findReplaceDlg->SetEventOwner(this->GetEventHandler());
+		m_findReplaceDlg->SetFocus();
+		return;
 	}
 
 	// the search always starts from the current line
@@ -1137,18 +1159,8 @@ void LEditor::OnFindDialog(wxCommandEvent& event)
 
 	if( type == wxEVT_FRD_FIND_NEXT )
 	{
-		if( !FindAndSelect() ) {
-			if(dirDown){
-				if( wxMessageBox(wxT("CodeLite reached the end of the document, Search again from the start?"), wxT("Confirm"), wxYES_NO, m_findReplaceDlg) == wxYES){
-					FindAndSelect();
-				} 
-			} else {
-				if( wxMessageBox(wxT("CodeLite reached the start of the document, Search again from the end?"), wxT("Confirm"), wxYES_NO, m_findReplaceDlg) == wxYES){
-					FindAndSelect();
-				}
-			}
-		}
-	} 
+		FindNext(m_findReplaceDlg->GetData());
+	}
 	else if( type == wxEVT_FRD_REPLACE )
 	{
 		if( !Replace() ) {
@@ -1165,21 +1177,46 @@ void LEditor::OnFindDialog(wxCommandEvent& event)
 	}
 }
 
-// do the actual find action and select the match if found
+void LEditor::FindNext(const FindReplaceData &data)
+{
+	bool dirDown = ! (data.GetFlags() & wxFRD_SEARCHUP ? true : false);
+	if( !FindAndSelect(data) ) {
+		if(dirDown){
+			if( wxMessageBox(wxT("CodeLite reached the end of the document, Search again from the start?"), wxT("Confirm"), wxYES_NO, m_findReplaceDlg) == wxYES){
+				FindAndSelect();
+			} 
+		} else {
+			if( wxMessageBox(wxT("CodeLite reached the start of the document, Search again from the end?"), wxT("Confirm"), wxYES_NO, m_findReplaceDlg) == wxYES){
+				FindAndSelect();
+			}
+		}
+	}
+}
+
+bool LEditor::Replace()
+{
+	return Replace(m_findReplaceDlg->GetData());
+}
+
 bool LEditor::FindAndSelect()
 {
-	bool dirDown = ! (m_findReplaceDlg->GetData().GetFlags() & wxFRD_SEARCHUP ? true : false);
-	int flags = GetSciSearchFlag();
-	int pos = FindString(m_findReplaceDlg->GetData().GetFindString(), flags, dirDown, m_lastMatchPos);
+	return FindAndSelect(m_findReplaceDlg->GetData());
+}
+
+bool LEditor::FindAndSelect(const FindReplaceData &data)
+{
+	bool dirDown = ! (data.GetFlags() & wxFRD_SEARCHUP ? true : false);
+	int flags = GetSciSearchFlag(data);
+	int pos = FindString(data.GetFindString(), flags, dirDown, m_lastMatchPos);
 	if (pos >= 0) 
 	{
 		EnsureCaretVisible();
-		SetSelection (pos, pos + (int)m_findReplaceDlg->GetData().GetFindString().Length());
+		SetSelection (pos, pos + (int)data.GetFindString().Length());
 
 		if( dirDown ) {
-			m_lastMatchPos = pos + (int)m_findReplaceDlg->GetData().GetFindString().Length();
+			m_lastMatchPos = pos + (int)data.GetFindString().Length();
 		} else {
-			m_lastMatchPos = pos - (int)m_findReplaceDlg->GetData().GetFindString().Length();
+			m_lastMatchPos = pos - (int)data.GetFindString().Length();
 		}
 		return true;
 	}
@@ -1195,16 +1232,15 @@ bool LEditor::FindAndSelect()
 	}
 }
 
-bool LEditor::Replace()
+bool LEditor::Replace(const FindReplaceData &data)
 {
-	wxString replaceString = m_findReplaceDlg->GetData().GetReplaceString();
-	wxString findString    = m_findReplaceDlg->GetData().GetFindString();
+	wxString replaceString = data.GetReplaceString();
+	wxString findString    = data.GetFindString();
 	wxString selection = GetSelectedText();
 
-	SetSearchFlags( GetSciSearchFlag());
+	SetSearchFlags( GetSciSearchFlag(data));
 	TargetFromSelection();
 
-	
 	if(SearchInTarget( findString ) != -1) {
 		// the selection contains the searched string
 		// do the replace
@@ -1215,10 +1251,10 @@ bool LEditor::Replace()
 	return FindAndSelect();
 }
 
-int LEditor::GetSciSearchFlag()
+int LEditor::GetSciSearchFlag(const FindReplaceData &data)
 {
 	size_t flags = 0;
-	size_t wxflags = m_findReplaceDlg->GetData().GetFlags();
+	size_t wxflags = data.GetFlags();
 	wxflags & wxFRD_MATCHWHOLEWORD ? flags |= wxSCI_FIND_WHOLEWORD : flags = flags;
 	wxflags & wxFRD_MATCHCASE ? flags |= wxSCI_FIND_MATCHCASE : flags = flags;
 	wxflags & wxFRD_REGULAREXPRESSION ? flags |= wxSCI_FIND_REGEXP : flags = flags;

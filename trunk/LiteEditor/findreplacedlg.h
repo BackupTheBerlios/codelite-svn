@@ -25,7 +25,7 @@ class FindReplaceData
 	wxString m_replaceString;
 	wxString m_findString;
 	size_t	m_flags;
-
+	
 public:
 	FindReplaceData() 
 		: m_replaceString(wxEmptyString)
@@ -62,10 +62,14 @@ public:
 	const wxString &GetReplaceString() const { return m_replaceString; }
 	void SetFindString(const wxString &findString) { m_findString = findString; }
 	void SetReplaceString(const wxString &replaceString) { m_replaceString = replaceString; }
+
+
 };
 
 class FindReplaceDialog : public wxDialog
 {
+	wxEvtHandler *m_owner;
+
 	FindReplaceData m_data;
 
 	// Options
@@ -109,6 +113,9 @@ public:
 	const FindReplaceData& GetData() const { return m_data; }
 
 	virtual bool Show();
+
+	void SetEventOwner(wxEvtHandler *owner) { m_owner = owner; }
+	wxEvtHandler *GetEventOwner() const { return m_owner; }
 
 protected:
 	void CreateGUIControls();

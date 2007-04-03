@@ -15,7 +15,9 @@ BEGIN_EVENT_TABLE(FindReplaceDialog, wxDialog)
 EVT_CLOSE(FindReplaceDialog::OnClose)
 END_EVENT_TABLE()
 
-FindReplaceDialog::FindReplaceDialog() : wxDialog()
+FindReplaceDialog::FindReplaceDialog() 
+: wxDialog()
+, m_owner(NULL)
 {
 }
 
@@ -42,6 +44,7 @@ bool FindReplaceDialog::Create(wxWindow* parent,
 		return false;
 
 	m_data = data;
+	m_owner = NULL;
 
 	CreateGUIControls();
 	ConnectEvents();
@@ -206,7 +209,12 @@ void FindReplaceDialog::SendEvent(wxEventType type)
 {
 	wxCommandEvent event(type, GetId());
 	event.SetEventObject(this);
-	GetParent()->GetEventHandler()->ProcessEvent( event );
+
+	if( GetEventOwner() == NULL )
+		GetEventHandler()->ProcessEvent( event );
+	else
+		// If an event owner was provided, pass it the event
+		GetEventOwner()->ProcessEvent( event );
 }
 
 bool FindReplaceDialog::Show()

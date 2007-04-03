@@ -6,6 +6,8 @@
 #include "readtags.h"
 #include "entry.h"
 
+class wxFrame;
+
 class Manager : public Singleton<Manager>
 {
 	friend class Singleton<Manager>;
@@ -17,6 +19,7 @@ public:
 	void SetPageTitle(wxWindow *page, const wxString &name);
 	const wxString GetPageTitle(wxWindow *win);
 	void SaveAll();
+	wxFrame *GetMainFrame();
 
 protected:
 	Manager(void);

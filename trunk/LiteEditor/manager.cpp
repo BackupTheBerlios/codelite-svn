@@ -11,6 +11,11 @@ Manager::~Manager(void)
 {
 }
 
+wxFrame *Manager::GetMainFrame()
+{
+	return Frame::Get();
+}
+
 bool Manager::IsWorkspaceOpen() const 
 {
 	return TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName().IsOk();

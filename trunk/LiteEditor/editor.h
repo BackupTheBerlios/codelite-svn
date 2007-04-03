@@ -7,6 +7,7 @@
 #include "calltip.h"
 #include "wx/filename.h"
 #include "findreplacedlg.h"
+#include <wx/wxFlatNotebook/wxFlatNotebook.h>
 
 //------------------------------------------------------------------------------
 // The editor:
@@ -41,8 +42,8 @@ class LEditor : public wxScintilla
 	};
 
 	TipKind m_tipKind;
-	FindReplaceDialog *m_findReplaceDlg;
-	FindReplaceData m_findReplaceData;
+	static FindReplaceDialog *m_findReplaceDlg;
+	static FindReplaceData m_findReplaceData;
 	int m_lastMatchPos;
 
 public:
@@ -95,6 +96,16 @@ public:
 
 	// Popup a find/replace dialog
 	void DoFindAndReplace();
+
+	// set this page as active, this usually happened when user changed the notebook 
+	// page to this one
+	void SetActive();
+
+	// Perform FindNext operation based on the data stored in the FindReplaceData class
+	void FindNext(const FindReplaceData &data);
+
+	static FindReplaceDialog* GetFindReplaceDialog() { return m_findReplaceDlg; }
+
 protected:
 
 	// Util function
@@ -103,8 +114,12 @@ protected:
 	int  FindString (const wxString &str, int flags, const bool down, long pos);
 	bool IsCommentOrString(long pos);
 	void SetDirty(bool dirty);
+	
 	bool FindAndSelect();
+	bool FindAndSelect(const FindReplaceData &data);
+
 	bool Replace();
+	bool Replace(const FindReplaceData &data);
 
 private:
 	void SetProperties();
@@ -117,7 +132,7 @@ private:
 	void BraceMatch(const bool& bSelRegion);
 
 	// Conevert FindReplaceDialog flags to wxSCI flags
-	int  GetSciSearchFlag();
+	int  GetSciSearchFlag(const FindReplaceData &data);
 
 	DECLARE_EVENT_TABLE()
 	void OnCharAdded(wxScintillaEvent& event);
@@ -130,6 +145,8 @@ private:
 	void OnSciUpdateUI(wxScintillaEvent &event);
 	void OnFindDialog(wxCommandEvent &event);
 	
+	
 };
 
 #endif // LITEEDITOR_EDITOR_H
+
