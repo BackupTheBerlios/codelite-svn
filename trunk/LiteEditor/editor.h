@@ -104,6 +104,7 @@ protected:
 	bool IsCommentOrString(long pos);
 	void SetDirty(bool dirty);
 	bool FindAndSelect();
+	bool Replace();
 
 private:
 	void SetProperties();
@@ -114,7 +115,9 @@ private:
 	void AutoIndent(const wxChar& nChar);
 	bool MatchBraceBack(const wxChar& chCloseBrace, const long &pos, long &matchedPos);
 	void BraceMatch(const bool& bSelRegion);
-	
+
+	// Conevert FindReplaceDialog flags to wxSCI flags
+	int  GetSciSearchFlag();
 
 	DECLARE_EVENT_TABLE()
 	void OnCharAdded(wxScintillaEvent& event);

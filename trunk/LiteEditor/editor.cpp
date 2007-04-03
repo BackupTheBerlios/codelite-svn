@@ -1133,9 +1133,10 @@ void LEditor::DoFindAndReplace()
 void LEditor::OnFindDialog(wxCommandEvent& event)
 {
 	wxEventType type = event.GetEventType();
+	bool dirDown = ! (m_findReplaceDlg->GetData().GetFlags() & wxFRD_SEARCHUP ? true : false);
+
 	if( type == wxEVT_FRD_FIND_NEXT )
 	{
-		bool dirDown = ! (m_findReplaceDlg->GetData().GetFlags() & wxFRD_SEARCHUP ? true : false);
 		if( !FindAndSelect() ) {
 			if(dirDown){
 				if( wxMessageBox(wxT("CodeLite reached the end of the document, Search again from the start?"), wxT("Confirm"), wxYES_NO, m_findReplaceDlg) == wxYES){
@@ -1147,6 +1148,20 @@ void LEditor::OnFindDialog(wxCommandEvent& event)
 				}
 			}
 		}
+	} 
+	else if( type == wxEVT_FRD_REPLACE )
+	{
+		if( !Replace() ) {
+			if(dirDown){
+				if( wxMessageBox(wxT("CodeLite reached the end of the document, Search again from the start?"), wxT("Confirm"), wxYES_NO, m_findReplaceDlg) == wxYES){
+					Replace();
+				} 
+			} else {
+				if( wxMessageBox(wxT("CodeLite reached the start of the document, Search again from the end?"), wxT("Confirm"), wxYES_NO, m_findReplaceDlg) == wxYES){
+					Replace();
+				}
+			}
+		}
 	}
 }
 
@@ -1154,13 +1169,8 @@ void LEditor::OnFindDialog(wxCommandEvent& event)
 bool LEditor::FindAndSelect()
 {
 	bool dirDown = ! (m_findReplaceDlg->GetData().GetFlags() & wxFRD_SEARCHUP ? true : false);
-	size_t flags = 0;
-	size_t wxflags = m_findReplaceDlg->GetData().GetFlags();
-	wxflags & wxFRD_MATCHWHOLEWORD ? flags |= wxSCI_FIND_WHOLEWORD : flags = flags;
-	wxflags & wxFRD_MATCHCASE ? flags |= wxSCI_FIND_MATCHCASE : flags = flags;
-	wxflags & wxFRD_REGULAREXPRESSION ? flags |= wxSCI_FIND_REGEXP : flags = flags;
-
-	int pos = FindString(m_findReplaceDlg->GetData().GetFindString(), (int)flags, dirDown, m_lastMatchPos);
+	int flags = GetSciSearchFlag();
+	int pos = FindString(m_findReplaceDlg->GetData().GetFindString(), flags, dirDown, m_lastMatchPos);
 	if (pos >= 0) 
 	{
 		EnsureCaretVisible();
@@ -1183,4 +1193,34 @@ bool LEditor::FindAndSelect()
 		}
 		return false;
 	}
+}
+
+bool LEditor::Replace()
+{
+	wxString replaceString = m_findReplaceDlg->GetData().GetReplaceString();
+	wxString findString    = m_findReplaceDlg->GetData().GetFindString();
+	wxString selection = GetSelectedText();
+
+	SetSearchFlags( GetSciSearchFlag());
+	TargetFromSelection();
+
+	
+	if(SearchInTarget( findString ) != -1) {
+		// the selection contains the searched string
+		// do the replace
+		ReplaceTarget( replaceString );
+	}
+
+	//  and find another match in the document
+	return FindAndSelect();
+}
+
+int LEditor::GetSciSearchFlag()
+{
+	size_t flags = 0;
+	size_t wxflags = m_findReplaceDlg->GetData().GetFlags();
+	wxflags & wxFRD_MATCHWHOLEWORD ? flags |= wxSCI_FIND_WHOLEWORD : flags = flags;
+	wxflags & wxFRD_MATCHCASE ? flags |= wxSCI_FIND_MATCHCASE : flags = flags;
+	wxflags & wxFRD_REGULAREXPRESSION ? flags |= wxSCI_FIND_REGEXP : flags = flags;
+	return static_cast<int>(flags);
 }

@@ -253,6 +253,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(WXSTABLE)\lib&quot;;&quot;$(WXSTABLE)\lib\vc_lib&quot;;..\sdk\lib;..\lib;..\sdk\wxsqlite3\lib;..\sdk\wxsqlite3\sqlite3\lib;..\sdk\wxscintilla\lib"
+				GenerateDebugInformation="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
