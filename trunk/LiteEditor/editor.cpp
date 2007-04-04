@@ -1,4 +1,5 @@
 #include "editor.h"
+#include <wx/xrc/xmlres.h>
 #include <wx/ffile.h> 
 #include <wx/tooltip.h>
 #include <wx/settings.h>
@@ -10,6 +11,7 @@
 #include "menumanager.h"
 #include <wx/fdrepdlg.h>
 #include "findreplacedlg.h"
+#include <wx/wxFlatNotebook/renderer.h>
 
 #ifdef USE_TRACE
 #define DEBUG_START_TIMER(msg) { wxString logmsg; m_watch.Start(); wxLogMessage(logmsg << _T("Timer started ===> ") << msg); }
@@ -108,7 +110,7 @@ void LEditor::SetProperties()
 	SetMarginMask(2, wxSCI_MASK_FOLDERS);
 
 	SetProperty(_("fold"), _("1"));
-	SetProperty(_("fold.compact"), _("1"));
+	SetProperty(_("fold.compact"), _("0"));
 	SetProperty(_("styling.within.preprocessor"), _("1"));
 
 	// Fold and comments as well
@@ -139,26 +141,33 @@ void LEditor::SetProperties()
 
 	// Mark current line
 	SetCaretLineVisible(true);
-	SetCaretLineBackground(wxColor(255, 255, 210)); // Light yellow
+	SetCaretLineBackground(wxColor(213, 234, 255));
 
-	SetFoldFlags(20);
-	SetMarginWidth(2, 16);
-	SetFoldMarginColour(true, wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
+	SetFoldFlags(0);
+	SetMarginWidth(2, 12);
+	
 
 	// Define the folding style to be square
-	DefineMarker(wxSCI_MARKNUM_FOLDEROPEN, wxSCI_MARK_ARROWDOWN, wxColor(0xff, 0xff, 0xff), wxColor(0, 0, 0xFF));
-	DefineMarker(wxSCI_MARKNUM_FOLDER, wxSCI_MARK_ARROW, wxColor(0xff, 0xff, 0xff), wxColor(0, 0, 0));
-	DefineMarker(wxSCI_MARKNUM_FOLDERSUB, wxSCI_MARK_EMPTY, wxColor(0xff, 0xff, 0xff), wxColor(0, 0, 0));
-	DefineMarker(wxSCI_MARKNUM_FOLDERTAIL, wxSCI_MARK_EMPTY, wxColor(0xff, 0xff, 0xff), wxColor(0, 0, 0));
-	DefineMarker(wxSCI_MARKNUM_FOLDEREND, wxSCI_MARK_EMPTY, wxColor(0xff, 0xff, 0xff), wxColor(0, 0, 0));
-	DefineMarker(wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_EMPTY, wxColor(0xff, 0xff, 0xff), wxColor(0, 0, 0));
-	DefineMarker(wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_EMPTY, wxColor(0xff, 0xff, 0xff), wxColor(0, 0, 0));
+	DefineMarker(wxSCI_MARKNUM_FOLDEROPEN, wxSCI_MARK_BOXMINUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+	DefineMarker(wxSCI_MARKNUM_FOLDER, wxSCI_MARK_BOXPLUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+	DefineMarker(wxSCI_MARKNUM_FOLDERSUB, wxSCI_MARK_VLINE, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+	DefineMarker(wxSCI_MARKNUM_FOLDERTAIL, wxSCI_MARK_LCORNER, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+	DefineMarker(wxSCI_MARKNUM_FOLDEREND, wxSCI_MARK_BOXPLUSCONNECTED, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+	DefineMarker(wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_BOXMINUSCONNECTED, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+	DefineMarker(wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_TCORNER, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+	// Bookmark
+	MarkerDefine(0x8, wxSCI_MARK_ARROW);
+	MarkerSetBackground(0x8, wxColour(12, 133, 222));
+	MarkerSetForeground(0x8, wxColour(66, 169, 244));
 
-
+	// Margin colours
+	SetFoldMarginColour(true, wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
+	SetFoldMarginHiColour(true, wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
+	
 	// calltip settings
     CallTipSetBackground(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
 	CallTipSetForeground(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOTEXT));
-
+	
 	//-----------------------------------------------
 	// Load laguage settings from configuration file
 	//-----------------------------------------------
@@ -285,8 +294,9 @@ void LEditor::SetLineNumberWidth()
 {
 	int pixelWidth = 4 + 5 * TextWidth(wxSCI_STYLE_LINENUMBER, _T("9"));
 	SetMarginWidth(0, pixelWidth);
-	StyleSetBackground(wxSCI_STYLE_LINENUMBER, wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
 	StyleSetSize(wxSCI_STYLE_LINENUMBER, 10);
+	StyleSetBackground(wxSCI_STYLE_LINENUMBER, wxFNBRenderer::LightColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE), 50));
+	StyleSetForeground(wxSCI_STYLE_LINENUMBER, wxColour(0, 63, 125));
 }
 
 void LEditor::OnMarginClick(wxScintillaEvent& event)
@@ -1288,7 +1298,7 @@ void LEditor::ToggleMarker()
 	int nPos = GetCurrentPos();
 	int nLine = LineFromPosition(nPos);
 	int nBits = MarkerGet(nLine);
-	bool bHasMraker = nBits & 256 ? true : false; // The 8th bit, is 2^8 = 256
+	bool bHasMraker = nBits & 0x100 ? true : false; // The 8th bit, is 2^8 = 256
 	
 	if( !bHasMraker )
 		//Delete it
@@ -1308,7 +1318,7 @@ void LEditor::FindNextMarker()
 {
 	int nPos = GetCurrentPos();
 	int nLine = LineFromPosition(nPos);
-	int nFoundLine = MarkerNext(nLine + 1, 256);
+	int nFoundLine = MarkerNext(nLine + 1, 0x100);
 	if (nFoundLine >= 0)
 	{
 		GotoLine(nFoundLine);
@@ -1317,7 +1327,7 @@ void LEditor::FindNextMarker()
 	{
 		//We reached the last marker, try again from top
 		int nLine = LineFromPosition(0);
-		int nFoundLine = MarkerNext(nLine, 256);
+		int nFoundLine = MarkerNext(nLine, 0x100);
 		if (nFoundLine >= 0)
 		{
 			GotoLine(nFoundLine);
@@ -1329,7 +1339,7 @@ void LEditor::FindPrevMarker()
 {
 	int nPos = GetCurrentPos();
 	int nLine = LineFromPosition(nPos);
-	int nFoundLine = MarkerPrevious(nLine - 1, 256);
+	int nFoundLine = MarkerPrevious(nLine - 1, 0x100);
 	if (nFoundLine >= 0)
 	{
 		GotoLine(nFoundLine);
@@ -1339,7 +1349,7 @@ void LEditor::FindPrevMarker()
 		//We reached first marker, try again from button
 		int nFileSize = GetLength();
 		int nLine = LineFromPosition(nFileSize);
-		int nFoundLine = MarkerPrevious(nLine, 256);
+		int nFoundLine = MarkerPrevious(nLine, 0x100);
 		if (nFoundLine >= 0)
 		{
 			GotoLine(nFoundLine);
