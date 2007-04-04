@@ -182,7 +182,7 @@ void GotoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 	LEditor *editor = static_cast<LEditor*>(owner);
 
 	wxString msg;
-	msg.Printf("Go to line number (1 - %ld):", editor->GetLineCount()); 
+	msg.Printf(wxT("Go to line number (1 - %ld):"), editor->GetLineCount()); 
 
 	while( 1 ) 
 	{
@@ -194,16 +194,16 @@ void GotoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 			if(!val.ToLong(&line))
 			{
 				wxString err;
-				err.Printf("%s is not a valid line number", val.GetData());
-				wxMessageBox (err, _("Go To Line"), wxOK | wxICON_INFORMATION);
+				err.Printf(wxT("'%s' is not a valid line number"), val.GetData());
+				wxMessageBox (err, wxT("Go To Line"), wxOK | wxICON_INFORMATION);
 				continue;
 			}
 
 			if(line > editor->GetLineCount())
 			{
 				wxString err;
-				err.Printf("Please insert a line number in the range of (1 - %ld)", editor->GetLineCount());
-				wxMessageBox (err, _("Go To Line"), wxOK | wxICON_INFORMATION);
+				err.Printf(wxT("Please insert a line number in the range of (1 - %ld)"), editor->GetLineCount());
+				wxMessageBox (err, wxT("Go To Line"), wxOK | wxICON_INFORMATION);
 				continue;
 			}
 
