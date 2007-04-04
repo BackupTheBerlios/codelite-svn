@@ -141,54 +141,32 @@ void FindReplaceHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &ev
 {
 	wxUnusedVar(event);
 	LEditor *editor = static_cast<LEditor*>(owner);
-	editor->DoFindAndReplace();
+
+	if( event.GetId() == wxID_FIND ) 
+	{
+		editor->DoFindAndReplace();
+	}
+	else 
+	{
+		FindReplaceDialog *dlg = editor->GetFindReplaceDialog();
+		if(event.GetId() == XRCID("find_next") && dlg)
+		{
+			FindReplaceData data = dlg->GetData();
+			// set search direction down
+			data.SetFlags(data.GetFlags() & ~(wxFRD_SEARCHUP));
+			editor->FindNext( data );
+		}
+		else if( event.GetId() == XRCID("find_previous") && dlg)
+		{
+			FindReplaceData data = dlg->GetData();
+			// set search direction up
+			data.SetFlags(data.GetFlags() | wxFRD_SEARCHUP);
+			editor->FindNext( data );
+		}
+	}
 }
 
 void FindReplaceHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
-{
-	wxUnusedVar(event);
-	wxUnusedVar(owner);
-}
-
-//------------------------------------
-// Find Next
-//------------------------------------
-void FindNextHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
-{
-	wxUnusedVar(event);
-	LEditor *editor = static_cast<LEditor*>(owner);
-	FindReplaceDialog *dlg = editor->GetFindReplaceDialog();
-	if( dlg ){
-		FindReplaceData data = dlg->GetData();
-		// set search direction down
-		data.SetFlags(data.GetFlags() & ~(wxFRD_SEARCHUP));
-		editor->FindNext( data );
-	}
-}
-
-void FindNextHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
-{
-	wxUnusedVar(event);
-	wxUnusedVar(owner);
-}
-
-//------------------------------------
-// Find Previous
-//------------------------------------
-void FindPreviousHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
-{
-	wxUnusedVar(event);
-	LEditor *editor = static_cast<LEditor*>(owner);
-	FindReplaceDialog *dlg = editor->GetFindReplaceDialog();
-	if( dlg ){
-		FindReplaceData data = dlg->GetData();
-		// set search direction up
-		data.SetFlags(data.GetFlags() | wxFRD_SEARCHUP);
-		editor->FindNext( data );
-	}
-}
-
-void FindPreviousHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
 	wxUnusedVar(event);
 	wxUnusedVar(owner);

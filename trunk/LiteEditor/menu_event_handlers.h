@@ -145,7 +145,7 @@ public:
 };
 
 //------------------------------------
-// Find / Repalce dialog
+// Find / Repalce 
 //------------------------------------
 class FindReplaceHandler : public MenuEventHandler 
 {
@@ -158,31 +158,4 @@ public:
 	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
 };
 
-//------------------------------------
-// Find Next
-//------------------------------------
-class FindNextHandler : public MenuEventHandler 
-{
-public:
-	FindNextHandler(int id) : MenuEventHandler(id){};
-	virtual ~FindNextHandler(){};
-
-public:
-	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
-	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
-};
-
-//------------------------------------
-// Find Previous
-//------------------------------------
-class FindPreviousHandler : public MenuEventHandler 
-{
-public:
-	FindPreviousHandler(int id) : MenuEventHandler(id){};
-	virtual ~FindPreviousHandler(){};
-
-public:
-	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
-	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
-};
 #endif // MENU_EVENT_HANDLERS_H

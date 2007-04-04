@@ -12,8 +12,8 @@ MenuManager::MenuManager(void)
 	PushHandler(new BraceMatchHandler(XRCID("select_to_brace")));
 	PushHandler(new BraceMatchHandler(XRCID("match_brace")));
 	PushHandler(new FindReplaceHandler(wxID_FIND));
-	PushHandler(new FindNextHandler(XRCID("find_next")));
-	PushHandler(new FindPreviousHandler(XRCID("find_previous")));
+	PushHandler(new FindReplaceHandler(XRCID("find_next")));
+	PushHandler(new FindReplaceHandler(XRCID("find_previous")));
 }
 
 MenuManager::~MenuManager(void)
