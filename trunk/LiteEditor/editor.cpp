@@ -180,8 +180,6 @@ void LEditor::SetProperties()
         ConfigFileFound = ConfigFileName.FileExists();
     } 
 
-	{}
-
 	if (ConfigFileFound)
 		EditorConfigST::Get()->LoadWords(ConfigFileName,  _T("LEX_CPP"), keyWords);
 
