@@ -178,7 +178,9 @@ void LEditor::SetProperties()
 		wxString installPath = Manager::Get()->GetInstallPath();
         ConfigFileName = wxFileName(installPath, ConfigFileName.GetFullName());
         ConfigFileFound = ConfigFileName.FileExists();
-    }
+    } 
+
+	{}
 
 	if (ConfigFileFound)
 		EditorConfigST::Get()->LoadWords(ConfigFileName,  _T("LEX_CPP"), keyWords);
