@@ -162,7 +162,7 @@ void LEditor::SetProperties()
 
 	// Margin colours
 	SetFoldMarginColour(true, wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
-	SetFoldMarginHiColour(true, wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
+	//SetFoldMarginHiColour(true, wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
 	
 	// calltip settings
     CallTipSetBackground(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
