@@ -17,39 +17,43 @@
 
 ifeq ($(type),debug)
    WXCFG=--debug=yes --unicode=no
-   DEBUG_FLAG= d
+   DEBUG_FLAG=d
    OBJ_DIR = ../../gcc_debug
+   UNICODE=
 endif 
 
 ifeq ($(type),release)
    WXCFG=--debug=no --unicode=no
    DEBUG_FLAG=
    OBJ_DIR = ../../gcc_release
+   UNICODE=
 endif
 
 ifeq ($(type),release_unicode)
    WXCFG=--debug=no --unicode=yes
    DEBUG_FLAG=
    OBJ_DIR = ../../gcc_release_unicode
+   UNICODE=u
 endif
 
 ifeq ($(type),debug_unicode)
    WXCFG=--debug=yes --unicode=yes
-   DEBUG_FLAG=
+   DEBUG_FLAG=d
    OBJ_DIR = ../../gcc_debug_unicode
+   UNICODE=u
 endif
 
 CMP = g++ 
 CXXFLAGS =  -I../../include $(shell wx-config --cxxflags $(WXCFG))
 
 ## Libraries required to link the sample program and their path
-LIBS =  -L../../lib -lwxflatnotebook$(DEBUG_FLAG)  $(shell wx-config --libs $(WXCFG))
+LIBS =  -L../../lib -lwxflatnotebook$(UNICODE)$(DEBUG_FLAG)  $(shell wx-config --libs $(WXCFG))
 
 ## sample program name
 OUTPUT  = wxFlatNotebookTest
 
 ## library name
-LIB_OUTPUT  = ../../lib/libwxflatnotebook$(DEBUG_FLAG).a
+LIB_OUTPUT  = ../../lib/libwxflatnotebook$(UNICODE)$(DEBUG_FLAG).a
 
 ##
 ## wxflatnotebook lib and sample objects

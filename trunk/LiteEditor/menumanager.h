@@ -34,3 +34,4 @@ private:
 };
 
 #endif // MENUMANAGER_H
+

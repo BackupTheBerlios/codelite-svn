@@ -142,7 +142,10 @@ Frame* Frame::Get()
 
 void Frame::CreateGUIControls(void)
 {
+#ifdef __WXMSWIN__
     SetIcon(wxICON(mainicon));
+#endif
+
 
 	// tell wxAuiManager to manage this frame
 	m_mgr.SetManagedWindow(this);
