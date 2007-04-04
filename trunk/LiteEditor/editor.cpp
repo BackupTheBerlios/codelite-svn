@@ -251,6 +251,12 @@ void LEditor::OnCharAdded(wxScintillaEvent& event)
 	// set the page title as dirty
 	SetDirty(true);
 	
+	// make sure line is visible
+	int curLine = LineFromPosition(GetCurrentPos());
+	if( !GetFoldExpanded(curLine) ) {
+		ToggleFold(curLine);
+	}
+
 	// Always do auto-indentation
 	if(event.GetKey() == ':' || event.GetKey() == '}' || event.GetKey() == '\n')
 		AutoIndent(event.GetKey());
