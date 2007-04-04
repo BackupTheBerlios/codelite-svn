@@ -234,3 +234,27 @@ void GotoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 	wxUnusedVar(event);
 	wxUnusedVar(owner);
 }
+
+//------------------------------------
+// Bookmarks
+//------------------------------------
+void BookmarkHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
+{
+	LEditor *editor = static_cast<LEditor*>(owner);
+
+	if		 (event.GetId() == XRCID("toggle_bookmark")){
+		editor->ToggleMarker();
+	} else if(event.GetId() == XRCID("next_bookmark")){
+		editor->FindNextMarker();
+	} else if(event.GetId() == XRCID("previous_bookmark")){
+		editor->FindPrevMarker();
+	} else if(event.GetId() == XRCID("removeall_bookmarks")){
+		editor->DelAllMarkers();
+	}
+}
+
+void BookmarkHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
+{
+	wxUnusedVar(owner);
+	wxUnusedVar(event);
+}

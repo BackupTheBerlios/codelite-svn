@@ -15,6 +15,10 @@ MenuManager::MenuManager(void)
 	PushHandler(new FindReplaceHandler(XRCID("find_next")));
 	PushHandler(new FindReplaceHandler(XRCID("find_previous")));
 	PushHandler(new GotoHandler(XRCID("goto_linenumber")));
+	PushHandler(new BookmarkHandler(XRCID("toggle_bookmark")));
+	PushHandler(new BookmarkHandler(XRCID("next_bookmark")));
+	PushHandler(new BookmarkHandler(XRCID("previous_bookmark")));
+	PushHandler(new BookmarkHandler(XRCID("removeall_bookmarks")));
 }
 
 MenuManager::~MenuManager(void)

@@ -1263,3 +1263,86 @@ int LEditor::GetSciSearchFlag(const FindReplaceData &data)
 	wxflags & wxFRD_REGULAREXPRESSION ? flags |= wxSCI_FIND_REGEXP : flags = flags;
 	return static_cast<int>(flags);
 }
+
+//----------------------------------------------
+// Bookmarks
+//----------------------------------------------
+void LEditor::AddMarker()
+{
+	int nPos = GetCurrentPos();
+	int nLine = LineFromPosition(nPos);
+	MarkerAdd(nLine, 0x8);
+}
+
+void LEditor::DelMarker()
+{
+	int nPos = GetCurrentPos();
+	int nLine = LineFromPosition(nPos);
+	MarkerDelete(nLine, 0x8);
+}
+
+void LEditor::ToggleMarker()
+{
+	// Add/Remove marker
+	// First we check if we already have a marker
+	int nPos = GetCurrentPos();
+	int nLine = LineFromPosition(nPos);
+	int nBits = MarkerGet(nLine);
+	bool bHasMraker = nBits & 256 ? true : false; // The 8th bit, is 2^8 = 256
+	
+	if( !bHasMraker )
+		//Delete it
+		AddMarker();
+	else
+		//Add one
+		DelMarker();
+}
+
+void LEditor::DelAllMarkers()
+{
+	// Delete all markers from the view
+	MarkerDeleteAll(0x8);
+}
+
+void LEditor::FindNextMarker()
+{
+	int nPos = GetCurrentPos();
+	int nLine = LineFromPosition(nPos);
+	int nFoundLine = MarkerNext(nLine + 1, 256);
+	if (nFoundLine >= 0)
+	{
+		GotoLine(nFoundLine);
+	}
+	else
+	{
+		//We reached the last marker, try again from top
+		int nLine = LineFromPosition(0);
+		int nFoundLine = MarkerNext(nLine, 256);
+		if (nFoundLine >= 0)
+		{
+			GotoLine(nFoundLine);
+		}
+	}
+}
+
+void LEditor::FindPrevMarker()
+{
+	int nPos = GetCurrentPos();
+	int nLine = LineFromPosition(nPos);
+	int nFoundLine = MarkerPrevious(nLine - 1, 256);
+	if (nFoundLine >= 0)
+	{
+		GotoLine(nFoundLine);
+	}
+	else
+	{
+		//We reached first marker, try again from button
+		int nFileSize = GetLength();
+		int nLine = LineFromPosition(nFileSize);
+		int nFoundLine = MarkerPrevious(nLine, 256);
+		if (nFoundLine >= 0)
+		{
+			GotoLine(nFoundLine);
+		}
+	}
+}

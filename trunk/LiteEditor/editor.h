@@ -104,6 +104,18 @@ public:
 	// Perform FindNext operation based on the data stored in the FindReplaceData class
 	void FindNext(const FindReplaceData &data);
 
+	// Bookmark API
+	//-----------------------------------------
+
+	// Toggle marker at the current line
+	void ToggleMarker();
+	// Delete all markers from the current document
+	void DelAllMarkers();
+	// Find next marker and move cursor to that line
+	void FindNextMarker();
+	// Find previous marker and move cursor to that line
+	void FindPrevMarker();
+
 	static FindReplaceDialog* GetFindReplaceDialog() { return m_findReplaceDlg; }
 
 protected:
@@ -120,6 +132,13 @@ protected:
 
 	bool Replace();
 	bool Replace(const FindReplaceData &data);
+
+	
+	// Add marker at the current line
+	void AddMarker();
+
+	// Delete the marker from the current line
+	void DelMarker();
 
 private:
 	void SetProperties();
