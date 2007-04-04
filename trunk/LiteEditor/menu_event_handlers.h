@@ -158,5 +158,18 @@ public:
 	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
 };
 
+//------------------------------------
+// Goto
+//------------------------------------
+class GotoHandler : public MenuEventHandler 
+{
+public:
+	GotoHandler(int id) : MenuEventHandler(id){};
+	virtual ~GotoHandler(){};
+
+public:
+	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
+	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
+};
 #endif // MENU_EVENT_HANDLERS_H
 

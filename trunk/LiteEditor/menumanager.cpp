@@ -14,6 +14,7 @@ MenuManager::MenuManager(void)
 	PushHandler(new FindReplaceHandler(wxID_FIND));
 	PushHandler(new FindReplaceHandler(XRCID("find_next")));
 	PushHandler(new FindReplaceHandler(XRCID("find_previous")));
+	PushHandler(new GotoHandler(XRCID("goto_linenumber")));
 }
 
 MenuManager::~MenuManager(void)

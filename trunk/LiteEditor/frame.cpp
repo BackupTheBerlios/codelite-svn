@@ -59,6 +59,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("find_next"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("find_previous"), Frame::DispatchCommandEvent)
 	EVT_MENU(wxID_FIND, Frame::DispatchCommandEvent)
+	EVT_MENU(XRCID("goto_linenumber"), Frame::DispatchCommandEvent)
 
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
@@ -76,6 +77,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("complete_word"), Frame::OnCompleteWordUpdateUI)
 	EVT_UPDATE_UI(XRCID("find_next"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(XRCID("find_previous"), Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(XRCID("goto_linenumber"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_FIND, Frame::OnFileExistUpdateUI)
 
 	/*
@@ -604,6 +606,7 @@ void Frame::OnFileNew(wxCommandEvent &event)
 	m_notebook->Thaw();
 
 	editor->SetFocus ();
+	editor->SetSCIFocus(true);
 }
 
 void Frame::OnFileOpen(wxCommandEvent & WXUNUSED(event))

@@ -1125,7 +1125,9 @@ void LEditor::SetActive()
 	if( m_findReplaceDlg ) {
 		m_findReplaceDlg->SetEventOwner(GetEventHandler());
 	}
+
 	SetFocus();
+	SetSCIFocus(true);
 }
 
 // Popup a Find/Replace dialog
@@ -1181,13 +1183,14 @@ void LEditor::FindNext(const FindReplaceData &data)
 {
 	bool dirDown = ! (data.GetFlags() & wxFRD_SEARCHUP ? true : false);
 	if( !FindAndSelect(data) ) {
+		wxWindow *parent = m_findReplaceDlg->IsShown() ? m_findReplaceDlg : NULL;
 		if(dirDown){
-			if( wxMessageBox(wxT("CodeLite reached the end of the document, Search again from the start?"), wxT("Confirm"), wxYES_NO, m_findReplaceDlg) == wxYES){
-				FindAndSelect();
+			if( wxMessageBox(wxT("CodeLite reached the end of the document, Search again from the start?"), wxT("Confirm"), wxYES_NO, parent) == wxYES){
+				FindAndSelect(data);
 			} 
 		} else {
-			if( wxMessageBox(wxT("CodeLite reached the start of the document, Search again from the end?"), wxT("Confirm"), wxYES_NO, m_findReplaceDlg) == wxYES){
-				FindAndSelect();
+			if( wxMessageBox(wxT("CodeLite reached the start of the document, Search again from the end?"), wxT("Confirm"), wxYES_NO, parent) == wxYES){
+				FindAndSelect(data);
 			}
 		}
 	}
@@ -1214,9 +1217,9 @@ bool LEditor::FindAndSelect(const FindReplaceData &data)
 		SetSelection (pos, pos + (int)data.GetFindString().Length());
 
 		if( dirDown ) {
-			m_lastMatchPos = pos + (int)data.GetFindString().Length();
+			m_lastMatchPos = PositionAfter(pos);
 		} else {
-			m_lastMatchPos = pos - (int)data.GetFindString().Length();
+			m_lastMatchPos = PositionBefore(pos);
 		}
 		return true;
 	}

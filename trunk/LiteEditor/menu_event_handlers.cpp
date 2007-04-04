@@ -171,3 +171,66 @@ void FindReplaceHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &
 	wxUnusedVar(event);
 	wxUnusedVar(owner);
 }
+
+//----------------------------------
+// goto linenumber
+//----------------------------------
+
+void GotoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	LEditor *editor = static_cast<LEditor*>(owner);
+
+	wxString msg;
+	msg.Printf("Go to line number (1 - %ld):", editor->GetLineCount()); 
+
+	while( 1 ) 
+	{
+		wxTextEntryDialog dlg(editor, msg, wxT("Go To Line"));
+		if(dlg.ShowModal() == wxID_OK)
+		{
+			wxString val = dlg.GetValue();
+			long line;
+			if(!val.ToLong(&line))
+			{
+				wxString err;
+				err.Printf("%s is not a valid line number", val.GetData());
+				wxMessageBox (err, _("Go To Line"), wxOK | wxICON_INFORMATION);
+				continue;
+			}
+
+			if(line > editor->GetLineCount())
+			{
+				wxString err;
+				err.Printf("Please insert a line number in the range of (1 - %ld)", editor->GetLineCount());
+				wxMessageBox (err, _("Go To Line"), wxOK | wxICON_INFORMATION);
+				continue;
+			}
+
+			if(line > 0)
+			{
+				editor->GotoLine(line - 1);
+				break;
+			}
+			else
+			{
+				editor->GotoLine(0);
+				break;
+			}
+		}
+		else
+		{
+			// wxID_CANCEL
+			return;
+		}
+	}
+
+	editor->SetSCIFocus(true);
+    editor->SetFocus ();
+}
+
+void GotoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
+{
+	wxUnusedVar(event);
+	wxUnusedVar(owner);
+}
