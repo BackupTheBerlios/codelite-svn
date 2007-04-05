@@ -107,8 +107,12 @@
             </object>
             
             <object class="wxMenuItem" name="wxID_SEPARATOR"/>
-            
+            <object class="wxMenuItem" name="goto_linenumber">
+                <label>&amp;Go To...\tCtrl+G</label>
+            </object>
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
             <object class="wxMenuItem" name="toggle_bookmark">
+
                 <label>To&amp;ggle Bookmark\tCtrl+F2</label>
             </object>
             <object class="wxMenuItem" name="next_bookmark">
