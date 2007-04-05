@@ -391,6 +391,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Search"
+			>
+			<File
+				RelativePath=".\search_manager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\search_manager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\search_thread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\serach_thread.cpp"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

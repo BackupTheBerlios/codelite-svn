@@ -235,6 +235,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\dirtraverser.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\entry.cpp"
 				>
 			</File>
@@ -298,6 +302,10 @@
 			</File>
 			<File
 				RelativePath=".\db_record.h"
+				>
+			</File>
+			<File
+				RelativePath=".\dirtraverser.h"
 				>
 			</File>
 			<File

@@ -7,6 +7,7 @@
 #include "process.h"
 #include "language.h"
 #include <wx/progdlg.h>
+#include "dirtraverser.h"
 
 #ifdef __VISUALC__
 #ifdef _DEBUG

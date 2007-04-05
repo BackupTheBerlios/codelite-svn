@@ -3,8 +3,8 @@
 
 #include <wx/dc.h>
 #include <wx/string.h>
-#include <wx/wxFlatNotebook/singleton.h>
-#include <wx/wxFlatNotebook/smart_ptr.h>
+#include <wx/wxFlatNotebook/fnb_singleton.h>
+#include <wx/wxFlatNotebook/fnb_smart_ptr.h>
 #include <map>
 #include <vector>
 #include <wx/event.h>
@@ -154,7 +154,7 @@ protected:
 
 };
 
-typedef SmartPtr<wxFNBRenderer> wxFNBRendererPtr;
+typedef wxFNBSmartPtr<wxFNBRenderer> wxFNBRendererPtr;
 
 class wxFNBRendererDefault : public wxFNBRenderer
 {
@@ -205,7 +205,7 @@ private:
 
 class wxFNBRendererMgr
 {
-	friend class Singleton<wxFNBRendererMgr>;
+	friend class wxFNBSingleton<wxFNBRendererMgr>;
 	std::map<int, wxFNBRendererPtr> m_renderers;
 public:
 	/**
@@ -220,5 +220,5 @@ private:
 	wxFNBRendererMgr();
 	virtual ~wxFNBRendererMgr();
 };
-typedef Singleton<wxFNBRendererMgr> wxFNBRendererMgrST;
+typedef wxFNBSingleton<wxFNBRendererMgr> wxFNBRendererMgrST;
 #endif // RENDERE_H

@@ -301,19 +301,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\wx\wxFlatNotebook\fnb_singleton.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\wx\wxFlatNotebook\fnb_smart_ptr.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\wx\wxFlatNotebook\popup_dlg.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\include\wx\wxFlatNotebook\renderer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\wx\wxFlatNotebook\singleton.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\wx\wxFlatNotebook\smart_ptr.h"
 				>
 			</File>
 			<File

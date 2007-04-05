@@ -475,8 +475,45 @@ static unsigned char xml_res_file_12[] = {
 32,177,182,238,95,1,6,0,177,199,15,69,241,57,108,150,0,0,0,0,73,69,78,68,
 174,66,96,130};
 
-static size_t xml_res_size_13 = 1191;
+static size_t xml_res_size_13 = 705;
 static unsigned char xml_res_file_13[] = {
+137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,16,0,0,0,16,8,6,0,0,
+0,31,243,255,97,0,0,0,43,116,69,88,116,67,114,101,97,116,105,111,110,32,
+84,105,109,101,0,77,111,32,50,52,32,70,101,98,32,50,48,48,51,32,49,55,58,
+52,53,58,52,57,32,43,48,49,48,48,38,220,93,34,0,0,0,7,116,73,77,69,7,212,
+7,7,8,30,1,199,217,78,193,0,0,0,9,112,72,89,115,0,0,10,240,0,0,10,240,1,
+66,172,52,152,0,0,0,4,103,65,77,65,0,0,177,143,11,252,97,5,0,0,2,25,73,
+68,65,84,120,218,141,82,187,110,19,65,20,61,243,216,93,71,224,68,16,41,
+13,95,64,7,21,159,193,103,240,1,208,166,161,64,138,228,138,146,142,127,
+160,163,129,10,33,33,209,129,34,132,220,80,16,18,252,88,219,107,239,236,
+204,92,206,236,218,201,66,82,48,214,217,241,204,220,115,231,156,185,87,
+225,254,203,39,7,71,251,199,195,219,38,119,46,32,10,8,65,132,66,8,10,144,
+8,129,38,4,74,41,108,98,116,254,124,60,194,215,231,175,1,148,246,224,104,
+120,252,246,213,227,123,167,63,22,56,155,57,156,47,29,38,203,128,105,229,
+177,112,130,170,17,172,153,168,97,66,24,139,124,175,192,167,55,241,25,239,
+57,101,130,15,246,96,152,231,227,179,10,223,127,174,240,171,108,240,123,
+233,49,169,152,96,29,81,214,130,85,3,222,10,56,170,128,142,200,111,105,
+152,60,43,60,240,144,9,190,216,224,35,166,117,192,108,35,152,213,192,132,
+184,216,112,38,230,252,63,119,116,161,72,54,134,241,132,75,51,213,0,251,
+68,102,61,15,23,12,230,229,152,19,51,167,48,37,46,156,198,42,164,16,211,
+145,245,54,201,160,0,108,142,221,176,209,104,44,189,98,112,154,53,202,64,
+37,36,174,98,34,111,73,166,151,36,39,57,111,21,180,31,155,14,214,81,97,
+45,26,149,24,172,68,161,140,100,23,250,239,155,119,40,168,64,155,43,5,194,
+69,67,27,142,254,106,150,169,86,17,49,147,46,200,152,235,73,146,2,211,179,
+0,147,193,107,139,192,18,5,27,225,173,116,18,255,189,185,111,33,89,187,
+76,96,185,176,150,155,25,193,6,202,165,179,119,147,252,157,130,190,133,
+180,169,51,155,106,11,83,8,50,159,248,234,202,66,63,73,186,104,192,179,
+172,103,65,217,140,149,97,135,21,17,5,95,127,144,236,147,20,161,175,191,
+129,72,199,82,173,133,118,97,107,81,238,238,225,30,14,189,197,154,217,171,
+13,75,90,105,76,189,106,251,166,29,122,23,174,146,102,78,161,190,84,80,
+142,191,141,94,140,194,211,44,87,185,243,210,246,124,96,89,211,79,146,149,
+68,228,35,67,73,167,196,59,135,247,39,239,184,59,39,154,212,12,119,136,
+71,196,131,109,123,170,93,147,220,48,100,139,146,248,76,124,84,93,131,183,
+196,182,183,241,127,163,217,42,88,252,1,243,93,220,79,105,182,126,216,0,
+0,0,0,73,69,78,68,174,66,96,130};
+
+static size_t xml_res_size_14 = 1281;
+static unsigned char xml_res_file_14[] = {
 60,63,120,109,108,32,118,101,114,115,105,111,110,61,34,49,46,48,34,32,101,
 110,99,111,100,105,110,103,61,34,85,84,70,45,56,34,63,62,10,60,114,101,
 115,111,117,114,99,101,62,10,32,32,60,111,98,106,101,99,116,32,99,108,97,
@@ -535,34 +572,40 @@ static unsigned char xml_res_file_13[] = {
 115,61,34,119,120,66,105,116,109,97,112,34,32,110,97,109,101,61,34,115,
 116,114,117,99,116,34,62,114,101,115,111,117,114,99,101,115,46,99,112,112,
 36,114,101,115,95,115,116,114,117,99,116,46,112,110,103,60,47,111,98,106,
-101,99,116,62,10,60,47,114,101,115,111,117,114,99,101,62,10};
+101,99,116,62,10,32,32,60,111,98,106,101,99,116,32,99,108,97,115,115,61,
+34,119,120,66,105,116,109,97,112,34,32,110,97,109,101,61,34,98,111,111,
+107,109,97,114,107,95,98,108,117,101,34,62,114,101,115,111,117,114,99,101,
+115,46,99,112,112,36,114,101,115,95,109,101,100,105,97,95,115,116,111,112,
+46,112,110,103,60,47,111,98,106,101,99,116,62,10,60,47,114,101,115,111,
+117,114,99,101,62,10};
 
 void InitXmlResource()
 {
 
     // Check for memory FS. If not present, load the handler:
     {
-        wxMemoryFSHandler::AddFile(_T("XRC_resource/dummy_file"), _T("dummy one"));
+        wxMemoryFSHandler::AddFile(wxT("XRC_resource/dummy_file"), wxT("dummy one"));
         wxFileSystem fsys;
-        wxFSFile *f = fsys.OpenFile(_T("memory:XRC_resource/dummy_file"));
-        wxMemoryFSHandler::RemoveFile(_T("XRC_resource/dummy_file"));
+        wxFSFile *f = fsys.OpenFile(wxT("memory:XRC_resource/dummy_file"));
+        wxMemoryFSHandler::RemoveFile(wxT("XRC_resource/dummy_file"));
         if (f) delete f;
         else wxFileSystem::AddHandler(new wxMemoryFSHandler);
     }
 
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_func_public.png"), xml_res_file_0, xml_res_size_0);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_func_protected.png"), xml_res_file_1, xml_res_size_1);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_func_private.png"), xml_res_file_2, xml_res_size_2);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_member_public.png"), xml_res_file_3, xml_res_size_3);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_member_protected.png"), xml_res_file_4, xml_res_size_4);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_member_private.png"), xml_res_file_5, xml_res_size_5);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_enum.xpm"), xml_res_file_6, xml_res_size_6);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_class.png"), xml_res_file_7, xml_res_size_7);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_typedef.xpm"), xml_res_file_8, xml_res_size_8);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_cubes_blue.png"), xml_res_file_9, xml_res_size_9);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_cube_green.png"), xml_res_file_10, xml_res_size_10);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_cube_yellow.png"), xml_res_file_11, xml_res_size_11);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$res_struct.png"), xml_res_file_12, xml_res_size_12);
-    wxMemoryFSHandler::AddFile(_T("XRC_resource/resources.cpp$._resources.xrc"), xml_res_file_13, xml_res_size_13);
-    wxXmlResource::Get()->Load(_T("memory:XRC_resource/resources.cpp$._resources.xrc"));
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_func_public.png"), xml_res_file_0, xml_res_size_0);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_func_protected.png"), xml_res_file_1, xml_res_size_1);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_func_private.png"), xml_res_file_2, xml_res_size_2);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_member_public.png"), xml_res_file_3, xml_res_size_3);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_member_protected.png"), xml_res_file_4, xml_res_size_4);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_member_private.png"), xml_res_file_5, xml_res_size_5);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_enum.xpm"), xml_res_file_6, xml_res_size_6);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_class.png"), xml_res_file_7, xml_res_size_7);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_typedef.xpm"), xml_res_file_8, xml_res_size_8);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_cubes_blue.png"), xml_res_file_9, xml_res_size_9);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_cube_green.png"), xml_res_file_10, xml_res_size_10);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_cube_yellow.png"), xml_res_file_11, xml_res_size_11);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_struct.png"), xml_res_file_12, xml_res_size_12);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$res_media_stop.png"), xml_res_file_13, xml_res_size_13);
+    wxMemoryFSHandler::AddFile(wxT("XRC_resource/resources.cpp$._resources.xrc"), xml_res_file_14, xml_res_size_14);
+    wxXmlResource::Get()->Load(wxT("memory:XRC_resource/resources.cpp$._resources.xrc"));
 }
