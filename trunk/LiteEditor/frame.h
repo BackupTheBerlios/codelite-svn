@@ -6,6 +6,7 @@
 #include <wx/process.h>
 #include "wx/aui/aui.h"
 #include "wx/frame.h"
+#include "findinfilesdlg.h"
 
 // forward decls
 class SymbolTree;
@@ -14,6 +15,7 @@ class TagsProcess;
 class wxSplitterWindow;
 class wxConfigBase;
 class LEditor;
+class FindInFilesDialog;
 
 /**
  * The main frame class
@@ -27,12 +29,14 @@ class Frame : public wxFrame
 	bool m_restartCtags;
 	wxFlatNotebook *m_notebook;
 	wxSplitterWindow *m_splitter;
-	wxLog *m_logTargetOld;
 
 	static Frame* m_theFrame;
 	wxString m_installPath;
 	wxConfigBase *m_config;
 	wxAuiManager m_mgr;
+	wxTextCtrl *m_debugWin;
+	FindInFilesDialog *m_findInFilesDlg;
+	FindReplaceData m_data;
 
 public:
 	// the access method to the singleton frame is by using the Get method
@@ -57,6 +61,7 @@ private:
 
 protected:
 	// event handlers
+	void OnSearchThread(wxCommandEvent &event);
 	void OnQuit(wxCommandEvent& WXUNUSED(event));
 	void OnClose(wxCloseEvent &event);
 	void OnAddSourceFile(wxCommandEvent& event);
@@ -79,6 +84,8 @@ protected:
 	void OnFileFindAndReplace(wxCommandEvent &event);
 	void OnFileExistUpdateUI(wxUpdateUIEvent &event);
 	void OnCompleteWordUpdateUI(wxUpdateUIEvent &event);
+	void OnFindInFiles(wxCommandEvent &event);
+
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

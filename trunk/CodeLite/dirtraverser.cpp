@@ -6,18 +6,18 @@ wxDirTraverseResult DirTraverser::OnFile(const wxString& filename)
 	wxFileName file(filename);
 
 	if(m_validExt.empty()){
-		m_files.push_back(file);
+		m_files.push_back(filename);
 	} else {
 		// we a have a list of extesions
 		if(m_validExt.find(file.GetExt().MakeLower()) != m_validExt.end()){
-			m_files.push_back(file);
+			m_files.push_back(filename);
 		}
 	}
 	return wxDIR_CONTINUE;
 }
 
 
-void DirTraverser::SetExtenstions(const std::map<wxString, bool> extMap)
+void DirTraverser::SetExtensions(const std::map<wxString, bool> extMap)
 {
 	m_validExt.clear();
 

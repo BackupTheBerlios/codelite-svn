@@ -19,7 +19,7 @@
  */
 class DirTraverser : public wxDirTraverser
 {
-	std::vector<wxFileName> m_files;
+	std::vector<wxString> m_files;
 	std::map<wxString, bool> m_validExt;
 
 public:
@@ -27,7 +27,7 @@ public:
 	 * By default we search for all files, unless a map of extensions is provided
 	 * \param extMap a map with all valid extensions
 	 */
-	void SetExtenstions(const std::map<wxString, bool> extMap);
+	void SetExtensions(const std::map<wxString, bool> extMap);
 
 	/**
 	 * This function is called once a file is found. The traverse of the directories 
@@ -59,7 +59,7 @@ public:
 	 * Return list of files found 
 	 * \return Return list of files found 
 	 */
-	std::vector<wxFileName>& GetFiles()
+	std::vector<wxString>& GetFiles()
 	{
 		return m_files;
 	}

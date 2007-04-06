@@ -21,6 +21,8 @@
 #include "manager.h"
 #include "menumanager.h"
 #include <wx/aboutdlg.h>
+#include "findinfilesdlg.h"
+#include "search_thread.h"
 
 #define ID_CTAGS_GLOBAL_ID		10500
 #define ID_CTAGS_LOCAL_ID		10501
@@ -31,6 +33,11 @@ extern wxImageList* CreateSymbolTreeImages();
 //----------------------------------------------------------------
 
 BEGIN_EVENT_TABLE(Frame, wxFrame)
+	// Search Thread handler
+	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_MATCHFOUND, Frame::OnSearchThread)
+	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHCANCELED, Frame::OnSearchThread)
+	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHEND, Frame::OnSearchThread)
+
 	EVT_END_PROCESS(ID_CTAGS_GLOBAL_ID, Frame::OnCtagsEnd)
 	EVT_END_PROCESS(ID_CTAGS_LOCAL_ID, Frame::OnCtagsEnd)
 
@@ -64,6 +71,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("next_bookmark"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("previous_bookmark"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("removeall_bookmarks"), Frame::DispatchCommandEvent)
+	EVT_MENU(XRCID("find_in_files"), Frame::OnFindInFiles)
 
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
@@ -105,14 +113,17 @@ Frame* Frame::m_theFrame = NULL;
 Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 : wxFrame(pParent, id, title, pos, size, style, name)
 , m_restartCtags(true)
+, m_findInFilesDlg(NULL)
 {
 	CreateGUIControls();
+
+	// Start the search thread
+	SearchThreadST::Get()->SetNotifyWindow(this);
+	SearchThreadST::Get()->Start();
 }
 
 Frame::~Frame(void)
 {
-	delete wxLog::SetActiveTarget(m_logTargetOld);
-
 	// Release singleton objects
 	TagsManagerST::Free();
 	LanguageST::Free();
@@ -129,6 +140,11 @@ Frame::~Frame(void)
 	//-----------------------------------------------------
 	ParseThreadST::Get()->Stop();
 	ParseThreadST::Free();
+
+	// Stop the search thread and free its resources
+	SearchThreadST::Get()->Stop();
+	SearchThreadST::Free();
+
 	wxFlatNotebook::CleanUp();
 	MenuManager::Free();
 
@@ -168,12 +184,10 @@ void Frame::CreateGUIControls(void)
 	//---------------------------------------------
 	// Add log window
 	//---------------------------------------------
-	wxTextCtrl *text = new wxTextCtrl(this, wxID_ANY, _T(""),
+	m_debugWin = new wxTextCtrl(this, wxID_ANY, _T(""),
                             wxDefaultPosition, wxSize(-1, 200), wxTE_MULTILINE);
-	m_mgr.AddPane(text, wxAuiPaneInfo().Name(wxT("Debug Window")).
+	m_mgr.AddPane(m_debugWin, wxAuiPaneInfo().Name(wxT("Debug Window")).
 		Caption(wxT("Debug Window")).Bottom().Layer(1).Position(1).MaximizeButton(true).CloseButton(true));
-
-	m_logTargetOld = wxLog::SetActiveTarget(new wxLogTextCtrl(text));
 
 	// Add the class view tree
 	m_tree = new CppSymbolTree(this, wxID_ANY, wxDefaultPosition, wxSize(250, 600));
@@ -304,6 +318,10 @@ void Frame::OnClose(wxCloseEvent& event)
 	// the main frame to handle the event or else we can get 
 	// memory leak
 	wxMilliSleep( 20 );
+
+	// Stop the search thread
+	SearchThreadST::Get()->StopSearch();
+
 	event.Skip();
 }
 
@@ -718,3 +736,49 @@ void Frame::ClosePage(LEditor *editor, int index, bool doDelete, bool &veto)
 		if( doDelete ) m_notebook->DeletePage(index, false);
 	}
 }
+
+void Frame::OnSearchThread(wxCommandEvent &event)
+{
+	if( event.GetEventType() == wxEVT_SEARCH_THREAD_MATCHFOUND)
+	{
+		SearchResultList *res = (SearchResultList*)event.GetClientData();
+		SearchResultList::iterator iter = res->begin();
+
+		wxString msg;
+		for(; iter != res->end(); iter++){
+			msg.Append((*iter).GetMessage() + wxT("\n"));
+		}
+
+		m_debugWin->AppendText(msg);
+		delete res;
+	}
+	else if(event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHCANCELED)
+	{
+		m_debugWin->AppendText(event.GetString() + wxT("\n"));
+	}
+	else if(event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHEND)
+	{
+		SearchSummary *summary = (SearchSummary*)event.GetClientData();
+		m_debugWin->AppendText(summary->GetMessage() + wxT("\n"));
+		delete summary;
+	}
+}
+
+void Frame::OnFindInFiles(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	if( m_findInFilesDlg == NULL ){
+		m_findInFilesDlg = new FindInFilesDialog(this, m_data);
+		m_findInFilesDlg->SetEventOwner(GetEventHandler());
+	}
+	
+	if( m_findInFilesDlg->IsShown() )
+	{
+		// make sure that dialog has focus and that this instace
+		m_findInFilesDlg->SetFocus();
+		return;
+	}
+
+	m_findInFilesDlg->Show();
+}
+
