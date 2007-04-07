@@ -96,6 +96,9 @@
         <object class="wxMenu" name="search_menu">
             <label>&amp;Search</label>
             <style>wxMENU_TEAROFF</style>
+            <object class="wxMenuItem" name="find_in_files">
+                <label>Find In Files...\tCtrl+Shift+F</label>
+            </object>
             <object class="wxMenuItem" name="wxID_FIND">
                 <label>Find And Replace...\tCtrl+F</label>
             </object>
@@ -107,12 +110,14 @@
             </object>
             
             <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            
             <object class="wxMenuItem" name="goto_linenumber">
                 <label>&amp;Go To...\tCtrl+G</label>
             </object>
+            
             <object class="wxMenuItem" name="wxID_SEPARATOR"/>
-            <object class="wxMenuItem" name="toggle_bookmark">
 
+            <object class="wxMenuItem" name="toggle_bookmark">
                 <label>To&amp;ggle Bookmark\tCtrl+F2</label>
             </object>
             <object class="wxMenuItem" name="next_bookmark">
@@ -122,7 +127,7 @@
                 <label>Pre&amp;vious Bookmark\tShift+F2</label>
             </object>
             <object class="wxMenuItem" name="removeall_bookmarks">
-                <label>Remove &amp;All Bookmarks\tAlt+F2</label>
+                <label>Remove &amp;All Bookmarks</label>
             </object>
         </object>
         

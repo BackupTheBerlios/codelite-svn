@@ -395,6 +395,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Runtime\rc\menu.xrc"
+				>
+			</File>
+			<File
 				RelativePath=".\resources.xrc"
 				>
 			</File>
