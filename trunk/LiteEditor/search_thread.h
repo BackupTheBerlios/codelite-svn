@@ -9,6 +9,7 @@
 #include "singleton.h"
 #include "wx/event.h"
 #include "wx/filename.h"
+#include <wx/regex.h>
 
 // Possible search data options:
 enum {
@@ -200,6 +201,9 @@ class SearchThread : public wxThread
 	SearchResultList m_results;
 	bool m_stopSearch;
 	SearchSummary m_summary;
+	wxString m_reExpr;
+	wxRegEx m_regex;
+	bool m_matchCase;
 
 private:
 	/**
@@ -292,11 +296,17 @@ private:
 	// Perform search on a line
 	void DoSearchLine(const wxString &line, const int lineNum, const wxString &fileName, const SearchData *data);
 
+	// Perform search on a line using regular expression
+	void DoSearchLineRE(const wxString &line, const int lineNum, const wxString &fileName, const SearchData *data);
+
 	// Send an event to the notified window
 	void SendEvent(wxEventType type);
 
+	// return a compiled regex object for the expression
+	wxRegEx &GetRegex(const wxString &expr, bool matchCase);
+
 	// Internal function 
-	bool AdjustLine(wxString &line, int pos, wxString &findString);
+	bool AdjustLine(wxString &line, int &pos, wxString &findString);
 
 };
 

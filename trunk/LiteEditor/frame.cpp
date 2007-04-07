@@ -223,11 +223,11 @@ void Frame::CreateGUIControls(void)
 	// constructor since to execute it, we are using wxExecute() which,  
 	// according to the documentation, will fail if used outside of the main thread. 
 	//--------------------------------------------------------------------------------------
-	DEBUG_MSG(_T("Starting ctags processes ..."))
+	
 	// We keep a pointer to wxProcess object returend from ctags starting process
 	m_ctags = TagsManagerST::Get()->StartCtagsProcess(this, 10500, TagsGlobal);
 	m_localCtags = TagsManagerST::Get()->StartCtagsProcess(this, 10501, TagsLocal);
-	DEBUG_MSG(_T("Done"))
+	
 
 	//--------------------------------------------------------------------------------------
 	// Start the parsing thread, the parsing thread and the SymbolTree (or its derived)
@@ -237,9 +237,7 @@ void Frame::CreateGUIControls(void)
 	// If you wish to connect another object for it, simply call ParseThreadST::Get()->SetNotifyWindow(this)
 	// with another object as 'this'
 	//--------------------------------------------------------------------------------------
-	DEBUG_MSG(_T("Starting parser thread ..."))
 	ParseThreadST::Get()->Start();
-	DEBUG_MSG(_T("Done"))
 
 	// And finally create a status bar
 	wxStatusBar* statusBar = new wxStatusBar(this, wxID_ANY);

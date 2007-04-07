@@ -49,6 +49,7 @@ SearchThread::SearchThread()
 : wxThread(wxTHREAD_JOINABLE)
 , m_notifiedWindow( NULL )
 , m_wordChars(wxT("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"))
+, m_reExpr(wxT(""))
 {
 	IndexWordChars();
 }
@@ -78,6 +79,21 @@ void SearchThread::SetWordChars(const wxString &chars)
 	IndexWordChars();
 }
 
+wxRegEx& SearchThread::GetRegex(const wxString &expr, bool matchCase)
+{
+	if(m_reExpr == expr && matchCase == m_matchCase){
+		return m_regex;
+	} else {
+		m_reExpr = expr;
+		m_matchCase = matchCase;
+
+		int flags = wxRE_DEFAULT;
+		if( !matchCase ) flags |= wxRE_ICASE;
+		m_regex.Compile(m_reExpr, flags);
+	}
+	return m_regex;
+}
+
 void* SearchThread::Entry()
 {
 	SearchData *data;
@@ -100,7 +116,7 @@ void* SearchThread::Entry()
 		}
 		
 		// Sleep for 100 seconds, and then try again
-		wxThread::Sleep(100);
+		wxThread::Sleep(5);
 	}
 	return NULL;
 }
@@ -176,6 +192,13 @@ void SearchThread::DoSearchFile(const wxString &fileName, const SearchData *data
 
 	if( data->IsRegularExpression() ){
 		// regular expression search
+		while( !input.Eof() ){
+
+			// Read the next line
+			wxString line = text.ReadLine();
+			DoSearchLineRE(line, lineNumber, fileName, data);
+			lineNumber++;
+		}
 	} else {
 		// simple search
 		while( !input.Eof() ){
@@ -190,6 +213,35 @@ void SearchThread::DoSearchFile(const wxString &fileName, const SearchData *data
 	if( m_results.empty() == false )
 		SendEvent(wxEVT_SEARCH_THREAD_MATCHFOUND);
 }
+void SearchThread::DoSearchLineRE(const wxString &line, const int lineNum, const wxString &fileName, const SearchData *data)
+{
+	wxRegEx &re = GetRegex(data->GetFindString(), data->IsMatchCase());
+	size_t col = 0;
+	wxString modLine = line;
+	if( re.IsValid() ){
+		while( re.Matches(modLine)) {
+			size_t start, len;
+			re.GetMatch(&start, &len);
+			col += start;
+
+			m_summary.SetNumMatchesFound(m_summary.GetNumMatchesFound() + 1);
+			
+			// Notify our match
+			SearchResult result;
+			result.SetColumn((int)col);
+			result.SetLineNumber(lineNum);
+			result.SetPattern(line);
+			result.SetFileName(fileName);
+			m_results.push_back(result);
+			col += len;
+
+			// adjust the line
+			if(line.Length() - col <= 0)
+				break;
+			modLine = modLine.Right(line.Length() - col);
+		}
+	}
+}
 
 void SearchThread::DoSearchLine(const wxString &line, const int lineNum, const wxString &fileName, const SearchData *data)
 {
@@ -202,9 +254,12 @@ void SearchThread::DoSearchLine(const wxString &line, const int lineNum, const w
 	}
 
 	int pos = 0;
+	int col = 0;
 	while( pos != wxNOT_FOUND ){
 		pos = modLine.Find(findString);
 		if(pos != wxNOT_FOUND){
+			col += pos;
+
 			// we have a match
 			if( data->IsMatchWholeWord() ){
 
@@ -225,22 +280,25 @@ void SearchThread::DoSearchLine(const wxString &line, const int lineNum, const w
 
 			// Notify our match
 			SearchResult result;
-			result.SetColumn(pos);
+			result.SetColumn(col);
 			result.SetLineNumber(lineNum);
 			result.SetPattern(line);
 			result.SetFileName(fileName);
 			m_results.push_back(result);
-
-			ADJUST_LINE_AND_CONT(modLine, pos, findString);
+			if( !AdjustLine(modLine, pos, findString) ){
+				break;									
+			}
+			col += (int)findString.Length();
 		}
 	}
 }
 
-bool SearchThread::AdjustLine(wxString &line, int pos, wxString &findString)
+bool SearchThread::AdjustLine(wxString &line, int &pos, wxString &findString)
 {
 	// adjust the current line
 	if( line.Length() - (pos + findString.Length()) >= findString.Length()){
 		line = line.Right(line.Length() - (pos + findString.Length()));
+		pos += (int)findString.Length();
 		return true;
 	} else {
 		return false;
