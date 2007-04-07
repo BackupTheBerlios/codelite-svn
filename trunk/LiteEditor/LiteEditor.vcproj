@@ -135,7 +135,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="&quot;$(WXSTABLE)\include&quot;;&quot;$(WXSTABLE)\lib\vc_lib\msw&quot;;&quot;$(WXSTABLE)\contrib\include&quot;;..\CodeLite;.\include;..\sdk\wxsqlite3\include;..\sdk\wxscintilla\include;..\sdk\wxflatnotebook\include\"
-				PreprocessorDefinitions="WIN32;__WIN32__;__WXMSW__;_WINDOWS"
+				PreprocessorDefinitions="WIN32;__WIN32__;__WXMSW__;_WINDOWS;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -332,6 +332,10 @@
 				RelativePath=".\resources.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\workspace.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -383,6 +387,10 @@
 			</File>
 			<File
 				RelativePath=".\stdwx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\workspace.h"
 				>
 			</File>
 		</Filter>

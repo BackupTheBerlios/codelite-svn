@@ -1,7 +1,17 @@
+/*!
+ * Manager.cpp
+ * 
+ * Copyright (c) 2007 by Eran Ifrah <eran.ifrah@gmail.com>
+ */
 #include "manager.h"
 #include "ctags_manager.h"
 #include "frame.h"
 #include "editor.h"
+#include "menumanager.h"
+#include "language.h"
+#include "editor_config.h"
+#include "parse_thread.h"
+#include "search_thread.h"
 
 Manager::Manager(void)
 {
@@ -9,6 +19,7 @@ Manager::Manager(void)
 
 Manager::~Manager(void)
 {
+	UnInitialize();
 }
 
 wxFrame *Manager::GetMainFrame()
@@ -67,4 +78,35 @@ void Manager::SaveAll()
 			editor->SaveFile();
 		}
 	}
+}
+
+void Manager::UnInitialize()
+{
+	// Release singleton objects
+	TagsManagerST::Free();
+	LanguageST::Free();
+	EditorConfigST::Free();
+	
+	//-----------------------------------------------------
+	// Stop the parser thread and release its resources
+	// This is required if you want to avoid memory leaks
+	// Stopping the parser thread can take up to several 
+	// seconds
+	// since we block until the thread complets its current 
+	// work on the queue
+	//-----------------------------------------------------
+	ParseThreadST::Get()->Stop();
+	ParseThreadST::Free();
+
+	// Stop the search thread and free its resources
+	SearchThreadST::Get()->Stop();
+	SearchThreadST::Free();
+
+	wxFlatNotebook::CleanUp();
+	MenuManager::Free();
+}
+
+bool Manager::CreateWorkspace(const wxString &name, const wxString &path)
+{
+	return true;
 }

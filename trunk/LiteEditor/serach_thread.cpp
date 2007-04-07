@@ -1,10 +1,10 @@
 #include "search_thread.h"
 #include "wx/event.h"
-#include "dirtraverser.h"
 #include <wx/txtstrm.h>
 #include <wx/wfstream.h>
 #include <iostream>
 #include <wx/tokenzr.h>
+#include <wx/dir.h>
 
 #define ADJUST_LINE_AND_CONT(modLine, pos, findString)	\
 {														\
@@ -23,22 +23,9 @@ DEFINE_EVENT_TYPE(wxEVT_SEARCH_THREAD_SEARCHCANCELED)
 // SearchData
 //----------------------------------------------------------------
 
-std::map<wxString, bool> SearchData::GetExtensions() const 
+const wxString& SearchData::GetExtensions() const 
 {
-	std::map<wxString, bool> exts;
-	wxStringTokenizer tok(m_validExt, wxT(";"));
-	
-	// return empty map to indicate search in all...
-	if(m_validExt == wxT("*.*") || m_validExt == wxT("*")){
-		return exts;
-	}
-
-	while( tok.HasMoreTokens() ) {
-		wxString token = tok.GetNextToken();
-		token = token.AfterFirst(wxT('.'));
-		exts[token] = true;
-	}
-	return exts;
+	return m_validExt;
 }
 
 //----------------------------------------------------------------
@@ -130,10 +117,8 @@ void SearchThread::PerformSearch(const SearchData &data)
 void SearchThread::DoSearchFiles(const SearchData *data)
 {
 	wxUnusedVar(data);
-	DirTraverser traverser;
 
 	// Get all files
-	traverser.SetExtensions(data->GetExtensions());
 	if( data->GetRootDir().IsEmpty())
 		return;
 
@@ -141,12 +126,12 @@ void SearchThread::DoSearchFiles(const SearchData *data)
 		return;
 
 	StopSearch(false);
+	wxArrayString fileList;
+	wxStringTokenizer tok(data->GetExtensions(), ";");
+	while( tok.HasMoreTokens() )
+		wxDir::GetAllFiles(data->GetRootDir(), &fileList, tok.GetNextToken());
 
-	wxDir dir(data->GetRootDir());
-	dir.Traverse(traverser);
-
-	std::vector<wxString> files = traverser.GetFiles();
-	for(size_t i=0; i<files.size(); i++){
+	for(size_t i=0; i<fileList.Count(); i++){
 		
 		m_summary.SetNumFileScanned((int)i+1);
 
@@ -158,7 +143,7 @@ void SearchThread::DoSearchFiles(const SearchData *data)
 			break;
 		}
 
-		DoSearchFile(files[i], data);
+		DoSearchFile(fileList.Item(i), data);
 	}
 }
 
@@ -362,5 +347,5 @@ void SearchThread::SendEvent(wxEventType type)
 	if( m_notifiedWindow ){
 		::wxPostEvent(m_notifiedWindow, event);
 	}
-	wxThread::Sleep(10);
+	wxThread::Sleep(5);
 }

@@ -87,7 +87,7 @@ public:
 	void SetRegularExpression(bool re){ SetOption(wxSD_REGULAREXPRESSION, re); }
 	void SetExtensions(const wxString &exts) { m_validExt = exts; }
 	void SetRootDir(const wxString &rootDir) { m_rootDir = rootDir; }
-	std::map<wxString, bool> GetExtensions() const;
+	const wxString& GetExtensions() const;
 	const wxString &GetFindString() const { return m_findString; }
 	void SetFindString(const wxString &findString){ m_findString = findString; }
 };

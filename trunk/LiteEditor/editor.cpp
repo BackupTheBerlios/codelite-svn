@@ -184,7 +184,7 @@ void LEditor::SetProperties()
 
 	// no local configfile found, check if there is one in the installPath
     if(!ConfigFileFound) {
-		wxString installPath = Manager::Get()->GetInstallPath();
+		wxString installPath = ManagerST::Get()->GetInstallPath();
         ConfigFileName = wxFileName(installPath, ConfigFileName.GetFullName());
         ConfigFileFound = ConfigFileName.FileExists();
     } 
@@ -238,11 +238,11 @@ void LEditor::SetProperties()
 void LEditor::SetDirty(bool dirty)
 {
 	if( dirty ){
-		if( !Manager::Get()->GetPageTitle(this).StartsWith(wxT("*")) ){
-			Manager::Get()->SetPageTitle(this, wxT("*") + Manager::Get()->GetPageTitle(this));
+		if( !ManagerST::Get()->GetPageTitle(this).StartsWith(wxT("*")) ){
+			ManagerST::Get()->SetPageTitle(this, wxT("*") + ManagerST::Get()->GetPageTitle(this));
 		}
 	} else {
-		Manager::Get()->SetPageTitle(this, GetFileName().GetFullName());
+		ManagerST::Get()->SetPageTitle(this, GetFileName().GetFullName());
 	}
 }
 
@@ -387,7 +387,7 @@ bool LEditor::SaveToFile(const wxFileName &fileName)
 	SetSavePoint();
 
 	// update the file name (remove the star from the file name)
-	Manager::Get()->SetPageTitle(this, fileName.GetFullName());
+	ManagerST::Get()->SetPageTitle(this, fileName.GetFullName());
 	return true;
 }
 
@@ -652,7 +652,7 @@ void LEditor::GotoDefinition()
 		history.SetProject(m_project);
 
 		// Just open the file and set the cursor on the match we found
-		Manager::Get()->OpenFile(tags[0]);
+		ManagerST::Get()->OpenFile(tags[0]);
 		m_history.push(history);
 	}
 	else
@@ -676,7 +676,7 @@ void LEditor::GotoPreviousDefintion()
 
 	// Get the last tag visited
 	TagEntry tag(m_history.top());
-	Manager::Get()->OpenFile(tag);
+	ManagerST::Get()->OpenFile(tag);
 
 	// remove it from the stack
 	m_history.pop();
@@ -1152,7 +1152,7 @@ void LEditor::DoFindAndReplace()
 	if( m_findReplaceDlg == NULL ) 
 	{
 		// Create the dialog
-		m_findReplaceDlg = new FindReplaceDialog(Manager::Get()->GetMainFrame(), m_findReplaceData);
+		m_findReplaceDlg = new FindReplaceDialog(ManagerST::Get()->GetMainFrame(), m_findReplaceData);
 		m_findReplaceDlg->SetEventOwner(this->GetEventHandler());
 	}
 	

@@ -117,6 +117,8 @@ Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPo
 {
 	CreateGUIControls();
 
+	ManagerST::Get();	// Dummy call
+
 	// Start the search thread
 	SearchThreadST::Get()->SetNotifyWindow(this);
 	SearchThreadST::Get()->Start();
@@ -124,29 +126,7 @@ Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPo
 
 Frame::~Frame(void)
 {
-	// Release singleton objects
-	TagsManagerST::Free();
-	LanguageST::Free();
-	EditorConfigST::Free();
-	Manager::Free();
-
-	//-----------------------------------------------------
-	// Stop the parser thread and release its resources
-	// This is required if you want to avoid memory leaks
-	// Stopping the parser thread can take up to several 
-	// seconds
-	// since we block until the thread complets its current 
-	// work on the queue
-	//-----------------------------------------------------
-	ParseThreadST::Get()->Stop();
-	ParseThreadST::Free();
-
-	// Stop the search thread and free its resources
-	SearchThreadST::Get()->Stop();
-	SearchThreadST::Free();
-
-	wxFlatNotebook::CleanUp();
-	MenuManager::Free();
+	ManagerST::Free();
 
 	if(m_config)
 		delete m_config;
@@ -685,7 +665,7 @@ void Frame::OnPageChanged(wxFlatNotebookEvent &event)
 void Frame::OnFileSaveAll(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	Manager::Get()->SaveAll();
+	ManagerST::Get()->SaveAll();
 }
 
 void Frame::OnCompleteWordUpdateUI(wxUpdateUIEvent &event)
