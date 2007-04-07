@@ -1193,6 +1193,14 @@ void LEditor::OnFindDialog(wxCommandEvent& event)
 			}
 		}
 	}
+	else if(type == wxEVT_FRD_REPLACEALL)
+	{
+		ReplaceAll();
+	}
+	else if(type == wxEVT_FRD_BOOKMARKALL)
+	{
+		MarkAll();
+	}
 }
 
 void LEditor::FindNext(const FindReplaceData &data)
@@ -1361,4 +1369,73 @@ void LEditor::FindPrevMarker()
 			GotoLine(nFoundLine);
 		}
 	}
+}
+
+bool LEditor::ReplaceAll()
+{
+	int occur = 0;
+	wxString findWhat = m_findReplaceDlg->GetData().GetFindString();
+	wxString replaceWith = m_findReplaceDlg->GetData().GetReplaceString();
+	int flags = (int)m_findReplaceDlg->GetData().GetFlags();
+
+	if (findWhat.IsEmpty()) {
+        return false;
+    }
+
+    BeginUndoAction();
+	long pos = 0;
+	
+	// Save the caret position
+	long savedPos = GetCurrentPos();
+
+	SetCaretAt(0);
+    while ((pos = FindString(findWhat, flags, true, pos)) >= 0) 
+	{
+		occur++;
+        ReplaceTarget (replaceWith);
+		pos += (int)replaceWith.Length();
+		SetCaretAt(pos);
+	}
+	
+	// Restore the caret
+	SetCaretAt(savedPos);
+
+    EndUndoAction();
+	
+	wxString message;
+	message << wxT("Replacements: ") << occur;
+	m_findReplaceDlg->SetReplacementsMessage(message);
+	return occur > 0;
+}
+
+bool LEditor::MarkAll()
+{
+	long pos = wxSCI_INVALID_POSITION;
+	long savedPos = GetCurrentPos();
+	wxString findWhat = m_findReplaceDlg->GetData().GetFindString();
+	int flags = (int)m_findReplaceDlg->GetData().GetFlags();
+
+	if(findWhat.IsEmpty())
+		return false;
+
+	// Set the cursor to start
+	SetCaretAt(0);
+
+	while ((pos = FindString (findWhat, flags, true, pos)) >= 0) 
+	{
+		MarkerAdd(LineFromPosition(pos), 0x8);
+		pos = PositionAfter(pos);
+		SetCaretAt(pos);
+	}
+
+	// Resttore the caret
+	SetCaretAt(savedPos);
+	return true;
+}
+
+void LEditor::SetCaretAt(const long pos)
+{
+	SetCurrentPos(pos);
+	SetSelectionStart(pos);
+	SetSelectionEnd(pos);
 }

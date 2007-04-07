@@ -115,6 +115,10 @@ public:
 	void FindNextMarker();
 	// Find previous marker and move cursor to that line
 	void FindPrevMarker();
+	// Replace all 
+	bool ReplaceAll();
+	// mark all occurances
+	bool MarkAll();
 
 	static FindReplaceDialog* GetFindReplaceDialog() { return m_findReplaceDlg; }
 
@@ -126,6 +130,7 @@ protected:
 	int  FindString (const wxString &str, int flags, const bool down, long pos);
 	bool IsCommentOrString(long pos);
 	void SetDirty(bool dirty);
+	void SetCaretAt(long pos);	
 	
 	bool FindAndSelect();
 	bool FindAndSelect(const FindReplaceData &data);

@@ -84,6 +84,10 @@ void FindReplaceDialog::CreateGUIControls()
 	wxStaticBoxSizer *sz = new wxStaticBoxSizer(wxVERTICAL, this, wxT("Options"));
 	gbSizer->Add(sz, wxGBPosition(2, 0), wxGBSpan(1, 2),  wxALL | wxEXPAND, 5 );
 
+	m_replacementsMsg = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	gbSizer->Add(m_replacementsMsg, wxGBPosition(3, 0), wxGBSpan(1, 2), wxALL | wxEXPAND, 5); 
+	SetReplacementsMessage(wxT("Replacements: 0"));
+
 	m_matchCase = new wxCheckBox(this, wxID_ANY, wxT("&Match case"));
 	m_matchCase->SetValue(m_data.GetFlags() & wxFRD_MATCHCASE ? true : false);
 	sz->Add(m_matchCase, 1, wxALL | wxEXPAND, 5 );
@@ -103,7 +107,7 @@ void FindReplaceDialog::CreateGUIControls()
 	m_searchUp = new wxCheckBox(this, wxID_ANY, wxT("Search &up"));
 	m_searchUp->SetValue(m_data.GetFlags() & wxFRD_SEARCHUP ? true : false);
 	sz->Add(m_searchUp, 1, wxALL | wxEXPAND, 5 ); 
-
+	
 	// Add the buttons
 	
 	m_find = new wxButton(this, wxID_ANY, wxT("&Find Next"));
@@ -223,4 +227,9 @@ bool FindReplaceDialog::Show()
 		return true;
 
 	return wxDialog::Show();
+}
+
+void FindReplaceDialog::SetReplacementsMessage(const wxString &msg)
+{
+	m_replacementsMsg->SetLabel(msg);
 }

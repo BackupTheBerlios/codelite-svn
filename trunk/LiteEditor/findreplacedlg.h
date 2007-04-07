@@ -66,6 +66,8 @@ public:
 
 };
 
+class wxStaticText;
+
 class FindReplaceDialog : public wxDialog
 {
 	wxEvtHandler *m_owner;
@@ -87,6 +89,7 @@ class FindReplaceDialog : public wxDialog
 	wxButton *m_replaceAll;
 	wxButton *m_markAll;
 	wxButton *m_cancel;
+	wxStaticText *m_replacementsMsg;
 
 public:
 	virtual ~FindReplaceDialog( );
@@ -116,6 +119,9 @@ public:
 
 	void SetEventOwner(wxEvtHandler *owner) { m_owner = owner; }
 	wxEvtHandler *GetEventOwner() const { return m_owner; }
+
+	// Set the replacements message
+	void SetReplacementsMessage(const wxString &msg);
 
 protected:
 	void CreateGUIControls();
