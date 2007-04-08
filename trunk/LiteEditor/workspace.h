@@ -5,6 +5,8 @@
 #include "wx/string.h"
 #include <wx/xml/xml.h>
 #include "wx/filename.h"
+#include "project.h"
+#include <map>
 
 /*!
  * \brief
@@ -16,6 +18,7 @@ class Workspace
 	friend class Singleton<Workspace>;
 	wxXmlDocument m_doc;
 	wxFileName m_fileName;
+	std::map<wxString, ProjectPtr> m_projects;
 
 private:
 
@@ -53,6 +56,23 @@ public:
 	 * true on success false otherwise
 	 */
 	bool OpenWorkspace(const wxString &fileName);
+
+	/**
+	 * \brief
+	 * Create a new project with given name, path and type
+	 * 
+	 * \param name
+	 * project name
+	 * 
+	 * \param path
+	 * project path
+	 *
+	 * \param type
+	 * Can be Project::EXECUTABLE, Project::STATIC_LIBRARY or Project::DYNAMIC_LIBRARY
+	 * \returns
+	 * true on success false otherwise
+	 */
+	bool CreateProject(const wxString &name, const wxString &path, const wxString &type);
 
 	/**
 	 * \brief get a string property from the worksapce file

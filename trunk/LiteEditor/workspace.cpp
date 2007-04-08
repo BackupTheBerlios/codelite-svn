@@ -1,6 +1,6 @@
 #include "workspace.h"
 #include "ctags_manager.h"
-#include "dirsaver.h"
+#include "project.h"
 
 Workspace::Workspace()
 {
@@ -15,14 +15,15 @@ Workspace::~Workspace()
 
 bool Workspace::OpenWorkspace(const wxString &fileName)
 {
-	// Construct a DirSaver object 
-	DirSaver saver;
-
 	m_fileName =  wxFileName(fileName);
+
 	m_doc.Load(m_fileName.GetFullPath());
 	if( !m_doc.IsOk() ){
 		return false;
 	}
+
+	// This function sets the working directory to the workspace directory!
+	::wxSetWorkingDirectory(m_fileName.GetPath());
 
 	// Load the database
 	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"));
@@ -44,9 +45,6 @@ bool Workspace::OpenWorkspace(const wxString &fileName)
 
 bool Workspace::CreateWorkspace(const wxString &name, const wxString &path)
 {
-	// Construct a DirSaver object 
-	DirSaver saver;
-
 	// If we have an open workspace, close it
 	if( m_doc.IsOk() ){
 		m_doc.Save(m_fileName.GetFullPath());
@@ -55,6 +53,8 @@ bool Workspace::CreateWorkspace(const wxString &name, const wxString &path)
 	// Create new
 	// Open workspace database
 	m_fileName = wxFileName(path, name + wxT(".clw"));
+
+	// This function sets the working directory to the workspace directory!
 	::wxSetWorkingDirectory(m_fileName.GetPath());
 
 	wxFileName dbFileName(wxT("./") + name + wxT(".tags"));
@@ -79,4 +79,23 @@ wxString Workspace::GetStringProperty(const wxString &propName)
 		return wxEmptyString;
 
 	return rootNode->GetPropVal(propName, wxEmptyString);
+}
+
+bool Workspace::CreateProject(const wxString &name, const wxString &path, const wxString &type)
+{
+	ProjectPtr proj(new Project());
+	proj->Create(name, path, type);
+	m_projects[name] = proj;
+
+	// make the project path to be relative to the workspace
+	wxFileName tmp(path);
+	tmp.MakeRelativeTo(m_fileName.GetPath());
+
+	// Add an entry to the workspace file
+	wxXmlNode *node = new wxXmlNode(m_doc.GetRoot(), wxXML_ELEMENT_NODE, wxT("Project"));
+	node->AddProperty(wxT("Name"), name);
+	node->AddProperty(wxT("Path"), tmp.GetFullPath());
+	m_doc.GetRoot()->AddChild(node);
+	m_doc.Save(m_fileName.GetFullPath());
+	return true;
 }

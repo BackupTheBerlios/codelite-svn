@@ -23,6 +23,7 @@
 #include <wx/aboutdlg.h>
 #include "findinfilesdlg.h"
 #include "search_thread.h"
+#include "project.h"
 
 #define ID_CTAGS_GLOBAL_ID		10500
 #define ID_CTAGS_LOCAL_ID		10501
@@ -766,5 +767,5 @@ void Frame::OnCreateProject(wxCommandEvent &event)
 
 	wxString projectName = GetStringFromUser(wxT("Insert Project Name:"));
 	if( !projectName.IsEmpty() )
-		ManagerST::Get()->CreateProject(projectName);
+		ManagerST::Get()->CreateProject(projectName, wxT("C:\\Development\\Proj.clp"), Project::EXECUTABLE);
 }

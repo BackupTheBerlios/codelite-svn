@@ -94,8 +94,11 @@ public:
 	 
 	/**
 	 * \brief create an empty project
+	 * \param name project name
+	 * \param path project file path
+	 * \param type project type, Project::STATIC_LIBRARY, Project::DYNAMIC_LIBRARY or Project::EXECUTABLE
 	 */
-	void CreateProject(const wxString &name);
+	void CreateProject(const wxString &name, const wxString &path, const wxString &type);
 
 	/**
 	 * Open an existing workspace by path

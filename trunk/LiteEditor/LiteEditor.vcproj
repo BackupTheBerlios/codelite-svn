@@ -329,6 +329,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\project.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\resources.cpp"
 				>
 			</File>
@@ -379,6 +383,10 @@
 			</File>
 			<File
 				RelativePath=".\menumanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\project.h"
 				>
 			</File>
 			<File

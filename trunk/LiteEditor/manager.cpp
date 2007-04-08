@@ -121,7 +121,7 @@ bool Manager::CreateWorkspace(const wxString &name, const wxString &path)
 	return res;
 }
 
-void Manager::CreateProject(const wxString &name)
+void Manager::CreateProject(const wxString &name, const wxString &path, const wxString &type)
 {
 	TagsManagerST::Get()->CreateProject(name);
 
@@ -129,11 +129,12 @@ void Manager::CreateProject(const wxString &name)
 	SymbolTree *tree = Frame::Get()->GetSymbolTree();
 	TagTreePtr dummy;
 	tree->BuildTree( dummy );
+
+	WorkspaceST::Get()->CreateProject(name, path, type);
 }
 
 void Manager::OpenWorkspace(const wxString &path)
 {
-	
 	if( !WorkspaceST::Get()->OpenWorkspace(path) )
 		return;
 	
