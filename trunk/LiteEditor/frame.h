@@ -87,6 +87,7 @@ protected:
 	void OnCompleteWordUpdateUI(wxUpdateUIEvent &event);
 	void OnFindInFiles(wxCommandEvent &event);
 	void OnCreateWorkspace(wxCommandEvent &event);
+	void OnSwitchWorkspace(wxCommandEvent &event);
 	void OnCreateProject(wxCommandEvent &event);
 	void OnWorkspaceOpen(wxUpdateUIEvent &event);
 

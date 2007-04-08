@@ -97,6 +97,11 @@ public:
 	 */
 	void CreateProject(const wxString &name);
 
+	/**
+	 * Open an existing workspace by path
+	 */
+	void OpenWorkspace(const wxString &path);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

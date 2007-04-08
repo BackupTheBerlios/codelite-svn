@@ -130,3 +130,33 @@ void Manager::CreateProject(const wxString &name)
 	TagTreePtr dummy;
 	tree->BuildTree( dummy );
 }
+
+void Manager::OpenWorkspace(const wxString &path)
+{
+	
+	if( !WorkspaceST::Get()->OpenWorkspace(path) )
+		return;
+	
+	// Load the database
+	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"));
+	wxString exDbfile = WorkspaceST::Get()->GetStringProperty(wxT("ExternalDatabase"));
+
+	if( dbfile.IsEmpty() ){
+		return;
+	}
+
+	TagsManagerST::Get()->OpenDatabase(dbfile);
+	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(_("Workspace DB: '%s'"), dbfile.GetData()), 1);
+
+	// Load the external database
+	if( exDbfile.IsEmpty() == false ){
+		TagsManagerST::Get()->OpenExternalDatabase(exDbfile);
+		Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), exDbfile.GetData()), 2);
+	}
+
+	//------------------------------------------------------------------------------------------
+	// Re-build the gui tree
+	//------------------------------------------------------------------------------------------
+	TagTreePtr dummy;
+	Frame::Get()->GetSymbolTree()->BuildTree( dummy );
+}

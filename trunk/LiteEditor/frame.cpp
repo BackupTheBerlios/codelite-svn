@@ -48,7 +48,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("about"), Frame::OnAbout)
 	EVT_MENU(wxID_NEW, Frame::OnFileNew)
 	EVT_MENU(XRCID("add_file_to_project"), Frame::OnAddSourceFile)
-	EVT_MENU(XRCID("open_workspace"), Frame::OnBuildFromDatabase)
 	EVT_MENU(wxID_OPEN, Frame::OnFileOpen)
 	EVT_FLATNOTEBOOK_PAGE_CLOSING(-1, Frame::OnFileClosing)
 	EVT_FLATNOTEBOOK_PAGE_CHANGED(-1, Frame::OnPageChanged)
@@ -73,6 +72,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("removeall_bookmarks"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("find_in_files"), Frame::OnFindInFiles)
 	EVT_MENU(XRCID("new_workspace"), Frame::OnCreateWorkspace)
+	EVT_MENU(XRCID("switch_to_workspace"), Frame::OnSwitchWorkspace)
 	EVT_MENU(XRCID("new_project"), Frame::OnCreateProject)
 
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
@@ -439,30 +439,14 @@ void Frame::OnSaveAs(wxCommandEvent& WXUNUSED(event))
 	editor->SaveFileAs();
 }
 
-void Frame::OnBuildFromDatabase(wxCommandEvent& WXUNUSED(event))
+void Frame::OnSwitchWorkspace(wxCommandEvent &event)
 {
-	const wxString ALL(_T("Tags Database File (*.db)|*.db|")
-					   _T("All Files (*.*)|*.*"));
-	wxFileDialog *dlg = new wxFileDialog(this, _("Open file"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , wxDefaultPosition);
-
-	if (dlg->ShowModal() == wxID_OK)
-	{
-		// get the path
-		wxFileName databaseFile(dlg->GetPath());
-		TagsManagerST::Get()->OpenDatabase(databaseFile);
-
-		//------------------------------------------------------------------------------------------
-		// Re-build the gui tree
-		// This function, if it does not receive a TagTree to work with, it will call
-		// TagsManagerST::Get()->Load() - which will return the tree for the current
-		// open database
-		// By calling TagsManagerST::Get()->OpenDatabase(databaseFile);, we force the BuildTree() 
-		// function to work with our database
-		//------------------------------------------------------------------------------------------
-		TagTreePtr dummy;
-		m_tree->BuildTree( dummy );
-
-		GetStatusBar()->SetStatusText(wxString::Format(_("Workspace DB: '%s'"), databaseFile.GetFullPath().GetData()), 1);
+	wxUnusedVar(event);
+	const wxString ALL(wxT("Code Lite Workspace files (*.clw)|*.clw|")
+					   wxT("All Files (*.*)|*.*"));
+	wxFileDialog *dlg = new wxFileDialog(this, wxT("Open Workspace"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , wxDefaultPosition);
+	if (dlg->ShowModal() == wxID_OK){
+		ManagerST::Get()->OpenWorkspace(dlg->GetPath());
 	}
 	dlg->Destroy();
 }

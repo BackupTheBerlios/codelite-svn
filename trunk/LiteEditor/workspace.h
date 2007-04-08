@@ -46,16 +46,19 @@ public:
 	 * \brief
 	 * Open an existing workspace
 	 * 
-	 * \param name
-	 * Workspace name
-	 * 
-	 * \param path
-	 * Workspace location 
+	 * \param fileName
+	 * Workspace file name (including extesion)
 	 * 
 	 * \returns
 	 * true on success false otherwise
 	 */
-	bool OpenWorkspace(const wxString &name, const wxString &path);
+	bool OpenWorkspace(const wxString &fileName);
+
+	/**
+	 * \brief get a string property from the worksapce file
+	 * \returns property value or wxEmptyString 
+	 */
+	wxString GetStringProperty(const wxString &propName);
 };
 
 typedef Singleton<Workspace> WorkspaceST;
