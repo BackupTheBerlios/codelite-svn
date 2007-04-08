@@ -8,14 +8,36 @@ Workspace::Workspace()
 
 Workspace::~Workspace()
 {
+	if( m_doc.IsOk() ){
+		m_doc.Save(m_fileName.GetFullPath());
+	}
 }
 
 bool Workspace::OpenWorkspace(const wxString &fileName)
 {
+	// Construct a DirSaver object 
+	DirSaver saver;
+
 	m_fileName =  wxFileName(fileName);
 	m_doc.Load(m_fileName.GetFullPath());
 	if( !m_doc.IsOk() ){
 		return false;
+	}
+
+	// Load the database
+	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"));
+	wxString exDbfile = WorkspaceST::Get()->GetStringProperty(wxT("ExternalDatabase"));
+	if( dbfile.IsEmpty() ){
+		return false;
+	}
+
+	// the database file names are relative to the workspace,
+	// convert them to absolute path
+	TagsManagerST::Get()->OpenDatabase(m_fileName.GetPath() + wxT("/") + dbfile);
+
+	// Load the external database
+	if( exDbfile.IsEmpty() == false ){
+		TagsManagerST::Get()->OpenExternalDatabase(m_fileName.GetPath() + wxT("/") + exDbfile);
 	}
 	return true;
 }
@@ -44,7 +66,6 @@ bool Workspace::CreateWorkspace(const wxString &name, const wxString &path)
 	m_doc.GetRoot()->AddProperty(wxT("Database"), dbFileName.GetFullPath());
 	m_doc.GetRoot()->AddProperty(wxT("ExternalDatabase"), wxEmptyString);
 	m_doc.Save(m_fileName.GetFullPath());
-
 	return true;
 }
 

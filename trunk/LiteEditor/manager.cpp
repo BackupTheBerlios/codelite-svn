@@ -137,26 +137,13 @@ void Manager::OpenWorkspace(const wxString &path)
 	if( !WorkspaceST::Get()->OpenWorkspace(path) )
 		return;
 	
-	// Load the database
+	// update status bar
 	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"));
 	wxString exDbfile = WorkspaceST::Get()->GetStringProperty(wxT("ExternalDatabase"));
+	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("Workspace DB: '%s'"), dbfile.GetData()), 1);
+	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), exDbfile.GetData()), 2);
 
-	if( dbfile.IsEmpty() ){
-		return;
-	}
-
-	TagsManagerST::Get()->OpenDatabase(dbfile);
-	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(_("Workspace DB: '%s'"), dbfile.GetData()), 1);
-
-	// Load the external database
-	if( exDbfile.IsEmpty() == false ){
-		TagsManagerST::Get()->OpenExternalDatabase(exDbfile);
-		Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), exDbfile.GetData()), 2);
-	}
-
-	//------------------------------------------------------------------------------------------
-	// Re-build the gui tree
-	//------------------------------------------------------------------------------------------
+	// update symbol tree
 	TagTreePtr dummy;
 	Frame::Get()->GetSymbolTree()->BuildTree( dummy );
 }
