@@ -46,6 +46,7 @@ public:
 	void OpenFile(const TagEntry& tag);
 	const wxString& GetInstallPath() const { return m_installPath; }
 	wxFlatNotebook *GetNotebook() { return m_notebook; }
+	SymbolTree *GetSymbolTree() { return m_tree; }
 	void CloseActiveFile();
 
 private:
@@ -85,7 +86,9 @@ protected:
 	void OnFileExistUpdateUI(wxUpdateUIEvent &event);
 	void OnCompleteWordUpdateUI(wxUpdateUIEvent &event);
 	void OnFindInFiles(wxCommandEvent &event);
-
+	void OnCreateWorkspace(wxCommandEvent &event);
+	void OnCreateProject(wxCommandEvent &event);
+	void OnWorkspaceOpen(wxUpdateUIEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

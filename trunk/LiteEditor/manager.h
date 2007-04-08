@@ -91,7 +91,12 @@ public:
 	 * true if succeeded, false otherwise
 	 */
 	bool CreateWorkspace(const wxString& name, const wxString &path);
- 
+	 
+	/**
+	 * \brief create an empty project
+	 */
+	void CreateProject(const wxString &name);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

@@ -72,6 +72,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("previous_bookmark"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("removeall_bookmarks"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("find_in_files"), Frame::OnFindInFiles)
+	EVT_MENU(XRCID("new_workspace"), Frame::OnCreateWorkspace)
+	EVT_MENU(XRCID("new_project"), Frame::OnCreateProject)
 
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
@@ -95,6 +97,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("next_bookmark"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(XRCID("previous_bookmark"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(XRCID("removeall_bookmarks"), Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(XRCID("new_project"), Frame::OnWorkspaceOpen)
+	EVT_UPDATE_UI(XRCID("add_project"), Frame::OnWorkspaceOpen)
 
 	/*
 	EVT_MENU(ID_COMPLETE_WORD, Frame::OnCompleteWord)
@@ -760,3 +764,23 @@ void Frame::OnFindInFiles(wxCommandEvent &event)
 	m_findInFilesDlg->Show();
 }
 
+void Frame::OnWorkspaceOpen(wxUpdateUIEvent &event)
+{
+	event.Enable(ManagerST::Get()->IsWorkspaceOpen());
+}
+
+void Frame::OnCreateWorkspace(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	// TODO:: prompt user for name and location
+	ManagerST::Get()->CreateWorkspace(wxT("TestWorkspace"), wxT("C:\\"));
+}
+
+void Frame::OnCreateProject(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+
+	wxString projectName = GetStringFromUser(wxT("Insert Project Name:"));
+	if( !projectName.IsEmpty() )
+		ManagerST::Get()->CreateProject(projectName);
+}

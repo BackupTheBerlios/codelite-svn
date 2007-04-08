@@ -140,6 +140,12 @@ public:
 	std::vector<TagEntry>* ParseLocals(const wxString& scope);
 
 	/**
+	 * Create an empty project in the tags database
+	 * \param projectName the project name to create
+	 */	
+	void CreateProject(const wxString &projectName);
+	
+	/**
 	 * \brief Set the full path to ctags executable, else TagsManager will use relative path ctags.
 	 * So, if for example, ctags is located at: $/home/eran/bin$, you simply call this function
 	 * with SetCtagsPath(_T("/home/eran/bin"));

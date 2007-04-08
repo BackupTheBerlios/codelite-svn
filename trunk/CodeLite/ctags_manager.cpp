@@ -275,6 +275,26 @@ TagTreePtr TagsManager::ParseSourceFile(const wxFileName& fp, const wxString& pr
 	return ttp;
 }
 
+void TagsManager::CreateProject(const wxString &projectName)
+{
+	// Make this call threadsafe
+	wxCriticalSectionLocker locker(m_cs);
+
+	// Create a tag entry of type project and fill the missing 
+	// values
+	TagEntry proj;
+	proj.SetPath(projectName);
+	proj.SetName(projectName);
+	proj.SetProject(projectName);
+	proj.SetKind(_T("project"));
+
+	// Obtain an sql insert statement
+	wxSQLite3Statement insertStmt = m_pDb->PrepareStatement(proj.GetInsertOneStatement());
+
+	// store the project into the database
+	proj.Store( insertStmt );
+}
+
 TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, const wxString& project, std::vector<DbRecordPtr> *comments)
 {
 	// Make this call threadsafe
@@ -417,7 +437,7 @@ TagTreePtr TagsManager::Load(const wxFileName& path, const wxString& project)
 	}
 	catch (wxSQLite3Exception& e)
 	{
-		std::cerr << e.GetErrorCode() << ":" << e.GetMessage().mb_str() << std::endl;
+		std::cerr << e.GetErrorCode() << wxT(":") << e.GetMessage().mb_str() << std::endl;
 	}
 	return tree;
 }
@@ -945,7 +965,10 @@ void TagsManager::DeleteProject(const wxString& projectName)
 	m_pDb->Commit();
 }
 
-void TagsManager::BuildExternalDatabase(const wxFileName& rootDir, const wxFileName &dbName, const wxString& WXUNUSED(language), wxWindow* updateDlgParent/** null */)
+void TagsManager::BuildExternalDatabase(const wxFileName& rootDir, 
+										const wxFileName &dbName, 
+										const wxString& WXUNUSED(language), 
+										wxWindow* updateDlgParent/** null */)
 {
 	// check that root dir exist
 	if(!wxDir::Exists(rootDir.GetFullPath()))
@@ -985,7 +1008,7 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir, const wxFileN
 		if( prgDlg )
 		{
 			wxString msg;
-			msg << _("File: ") << curFile.GetFullPath();
+			msg << wxT("File:\n") << curFile.GetFullPath();
 			prgDlg->Update(i, msg);
 		}
 

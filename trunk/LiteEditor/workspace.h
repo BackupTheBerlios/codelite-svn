@@ -3,6 +3,8 @@
 
 #include "singleton.h"
 #include "wx/string.h"
+#include <wx/xml/xml.h>
+#include "wx/filename.h"
 
 /*!
  * \brief
@@ -11,6 +13,10 @@
  */
 class Workspace 
 {
+	friend class Singleton<Workspace>;
+	wxXmlDocument m_doc;
+	wxFileName m_fileName;
+
 private:
 
 	/// Constructor
@@ -21,7 +27,7 @@ private:
 
 public:
 
-	/*!
+	/**
 	 * \brief
 	 * Create a new workspace
 	 * 
@@ -36,7 +42,7 @@ public:
 	 */
 	bool CreateWorkspace(const wxString &name, const wxString &path);
 
-	/*!
+	/**
 	 * \brief
 	 * Open an existing workspace
 	 * 
@@ -51,4 +57,7 @@ public:
 	 */
 	bool OpenWorkspace(const wxString &name, const wxString &path);
 };
+
+typedef Singleton<Workspace> WorkspaceST;
+
 #endif // WORKSPACE_H

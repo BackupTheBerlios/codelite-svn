@@ -134,11 +134,11 @@
         <object class="wxMenu" name="project_menu">
             <label>&amp;Project</label>
             <style>wxMENU_TEAROFF</style>
-            <object class="wxMenuItem" name="new_project">
+            <object class="wxMenuItem" name="new_workspace">
                 <label>&amp;Create New Workspace...</label>
                 <help>Create New workspace</help>
             </object>
-            <object class="wxMenuItem" name="new_project">
+            <object class="wxMenuItem" name="switch_to_workspace">
                 <label>&amp;Switch to Workspace...</label>
                 <help>Switch to an existing workspace</help>
             </object>
@@ -146,7 +146,7 @@
                 <label>&amp;Create New Project\tCtrl+Shift+N</label>
                 <help>Create New Project and add it to the current workspace</help>
             </object>
-            <object class="wxMenuItem" name="new_project">
+            <object class="wxMenuItem" name="add_project">
                 <label>&amp;Add an Existing Project\tCtrl+Shift+A</label>
                 <help>Add an existing project to the current workspace</help>
             </object>            

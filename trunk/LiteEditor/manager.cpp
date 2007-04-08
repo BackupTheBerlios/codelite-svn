@@ -12,6 +12,8 @@
 #include "editor_config.h"
 #include "parse_thread.h"
 #include "search_thread.h"
+#include "workspace.h"
+#include "cpp_symbol_tree.h"
 
 Manager::Manager(void)
 {
@@ -86,7 +88,8 @@ void Manager::UnInitialize()
 	TagsManagerST::Free();
 	LanguageST::Free();
 	EditorConfigST::Free();
-	
+	WorkspaceST::Free();
+
 	//-----------------------------------------------------
 	// Stop the parser thread and release its resources
 	// This is required if you want to avoid memory leaks
@@ -108,5 +111,22 @@ void Manager::UnInitialize()
 
 bool Manager::CreateWorkspace(const wxString &name, const wxString &path)
 {
-	return true;
+	bool res = WorkspaceST::Get()->CreateWorkspace(name, path);
+
+	// Update the symbol tree
+	SymbolTree *tree = Frame::Get()->GetSymbolTree();
+	TagTreePtr dummy;
+	tree->BuildTree( dummy );
+
+	return res;
+}
+
+void Manager::CreateProject(const wxString &name)
+{
+	TagsManagerST::Get()->CreateProject(name);
+
+	// Update the symbol tree
+	SymbolTree *tree = Frame::Get()->GetSymbolTree();
+	TagTreePtr dummy;
+	tree->BuildTree( dummy );
 }
