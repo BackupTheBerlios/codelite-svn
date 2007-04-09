@@ -340,6 +340,10 @@
 				RelativePath=".\workspace.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\xmlutils.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -399,6 +403,10 @@
 			</File>
 			<File
 				RelativePath=".\workspace.h"
+				>
+			</File>
+			<File
+				RelativePath=".\xmlutils.h"
 				>
 			</File>
 		</Filter>

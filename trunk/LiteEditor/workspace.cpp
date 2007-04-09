@@ -25,12 +25,25 @@ bool Workspace::OpenWorkspace(const wxString &fileName)
 	// This function sets the working directory to the workspace directory!
 	::wxSetWorkingDirectory(m_fileName.GetPath());
 
+	// Load all projects
+	wxXmlNode *child = m_doc.GetRoot()->GetChildren();
+	while(child){
+		if(child->GetName() == wxT("Project")){
+			wxString projectPath = child->GetPropVal(wxT("Path"), wxEmptyString);
+			ProjectPtr proj(new Project());
+			proj->Load(projectPath);
+			m_projects[proj->GetName()] = proj;
+		}
+		child = child->GetNext();
+	}
+
 	// Load the database
 	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"));
 	wxString exDbfile = WorkspaceST::Get()->GetStringProperty(wxT("ExternalDatabase"));
 	if( dbfile.IsEmpty() ){
 		return false;
 	}
+	
 
 	// the database file names are relative to the workspace,
 	// convert them to absolute path
@@ -52,7 +65,7 @@ bool Workspace::CreateWorkspace(const wxString &name, const wxString &path)
 	
 	// Create new
 	// Open workspace database
-	m_fileName = wxFileName(path, name + wxT(".clw"));
+	m_fileName = wxFileName(path, name + wxT(".workspace"));
 
 	// This function sets the working directory to the workspace directory!
 	::wxSetWorkingDirectory(m_fileName.GetPath());
@@ -90,12 +103,26 @@ bool Workspace::CreateProject(const wxString &name, const wxString &path, const 
 	// make the project path to be relative to the workspace
 	wxFileName tmp(path);
 	tmp.MakeRelativeTo(m_fileName.GetPath());
-
+	
+	// find the last project in this workspace and append the node after it
+	wxXmlNode *last_proj = NULL;
+	wxXmlNode *child = m_doc.GetRoot()->GetChildren();
+	while( child ){
+		if( child->GetName() == wxT("Project")){
+			last_proj = child;
+		}
+		child = child->GetNext();
+	}
+	
 	// Add an entry to the workspace file
 	wxXmlNode *node = new wxXmlNode(m_doc.GetRoot(), wxXML_ELEMENT_NODE, wxT("Project"));
 	node->AddProperty(wxT("Name"), name);
 	node->AddProperty(wxT("Path"), tmp.GetFullPath());
-	m_doc.GetRoot()->AddChild(node);
+	if( !last_proj ){
+		m_doc.GetRoot()->AddChild(node);
+	} else {
+		m_doc.GetRoot()->InsertChild(node, last_proj);
+	}
 	m_doc.Save(m_fileName.GetFullPath());
 	return true;
 }

@@ -1,4 +1,5 @@
 #include "project.h"
+#include "xmlutils.h"
 
 const wxString Project::STATIC_LIBRARY = wxT("STATIC_LIBRARY");
 const wxString Project::DYMANIC_LIBRARY = wxT("DYMANIC_LIBRARY");
@@ -20,10 +21,16 @@ bool Project::Create(const wxString &name, const wxFileName &path, const wxStrin
 	m_doc.GetRoot()->AddProperty(wxT("Name"), name);
 	m_doc.GetRoot()->AddProperty(wxT("Type"), projType);
 
-	// Create the default virtual directory
-	wxXmlNode *vd = new wxXmlNode(m_doc.GetRoot(), wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
-	vd->AddProperty(wxT("Name"), wxT("Default"));
-	m_doc.GetRoot()->AddChild(vd);
+	// Create the default virtual directories
+	wxXmlNode *srcNode = NULL, *headNode = NULL;
+
+	srcNode = new wxXmlNode(m_doc.GetRoot(), wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
+	srcNode->AddProperty(wxT("Name"), wxT("Source Files"));
+	m_doc.GetRoot()->AddChild(srcNode);
+
+	headNode = new wxXmlNode(m_doc.GetRoot(), wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
+	headNode->AddProperty(wxT("Name"), wxT("Headers Files"));
+	m_doc.GetRoot()->InsertChild(headNode, srcNode);
 
 	m_doc.Save(m_fileName.GetFullPath());
 	return true;
@@ -59,7 +66,9 @@ wxXmlNode *Project::CreateVD(const wxString &name)
 {
 	wxXmlNode *node = new wxXmlNode(m_doc.GetRoot(), wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
 	node->AddProperty(wxT("Name"), name);
-	m_doc.GetRoot()->AddChild(node);
+
+	wxXmlNode *insertBefore = XmlUtils::FindLastByTagName(m_doc.GetRoot(), wxT("VirtualDirectory"));
+	XmlUtils::InsertChild(m_doc.GetRoot(), node, insertBefore);
 	return node;
 }
 
@@ -77,7 +86,8 @@ bool Project::AddFile(const wxFileName &fileName, const wxString &virtualDir)
 	
 	wxXmlNode *node = new wxXmlNode(vd, wxXML_ELEMENT_NODE, wxT("File"));
 	node->AddProperty(wxT("Name"), tmp.GetFullPath());
-	vd->AddChild(node);
+	wxXmlNode *insertBefore = XmlUtils::FindLastByTagName(m_doc.GetRoot(), wxT("File"));
+	XmlUtils::InsertChild(vd, node, insertBefore);
 	return true;
 }
 
@@ -88,12 +98,26 @@ bool Project::CreateVirtualDir(const wxString &name)
 
 bool Project::DeleteVirtualDir(const wxString &name)
 {
-	return true;
+	wxXmlNode *child = m_doc.GetRoot()->GetChildren();
+	while( child ){
+		if( child->GetName() == wxT("VirtualDirectory")){
+			if(child->GetPropVal(wxT("Name"), wxEmptyString) == name){
+				m_doc.GetRoot()->RemoveChild(child);
+				delete child;
+				return true;
+			}
+		}
+	}
+	return false;
 }
-
 
 bool Project::RemoveFile(const wxFileName &fileName)
 {
+	wxUnusedVar(fileName);
 	return true;
 }
 
+wxString Project::GetName() const
+{
+	return m_doc.GetRoot()->GetPropVal(wxT("Name"), wxEmptyString);
+}

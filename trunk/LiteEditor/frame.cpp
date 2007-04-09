@@ -443,7 +443,7 @@ void Frame::OnSaveAs(wxCommandEvent& WXUNUSED(event))
 void Frame::OnSwitchWorkspace(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	const wxString ALL(wxT("Code Lite Workspace files (*.clw)|*.clw|")
+	const wxString ALL(wxT("Code Lite Workspace files (*.workspace)|*.workspace|")
 					   wxT("All Files (*.*)|*.*"));
 	wxFileDialog *dlg = new wxFileDialog(this, wxT("Open Workspace"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , wxDefaultPosition);
 	if (dlg->ShowModal() == wxID_OK){
@@ -767,5 +767,5 @@ void Frame::OnCreateProject(wxCommandEvent &event)
 
 	wxString projectName = GetStringFromUser(wxT("Insert Project Name:"));
 	if( !projectName.IsEmpty() )
-		ManagerST::Get()->CreateProject(projectName, wxT("C:\\Development\\Proj.clp"), Project::EXECUTABLE);
+		ManagerST::Get()->CreateProject(projectName, wxT("C:\\Development\\Proj.project"), Project::EXECUTABLE);
 }

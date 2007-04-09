@@ -26,6 +26,9 @@ public:
 	Project();
 	virtual ~Project();
 
+	/// Return project name
+	wxString GetName() const;
+
 	//-----------------------------------
 	// Project operations
 	//-----------------------------------
