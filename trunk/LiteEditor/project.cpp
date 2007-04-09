@@ -24,13 +24,13 @@ bool Project::Create(const wxString &name, const wxFileName &path, const wxStrin
 	// Create the default virtual directories
 	wxXmlNode *srcNode = NULL, *headNode = NULL;
 
-	srcNode = new wxXmlNode(m_doc.GetRoot(), wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
+	srcNode = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
 	srcNode->AddProperty(wxT("Name"), wxT("Source Files"));
 	m_doc.GetRoot()->AddChild(srcNode);
 
-	headNode = new wxXmlNode(m_doc.GetRoot(), wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
-	headNode->AddProperty(wxT("Name"), wxT("Headers Files"));
-	m_doc.GetRoot()->InsertChild(headNode, srcNode);
+	headNode = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
+	headNode->AddProperty(wxT("Name"), wxT("Header Files"));
+	m_doc.GetRoot()->AddChild(headNode);
 
 	m_doc.Save(m_fileName.GetFullPath());
 	return true;
@@ -64,11 +64,10 @@ wxXmlNode *Project::GetVirtualDir(const wxString &name)
 
 wxXmlNode *Project::CreateVD(const wxString &name)
 {
-	wxXmlNode *node = new wxXmlNode(m_doc.GetRoot(), wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
+	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
 	node->AddProperty(wxT("Name"), name);
-
-	wxXmlNode *insertBefore = XmlUtils::FindLastByTagName(m_doc.GetRoot(), wxT("VirtualDirectory"));
-	XmlUtils::InsertChild(m_doc.GetRoot(), node, insertBefore);
+	
+	m_doc.GetRoot()->AddChild(node);
 	return node;
 }
 
@@ -84,10 +83,9 @@ bool Project::AddFile(const wxFileName &fileName, const wxString &virtualDir)
 	wxFileName tmp(fileName);
 	tmp.MakeRelativeTo(m_fileName.GetPath());
 	
-	wxXmlNode *node = new wxXmlNode(vd, wxXML_ELEMENT_NODE, wxT("File"));
+	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("File"));
 	node->AddProperty(wxT("Name"), tmp.GetFullPath());
-	wxXmlNode *insertBefore = XmlUtils::FindLastByTagName(m_doc.GetRoot(), wxT("File"));
-	XmlUtils::InsertChild(vd, node, insertBefore);
+	vd->AddChild(node);
 	return true;
 }
 

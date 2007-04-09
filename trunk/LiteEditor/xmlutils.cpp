@@ -27,12 +27,3 @@ wxXmlNode *XmlUtils::FindLastByTagName(const wxXmlNode *parent, const wxString &
 	return last_node;
 }
 
-bool XmlUtils::InsertChild(wxXmlNode *parent, wxXmlNode *child, wxXmlNode *insertBefore)
-{
-	if(insertBefore == NULL){
-		parent->AddChild(child);
-		return true;
-	} else {
-		return parent->InsertChild(child, insertBefore);
-	}
-}

@@ -1,6 +1,7 @@
 #include "workspace.h"
 #include "ctags_manager.h"
 #include "project.h"
+#include "xmlutils.h"
 
 Workspace::Workspace()
 {
@@ -104,25 +105,12 @@ bool Workspace::CreateProject(const wxString &name, const wxString &path, const 
 	wxFileName tmp(path);
 	tmp.MakeRelativeTo(m_fileName.GetPath());
 	
-	// find the last project in this workspace and append the node after it
-	wxXmlNode *last_proj = NULL;
-	wxXmlNode *child = m_doc.GetRoot()->GetChildren();
-	while( child ){
-		if( child->GetName() == wxT("Project")){
-			last_proj = child;
-		}
-		child = child->GetNext();
-	}
-	
 	// Add an entry to the workspace file
-	wxXmlNode *node = new wxXmlNode(m_doc.GetRoot(), wxXML_ELEMENT_NODE, wxT("Project"));
+	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Project"));
 	node->AddProperty(wxT("Name"), name);
 	node->AddProperty(wxT("Path"), tmp.GetFullPath());
-	if( !last_proj ){
-		m_doc.GetRoot()->AddChild(node);
-	} else {
-		m_doc.GetRoot()->InsertChild(node, last_proj);
-	}
+
+	m_doc.GetRoot()->AddChild(node);
 	m_doc.Save(m_fileName.GetFullPath());
 	return true;
 }
