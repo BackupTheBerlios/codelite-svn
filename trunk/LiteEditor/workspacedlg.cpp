@@ -9,36 +9,35 @@
 
 DEFINE_EVENT_TYPE(wxEVT_CREATE_WORKSPACE)
 
-WorkspaceDlg::WorkspaceDlg() 
+NewDlg::NewDlg() 
 : wxDialog()
-, m_owner(NULL)
+, m_selection(NEW_DLG_WORKSPACE)
 {
 }
 
-WorkspaceDlg::WorkspaceDlg(wxWindow* parent, 
-						   const WorkspaceData& data, 
-						   wxWindowID id, 
-						   const wxString& caption, 
-						   const wxPoint& pos, 
-						   const wxSize& size, 
-						   long style)
+NewDlg::NewDlg(wxWindow* parent, 
+			   int type, 
+			   wxWindowID id, 
+			   const wxString& caption, 
+			   const wxPoint& pos, 
+			   const wxSize& size, 
+			   long style)
 {
-	Create(parent, data, id, caption, pos, size, style);
+	Create(parent, type, id, caption, pos, size, style);
 }
 
-bool WorkspaceDlg::Create(wxWindow* parent, 
-						  const WorkspaceData& data, 
-						  wxWindowID id, 
-						  const wxString& caption, 
-						  const wxPoint& pos, 
-						  const wxSize& size, 
-						  long style)
+bool NewDlg::Create(wxWindow* parent, 
+					 int type, 
+					 wxWindowID id, 
+					 const wxString& caption, 
+					 const wxPoint& pos, 
+					 const wxSize& size, 
+					 long style)
 {
 	if( !wxDialog::Create(parent, id, caption, pos, size, style) )
 		return false;
 
-	m_data = data;
-	m_owner = NULL;
+	m_selection = type;
 
 	CreateGUIControls();
 	ConnectEvents();
@@ -48,11 +47,11 @@ bool WorkspaceDlg::Create(wxWindow* parent,
 	return true;
 }
 
-WorkspaceDlg::~WorkspaceDlg()
+NewDlg::~NewDlg()
 {
 }
 
-void WorkspaceDlg::CreateGUIControls()
+void NewDlg::CreateGUIControls()
 {
 	wxBoxSizer *btnSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *panelSizer = new wxBoxSizer(wxVERTICAL);
@@ -96,29 +95,33 @@ void WorkspaceDlg::CreateGUIControls()
 	mainSizer->Add(btnSizer, 0, wxALL | wxALIGN_RIGHT, 5);
 }
 
-void WorkspaceDlg::OnClick(wxCommandEvent & WXUNUSED(event))
+void NewDlg::OnClick(wxCommandEvent & WXUNUSED(event))
 {
 	// pass data from controls to the m_data
-	m_data.m_path = m_pathPicker->GetPath();
-	m_data.m_externalTagsDB = m_tagsPicker->GetPath();
-	m_data.m_name = m_name->GetValue();
+	if( m_selection == NEW_DLG_WORKSPACE ){
+		m_workspaceData.m_path = m_pathPicker->GetPath();
+		m_workspaceData.m_externalTagsDB = m_tagsPicker->GetPath();
+		m_workspaceData.m_name = m_name->GetValue();
 
-	if( m_data.m_name.Trim().IsEmpty() ){
-		wxMessageBox(wxT("Invalid workspace name"), wxT("Error"), wxOK | wxICON_HAND);
-		return;
+		if( m_workspaceData.m_name.Trim().IsEmpty() ){
+			wxMessageBox(wxT("Invalid workspace name"), wxT("Error"), wxOK | wxICON_HAND);
+			return;
+		}
+
+		if( !wxDirExists(m_workspaceData.m_path) ){
+			wxMessageBox(wxT("Invalid path"), wxT("Error"), wxOK | wxICON_HAND);
+			return;
+		}
 	}
 
-	if( !wxDirExists(m_data.m_path) ){
-		wxMessageBox(wxT("Invalid path"), wxT("Error"), wxOK | wxICON_HAND);
-		return;
-	}
+	
 
 	EndModal(wxID_OK);
 }
 
-void WorkspaceDlg::ConnectEvents()
+void NewDlg::ConnectEvents()
 {
 	// Connect buttons
-	m_create->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WorkspaceDlg::OnClick), NULL, this);
+	m_create->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(NewDlg::OnClick), NULL, this);
 }
 	

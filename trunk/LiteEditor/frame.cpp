@@ -759,9 +759,9 @@ void Frame::OnCreateWorkspace(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 
-	WorkspaceDlg *dlg = new WorkspaceDlg(this, WorkspaceData());
+	NewDlg *dlg = new NewDlg(this, NEW_DLG_WORKSPACE);
 	if(dlg->ShowModal() == wxID_OK){
-		WorkspaceData data = dlg->GetData();
+		WorkspaceData data = dlg->GetWorksapceData();
 		ManagerST::Get()->CreateWorkspace(data.m_name, data.m_path);
 	}
 	dlg->Destroy();

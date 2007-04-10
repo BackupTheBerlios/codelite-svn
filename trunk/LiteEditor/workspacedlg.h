@@ -1,9 +1,12 @@
-#ifndef WORKSPACE_DLG_H
-#define WORKSPACE_DLG_H
+#ifndef NEW_DLG_H
+#define NEW_DLG_H
 
 #include "wx/dialog.h"
 
 DECLARE_EVENT_TYPE(wxEVT_CREATE_WORKSPACE, -1)
+
+#define NEW_DLG_PROJECT   0
+#define NEW_DLG_WORKSPACE 1
 
 class wxTextCtrl;
 class wxCheckBox;
@@ -21,11 +24,18 @@ public:
 	wxString m_externalTagsDB;	//< External tags database to use 
 };
 
+class ProjectData {
+public:
+	wxString m_name;	//< project name
+	wxString m_path;	//< project directoy
+	wxString m_type;	//< project type (static library, dynamic or executable
+};
+
 // Workspace dialog
-class WorkspaceDlg : public wxDialog
+class NewDlg : public wxDialog
 {
-	wxEvtHandler *m_owner;
-	WorkspaceData m_data;
+	WorkspaceData m_workspaceData;
+	ProjectData m_projectData;
 
 	// Options
 	wxTextCtrl *m_name;
@@ -35,12 +45,13 @@ class WorkspaceDlg : public wxDialog
 	// Buttons
 	wxButton *m_create;
 	wxButton *m_cancel;
-	
+	int m_selection;
+
 public:
-	virtual ~WorkspaceDlg( );
-	WorkspaceDlg();
-	WorkspaceDlg(	wxWindow* parent, 
-					const WorkspaceData& data, 
+	virtual ~NewDlg( );
+	NewDlg();
+	NewDlg(	wxWindow* parent, 
+					int type = NEW_DLG_WORKSPACE,  
 					wxWindowID id = wxID_ANY, 
 					const wxString& caption = wxT("Create Workspace"), 
 					const wxPoint& pos = wxDefaultPosition, 
@@ -49,7 +60,7 @@ public:
 
 	// Creation
 	bool Create(wxWindow* parent, 
-				const WorkspaceData& data, 
+				int type = NEW_DLG_WORKSPACE,  
 				wxWindowID id = wxID_ANY, 
 				const wxString& caption = wxT("Create Workspace"), 
 				const wxPoint& pos = wxDefaultPosition, 
@@ -57,12 +68,13 @@ public:
 				long style = wxDEFAULT_DIALOG_STYLE
 				);
  
-	const WorkspaceData& GetData() const { return m_data; }
+	const WorkspaceData& GetWorksapceData() const { return m_workspaceData; }
+	const ProjectData& GetProjectData() const { return m_projectData; }
 
 protected:
 	void CreateGUIControls();
 	void ConnectEvents();
 	void OnClick(wxCommandEvent &event);
 };
-#endif // WORKSPACE_DLG_H
+#endif // NEW_DLG_H
 
