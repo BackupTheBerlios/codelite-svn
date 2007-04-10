@@ -14,12 +14,12 @@ Workspace::~Workspace()
 	}
 }
 
-bool Workspace::OpenWorkspace(const wxString &fileName)
+bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 {
-	m_fileName =  wxFileName(fileName);
-
+	m_fileName = wxFileName(fileName);
 	m_doc.Load(m_fileName.GetFullPath());
 	if( !m_doc.IsOk() ){
+		errMsg = wxT("Corrupted workspace file");
 		return false;
 	}
 
@@ -39,12 +39,12 @@ bool Workspace::OpenWorkspace(const wxString &fileName)
 	}
 
 	// Load the database
-	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"));
-	wxString exDbfile = WorkspaceST::Get()->GetStringProperty(wxT("ExternalDatabase"));
+	wxString dbfile = GetStringProperty(wxT("Database"), errMsg);
+	wxString exDbfile = GetStringProperty(wxT("ExternalDatabase"), errMsg);
 	if( dbfile.IsEmpty() ){
+		errMsg = wxT("Missing 'Database' value in workspace '");
 		return false;
 	}
-	
 
 	// the database file names are relative to the workspace,
 	// convert them to absolute path
@@ -57,11 +57,14 @@ bool Workspace::OpenWorkspace(const wxString &fileName)
 	return true;
 }
 
-bool Workspace::CreateWorkspace(const wxString &name, const wxString &path)
+bool Workspace::CreateWorkspace(const wxString &name, const wxString &path, wxString &errMsg)
 {
 	// If we have an open workspace, close it
 	if( m_doc.IsOk() ){
-		m_doc.Save(m_fileName.GetFullPath());
+		if ( !m_doc.Save(m_fileName.GetFullPath()) ){
+			errMsg = wxT("Failed to save current workspace");
+			return false;
+		}
 	}
 	
 	// Create new
@@ -83,20 +86,29 @@ bool Workspace::CreateWorkspace(const wxString &name, const wxString &path)
 	return true;
 }
 
-wxString Workspace::GetStringProperty(const wxString &propName)
+wxString Workspace::GetStringProperty(const wxString &propName, wxString &errMsg)
 {
-	if( !m_doc.IsOk() )
+	if( !m_doc.IsOk() ){
+		errMsg = wxT("No workspace open");
 		return wxEmptyString;
+	}
 
 	wxXmlNode *rootNode = m_doc.GetRoot();
-	if( !rootNode )
+	if( !rootNode ){
+		errMsg = wxT("Corrupted workspace file");
 		return wxEmptyString;
+	}
 
 	return rootNode->GetPropVal(propName, wxEmptyString);
 }
 
-bool Workspace::CreateProject(const wxString &name, const wxString &path, const wxString &type)
+bool Workspace::CreateProject(const wxString &name, const wxString &path, const wxString &type, wxString &errMsg)
 {
+	if( !m_doc.IsOk() ){
+		errMsg = wxT("No workspace open");
+		return false;
+	}
+
 	ProjectPtr proj(new Project());
 	proj->Create(name, path, type);
 	m_projects[name] = proj;

@@ -305,14 +305,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\findinfilesdlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\findreplacedlg.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\frame.cpp"
 				>
 			</File>
@@ -363,14 +355,6 @@
 			</File>
 			<File
 				RelativePath=".\editor_config.h"
-				>
-			</File>
-			<File
-				RelativePath=".\findinfilesdlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\findreplacedlg.h"
 				>
 			</File>
 			<File
@@ -436,6 +420,34 @@
 			</File>
 			<File
 				RelativePath=".\serach_thread.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Dialogs"
+			>
+			<File
+				RelativePath=".\findinfilesdlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\findinfilesdlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\findreplacedlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\findreplacedlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\workspacedlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\workspacedlg.h"
 				>
 			</File>
 		</Filter>

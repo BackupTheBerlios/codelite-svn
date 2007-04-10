@@ -87,10 +87,8 @@ public:
 	 * \param path
 	 * workspace path
 	 * 
-	 * \returns 
-	 * true if succeeded, false otherwise
 	 */
-	bool CreateWorkspace(const wxString& name, const wxString &path);
+	void CreateWorkspace(const wxString& name, const wxString &path);
 	 
 	/**
 	 * \brief create an empty project

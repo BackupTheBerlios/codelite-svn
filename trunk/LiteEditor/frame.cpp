@@ -24,6 +24,7 @@
 #include "findinfilesdlg.h"
 #include "search_thread.h"
 #include "project.h"
+#include "workspacedlg.h"
 
 #define ID_CTAGS_GLOBAL_ID		10500
 #define ID_CTAGS_LOCAL_ID		10501
@@ -757,8 +758,13 @@ void Frame::OnWorkspaceOpen(wxUpdateUIEvent &event)
 void Frame::OnCreateWorkspace(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	// TODO:: prompt user for name and location
-	ManagerST::Get()->CreateWorkspace(wxT("TestWorkspace"), wxT("C:\\"));
+
+	WorkspaceDlg *dlg = new WorkspaceDlg(this, WorkspaceData());
+	if(dlg->ShowModal() == wxID_OK){
+		WorkspaceData data = dlg->GetData();
+		ManagerST::Get()->CreateWorkspace(data.m_name, data.m_path);
+	}
+	dlg->Destroy();
 }
 
 void Frame::OnCreateProject(wxCommandEvent &event)

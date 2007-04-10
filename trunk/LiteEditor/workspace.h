@@ -43,7 +43,7 @@ public:
 	 * \returns
 	 * true on success false otherwise
 	 */
-	bool CreateWorkspace(const wxString &name, const wxString &path);
+	bool CreateWorkspace(const wxString &name, const wxString &path, wxString &errMsg);
 
 	/**
 	 * \brief
@@ -55,7 +55,7 @@ public:
 	 * \returns
 	 * true on success false otherwise
 	 */
-	bool OpenWorkspace(const wxString &fileName);
+	bool OpenWorkspace(const wxString &fileName, wxString &errMsg);
 
 	/**
 	 * \brief
@@ -72,13 +72,13 @@ public:
 	 * \returns
 	 * true on success false otherwise
 	 */
-	bool CreateProject(const wxString &name, const wxString &path, const wxString &type);
+	bool CreateProject(const wxString &name, const wxString &path, const wxString &type, wxString &errMsg);
 
 	/**
 	 * \brief get a string property from the worksapce file
 	 * \returns property value or wxEmptyString 
 	 */
-	wxString GetStringProperty(const wxString &propName);
+	wxString GetStringProperty(const wxString &propName, wxString &errMsg);
 };
 
 typedef Singleton<Workspace> WorkspaceST;

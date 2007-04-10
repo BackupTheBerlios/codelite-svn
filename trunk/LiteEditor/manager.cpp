@@ -15,6 +15,13 @@
 #include "workspace.h"
 #include "cpp_symbol_tree.h"
 
+#define CHECK_MSGBOX(res)									\
+if( !res )													\
+{															\
+	wxMessageBox(errMsg, wxT("Error"), wxOK | wxICON_HAND);	\
+	return;													\
+}
+
 Manager::Manager(void)
 {
 }
@@ -109,38 +116,41 @@ void Manager::UnInitialize()
 	MenuManager::Free();
 }
 
-bool Manager::CreateWorkspace(const wxString &name, const wxString &path)
+void Manager::CreateWorkspace(const wxString &name, const wxString &path)
 {
-	bool res = WorkspaceST::Get()->CreateWorkspace(name, path);
+	wxString errMsg;
+	bool res = WorkspaceST::Get()->CreateWorkspace(name, path, errMsg);
+	CHECK_MSGBOX(res);
 
 	// Update the symbol tree
 	SymbolTree *tree = Frame::Get()->GetSymbolTree();
 	TagTreePtr dummy;
 	tree->BuildTree( dummy );
-
-	return res;
 }
 
 void Manager::CreateProject(const wxString &name, const wxString &path, const wxString &type)
 {
+	wxString errMsg;
+	bool res = WorkspaceST::Get()->CreateProject(name, path, type, errMsg);
+	CHECK_MSGBOX(res);
+
 	TagsManagerST::Get()->CreateProject(name);
 
 	// Update the symbol tree
 	SymbolTree *tree = Frame::Get()->GetSymbolTree();
 	TagTreePtr dummy;
 	tree->BuildTree( dummy );
-
-	WorkspaceST::Get()->CreateProject(name, path, type);
 }
 
 void Manager::OpenWorkspace(const wxString &path)
 {
-	if( !WorkspaceST::Get()->OpenWorkspace(path) )
-		return;
+	wxString errMsg;
+	bool res = WorkspaceST::Get()->OpenWorkspace(path, errMsg);
+	CHECK_MSGBOX(res);
 	
 	// update status bar
-	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"));
-	wxString exDbfile = WorkspaceST::Get()->GetStringProperty(wxT("ExternalDatabase"));
+	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"), errMsg);
+	wxString exDbfile = WorkspaceST::Get()->GetStringProperty(wxT("ExternalDatabase"), errMsg);
 	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("Workspace DB: '%s'"), dbfile.GetData()), 1);
 	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), exDbfile.GetData()), 2);
 
