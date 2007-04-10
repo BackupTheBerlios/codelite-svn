@@ -143,11 +143,11 @@
                 <help>Switch to an existing workspace</help>
             </object>
             <object class="wxMenuItem" name="new_project">
-                <label>&amp;Create New Project\tCtrl+Shift+N</label>
+                <label>&amp;Create New &amp;Project\tCtrl+Shift+N</label>
                 <help>Create New Project and add it to the current workspace</help>
             </object>
             <object class="wxMenuItem" name="add_project">
-                <label>&amp;Add an Existing Project\tCtrl+Shift+A</label>
+                <label>&amp;Add an &amp;Existing Project\tCtrl+Shift+A</label>
                 <help>Add an existing project to the current workspace</help>
             </object>            
         </object>
