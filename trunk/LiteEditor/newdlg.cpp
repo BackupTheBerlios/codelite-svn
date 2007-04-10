@@ -10,6 +10,7 @@
 #include <wx/listctrl.h>
 #include "project.h"
 #include <map>
+#include "manager.h"
 
 DEFINE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE)
 
@@ -82,6 +83,10 @@ void NewDlg::CreateGUIControls()
 
 	mainSizer->Add(new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL), 0, wxEXPAND );
 	mainSizer->Add(btnSizer, 0, wxALL | wxALIGN_RIGHT, 5);
+
+	if( !ManagerST::Get()->IsWorkspaceOpen() ){
+		m_book->Enable(NEW_DLG_PROJECT, false);
+	}
 }
 
 wxWindow *NewDlg::CreateWorkspacePage()
