@@ -67,6 +67,11 @@ bool Workspace::CreateWorkspace(const wxString &name, const wxString &path, wxSt
 		}
 	}
 	
+	if( name.IsEmpty() ){
+		errMsg = wxT("Invalid workspace name");
+		return false;
+	}
+
 	// Create new
 	// Open workspace database
 	m_fileName = wxFileName(path, name + wxT(".workspace"));

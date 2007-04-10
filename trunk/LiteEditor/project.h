@@ -32,10 +32,10 @@ public:
 	//-----------------------------------
 	// Project operations
 	//-----------------------------------
-	bool Load(const wxFileName &path);
-	bool Create(const wxString &name, const wxFileName &path, const wxString &projType = Project::STATIC_LIBRARY);
-	bool AddFile(const wxFileName &fileName, const wxString &virtualDir = wxEmptyString);
-	bool RemoveFile(const wxFileName &fileName);
+	bool Load(const wxString &path);
+	bool Create(const wxString &name, const wxString &path, const wxString &projType = Project::STATIC_LIBRARY);
+	bool AddFile(const wxString &fileName, const wxString &virtualDir = wxEmptyString);
+	bool RemoveFile(const wxString &fileName);
 	bool CreateVirtualDir(const wxString &name);
 	bool DeleteVirtualDir(const wxString &name);
 

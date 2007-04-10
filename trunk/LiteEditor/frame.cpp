@@ -24,7 +24,7 @@
 #include "findinfilesdlg.h"
 #include "search_thread.h"
 #include "project.h"
-#include "workspacedlg.h"
+#include "newdlg.h"
 
 #define ID_CTAGS_GLOBAL_ID		10500
 #define ID_CTAGS_LOCAL_ID		10501
@@ -39,6 +39,9 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_MATCHFOUND, Frame::OnSearchThread)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHCANCELED, Frame::OnSearchThread)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHEND, Frame::OnSearchThread)
+
+	// New dialog handlers
+	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE, Frame::OnNewDlgCreate)
 
 	EVT_END_PROCESS(ID_CTAGS_GLOBAL_ID, Frame::OnCtagsEnd)
 	EVT_END_PROCESS(ID_CTAGS_LOCAL_ID, Frame::OnCtagsEnd)
@@ -73,10 +76,10 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("previous_bookmark"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("removeall_bookmarks"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("find_in_files"), Frame::OnFindInFiles)
-	EVT_MENU(XRCID("new_workspace"), Frame::OnCreateWorkspace)
+	EVT_MENU(XRCID("new_workspace"), Frame::OnProjectNewWorkspace)
+	EVT_MENU(XRCID("new_project"), Frame::OnProjectNewProject)
 	EVT_MENU(XRCID("switch_to_workspace"), Frame::OnSwitchWorkspace)
-	EVT_MENU(XRCID("new_project"), Frame::OnCreateProject)
-
+	
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CLOSE, Frame::OnFileExistUpdateUI)
@@ -755,23 +758,35 @@ void Frame::OnWorkspaceOpen(wxUpdateUIEvent &event)
 	event.Enable(ManagerST::Get()->IsWorkspaceOpen());
 }
 
-void Frame::OnCreateWorkspace(wxCommandEvent &event)
+// Project->New Workspace
+void Frame::OnProjectNewWorkspace(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-
 	NewDlg *dlg = new NewDlg(this, NEW_DLG_WORKSPACE);
-	if(dlg->ShowModal() == wxID_OK){
-		WorkspaceData data = dlg->GetWorksapceData();
-		ManagerST::Get()->CreateWorkspace(data.m_name, data.m_path);
-	}
+	dlg->ShowModal();
 	dlg->Destroy();
 }
 
-void Frame::OnCreateProject(wxCommandEvent &event)
+// Project->New Project
+void Frame::OnProjectNewProject(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	NewDlg *dlg = new NewDlg(this, NEW_DLG_PROJECT);
+	dlg->ShowModal();
+	dlg->Destroy();
+}
+
+// NewDlg->Create handler
+void Frame::OnNewDlgCreate(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 
-	wxString projectName = GetStringFromUser(wxT("Insert Project Name:"));
-	if( !projectName.IsEmpty() )
-		ManagerST::Get()->CreateProject(projectName, wxT("C:\\Development\\Proj.project"), Project::EXECUTABLE);
+	NewDlg *dlg = static_cast<NewDlg*>(event.GetEventObject());
+	if( dlg->GetSelection() == NEW_DLG_WORKSPACE ){
+		WorkspaceData data = dlg->GetWorksapceData();
+		ManagerST::Get()->CreateWorkspace(data.m_name, data.m_path);
+	} else if( dlg->GetSelection() == NEW_DLG_PROJECT ) {
+		ProjectData data = dlg->GetProjectData();
+		ManagerST::Get()->CreateProject(data.m_name, data.m_path, data.m_type);
+	}
 }

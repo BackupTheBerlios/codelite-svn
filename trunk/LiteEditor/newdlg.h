@@ -2,8 +2,9 @@
 #define NEW_DLG_H
 
 #include "wx/dialog.h"
+#include "wx/listctrl.h"
 
-DECLARE_EVENT_TYPE(wxEVT_CREATE_WORKSPACE, -1)
+DECLARE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE, -1)
 
 #define NEW_DLG_PROJECT   0
 #define NEW_DLG_WORKSPACE 1
@@ -15,6 +16,8 @@ class wxStaticText;
 class wxDirPickerCtrl;
 class wxComboBox;
 class wxFilePickerCtrl;
+class wxFlatNotebook;
+class wxListCtrl;
 
 // Workspace information
 class WorkspaceData {
@@ -42,27 +45,32 @@ class NewDlg : public wxDialog
 	wxDirPickerCtrl *m_pathPicker;
 	wxFilePickerCtrl *m_tagsPicker;
 
+	wxTextCtrl *m_projName;
+	wxDirPickerCtrl *m_projPathPicker;
+	wxListCtrl *m_projTypes;
+
 	// Buttons
 	wxButton *m_create;
 	wxButton *m_cancel;
 	int m_selection;
+	wxFlatNotebook *m_book;
 
 public:
 	virtual ~NewDlg( );
 	NewDlg();
 	NewDlg(	wxWindow* parent, 
-					int type = NEW_DLG_WORKSPACE,  
+					int selection = NEW_DLG_WORKSPACE,  
 					wxWindowID id = wxID_ANY, 
-					const wxString& caption = wxT("Create Workspace"), 
+					const wxString& caption = wxT("New"), 
 					const wxPoint& pos = wxDefaultPosition, 
 					const wxSize& size = wxSize(400, 200), 
 					long style = wxDEFAULT_DIALOG_STYLE);
 
 	// Creation
 	bool Create(wxWindow* parent, 
-				int type = NEW_DLG_WORKSPACE,  
+				int selection = NEW_DLG_WORKSPACE,  
 				wxWindowID id = wxID_ANY, 
-				const wxString& caption = wxT("Create Workspace"), 
+				const wxString& caption = wxT("New"), 
 				const wxPoint& pos = wxDefaultPosition, 
 				const wxSize& size = wxSize(400, 200), 
 				long style = wxDEFAULT_DIALOG_STYLE
@@ -71,10 +79,17 @@ public:
 	const WorkspaceData& GetWorksapceData() const { return m_workspaceData; }
 	const ProjectData& GetProjectData() const { return m_projectData; }
 
+	// return the selected notebook tab
+	int GetSelection() const;
+
 protected:
 	void CreateGUIControls();
 	void ConnectEvents();
 	void OnClick(wxCommandEvent &event);
+	void OnListItemSelected(wxListEvent &event);
+
+	wxWindow *CreateProjectPage();
+	wxWindow *CreateWorkspacePage();
 };
 #endif // NEW_DLG_H
 

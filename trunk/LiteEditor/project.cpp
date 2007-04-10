@@ -1,9 +1,9 @@
 #include "project.h"
 #include "xmlutils.h"
 
-const wxString Project::STATIC_LIBRARY = wxT("STATIC_LIBRARY");
-const wxString Project::DYMANIC_LIBRARY = wxT("DYMANIC_LIBRARY");
-const wxString Project::EXECUTABLE = wxT("EXECUTABLE");
+const wxString Project::STATIC_LIBRARY = wxT("Static Library");
+const wxString Project::DYMANIC_LIBRARY = wxT("Dynamic Library");
+const wxString Project::EXECUTABLE = wxT("Executable");
 
 Project::Project()
 {
@@ -13,9 +13,9 @@ Project::~Project()
 {
 }
 
-bool Project::Create(const wxString &name, const wxFileName &path, const wxString &projType)
+bool Project::Create(const wxString &name, const wxString &path, const wxString &projType)
 {
-	m_fileName = path;
+	m_fileName = path + wxT("/") + name + wxT(".project");
 	wxXmlNode *root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("CodeLite_Project"));   
 	m_doc.SetRoot(root);
 	m_doc.GetRoot()->AddProperty(wxT("Name"), name);
@@ -36,9 +36,9 @@ bool Project::Create(const wxString &name, const wxFileName &path, const wxStrin
 	return true;
 }
 
-bool Project::Load(const wxFileName &path)
+bool Project::Load(const wxString &path)
 {
-	if( !m_doc.Load(path.GetFullPath()) ){
+	if( !m_doc.Load(path) ){
 		return false;
 	}
 
@@ -71,7 +71,7 @@ wxXmlNode *Project::CreateVD(const wxString &name)
 	return node;
 }
 
-bool Project::AddFile(const wxFileName &fileName, const wxString &virtualDir)
+bool Project::AddFile(const wxString &fileName, const wxString &virtualDir)
 {
 	wxXmlNode *vd = GetVirtualDir(virtualDir);
 	if( !vd ){
@@ -109,7 +109,7 @@ bool Project::DeleteVirtualDir(const wxString &name)
 	return false;
 }
 
-bool Project::RemoveFile(const wxFileName &fileName)
+bool Project::RemoveFile(const wxString &fileName)
 {
 	wxUnusedVar(fileName);
 	return true;
