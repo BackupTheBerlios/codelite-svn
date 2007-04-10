@@ -443,11 +443,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\workspacedlg.cpp"
+				RelativePath=".\newdlg.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\workspacedlg.h"
+				RelativePath=".\newdlg.h"
 				>
 			</File>
 		</Filter>
