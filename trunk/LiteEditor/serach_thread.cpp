@@ -127,7 +127,7 @@ void SearchThread::DoSearchFiles(const SearchData *data)
 
 	StopSearch(false);
 	wxArrayString fileList;
-	wxStringTokenizer tok(data->GetExtensions(), ";");
+	wxStringTokenizer tok(data->GetExtensions(), wxT(";"));
 	while( tok.HasMoreTokens() )
 		wxDir::GetAllFiles(data->GetRootDir(), &fileList, tok.GetNextToken());
 
