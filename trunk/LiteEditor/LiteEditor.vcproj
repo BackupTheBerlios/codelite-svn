@@ -415,11 +415,11 @@
 			Name="Search"
 			>
 			<File
-				RelativePath=".\search_thread.h"
+				RelativePath=".\search_thread.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\serach_thread.cpp"
+				RelativePath=".\search_thread.h"
 				>
 			</File>
 		</Filter>
