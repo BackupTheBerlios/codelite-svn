@@ -293,10 +293,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cpp_symbol_tree.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\editor.cpp"
 				>
 			</File>
@@ -343,10 +339,6 @@
 			>
 			<File
 				RelativePath=".\app.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cpp_symbol_tree.h"
 				>
 			</File>
 			<File
@@ -448,6 +440,26 @@
 			</File>
 			<File
 				RelativePath=".\newdlg.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Trees"
+			>
+			<File
+				RelativePath=".\cpp_symbol_tree.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\cpp_symbol_tree.h"
+				>
+			</File>
+			<File
+				RelativePath=".\fileview.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\fileview.h"
 				>
 			</File>
 		</Filter>

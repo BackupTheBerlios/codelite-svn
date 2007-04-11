@@ -25,6 +25,7 @@
 #include "search_thread.h"
 #include "project.h"
 #include "newdlg.h"
+#include "fileview.h"
 
 #define ID_CTAGS_GLOBAL_ID		10500
 #define ID_CTAGS_LOCAL_ID		10501
@@ -55,8 +56,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(wxID_NEW, Frame::OnFileNew)
 	EVT_MENU(XRCID("add_file_to_project"), Frame::OnAddSourceFile)
 	EVT_MENU(wxID_OPEN, Frame::OnFileOpen)
-	EVT_FLATNOTEBOOK_PAGE_CLOSING(-1, Frame::OnFileClosing)
-	EVT_FLATNOTEBOOK_PAGE_CHANGED(-1, Frame::OnPageChanged)
+	
 	EVT_MENU(wxID_CLOSE, Frame::OnFileClose)
 	EVT_MENU(XRCID("save_all"), Frame::OnFileSaveAll)
 	EVT_MENU(wxID_CUT, Frame::DispatchCommandEvent)
@@ -175,24 +175,32 @@ void Frame::CreateGUIControls(void)
 	// Add log window
 	//---------------------------------------------
 	m_debugWin = new wxTextCtrl(this, wxID_ANY, _T(""),
-                            wxDefaultPosition, wxSize(-1, 200), wxTE_MULTILINE);
+                            wxDefaultPosition, wxSize(600, 200), wxTE_MULTILINE);
 	m_mgr.AddPane(m_debugWin, wxAuiPaneInfo().Name(wxT("Debug Window")).
 		Caption(wxT("Debug Window")).Bottom().Layer(1).Position(1).MaximizeButton(true).CloseButton(true));
 
+	// Add the explorer notebook
+	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_BOTTOM; 
+	m_explorerBook = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxSize(250, 600), style);
+
 	// Add the class view tree
-	m_tree = new CppSymbolTree(this, wxID_ANY, wxDefaultPosition, wxSize(250, 600));
+	m_tree = new CppSymbolTree(m_explorerBook, wxID_ANY);
+	m_explorerBook->AddPage(m_tree, wxT("Symbol View"), true);
+
+	m_fileView = new FileViewTree(m_explorerBook, wxID_ANY);
+	m_explorerBook->AddPage(m_fileView, wxT("File View"));
 
 	// Set the images for the symbols
 	m_tree->SetSymbolsImages( CreateSymbolTreeImages() );
 
-	// Add the tree pane
-	m_mgr.AddPane(m_tree, wxAuiPaneInfo().
-		Name(wxT("SymbolTree")).Caption(wxT("Symbol Tree")).
+	// Add the explorer pane
+	m_mgr.AddPane(m_explorerBook, wxAuiPaneInfo().
+		Name(wxT("Workspace")).Caption(wxT("Workspace")).
 		Left().Layer(1).Position(1).
 		CloseButton(true).MaximizeButton(true));
 
 	// Create the notebook for all the files
-	long style = 
+	style = 
 		wxFNB_TABS_BORDER_SIMPLE | 
 		wxFNB_NODRAG | 
 		wxFNB_VC8 | 
@@ -206,6 +214,10 @@ void Frame::CreateGUIControls(void)
 	m_notebook = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
 	m_mgr.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("Editor")).
                   CenterPane().PaneBorder(false));
+
+	// Connect the main notebook events
+	m_notebook->Connect(m_notebook->GetId(), wxEVT_COMMAND_FLATNOTEBOOK_PAGE_CHANGED, wxFlatNotebookEventHandler(Frame::OnPageChanged), NULL, this);
+	m_notebook->Connect(m_notebook->GetId(), wxEVT_COMMAND_FLATNOTEBOOK_PAGE_CLOSING, wxFlatNotebookEventHandler(Frame::OnFileClosing), NULL, this);
 
 	//--------------------------------------------------------------------------------------
 	// Start ctags process. 

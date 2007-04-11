@@ -16,6 +16,7 @@ class wxSplitterWindow;
 class wxConfigBase;
 class LEditor;
 class FindInFilesDialog;
+class FileViewTree;
 
 /**
  * The main frame class
@@ -28,6 +29,7 @@ class Frame : public wxFrame
 	TagsProcess *m_localCtags;
 	bool m_restartCtags;
 	wxFlatNotebook *m_notebook;
+	wxFlatNotebook *m_explorerBook;
 	wxSplitterWindow *m_splitter;
 
 	static Frame* m_theFrame;
@@ -37,6 +39,7 @@ class Frame : public wxFrame
 	wxTextCtrl *m_debugWin;
 	FindInFilesDialog *m_findInFilesDlg;
 	FindReplaceData m_data;
+	FileViewTree *m_fileView;
 
 public:
 	// the access method to the singleton frame is by using the Get method
