@@ -2,9 +2,8 @@
 #define DIRTRAVERSER_H
 
 #include <wx/dir.h>
-#include <vector>
+#include <wx/arrstr.h>
 #include <map>
-#include <wx/filename.h>
 
 /**
  * A helper class that help us recurse into sub-directories.
@@ -19,15 +18,16 @@
  */
 class DirTraverser : public wxDirTraverser
 {
-	std::vector<wxString> m_files;
-	std::map<wxString, bool> m_validExt;
+	wxArrayString m_files;
+	wxString m_filespec;
+	std::map<wxString, bool> m_specMap;
 
 public:
+
 	/**
-	 * By default we search for all files, unless a map of extensions is provided
-	 * \param extMap a map with all valid extensions
+	 * Construct a DirTraverser with a given file spec
 	 */
-	void SetExtensions(const std::map<wxString, bool> extMap);
+	DirTraverser(const wxString &filespec);
 
 	/**
 	 * This function is called once a file is found. The traverse of the directories 
@@ -59,7 +59,7 @@ public:
 	 * Return list of files found 
 	 * \return Return list of files found 
 	 */
-	std::vector<wxString>& GetFiles()
+	wxArrayString& GetFiles()
 	{
 		return m_files;
 	}

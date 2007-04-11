@@ -177,10 +177,10 @@ public:
 	void SetNumMatchesFound(const int &num) { m_matchesFound = num; }
 
 	wxString GetMessage() const { 
-		wxString msg(wxT("Number of files scanned: "));
+		wxString msg(wxT("====== Number of files scanned: "));
 		msg << m_fileScanned;
 		msg << wxT(" Matches found: ");
-		msg << m_matchesFound; 
+		msg << m_matchesFound << wxT(" ======"); 
 		return msg;
 	}
 
@@ -315,5 +315,7 @@ typedef Singleton<SearchThread> SearchThreadST;
 DECLARE_EVENT_TYPE(wxEVT_SEARCH_THREAD_MATCHFOUND, wxID_ANY)
 DECLARE_EVENT_TYPE(wxEVT_SEARCH_THREAD_SEARCHEND, wxID_ANY)
 DECLARE_EVENT_TYPE(wxEVT_SEARCH_THREAD_SEARCHCANCELED, wxID_ANY)
+DECLARE_EVENT_TYPE(wxEVT_SEARCH_THREAD_SEARCHSTARTED, wxID_ANY)
 
 #endif // SEARCH_THREAD_H
+

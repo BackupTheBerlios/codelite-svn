@@ -5,6 +5,8 @@
 #include <iostream>
 #include <wx/tokenzr.h>
 #include <wx/dir.h>
+#include <wx/log.h>
+#include "dirtraverser.h"
 
 #define ADJUST_LINE_AND_CONT(modLine, pos, findString)	\
 {														\
@@ -18,6 +20,7 @@
 DEFINE_EVENT_TYPE(wxEVT_SEARCH_THREAD_MATCHFOUND)
 DEFINE_EVENT_TYPE(wxEVT_SEARCH_THREAD_SEARCHEND)
 DEFINE_EVENT_TYPE(wxEVT_SEARCH_THREAD_SEARCHCANCELED)
+DEFINE_EVENT_TYPE(wxEVT_SEARCH_THREAD_SEARCHSTARTED)
 
 //----------------------------------------------------------------
 // SearchData
@@ -127,12 +130,43 @@ void SearchThread::DoSearchFiles(const SearchData *data)
 
 	StopSearch(false);
 	wxArrayString fileList;
-	wxStringTokenizer tok(data->GetExtensions(), wxT(";"));
-	while( tok.HasMoreTokens() )
-		wxDir::GetAllFiles(data->GetRootDir(), &fileList, tok.GetNextToken());
+
+	DirTraverser traverser(data->GetExtensions());
+	wxDir dir(data->GetRootDir());
+	dir.Traverse(traverser);
+
+	fileList = traverser.GetFiles();
+
+	// Send startup message to main thread
+	if( m_notifiedWindow ){
+		wxString message;
+		wxCommandEvent event(wxEVT_SEARCH_THREAD_SEARCHSTARTED, GetId());
+		message << wxT("====== Searching for: '") << data->GetFindString();
+		message << wxT("';\tMatch case: ");
+		if( data->IsMatchCase() ){
+			message << wxT("true ");
+		} else {
+			message << wxT("false ");
+		}
+
+		message << wxT(";\tMatch whole word: ");
+		if( data->IsMatchWholeWord() ){
+			message << wxT("true ");
+		} else {
+			message << wxT("false ");
+		}
+
+		message << wxT(";\tRegular expression: ");
+		if( data->IsRegularExpression() ){
+			message << wxT("true;");
+		} else {
+			message << wxT("false; ======");
+		}
+		event.SetString(message);
+		::wxPostEvent(m_notifiedWindow, event);
+	}
 
 	for(size_t i=0; i<fileList.Count(); i++){
-		
 		m_summary.SetNumFileScanned((int)i+1);
 
 		// give user chance to cancel the search ...
@@ -142,7 +176,6 @@ void SearchThread::DoSearchFiles(const SearchData *data)
 			StopSearch(false);
 			break;
 		}
-
 		DoSearchFile(fileList.Item(i), data);
 	}
 }

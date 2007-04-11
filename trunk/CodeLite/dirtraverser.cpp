@@ -1,31 +1,34 @@
 #include "dirtraverser.h"
+#include "wx/tokenzr.h"
+#include "wx/filename.h"
+
+DirTraverser::DirTraverser(const wxString &filespec)
+: wxDirTraverser()
+, m_filespec(filespec)
+{
+	if(m_filespec.Trim() == wxT("*.*") || m_filespec.Trim() == wxT("*")){
+		m_specMap.clear();
+	} else {
+		wxStringTokenizer tok(m_filespec, wxT(";"));
+		while( tok.HasMoreTokens() ){
+			std::pair<wxString, bool> val;
+			val.first = tok.GetNextToken().AfterLast(wxT('*'));
+			val.first = val.first.AfterLast(wxT('.')).MakeLower();
+			val.second = true;
+			m_specMap.insert( val );
+		}
+	}
+}
 
 wxDirTraverseResult DirTraverser::OnFile(const wxString& filename)
 {
 	// add the file to our array
-	wxFileName file(filename);
+	wxFileName fn(filename);
 
-	if(m_validExt.empty()){
-		m_files.push_back(filename);
-	} else {
-		// we a have a list of extesions
-		if(m_validExt.find(file.GetExt().MakeLower()) != m_validExt.end()){
-			m_files.push_back(filename);
-		}
+	if( m_specMap.empty() ){
+		m_files.Add(filename);
+	} else if(m_specMap.find(fn.GetExt().MakeLower()) != m_specMap.end()){
+		m_files.Add(filename);
 	}
 	return wxDIR_CONTINUE;
-}
-
-
-void DirTraverser::SetExtensions(const std::map<wxString, bool> extMap)
-{
-	m_validExt.clear();
-
-	// loop over the input map and convert all entries to upper case before inserting
-	// them to our map
-	std::map<wxString, bool>::const_iterator iter = extMap.begin();
-	for(; iter != extMap.end(); iter++){
-		wxString key = iter->first; // the key
-		m_validExt[key.MakeLower()]  = true;
-	}
 }

@@ -39,6 +39,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_MATCHFOUND, Frame::OnSearchThread)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHCANCELED, Frame::OnSearchThread)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHEND, Frame::OnSearchThread)
+	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHSTARTED, Frame::OnSearchThread)
 
 	// New dialog handlers
 	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE, Frame::OnNewDlgCreate)
@@ -723,7 +724,8 @@ void Frame::OnSearchThread(wxCommandEvent &event)
 		m_debugWin->AppendText(msg);
 		delete res;
 	}
-	else if(event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHCANCELED)
+	else if(event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHCANCELED ||
+		event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHSTARTED)
 	{
 		m_debugWin->AppendText(event.GetString() + wxT("\n"));
 	}

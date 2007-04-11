@@ -975,7 +975,7 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 		return;
 
 	// Find all files under this directory
-	DirTraverser traverser;
+	DirTraverser traverser(wxEmptyString);
 	wxString tags;
 	wxProgressDialog* prgDlg = NULL;
 
