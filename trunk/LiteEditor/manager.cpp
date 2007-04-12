@@ -42,9 +42,49 @@ bool Manager::IsWorkspaceOpen() const
 	return TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName().IsOk();
 }
 
-void Manager::OpenFile(const TagEntry &tag)
+void Manager::OpenFile(const wxString &file_name, const wxString &projectName, const int lineno)
 {
-	Frame::Get()->OpenFile(tag);
+	wxFileName fileName(file_name);
+	wxFlatNotebook *notebook = Frame::Get()->GetNotebook();
+	// Search to see if this file is already opened
+	// in the notebook
+	LEditor* editor = NULL;
+	size_t nCount = 0;
+	for(; nCount < (size_t)notebook ->GetPageCount(); nCount++)
+	{
+		editor = static_cast<LEditor*>(notebook ->GetPage(nCount));
+		if( editor->GetFileName() == fileName.GetFullPath() )
+		{
+			notebook ->SetSelection( nCount );
+			break;
+		}
+		editor = NULL;
+	}
+
+	if( !editor )
+	{
+		/// Open the file and read the text
+		if(fileName.IsOk() == false)
+			return;
+
+		// Create new editor and add it to the notebook
+		notebook ->Freeze();
+		editor = new LEditor(Frame::Get(), wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), projectName);
+		notebook ->AddPage(editor, fileName.GetFullName(), true);
+		notebook ->Thaw();
+	}
+
+	// Go to tag line number and gives scintilla the focus
+	editor->GotoLine( lineno );
+	editor->SetProject( projectName );
+	editor->SetFocus ();
+
+}
+
+/// Open file and set the cursor to be on the line
+void Manager::OpenFile(const TagEntry& tag)
+{
+	OpenFile(tag.GetFile(), tag.GetProject(), tag.GetLine() - 1);
 }
 
 const wxString &Manager::GetInstallPath() const

@@ -9,16 +9,16 @@ class CppSymbolTree : public SymbolTree
 public:
 
 	/// Nothing special here, just call our parent constructor
-	CppSymbolTree(wxWindow *parent, const wxWindowID id, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize)
-		: SymbolTree(parent, id, pos, size)
-	{};
+	CppSymbolTree(wxWindow *parent, const wxWindowID id, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize, long style = 0);
+		
 
 	/// destructor
 	virtual ~CppSymbolTree()
 	{};
 
-	DECLARE_EVENT_TABLE()
-	void OnMouseDblClick(wxMouseEvent& event);
+protected:
+	virtual void OnMouseDblClick(wxMouseEvent& event);
+	virtual void OnMouseRightUp(wxTreeEvent& event);
 };
 
 #endif // LITEEDITOR_CPP_SYMBOL_TREE_H

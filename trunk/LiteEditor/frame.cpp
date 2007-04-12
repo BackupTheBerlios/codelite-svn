@@ -469,44 +469,6 @@ void Frame::OnSwitchWorkspace(wxCommandEvent &event)
 	dlg->Destroy();
 }
 
-/// Open file and set the cursor to be on the line
-void Frame::OpenFile(const TagEntry& tag)
-{
-	wxFileName fileName(tag.GetFile());
-
-	// Search to see if this file is already opened
-	// in the notebook
-	LEditor* editor = NULL;
-	size_t nCount = 0;
-	for(; nCount < (size_t)m_notebook->GetPageCount(); nCount++)
-	{
-		editor = static_cast<LEditor*>(m_notebook->GetPage(nCount));
-		if( editor->GetFileName() == fileName.GetFullPath() )
-		{
-			m_notebook->SetSelection( nCount );
-			break;
-		}
-		editor = NULL;
-	}
-
-	if( !editor )
-	{
-		/// Open the file and read the text
-		if(fileName.IsOk() == false)
-			return;
-
-		// Create new editor and add it to the notebook
-		m_notebook->Freeze();
-		editor = new LEditor(this, wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), tag.GetProject());
-		m_notebook->AddPage(editor, fileName.GetFullName(), true);
-		m_notebook->Thaw();
-	}
-
-	// Go to tag line number and gives scintilla the focus
-	editor->GotoLine( tag.GetLine() - 1 );
-	editor->SetFocus ();
-}
-
 //------------------------------------------------------
 // Complete word, complete a word from the current caret
 // position.

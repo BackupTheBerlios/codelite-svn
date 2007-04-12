@@ -50,6 +50,16 @@ public:
 
 	/*!
 	 * \brief
+	 * Open a file using file name and line number
+	 * 
+	 * \param fileName full path of the file name
+	 * \param projectName project name, can be wxEmptyString
+	 * \param lineno the cursor will be placed at lineno
+	 */
+	void OpenFile(const wxString &file_name, const wxString &projectName, const int lineno);
+
+	/*!
+	 * \brief
 	 * Set the title for the page (tab)
 	 */
 	void SetPageTitle(wxWindow *page, const wxString &name);

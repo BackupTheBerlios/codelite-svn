@@ -1,7 +1,7 @@
 #include "precompiled_header.h"
 
 #include "cpp_symbol_tree.h"
-#include "frame.h"
+#include "manager.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/imaglist.h>
 
@@ -43,9 +43,20 @@ wxImageList* CreateSymbolTreeImages()
 	return images;
 }
 
-BEGIN_EVENT_TABLE(CppSymbolTree, SymbolTree)
-	EVT_LEFT_DCLICK(CppSymbolTree::OnMouseDblClick)
-END_EVENT_TABLE()
+CppSymbolTree::CppSymbolTree(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size, long style)
+: SymbolTree(parent, id, pos, size, style)
+{
+	Connect(GetId(), wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler(CppSymbolTree::OnMouseRightUp));
+	Connect(GetId(), wxEVT_LEFT_DCLICK, wxMouseEventHandler(CppSymbolTree::OnMouseDblClick));
+}
+
+void CppSymbolTree::OnMouseRightUp(wxTreeEvent &event)
+{
+	wxTreeItemId item = event.GetItem();
+	if(item.IsOk()){
+		SelectItem(item, true);
+	}
+}
 
 void CppSymbolTree::OnMouseDblClick(wxMouseEvent& event)
 {
@@ -92,7 +103,7 @@ void CppSymbolTree::OnMouseDblClick(wxMouseEvent& event)
 			return;
 		}
 		// Open the file and set the cursor to line number
-		Frame::Get()->OpenFile(node->GetData());
+		ManagerST::Get()->OpenFile(node->GetData());
 		return;
 	}
 	event.Skip();

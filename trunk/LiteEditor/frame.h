@@ -46,7 +46,6 @@ public:
 	static Frame* Get();
 	virtual ~Frame(void);
 
-	void OpenFile(const TagEntry& tag);
 	const wxString& GetInstallPath() const { return m_installPath; }
 	wxFlatNotebook *GetNotebook() { return m_notebook; }
 	SymbolTree *GetSymbolTree() { return m_tree; }

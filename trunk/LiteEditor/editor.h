@@ -65,6 +65,11 @@ public:
 	// Return the file name opened in this editor
 	const wxFileName& GetFileName() const { return m_fileName; }
 
+	// Return the project name
+	const wxString &GetProject() const { return m_project; }
+	// Set the project name
+	void SetProject(const wxString &proj) { m_project = proj; }
+
 	// Attempt to display a list of members 
 	// after a '.' or '->' operator has been inserted into 
 	// the code

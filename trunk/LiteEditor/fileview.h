@@ -53,6 +53,9 @@ public:
 	// Build the actual tree from the workspace
 	void BuildTree();
 
+protected:
+	void OnMouseRightUp(wxTreeEvent &event);
+
 private:
 	// Build project node
 	void BuildProjectNode(const wxString &projectName);

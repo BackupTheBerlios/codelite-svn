@@ -20,6 +20,8 @@ FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint&
 	images->Add(wxXmlResource::Get()->LoadBitmap(_T("page_white_h")));			//4
 	images->Add(wxXmlResource::Get()->LoadBitmap(_T("page_white_text")));		//5
 	AssignImageList( images );
+
+	Connect(GetId(), wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler(FileViewTree::OnMouseRightUp));
 }
 
 FileViewTree::~FileViewTree()
@@ -125,4 +127,15 @@ void FileViewTree::BuildProjectNode(const wxString &projectName)
 	}
 
 //	SortTree(m_sortItems);
+}
+
+//-----------------------------------------------
+// Event handlers
+//-----------------------------------------------
+void FileViewTree::OnMouseRightUp(wxTreeEvent &event)
+{
+	wxTreeItemId item = event.GetItem();
+	if(item.IsOk()){
+		SelectItem(item, true);
+	}
 }
