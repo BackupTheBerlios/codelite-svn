@@ -28,8 +28,8 @@ class SearchData
 {
 	wxString m_rootDir;
 	wxString m_findString;
-	wxString m_validExt;
 	int m_flags;
+	wxString m_validExt;
 
 private:
 	// An internal helper function that set/remove an option bit
