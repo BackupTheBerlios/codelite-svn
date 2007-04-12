@@ -128,6 +128,9 @@ public:
 	ProjectTreePtr AsTree();
 
 private:
+	// Recursive helper function
+	void RecursiveAdd(wxXmlNode *xmlNode, ProjectTreePtr &ptp, ProjectTreeNode *nodeParent);
+
 	// Return the node representing a virtual dir by name
 	// if no such virtual dir exist, create it.
 	wxXmlNode *GetVirtualDir(const wxString &name);

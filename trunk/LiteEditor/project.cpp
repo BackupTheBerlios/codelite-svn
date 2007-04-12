@@ -124,6 +124,51 @@ ProjectTreePtr Project::AsTree()
 {
 	ProjectItem item(GetName(), GetName(), wxEmptyString, ProjectItem::TypeProject);
 	ProjectTreePtr ptp(new ProjectTree(item.Key(), item));
+	
+	wxXmlNode *child = m_doc.GetRoot()->GetChildren();
+	while( child ){
+		RecursiveAdd(child, ptp, ptp->GetRoot());
+		child = child->GetNext();
+	}
 	return ptp;
 }
 
+void Project::RecursiveAdd(wxXmlNode *xmlNode, ProjectTreePtr &ptp, ProjectTreeNode *nodeParent)
+{
+	// Build the key for this node
+	std::list<wxString> nameList;
+
+	wxXmlNode *parent = xmlNode->GetParent();
+	while( parent ){
+		nameList.push_front(parent->GetPropVal(wxT("Name"), wxEmptyString));
+		parent = parent->GetParent();
+	}
+
+	wxString key;
+	for(size_t i=0; i<nameList.size(); i++){
+		key += nameList.front();
+		key += wxT(".");
+		nameList.pop_front();
+	}
+	key += xmlNode->GetPropVal(wxT("Name"), wxEmptyString);
+
+	// Create the tree node data
+	ProjectItem item;
+	if( xmlNode->GetName() == wxT("Project") ){
+		item = ProjectItem(key, xmlNode->GetPropVal(wxT("Name"), wxEmptyString), wxEmptyString, ProjectItem::TypeProject);
+	} else if( xmlNode->GetName() == wxT("VirtualDirectory") ){
+		item = ProjectItem(key, xmlNode->GetPropVal(wxT("Name"), wxEmptyString), wxEmptyString, ProjectItem::TypeVirtualDirectory);
+	} else if( xmlNode->GetName() == wxT("File") ){
+		wxFileName filename(xmlNode->GetPropVal(wxT("Name"), wxEmptyString));
+		item = ProjectItem(key, filename.GetFullName(), filename.GetFullPath(), ProjectItem::TypeFile);
+	}
+
+	ProjectTreeNode *newNode = ptp->AddChild(item.Key(), item, nodeParent);
+	// This node has children, add them as well
+	wxXmlNode *children = xmlNode->GetChildren();
+
+	while( children ){
+		RecursiveAdd(children, ptp, newNode);
+		children = children->GetNext();
+	}
+}
