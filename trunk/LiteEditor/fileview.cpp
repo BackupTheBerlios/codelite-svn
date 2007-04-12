@@ -72,19 +72,19 @@ int FileViewTree::GetIconIndex(const ProjectItem &item)
 	case ProjectItem::TypeFile:
 		{
 			wxFileName filename(item.GetFile());
-			if(filename.GetExt().CmpNoCase("cpp") == 0){
+			if(filename.GetExt().CmpNoCase(wxT("cpp")) == 0){
 				icondIndex = 3;
-			} else if(filename.GetExt().CmpNoCase("cxx") == 0){
+			} else if(filename.GetExt().CmpNoCase(wxT("cxx")) == 0){
 				icondIndex = 3;
-			} else if(filename.GetExt().CmpNoCase("c++") == 0){
+			} else if(filename.GetExt().CmpNoCase(wxT("c++")) == 0){
 				icondIndex = 3;
-			} else if(filename.GetExt().CmpNoCase("cc") == 0){
+			} else if(filename.GetExt().CmpNoCase(wxT("cc")) == 0){
 				icondIndex = 3;
-			} else if(filename.GetExt().CmpNoCase("c") == 0){
+			} else if(filename.GetExt().CmpNoCase(wxT("c")) == 0){
 				icondIndex = 2;
-			} else if(filename.GetExt().CmpNoCase("h") == 0){
+			} else if(filename.GetExt().CmpNoCase(wxT("h")) == 0){
 				icondIndex = 4;
-			} else if(filename.GetExt().CmpNoCase("hpp") == 0){
+			} else if(filename.GetExt().CmpNoCase(wxT("hpp")) == 0){
 				icondIndex = 4;
 			} else {
 				icondIndex = 5;
