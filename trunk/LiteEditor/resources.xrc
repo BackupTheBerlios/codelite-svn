@@ -13,5 +13,11 @@
     <object class="wxBitmap" name="namespace">res/cube_yellow.png</object>  
     <object class="wxBitmap" name="struct">res/struct.png</object>  
     <object class="wxBitmap" name="bookmark_blue">res/media_stop.png</object>
+	
+	<object class="wxBitmap" name="folder">res/folder.png</object>
+	<object class="wxBitmap" name="page_white_c">res/page_white_c.png</object>
+	<object class="wxBitmap" name="page_white_cplusplus">res/page_white_cplusplus.png</object>
+	<object class="wxBitmap" name="page_white_h">res/page_white_h.png</object>
+	<object class="wxBitmap" name="page_white_text">res/page_white_text.png</object>
 </resource>
    
