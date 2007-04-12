@@ -8,7 +8,7 @@
 #include <list>
 #include <tree.h>
 #include "smart_ptr.h"
-
+ 
 /**
  * \class ProjectItem
  * a node item that represents a displayable project item

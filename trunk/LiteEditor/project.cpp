@@ -18,7 +18,7 @@ bool Project::Create(const wxString &name, const wxString &path, const wxString 
 	m_fileName = path + wxT("/") + name + wxT(".project");
 	wxXmlNode *root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("CodeLite_Project"));   
 	m_doc.SetRoot(root);
-	m_doc.GetRoot()->AddProperty(wxT("Name"), name);
+	m_doc.GetRoot()->AddProperty(wxT("Name"), m_fileName.GetFullPath());
 	m_doc.GetRoot()->AddProperty(wxT("Type"), projType);
 
 	// Create the default virtual directories

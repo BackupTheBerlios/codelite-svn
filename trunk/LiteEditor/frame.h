@@ -50,6 +50,7 @@ public:
 	const wxString& GetInstallPath() const { return m_installPath; }
 	wxFlatNotebook *GetNotebook() { return m_notebook; }
 	SymbolTree *GetSymbolTree() { return m_tree; }
+	FileViewTree *GetFileViewTree() { return m_fileView; }
 	void CloseActiveFile();
 
 private:

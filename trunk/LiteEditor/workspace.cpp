@@ -32,7 +32,11 @@ bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 		if(child->GetName() == wxT("Project")){
 			wxString projectPath = child->GetPropVal(wxT("Path"), wxEmptyString);
 			ProjectPtr proj(new Project());
-			proj->Load(projectPath);
+			if( !proj->Load(projectPath) ){
+				errMsg = wxT("Corrupted project file '");
+				errMsg << projectPath << wxT("'");
+				return false;
+			}
 			m_projects[proj->GetName()] = proj;
 		}
 		child = child->GetNext();
@@ -130,4 +134,28 @@ bool Workspace::CreateProject(const wxString &name, const wxString &path, const 
 	m_doc.GetRoot()->AddChild(node);
 	m_doc.Save(m_fileName.GetFullPath());
 	return true;
+}
+
+ProjectPtr Workspace::FindProjectByName(const wxString &projName, wxString &errMsg) const
+{
+	if( !m_doc.IsOk() ){
+		errMsg = wxT("No workspace open");
+		return NULL;
+	}
+
+	std::map<wxString, ProjectPtr>::const_iterator iter = m_projects.find(projName);
+	if( iter == m_projects.end() ){
+		errMsg = wxT("Invalid project name '");
+		errMsg << projName << wxT("'");
+		return NULL;
+	}
+	return iter->second;
+}
+
+void Workspace::GetProjectList(wxArrayString &list)
+{
+	std::map<wxString, ProjectPtr>::iterator iter = m_projects.begin();
+	for(; iter != m_projects.end(); iter++){
+		list.Add(iter->first);	// add the name
+	}
 }

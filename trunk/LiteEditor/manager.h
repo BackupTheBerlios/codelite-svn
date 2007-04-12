@@ -10,6 +10,7 @@
 #include "wx/string.h"
 #include "readtags.h"
 #include "entry.h"
+#include "project.h"
 
 class wxFrame;
 
@@ -102,6 +103,16 @@ public:
 	 * Open an existing workspace by path
 	 */
 	void OpenWorkspace(const wxString &path);
+
+	/**
+	 * Return a tree for the file view of a single project
+	 */
+	ProjectTreePtr GetProjectFileViewTree(const wxString &projectName);
+
+	/**
+	 * Return all project names under this workspace
+	 */
+	void GetProjectList(wxArrayString &list);
 
 protected:
 	Manager(void);

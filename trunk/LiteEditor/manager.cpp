@@ -14,6 +14,7 @@
 #include "search_thread.h"
 #include "workspace.h"
 #include "cpp_symbol_tree.h"
+#include "fileview.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -157,4 +158,24 @@ void Manager::OpenWorkspace(const wxString &path)
 	// update symbol tree
 	TagTreePtr dummy;
 	Frame::Get()->GetSymbolTree()->BuildTree( dummy );
+	Frame::Get()->GetFileViewTree()->BuildTree();
+}
+
+ProjectTreePtr Manager::GetProjectFileViewTree(const wxString &projectName)
+{
+	if( !IsWorkspaceOpen() ){
+		return NULL;
+	}
+
+	wxString err_msg;
+	ProjectPtr prj = WorkspaceST::Get()->FindProjectByName(projectName, err_msg);
+	if( !prj ){
+		return NULL;
+	}
+	return prj->AsTree();
+}
+
+void Manager::GetProjectList(wxArrayString &list)
+{
+	WorkspaceST::Get()->GetProjectList(list);
 }

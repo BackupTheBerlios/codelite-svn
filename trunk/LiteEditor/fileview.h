@@ -1,7 +1,8 @@
 #ifndef FILE_VIEW_TREE_H
 #define FILE_VIEW_TREE_H
 
-#include "wx/treectrl.h"
+#include "wx/treectrl.h" 
+#include "project.h"
 
 /**
  * Class FilewViewTreeItemData, a user defined class which stores a node private information
@@ -49,9 +50,13 @@ public:
 	 */
 	virtual void Create(wxWindow *parent, const wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
 
-private:
 	// Build the actual tree from the workspace
 	void BuildTree();
+
+private:
+	// Build project node
+	void BuildProjectNode(const wxString &projectName);
+	int GetIconIndex(const ProjectItem &item);
 };
 
 #endif // FILE_VIEW_TREE_H

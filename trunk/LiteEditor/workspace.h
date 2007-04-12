@@ -79,6 +79,19 @@ public:
 	 * \returns property value or wxEmptyString 
 	 */
 	wxString GetStringProperty(const wxString &propName, wxString &errMsg);
+
+	/**
+	 * Find a project by name
+	 * \param projName project name
+	 * \param errMsg [output] incase an error, report the error to the caller
+	 * \returns ProjectPtr or NULL if no match was found
+	 */
+	ProjectPtr FindProjectByName(const wxString &projName, wxString &errMsg) const;
+
+	/**
+	 * Return all project names under this workspace
+	 */
+	void GetProjectList(wxArrayString &list);
 };
 
 typedef Singleton<Workspace> WorkspaceST;
