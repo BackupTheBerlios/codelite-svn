@@ -119,3 +119,11 @@ wxString Project::GetName() const
 {
 	return m_doc.GetRoot()->GetPropVal(wxT("Name"), wxEmptyString);
 }
+
+ProjectTreePtr Project::AsTree()
+{
+	ProjectItem item(GetName(), GetName(), wxEmptyString, ProjectItem::TypeProject);
+	ProjectTreePtr ptp(new ProjectTree(item.Key(), item));
+	return ptp;
+}
+
