@@ -470,8 +470,8 @@ void wxFlatMenuBar::DrawToolbar(wxDC &dc, const wxRect &rect)
 			int imgx = buttonRect.x + (buttonRect.width - bmp.GetWidth())/2;
 			int imgy = buttonRect.y + (buttonRect.height - bmp.GetHeight())/2;
 
-			if(m_tbButtons[i]->m_state == ControlFocus)
-			{
+//			if(m_tbButtons[i]->m_state == ControlFocus)
+//			{
 				// incase we the button is in focus, place it 
 				// once pixle up and left
 				// place a dark image under the original image to provide it
@@ -480,9 +480,9 @@ void wxFlatMenuBar::DrawToolbar(wxDC &dc, const wxRect &rect)
 //				ConvertToMonochrome(bmp, shadow);
 //				dc.DrawBitmap(bmp, imgx, imgy, true);
 
-				imgx -= 1;
-				imgy -= 1;
-			}
+//				imgx -= 1;
+//				imgy -= 1;
+//			}
 
 			dc.DrawBitmap(bmp, imgx, imgy, true);
 			xx += buttonRect.width;
@@ -853,8 +853,8 @@ void wxFlatMenuBar::DrawToolbarItem(wxDC &dc, int idx, ControlState state)
 	int x = rect.x + (buttonRect.width - m_tbButtons[idx]->m_tbItem->GetBitmap().GetWidth())/2;
 	int y = rect.y + (buttonRect.height - m_tbButtons[idx]->m_tbItem->GetBitmap().GetHeight())/2;
 
-	if(state == ControlFocus)
-	{
+//	if(state == ControlFocus)
+//	{
 		// place a dark image under the original image to provide it
 		// with some shadow
 //		wxBitmap shadow;
@@ -863,9 +863,9 @@ void wxFlatMenuBar::DrawToolbarItem(wxDC &dc, int idx, ControlState state)
 
 		// incase we the button is in focus, place it 
 		// once pixle up and left
-		x -= 1;
-		y -= 1;
-	}
+//		x -= 1;
+//		y -= 1;
+//	}
 	dc.DrawBitmap(m_tbButtons[idx]->m_tbItem->GetBitmap(), x, y, true);
 }
 
