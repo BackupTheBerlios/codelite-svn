@@ -24,16 +24,16 @@ void OutputPane::CreateGUIControls()
 	wxArtManagerST::Get()->SetMenuTheme( StyleXP );
 	wxArtManagerST::Get()->SetRaiseToolbar( false );
 	wxArtManagerST::Get()->DrawMenuBarBorder( false );
-	wxArtManagerST::Get()->SetMenuBarColour( wxT("Default") );
-	wxArtManagerST::Get()->SetMBVerticalGradient( true );
+	wxArtManagerST::Get()->SetMenuBarColour( wxT("Generic") );
+	wxArtManagerST::Get()->SetMBVerticalGradient( false );
 
 	wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(mainSizer);
 
 	wxFlatMenuBar *mb = new wxFlatMenuBar(this, wxID_ANY, true, SmallIcons);
-	mb->SetSize(wxSize(-1, 36));
+	mb->SetSize(wxSize(-1, 42));
 	
-	wxBitmap bmp = wxXmlResource::Get()->LoadBitmap(_T("cross"));
+	wxBitmap bmp = wxXmlResource::Get()->LoadBitmap(_T("document_delete"));
 
 	wxFlatToolbarItem *tool = new wxFlatToolbarItem(bmp, wxNewId(), wxT("Clear All"));
 	mb->AppendToolbarItem(tool);

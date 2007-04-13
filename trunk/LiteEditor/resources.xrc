@@ -20,5 +20,6 @@
 	<object class="wxBitmap" name="page_white_h">res/page_white_h.png</object>
 	<object class="wxBitmap" name="page_white_text">res/page_white_text.png</object>
   <object class="wxBitmap" name="cross">res/cross.png</object>
+  <object class="wxBitmap" name="document_delete">res/document_delete.png</object>
 </resource>
    
