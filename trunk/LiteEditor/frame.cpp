@@ -11,7 +11,6 @@
 #include "symbol_tree.h"
 #include <wx/splitter.h>
 #include "parse_thread.h"
-#include "editor.h"
 #include "cpp_symbol_tree.h"
 #include "language.h"
 #include "process.h"
@@ -138,9 +137,6 @@ Frame::~Frame(void)
 {
 	ManagerST::Free();
 
-	if(m_config)
-		delete m_config;
-
 	// uninitialize AUI manager
 	m_mgr.UnInit();
 }
@@ -241,17 +237,17 @@ void Frame::CreateGUIControls(void)
 	//--------------------------------------------------------------------------------------
 	ParseThreadST::Get()->Start();
 
+	// Initialise editor configuration file
+	wxFileName configFile(wxT("liteeditor.xml"));
+	EditorConfigST::Get()->Load(configFile);
+
 	// And finally create a status bar
 	wxStatusBar* statusBar = new wxStatusBar(this, wxID_ANY);
 	statusBar->SetFieldsCount(3);
 	SetStatusBar(statusBar);
 	
-	GetStatusBar()->SetStatusText(_("Welcome to CodeLite sample application!"));
+	GetStatusBar()->SetStatusText(_("Ready"));
 
-	// Get the install path from the configuration
-	m_config = wxConfigBase::Get();
-	m_config->Read(_T("LiteEditor/InstallPath"), &m_installPath);
-	
 	// "commit" all changes made to wxAuiManager
     m_mgr.Update();
 

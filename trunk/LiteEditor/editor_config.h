@@ -4,9 +4,7 @@
 #include "singleton.h"
 #include <wx/filename.h>
 #include <vector>
-
-class wxXmlDocument;
-class wxXmlNode;
+#include "wx/xml/xml.h"
 
 class AttributeStyle
 {
@@ -68,8 +66,10 @@ class EditorConfig
 	wxXmlDocument* m_doc;
 
 public:
-	void LoadStyle(const wxFileName& fileName, const wxString& lexer, std::vector<AttributeStyle>& styles);
-	void LoadWords(const wxFileName& fileName, const wxString& lexer, wxString& words);
+	bool Load(const wxFileName &fileName);
+	void LoadStyle(const wxString& lexer, std::vector<AttributeStyle>& styles);
+	void LoadWords(const wxString& lexer, wxString& words);
+	bool IsOk() const { return m_doc->IsOk(); }
 
 private:
 	EditorConfig();

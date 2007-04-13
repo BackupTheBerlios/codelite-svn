@@ -12,14 +12,6 @@
 #endif 
 
 
-#ifdef USE_TRACE
-#define DEBUG_START_TIMER(msg) { wxString logmsg; m_watch.Start(); wxLogMessage(logmsg << _T("Timer started ===> ") << msg); }
-#define DEBUG_STOP_TIMER()   { wxString msg; msg << _T("Done, total time elapsed: ") << m_watch.Time() << _T(" milliseconds"); wxLogMessage(msg); }
-#else
-#define DEBUG_START_TIMER(msg)
-#define DEBUG_STOP_TIMER()
-#endif
-
 IMPLEMENT_DYNAMIC_CLASS(SymbolTreeEvent, wxNotifyEvent)
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_SYMBOL_TREE_UPDATE_ITEM)
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_SYMBOL_TREE_DELETE_ITEM)
@@ -51,7 +43,6 @@ void* ParseThread::Entry()
 		
 		if( GetRequest( sourceFile, project, dbfile ) )
 		{
-			DEBUG_MSG( _T("Processing request for Project:") << project << _T(" File: ") << sourceFile << _T(" DB: ") << dbfile)
 			ProcessRequest( sourceFile, project, dbfile );
 			wxThread::Sleep(10);  // Allow other threads to work as well
 			continue; // to avoid the sleep
@@ -96,7 +87,6 @@ void ParseThread::ProcessRequest(wxString& file, wxString& project, wxString& db
 	// Build a tree from project/file/project 
 	// from the value which are set in the database
 	//----------------------------------------------
-	DEBUG_START_TIMER(_T("Creating old tree from database"));
 	TagTreePtr oldTree;
 	try
 	{
@@ -118,23 +108,17 @@ void ParseThread::ProcessRequest(wxString& file, wxString& project, wxString& db
 		std::cerr << e.GetErrorCode() << ":" << e.GetMessage().mb_str() << std::endl;
 	}
 
-	DEBUG_STOP_TIMER()
-	
 	// Build second tree from the updated file
 	TagTreePtr newTree;
 	std::vector<DbRecordPtr> comments;
 	if( TagsManagerST::Get()->GetParseComments() )
 	{
-		DEBUG_START_TIMER(_T("Building new syntax tree from source file (comments inclded)"));
 		newTree = TagsManagerST::Get()->ParseSourceFile(wxFileName(file), project, &comments);
 	}
 	else
 	{
-		DEBUG_START_TIMER(_T("Building new syntax tree from source file"))
 		newTree = TagsManagerST::Get()->ParseSourceFile(wxFileName(file), project);
 	}
-	DEBUG_STOP_TIMER()
-	
 	//-------------------------------------------------------------------
 	// Now what is left to be done here, is to update the GUI tree
 	// The GUI tree needs to be updated item by item, to avoid total tree
@@ -146,15 +130,10 @@ void ParseThread::ProcessRequest(wxString& file, wxString& project, wxString& db
 	std::vector<std::pair<wxString, TagEntry> >  newItems;
 	std::vector<std::pair<wxString, TagEntry> >  modifiedItems;
 
-	DEBUG_START_TIMER(_T("Comparing trees ..."))
 	oldTree->Compare(newTree.Get(), deletedItems, modifiedItems, newItems);
-	DEBUG_STOP_TIMER()
-
 	// Delete old entries
 	size_t i=0;
 	m_pDb->Begin();
-	
-	DEBUG_START_TIMER(_T("Updating database ..."))
 	
 	// Prepare sql statements
 	TagEntry dummy;
@@ -175,7 +154,7 @@ void ParseThread::ProcessRequest(wxString& file, wxString& project, wxString& db
 		}
 		catch( wxSQLite3Exception & e)
 		{
-			DEBUG_MSG(e.GetMessage());
+			wxUnusedVar(e);
 		}
 	}
 
@@ -193,9 +172,6 @@ void ParseThread::ProcessRequest(wxString& file, wxString& project, wxString& db
 	insertStmt.Finalize();
 	updateStmt.Finalize();
 	deleteStmt.Finalize();
-	DEBUG_STOP_TIMER()
-
-	DEBUG_MSG( (int)newItems.size() << _T(" Added, ") << (int)deletedItems.size() << _T(" Deleted, ") << (int)modifiedItems.size() << _T(" Updated.") );
 
 	// If there is no event handler set to handle this comaprison 
 	// results, then nothing more to be done
@@ -203,8 +179,6 @@ void ParseThread::ProcessRequest(wxString& file, wxString& project, wxString& db
 		return;
 
 	// Send an event for each operation type
-	DEBUG_START_TIMER(_T("Sending events to Symbol Tree"));
-
 	if( !deletedItems.empty() )
 		SendEvent(wxEVT_COMMAND_SYMBOL_TREE_DELETE_ITEM, deletedItems);
 

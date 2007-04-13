@@ -11,6 +11,11 @@ EditorConfig::~EditorConfig()
 	delete m_doc;
 }
 
+bool EditorConfig::Load(const wxFileName &filename)
+{
+	return m_doc->Load(filename.GetFullPath());
+}
+
 wxXmlNode* EditorConfig::GetLexerNode(const wxString& lexer)
 {
 	wxXmlNode *child = m_doc->GetRoot()->GetChildren();
@@ -24,11 +29,10 @@ wxXmlNode* EditorConfig::GetLexerNode(const wxString& lexer)
 	return NULL;
 }
 
-void EditorConfig::LoadWords(const wxFileName& fileName, const wxString& lexer, wxString& words)
+void EditorConfig::LoadWords(const wxString& lexer, wxString& words)
 {
 	if( !m_doc->IsOk() )
-		if (!m_doc->Load(fileName.GetFullPath()))
-			return ;
+		return ;
 		
 	wxXmlNode *lexerNode = GetLexerNode(lexer);
 	if( lexerNode )
@@ -57,11 +61,10 @@ void EditorConfig::LoadWords(const wxFileName& fileName, const wxString& lexer, 
 	}
 }
 
-void EditorConfig::LoadStyle(const wxFileName& fileName, const wxString& lexer, std::vector<AttributeStyle>& styles)
+void EditorConfig::LoadStyle(const wxString& lexer, std::vector<AttributeStyle>& styles)
 {
 	if( !m_doc->IsOk() )
-		if (!m_doc->Load(fileName.GetFullPath()))
-			return ;
+		return ;
 
 	wxXmlNode *lexerNode = GetLexerNode(lexer);
 	if( lexerNode )

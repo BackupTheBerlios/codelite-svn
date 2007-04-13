@@ -73,10 +73,4 @@
     #define _C(x) _CC((x),wxConvUTF8)
 #endif
 
-#ifdef USE_TRACE
-    #define DEBUG_MSG(msg) { wxString tmpLogMsgString; tmpLogMsgString << msg; wxLogMessage(tmpLogMsgString); }
-#else
-    #define DEBUG_MSG(msg) { wxString tmpLogMsgString; tmpLogMsgString << msg; }
-#endif
-
 #endif // CODELITE_PRECOMPILED_HEADER_H

@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiteEditor", "LiteEditor\LiteEditor.vcproj", "{33133335-3996-408B-81E2-2FA20E5E4F64}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E8E7D604-D0FC-423A-81EF-70C182B40C14} = {E8E7D604-D0FC-423A-81EF-70C182B40C14}
@@ -28,16 +28,16 @@ Global
 		{33133335-3996-408B-81E2-2FA20E5E4F64}.Debug Unicode|Win32.Build.0 = Debug Unicode|Win32
 		{33133335-3996-408B-81E2-2FA20E5E4F64}.Debug|Win32.ActiveCfg = Debug|Win32
 		{33133335-3996-408B-81E2-2FA20E5E4F64}.Debug|Win32.Build.0 = Debug|Win32
-		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release Unicode|Win32.ActiveCfg = Debug Unicode|Win32
-		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release Unicode|Win32.Build.0 = Debug Unicode|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release Unicode|Win32.ActiveCfg = Release Unicode|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release Unicode|Win32.Build.0 = Release Unicode|Win32
 		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release|Win32.ActiveCfg = Release|Win32
 		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release|Win32.Build.0 = Release|Win32
 		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Debug Unicode|Win32.ActiveCfg = Debug Unicode|Win32
 		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Debug Unicode|Win32.Build.0 = Debug Unicode|Win32
 		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Debug|Win32.Build.0 = Debug|Win32
-		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release Unicode|Win32.ActiveCfg = Debug Unicode|Win32
-		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release Unicode|Win32.Build.0 = Debug Unicode|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release Unicode|Win32.ActiveCfg = Release Unicode|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release Unicode|Win32.Build.0 = Release Unicode|Win32
 		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release|Win32.ActiveCfg = Release|Win32
 		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release|Win32.Build.0 = Release|Win32
 		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Debug Unicode|Win32.ActiveCfg = Debug Unicode|Win32

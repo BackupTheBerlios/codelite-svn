@@ -66,6 +66,10 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, c
 		/// Open the file and read the text
 		if(fileName.IsOk() == false)
 			return;
+		
+		// make sure that the file exist
+		if( !fileName.FileExists() )
+			return;
 
 		// Create new editor and add it to the notebook
 		notebook ->Freeze();
@@ -85,11 +89,6 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, c
 void Manager::OpenFile(const TagEntry& tag)
 {
 	OpenFile(tag.GetFile(), tag.GetProject(), tag.GetLine() - 1);
-}
-
-const wxString &Manager::GetInstallPath() const
-{
-	return Frame::Get()->GetInstallPath();
 }
 
 void Manager::SetPageTitle(wxWindow *page, const wxString &name)

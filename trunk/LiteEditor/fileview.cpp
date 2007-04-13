@@ -22,6 +22,7 @@ FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint&
 	AssignImageList( images );
 
 	Connect(GetId(), wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler(FileViewTree::OnMouseRightUp));
+	Connect(GetId(), wxEVT_LEFT_DCLICK, wxMouseEventHandler(FileViewTree::OnMouseDblClick));
 }
 
 FileViewTree::~FileViewTree()
@@ -122,7 +123,7 @@ void FileViewTree::BuildProjectNode(const wxString &projectName)
 										node->GetData().GetDisplayName(),	// display name
 										GetIconIndex(node->GetData()),		// item image index
 										GetIconIndex(node->GetData()),		// selected item image
-										new FilewViewTreeItemData());
+										new FilewViewTreeItemData(node->GetData()));
 		items[node->GetKey()] = hti;
 	}
 
@@ -138,4 +139,43 @@ void FileViewTree::OnMouseRightUp(wxTreeEvent &event)
 	if(item.IsOk()){
 		SelectItem(item, true);
 	}
+}
+
+void FileViewTree::OnMouseDblClick(wxMouseEvent &event)
+{
+	wxTreeItemId treeItem = GetSelection();
+	if(!treeItem)
+	{
+		event.Skip();
+		return;
+	}
+
+	// Make sure the double click was done on an actual item
+	int flags = wxTREE_HITTEST_ONITEMLABEL;
+	if(HitTest(event.GetPosition(), flags) != treeItem)
+	{
+		event.Skip();
+		return;
+	}
+
+	//-----------------------------------------------------
+	// Each tree items, keeps a private user data that 
+	// holds the key for searching the its corresponding
+	// node in the m_tree data structure
+	//-----------------------------------------------------
+	FilewViewTreeItemData* itemData = static_cast<FilewViewTreeItemData*>(GetItemData(treeItem));
+	if( !itemData )
+	{
+		event.Skip();
+		return;
+	}
+
+	if( itemData->GetData().GetKind() == ProjectItem::TypeFile ){
+		wxString filename = itemData->GetData().GetFile();
+		wxString project  = itemData->GetData().Key().BeforeFirst(wxT('.'));
+		ManagerST::Get()->OpenFile(filename, project, -1);
+		event.Skip();
+		return;
+	}
+	return;
 }

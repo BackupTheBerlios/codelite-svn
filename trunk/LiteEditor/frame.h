@@ -7,6 +7,7 @@
 #include "wx/aui/aui.h"
 #include "wx/frame.h"
 #include "findinfilesdlg.h"
+#include "editor.h"
 
 // forward decls
 class SymbolTree;
@@ -14,7 +15,6 @@ class TagEntry;
 class TagsProcess;
 class wxSplitterWindow;
 class wxConfigBase;
-class LEditor;
 class FindInFilesDialog;
 class FileViewTree;
 
@@ -33,8 +33,6 @@ class Frame : public wxFrame
 	wxSplitterWindow *m_splitter;
 
 	static Frame* m_theFrame;
-	wxString m_installPath;
-	wxConfigBase *m_config;
 	wxAuiManager m_mgr;
 	wxTextCtrl *m_debugWin;
 	FindInFilesDialog *m_findInFilesDlg;
@@ -46,7 +44,6 @@ public:
 	static Frame* Get();
 	virtual ~Frame(void);
 
-	const wxString& GetInstallPath() const { return m_installPath; }
 	wxFlatNotebook *GetNotebook() { return m_notebook; }
 	SymbolTree *GetSymbolTree() { return m_tree; }
 	FileViewTree *GetFileViewTree() { return m_fileView; }

@@ -35,13 +35,6 @@ public:
 
 	/*!
 	 * \brief
-	 * Return the installation path of CodeLite
-	 * 
-	 */
-	const wxString &GetInstallPath() const;
-	
-	/*!
-	 * \brief
 	 * Open a file using TagEntry as input
 	 * 
 	 * \param tag TagEntry 

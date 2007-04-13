@@ -1,14 +1,14 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
+#include "wx/wx.h"
 #include "wx/string.h"
 #include <wx/xml/xml.h>
 #include "wx/filename.h"
-#include "smart_ptr.h"
-#include <list>
 #include <tree.h>
 #include "smart_ptr.h"
- 
+#include <list>
+
 /**
  * \class ProjectItem
  * a node item that represents a displayable project item
@@ -42,7 +42,8 @@ public:
 		, m_displayName(displayName)
 		, m_file(file)
 		, m_kind(kind)
-	{}
+	{
+	}
 
 	ProjectItem() : m_key(wxEmptyString), m_displayName(wxEmptyString), m_file(wxEmptyString), m_kind(TypeProject)
 	{}

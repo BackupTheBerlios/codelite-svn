@@ -15,15 +15,7 @@
 #endif
 #endif 
 
-#ifdef USE_TRACE
-#define DEBUG_START_TIMER(msg) { wxString logline; logline << _T("Timer started ===> ") << msg; m_watch.Start(); wxLogMessage(logline); }
-#define DEBUG_STOP_TIMER()   { wxString msg; msg << _T("Done, total time elapsed: ") << m_watch.Time() << _T(" milliseconds"); wxLogMessage(msg); }
-#else
-#define DEBUG_START_TIMER(msg)
-#define DEBUG_STOP_TIMER()
-#endif
-
-/// Descending sorting function
+// Descending sorting function
 struct SDescendingSort
 {
 	bool operator()(const TagEntry &rStart, const TagEntry &rEnd)
@@ -87,7 +79,6 @@ TagTreePtr TagsManager::ParseTagsFile(const wxFileName& fp, const wxString& proj
 	tagFile *const file = tagsOpen(fileName.data(), &info);
 	if( !file ) 
 	{
-		DEBUG_MSG(_T("cant open tag file!"));
 		return TagTreePtr( NULL );
 	}
 
@@ -257,7 +248,6 @@ TagTreePtr TagsManager::ParseSourceFile(const wxFileName& fp, const wxString& pr
 	
 	if(m_ctags == NULL)
 	{
-		DEBUG_MSG(_T("ctags process, for global scope, is not running, call TagsManager::StartCtagsProcess()"));
 		return TagTreePtr( NULL );
 	}
 
@@ -304,7 +294,6 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 	
 	if(m_ctags == NULL)
 	{
-		DEBUG_MSG(_T("ctags process, for global scope, is not running, call TagsManager::StartCtagsProcess()"));
 		return TagTreePtr(NULL);
 	}
 		
@@ -335,7 +324,6 @@ std::vector<TagEntry>* TagsManager::ParseLocals(const wxString& scope)
 
 	if(m_localCtags == NULL)
 	{
-		DEBUG_MSG(_T("ctags process, for local scope, is not running, call TagsManager::StartCtagsProcess()"));
 		return NULL;
 	}
 
@@ -466,7 +454,6 @@ TagsProcess* TagsManager::StartCtagsProcess(wxEvtHandler* evtHandler, int id, in
 	std::map<int, wxString>::iterator iter = m_ctagsCmd.find(kind);
 	if( iter == m_ctagsCmd.end() )
 	{
-		DEBUG_MSG(_T("Faild to start ctags: Invalid ctags kind"));
 		return NULL;
 	}
 	
@@ -488,7 +475,6 @@ TagsProcess* TagsManager::StartCtagsProcess(wxEvtHandler* evtHandler, int id, in
 
 	if( process->GetPid() <= 0 )
 	{
-		DEBUG_MSG(_T("Failed to start ctags process"));
 		return NULL;
 	}
 
@@ -518,7 +504,6 @@ void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, TagsPro
 	}
 	else
 	{
-		DEBUG_MSG(_T("Failed to connect to ctags process's standard input"));
 		return;
 	}
 	
@@ -638,19 +623,13 @@ void TagsManager::GetTags(const wxString& name, const wxString& scopeName, std::
 	{
 		// Get a list of tags from the current scope, first remove the non-visible scope from the 
 		// row scope
-		DEBUG_START_TIMER(_T("Getting local scope ...") );
 		wxString visibleScope = LanguageST::Get()->GetScope(scope, wxEmptyString);
-		DEBUG_STOP_TIMER()
-
-		DEBUG_START_TIMER(_T("Processing local scope..") );
 		localTags = TagsManagerST::Get()->ParseLocals(visibleScope);
-		DEBUG_STOP_TIMER()
-
+		
 		// filter all non qualified names from the local scope,
 		// consider flags (PartialMatch or ExactMatch)
 		FilterResults(*localTags, name, tags, flags, &tmpMap);
-		DEBUG_MSG(_T("Matched ") << static_cast<int>(tags.size()) << _T(" in local scope"))
-
+		
 		delete localTags;
 	}
 
@@ -698,21 +677,15 @@ void TagsManager::GetTags(const wxString& name, const wxString& scopeName, std::
 			  << _T(" order by name") ;
 	}
 
-	DEBUG_START_TIMER(_T("Quering database with the following sql: ") << query)
 	wxSQLite3ResultSet rs = m_pDb->Query(query);
-	DEBUG_STOP_TIMER();
-
+	
 	wxSQLite3ResultSet ex_rs;
 	if( m_pExternalDb->IsOpen() )
 	{
-		DEBUG_START_TIMER(_T("Quering external database with the following sql: ") << query);
 		ex_rs = m_pExternalDb->Query(query);
-		DEBUG_STOP_TIMER();
 	}
 
 	// Add the database results
-	DEBUG_START_TIMER(_T("Populating map with database results ... "));
-
 	try
 	{
 		while( rs.NextRow() )
@@ -747,10 +720,8 @@ void TagsManager::GetTags(const wxString& name, const wxString& scopeName, std::
 	}
 	catch( wxSQLite3Exception& e)
 	{
-		DEBUG_MSG(e.GetMessage())
+		wxUnusedVar(e);
 	}
-
-	DEBUG_STOP_TIMER()
 
 	if(false == allowDups)
 	{
@@ -763,9 +734,7 @@ void TagsManager::GetTags(const wxString& name, const wxString& scopeName, std::
 	}
 
 	// Sort the results base on their name
-	DEBUG_START_TIMER(_T("Sorting result vector ..."))
 	std::sort(tags.begin(), tags.end(), SDescendingSort());	
-	DEBUG_STOP_TIMER()
 }
 
 void TagsManager::TagsByParent(const wxString& parent, std::vector<TagEntry> &tags, bool inheritedMembers)
@@ -838,7 +807,7 @@ void TagsManager::GetTagsBySQL(const wxString& sql, std::vector<TagEntry> &tags,
 	}
 	catch(wxSQLite3Exception &e)
 	{
-		DEBUG_MSG(e.GetMessage())
+		wxUnusedVar(e);
 	}
 
 	// We have an external database as well, use it
@@ -862,7 +831,7 @@ void TagsManager::GetTagsBySQL(const wxString& sql, std::vector<TagEntry> &tags,
 		}
 		catch(wxSQLite3Exception &e)
 		{
-			DEBUG_MSG(e.GetMessage())
+			wxUnusedVar(e);
 		}
 	}
 }
@@ -901,7 +870,7 @@ bool TagsManager::GetClassTagByName(const wxString& name, TagEntry &tag)
 	}
 	catch(wxSQLite3Exception &e)
 	{
-		DEBUG_MSG(e.GetMessage())
+		wxUnusedVar(e);
 	}
 
 
@@ -952,7 +921,7 @@ void TagsManager::FindSymbol(const wxString& name, std::vector<TagEntry> &tags)
 	}
 	catch(wxSQLite3Exception &e)
 	{
-		DEBUG_MSG(e.GetMessage())
+		wxUnusedVar(e);
 	}
 }
 
@@ -1164,7 +1133,7 @@ wxString TagsManager::GetComment(const wxString &file, const int line)
 	}
 	catch( wxSQLite3Exception &e )
 	{
-		DEBUG_MSG(e.GetMessage())
+		wxUnusedVar(e);
 	}
 
 	return wxEmptyString;

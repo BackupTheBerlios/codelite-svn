@@ -13,14 +13,6 @@
 #endif 
 
 
-#ifdef USE_TRACE
-#define DEBUG_START_TIMER(msg) { wxString logline; logline << _T("Timer started ===> ") << msg; m_watch.Start(); wxLogMessage(logline); }
-#define DEBUG_STOP_TIMER()   { wxString msg; msg << _T("Done, total time elapsed: ") << m_watch.Time() << _T(" milliseconds"); wxLogMessage(msg); }
-#else
-#define DEBUG_START_TIMER(msg)
-#define DEBUG_STOP_TIMER()
-#endif
-
 // Some useful macros
 #define CHECK_STATE(x) { if(state != x) { flag = 0; break; } }
 #define CHECK_STATE2(x, y) { if(state != x && state != y) { flag = 0; break; } }
@@ -692,13 +684,11 @@ wxString Language::ProcessExpression(const wxString& stmt, wxString & parent, bo
 		// do some validations
 		if(isPointer && oper != _T("->"))
 		{
-			DEBUG_MSG(_T("cant use operator '") << oper << _T("' on a pointer !"));
 			return wxEmptyString;
 		}
 
 		if(!isPointer && oper == _T("->"))
 		{
-			DEBUG_MSG(_T("cant use operator '") << oper << _T("' on a non pointer qualifier"));
 			return wxEmptyString;
 		}
 		
@@ -730,7 +720,6 @@ wxString Language::ProcessExpression(const wxString& stmt, wxString & parent, bo
 			if(oper == _T("::") && (tags[0].GetKind() == _T("function") || tags[0].GetKind() == _T("prototype")))
 			{
 				// A function cant be followed by a scope operator
-				DEBUG_MSG(_T("A function can not be followed by a scope operator ( :: )") );
 				return wxEmptyString;
 			}
 
@@ -746,7 +735,6 @@ wxString Language::ProcessExpression(const wxString& stmt, wxString & parent, bo
 			{
 				if( foundThisKeyword )
 				{
-					DEBUG_MSG(_T("Expressions can not be evaluated, you cant use 'this' more then once"))
 					return wxEmptyString;
 				}
 				foundThisKeyword = true;
@@ -757,7 +745,6 @@ wxString Language::ProcessExpression(const wxString& stmt, wxString & parent, bo
 			{
 				if( foundThisKeyword )
 				{
-					DEBUG_MSG(_T("Expressions can not be evaluated, you cant use 'this' more then once"))
 						return wxEmptyString;
 				}
 				foundThisKeyword = true;
@@ -766,13 +753,11 @@ wxString Language::ProcessExpression(const wxString& stmt, wxString & parent, bo
 
 			if(isPointer && oper != _T("->"))
 			{
-				DEBUG_MSG(_T("cant use operator '") << oper << _T("' on a pointer !"));
 				return wxEmptyString;
 			}
 
 			if(!isPointer && oper == _T("->"))
 			{
-				DEBUG_MSG(_T("cant use operator '") << oper << _T("' on a non pointer qualifier"));
 				return wxEmptyString;
 			}
 
@@ -782,7 +767,6 @@ wxString Language::ProcessExpression(const wxString& stmt, wxString & parent, bo
 			qualifier.erase(qualifier.find_last_not_of(_T("*& "))+1);
 
 			// Print debug message
-			DEBUG_MSG(_T("Expression result is: ") << qualifier);
 
 			// If we have more tokens, keep processing them
 			// but now the parent is set the previous qualifier
@@ -987,14 +971,11 @@ wxString Language::GetWordQualifier( const wxString & word, const wxString & sco
 	std::vector<TagEntry> tags;
 	wxString escapedName( word );
 
-	DEBUG_START_TIMER(_T("Testing for 'this' keyword") );
-
 	// Support fot 'this' & '*this' keyword
 	if(word == _T("this") || word == _T("*this")) 
 	{
 		if(scopeName.IsEmpty() || scopeName == _T("<global>"))
 		{
-			DEBUG_MSG(_T("'this' keyword must be in a class / struct context"));
 			return wxEmptyString;
 		}
 		TagEntry tag;
@@ -1004,25 +985,17 @@ wxString Language::GetWordQualifier( const wxString & word, const wxString & sco
 		return wxEmptyString;
 	}
 
-	DEBUG_STOP_TIMER()
-
 	// If we have local scope, we process it first
 	if( scope.IsEmpty() == false )
 	{
 		// Get a list of tags from the current scope, first remove the non-visible scope from the 
 		// row scope
-		DEBUG_START_TIMER(_T("Getting local scope ...") );
 		wxString visibleScope = GetScope( scope, wxEmptyString );
-		DEBUG_STOP_TIMER()
-
-		DEBUG_START_TIMER(_T("Processing local scope..") );
 		localTags = TagsManagerST::Get()->ParseLocals( visibleScope );
-		DEBUG_STOP_TIMER()
 
 		// filter all non qualified names from the local scope,
 		// consider flags (PartialMatch or ExactMatch)
 		TagsManagerST::Get()->FilterResults( *localTags, word, tags, ExactMatch );
-		DEBUG_MSG(_T("Matched ") << static_cast<int>(tags.size()) << _T(" in local scope"))
 
 		delete localTags;
 
@@ -1060,19 +1033,12 @@ void Language::GetHoverTip(const wxString & token, const wxString & scope, const
 	{
 		// Get a list of tags from the current scope, first remove the non-visible scope from the 
 		// row scope
-		DEBUG_START_TIMER(_T("Getting local scope ...") );
 		wxString visibleScope = LanguageST::Get()->GetScope(scope, wxEmptyString);
-		DEBUG_STOP_TIMER()
-
-		DEBUG_START_TIMER(_T("Processing local scope..") );
 		localTags = TagsManagerST::Get()->ParseLocals(visibleScope);
-		DEBUG_STOP_TIMER()
-
 		// filter all non qualified names from the local scope,
 		FilterResults(*localTags, isFunc, token, tags2);
 
 		// if the tag is a function
-		DEBUG_MSG(_T("Matched ") << static_cast<int>(tags2.size()) << _T(" in local scope"))
 
 		delete localTags;
 

@@ -18,7 +18,7 @@ TagsDatabase::TagsDatabase(bool memDb)
 
 	// are we memory database?
 	if(m_memDb)
-		m_db->Open(_T(":memory:"));
+		m_db->Open(wxT(":memory:"));
 }
 
 TagsDatabase::~TagsDatabase()
@@ -135,7 +135,7 @@ wxString TagsDatabase::GetSchemaVersion() const
 	}
 	catch(wxSQLite3Exception &e )
 	{
-		DEBUG_MSG(e.GetMessage())
+		wxUnusedVar(e);
 	}
 	return wxEmptyString;
 }
@@ -418,7 +418,7 @@ void TagsDatabase::LoadToMemory(const wxFileName& fn)
 	}
 	catch(wxSQLite3Exception& e)
 	{
-		DEBUG_MSG(e.GetMessage())
+		wxUnusedVar(e);
 	}
 }
 

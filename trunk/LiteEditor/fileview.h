@@ -13,8 +13,10 @@
  */
 class FilewViewTreeItemData : public wxTreeItemData
 {
+	ProjectItem m_item;
 public:
-    FilewViewTreeItemData(){ }
+	FilewViewTreeItemData(const ProjectItem &item) : m_item(item) { }
+	const ProjectItem &GetData() const { return m_item; }
 };
 
 class FileViewTree : public wxTreeCtrl
@@ -54,7 +56,8 @@ public:
 	void BuildTree();
 
 protected:
-	void OnMouseRightUp(wxTreeEvent &event);
+	virtual void OnMouseRightUp(wxTreeEvent &event);
+	virtual void OnMouseDblClick(wxMouseEvent &event);
 
 private:
 	// Build project node

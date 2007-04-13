@@ -13,21 +13,6 @@
 #include "findreplacedlg.h"
 #include <wx/wxFlatNotebook/renderer.h>
 
-#ifdef USE_TRACE
-#define DEBUG_START_TIMER(msg) { wxString logmsg; m_watch.Start(); wxLogMessage(logmsg << _T("Timer started ===> ") << msg); }
-#define DEBUG_STOP_TIMER()   { wxString msg; msg << _T("Done, total time elapsed: ") << m_watch.Time() << _T(" milliseconds"); wxLogMessage(msg); }
-#else
-#define DEBUG_START_TIMER(msg)
-#define DEBUG_STOP_TIMER()
-#endif
-
-#ifdef USE_TRACE
-#define DEBUG_MSG(msg) { wxString tmpLogMsgString; tmpLogMsgString << msg; wxLogMessage(tmpLogMsgString); }
-#else
-#define DEBUG_MSG(msg) { wxString tmpLogMsgString; tmpLogMsgString << msg; }
-#endif 
-
-
 // fix bug in wxscintilla.h
 #ifdef EVT_SCI_CALLTIP_CLICK
 #undef EVT_SCI_CALLTIP_CLICK
@@ -177,28 +162,16 @@ void LEditor::SetProperties()
 	std::vector<AttributeStyle> styles;
 
 	// Read the configuration file
-	wxFileName ConfigFileName(_T("liteeditor.xml"));
-
-	// check first presence of a local configfile
-	bool ConfigFileFound(ConfigFileName.FileExists());
-
-	// no local configfile found, check if there is one in the installPath
-    if(!ConfigFileFound) {
-		wxString installPath = ManagerST::Get()->GetInstallPath();
-        ConfigFileName = wxFileName(installPath, ConfigFileName.GetFullName());
-        ConfigFileFound = ConfigFileName.FileExists();
-    } 
-
-	if (ConfigFileFound)
-		EditorConfigST::Get()->LoadWords(ConfigFileName,  _T("LEX_CPP"), keyWords);
+	if(EditorConfigST::Get()->IsOk())
+	{
+		EditorConfigST::Get()->LoadWords(wxT("LEX_CPP"), keyWords);
+		EditorConfigST::Get()->LoadStyle(wxT("LEX_CPP"), styles);
+	}
 
 	// Update the control
 	SetLexer(wxSCI_LEX_CPP);
 	SetKeyWords(0, keyWords);
 	StyleClearAll();
-
-	if (ConfigFileFound)
-		EditorConfigST::Get()->LoadStyle(ConfigFileName, _T("LEX_CPP"), styles);
 
 	for(size_t i=0; i<styles.size(); i++)
 	{
@@ -231,7 +204,6 @@ void LEditor::SetProperties()
 	AutoCompSetChooseSingle(true);					// If only one match, insert it automatically
 	AutoCompSetIgnoreCase(true);
 	SetIndent(8);
-
 	StyleSetBold(wxSCI_STYLE_BRACELIGHT, true);
 }
 
@@ -472,17 +444,13 @@ void LEditor::CompleteWord()
 	if(IsCommentOrString(GetCurrentPos()))
 		return;
 
-	DEBUG_START_TIMER(_T("Getting local scope"))
 	// Get the local scope and the word under the cursor
 	GetWordAndScope(word, scope ,scopeName);
-	DEBUG_STOP_TIMER()
 
 	if(word.IsEmpty())
 		return;
 
-	DEBUG_START_TIMER(_T("Scanning for tags ..."))
 	TagsManagerST::Get()->GetTags(word, scopeName, tags, PartialMatch, scope);
-	DEBUG_STOP_TIMER()
 
 	/// Convert the vector to a string delimited
 	wxString list;
@@ -634,11 +602,9 @@ void LEditor::GotoDefinition()
 
 	wxString logmsg;
 	logmsg << _T("Searching for symbol: ") << word;
-	DEBUG_START_TIMER(logmsg);
-
+	
 	// get all tags that matches the name (we use exact match)
 	TagsManagerST::Get()->FindSymbol(word, tags);
-	DEBUG_STOP_TIMER();
 	if(tags.empty())
 		return;
 

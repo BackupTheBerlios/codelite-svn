@@ -1257,8 +1257,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHsc "
-				Optimization="2"
-				InlineFunctionExpansion="1"
+				Optimization="0"
+				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="$(WXWIN)\lib\vc_lib\mswu,$(WXWIN)\include,..\include,..\sqlite3\include"
 				PreprocessorDefinitions="WIN32;_LIB;__WXMSW__;wxUSE_DYNAMIC_SQLITE3_LOAD=0;WXSQLITE3_HAVE_METADATA=0;WXSQLITE3_HAVE_CODEC=0;WXSQLITE3_HAVE_LOAD_EXTENSION=0"
 				StringPooling="true"
@@ -1270,6 +1270,7 @@
 				ObjectFile=".\msvc6prju_lib\wxsqlite3/"
 				ProgramDataBaseFileName="..\lib\wxsqlite3u.pdb"
 				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

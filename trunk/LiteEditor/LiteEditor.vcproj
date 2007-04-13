@@ -280,6 +280,84 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Release Unicode|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				AdditionalIncludeDirectories="&quot;$(WXSTABLE)\include&quot;;&quot;$(WXSTABLE)\lib\vc_lib\mswu&quot;;&quot;$(WXSTABLE)\contrib\include&quot;;..\CodeLite;..\sdk\wxscintilla\include;.\include;..\sdk\wxsqlite3\include;..\sdk\wxflatnotebook\include\"
+				PreprocessorDefinitions="WIN32;__WIN32__;__WXMSW__;_CRT_SECURE_NO_DEPRECATE"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="0"
+				WarningLevel="4"
+				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="$(WXSTABLE)\include"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="wxmsw28u_aui.lib wxbase28u_net.lib wxbase28u_xml.lib wxmsw28u_html.lib wxmsw28u_core.lib wxmsw28u_adv.lib wxmsw28u_xrc.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib comctl32.lib rpcrt4.lib shell32.lib gdi32.lib kernel32.lib user32.lib comdlg32.lib ole32.lib oleaut32.lib advapi32.lib wxsqlite3u.lib sqlite3.lib codeliteu.lib wxscintillau.lib"
+				OutputFile="../Runtime/LiteEditorU.exe"
+				LinkIncremental="1"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="&quot;$(WXSTABLE)\lib&quot;;&quot;$(WXSTABLE)\lib\vc_lib&quot;;..\sdk\lib;..\lib;..\sdk\wxsqlite3\lib;..\sdk\wxsqlite3\sqlite3\lib;..\sdk\wxscintilla\lib"
+				GenerateDebugInformation="false"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
