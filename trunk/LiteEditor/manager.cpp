@@ -15,6 +15,7 @@
 #include "workspace.h"
 #include "cpp_symbol_tree.h"
 #include "fileview.h"
+#include "art_manager.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -154,6 +155,7 @@ void Manager::UnInitialize()
 
 	wxFlatNotebook::CleanUp();
 	MenuManager::Free();
+	wxArtManagerST::Free();
 }
 
 void Manager::CreateWorkspace(const wxString &name, const wxString &path)

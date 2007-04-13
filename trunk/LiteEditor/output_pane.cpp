@@ -1,12 +1,13 @@
 #include "output_pane.h"
 #include "flat_menu_bar.h"
 #include <wx/xrc/xmlres.h>
+#include <wx/wxscintilla.h>
 
 const wxString OutputPane::FIND_IN_FILES_WIN = wxT("Find Results");
 const wxString OutputPane::BUILD_WIN = wxT("Build");
 
 OutputPane::OutputPane(wxWindow *parent, const wxString &caption)
-: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 300))
+: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 300))
 , m_caption(caption)
 {
 	CreateGUIControls();	
@@ -33,8 +34,12 @@ void OutputPane::CreateGUIControls()
 	mb->SetSize(wxSize(-1, 36));
 	
 	wxBitmap bmp = wxXmlResource::Get()->LoadBitmap(_T("cross"));
-	wxFlatToolbarItem *tool = new wxFlatToolbarItem(bmp, wxID_ANY, wxT("Clear All"));
+
+	wxFlatToolbarItem *tool = new wxFlatToolbarItem(bmp, wxNewId(), wxT("Clear All"));
 	mb->AppendToolbarItem(tool);
+
+	// Connect handlers
+	Connect( tool->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( OutputPane::OnClearAll ));
 
 	mainSizer->Add(mb, 0, wxEXPAND | wxALL, 1);
 
@@ -43,11 +48,18 @@ void OutputPane::CreateGUIControls()
 	mainSizer->Add(m_book, 1, wxEXPAND | wxALL, 1);
 
 	// Create the 'Find In Files Window'
-	wxTextCtrl *findInFilesWin = new wxTextCtrl(m_book, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(600, 200), wxTE_MULTILINE);
+	wxScintilla *findInFilesWin = new wxScintilla(m_book, wxID_ANY, wxDefaultPosition, wxSize(600, 200));
 	m_book->AddPage(findInFilesWin, FIND_IN_FILES_WIN, true);
+	findInFilesWin->SetReadOnly(true);
 
 	wxFont font(8, wxFONTFAMILY_TELETYPE, wxNORMAL, wxNORMAL);
-	findInFilesWin->SetFont(font);
+	findInFilesWin->StyleSetFont(wxSCI_STYLE_DEFAULT, font);
+}
+
+void OutputPane::OnClearAll(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	Clear();
 }
 
 void OutputPane::AppendText(const wxString &winName, const wxString &text)
@@ -61,13 +73,37 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 	{
 	case 0:	// Find In Files
 		{
-			wxTextCtrl *win = static_cast<wxTextCtrl*>(m_book->GetPage((size_t)index));
-			win->AppendText( text );
+			wxScintilla *win = static_cast<wxScintilla*>(m_book->GetPage((size_t)index));
+			// enable writing
+			win->SetReadOnly(false);					
+			// add the text
+			win->AddText( text );						
+			// the next 4 lines make sure that the caret is at last line
+			// and is visible
+			win->SetSelectionEnd(win->GetLength());
+			win->SetSelectionStart(win->GetLength());
+			win->SetCurrentPos(win->GetLength());
+			win->EnsureCaretVisible();
+			// enable readonly mode 
+			win->SetReadOnly(true);						
 			break;
 		}
 	default:
 		break;
 	}
+}
+
+void OutputPane::Clear()
+{
+	int index = CaptionToIndex(OutputPane::FIND_IN_FILES_WIN);
+	if( index == wxNOT_FOUND )
+		return;
+
+	wxScintilla *win = static_cast<wxScintilla*>(m_book->GetPage((size_t)index));
+
+	win->SetReadOnly(false);
+	win->ClearAll();
+	win->SetReadOnly(true);
 }
 
 int OutputPane::CaptionToIndex(const wxString &caption)

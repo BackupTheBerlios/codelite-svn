@@ -25,12 +25,18 @@ public:
 	// Operations
 	//-----------------------------------------------
 	void AppendText(const wxString &winName, const wxString &text);
+	void Clear();
 
 	//-----------------------------------------------
 	// Setters/Getters
 	//-----------------------------------------------
 	wxFlatNotebook *GetNotebook() { return m_book; }
 	const wxString &GetCaption() const { return m_caption; }
+
+	//-----------------------------------------------
+	// Event handlers
+	//-----------------------------------------------
+	void OnClearAll(wxCommandEvent &event);
 };
 
 #endif // OUTPUT_PANE_H

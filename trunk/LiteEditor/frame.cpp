@@ -678,9 +678,13 @@ void Frame::OnSearchThread(wxCommandEvent &event)
 		m_outputPane->AppendText(OutputPane::FIND_IN_FILES_WIN, msg);
 		delete res;
 	}
-	else if(event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHCANCELED ||
-		event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHSTARTED)
+	else if(event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHCANCELED)
 	{
+		m_outputPane->AppendText(OutputPane::FIND_IN_FILES_WIN, event.GetString() + wxT("\n"));
+	}
+	else if(event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHSTARTED)
+	{
+		m_outputPane->Clear();
 		m_outputPane->AppendText(OutputPane::FIND_IN_FILES_WIN, event.GetString() + wxT("\n"));
 	}
 	else if(event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHEND)

@@ -7,7 +7,7 @@ const wxString WorkspacePane::FILE_VIEW   = wxT("Files");
 extern wxImageList* CreateSymbolTreeImages();
 
 WorkspacePane::WorkspacePane(wxWindow *parent, const wxString &caption)
-: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(300, -1))
+: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(300, 400))
 , m_caption(caption)
 {
 	CreateGUIControls();	
