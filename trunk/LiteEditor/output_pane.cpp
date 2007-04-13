@@ -28,6 +28,9 @@ void OutputPane::CreateGUIControls()
 	// Create the 'Find In Files Window'
 	wxTextCtrl *findInFilesWin = new wxTextCtrl(m_book, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(600, 200), wxTE_MULTILINE);
 	m_book->AddPage(findInFilesWin, FIND_IN_FILES_WIN, true);
+
+	wxFont font(8, wxFONTFAMILY_TELETYPE, wxNORMAL, wxNORMAL);
+	findInFilesWin->SetFont(font);
 }
 
 void OutputPane::AppendText(const wxString &winName, const wxString &text)
@@ -42,7 +45,7 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 	case 0:	// Find In Files
 		{
 			wxTextCtrl *win = static_cast<wxTextCtrl*>(m_book->GetPage((size_t)index));
-			win->AppendText( text + wxT("\n") );
+			win->AppendText( text );
 			break;
 		}
 	default:
