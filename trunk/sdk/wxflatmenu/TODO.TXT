@@ -1,0 +1,8 @@
+Open bugs for wxFlatMenu:
+
+- No tooltips over the toolbar items
+- Menu items as separators can expands when set in AUI framework
+- Allow enter some custom controls to the toolbar - a Combobox will be a good start
+- **FIXED** Crash on GTK when scrollbuttons are enabled - currently the code is disabled using __WXMSW__, will be replaced to more generic code
+- **FIXED** bug: grandchild menu can do under the screen ....
+
