@@ -107,7 +107,7 @@ class wxArtManager : public wxEvtHandler
 	bool m_raiseTB;
 	
 
-	friend class Singleton<wxArtManager>;
+	friend class fmSingleton<wxArtManager>;
 	std::map<wxString, wxBitmapPtr> m_bitmaps;
 
 private: 
@@ -570,7 +570,7 @@ protected:
 	void OnSysColourChange(wxSysColourChangedEvent &event);
 };
 
-typedef Singleton<wxArtManager> wxArtManagerST;
+typedef fmSingleton<wxArtManager> wxArtManagerST;
 
 /**
  * \ingroup wxflatcontrols

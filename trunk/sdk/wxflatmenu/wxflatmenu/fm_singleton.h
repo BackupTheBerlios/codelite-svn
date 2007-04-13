@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Name:		singleton.h
-// Purpose:     A template class that implements the Singleton pattern 
+// Purpose:     A template class that implements the fmSingleton pattern 
 // Author:      <eranif@bezeqint.net>
 // Created:     15/10/2006
 // Copyright:   Eran Ifrah (c)
@@ -10,13 +10,13 @@
 #ifndef CODELITE_SINGLETON_H
 #define CODELITE_SINGLETON_H
 /**
- * A template class that implements the Singleton pattern.
+ * A template class that implements the fmSingleton pattern.
  *
  * \date 08-23-2006
  * \author eran
  */
 template <typename T>
-class Singleton
+class fmSingleton
 {
 	static T* ms_instance;
 public:
@@ -35,28 +35,28 @@ protected:
 	/**
 	 * Default constructor.
 	 */
-	Singleton();
+	fmSingleton();
 
 	/**
 	 * Destructor.
 	 */
-	virtual ~Singleton();
+	virtual ~fmSingleton();
 };
 template <typename T>
-T* Singleton<T>::ms_instance = 0;
+T* fmSingleton<T>::ms_instance = 0;
 
 template <typename T>
-Singleton<T>::Singleton()
+fmSingleton<T>::fmSingleton()
 {
 }
 
 template <typename T>
-Singleton<T>::~Singleton()
+fmSingleton<T>::~fmSingleton()
 {
 }
 
 template <typename T>
-T* Singleton<T>::Get()
+T* fmSingleton<T>::Get()
 {
 	if(!ms_instance)
 		ms_instance = new T();
@@ -64,7 +64,7 @@ T* Singleton<T>::Get()
 }
 
 template <typename T>
-void Singleton<T>::Free()
+void fmSingleton<T>::Free()
 {
 	if( ms_instance )
 	{
