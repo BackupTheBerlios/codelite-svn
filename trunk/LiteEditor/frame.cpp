@@ -15,8 +15,6 @@
 #include "language.h"
 #include "process.h"
 #include "editor_config.h"
-#include <wx/config.h>
-#include <wx/confbase.h>
 #include "manager.h"
 #include "menumanager.h"
 #include <wx/aboutdlg.h>
@@ -29,7 +27,6 @@
 #define ID_CTAGS_GLOBAL_ID		10500
 #define ID_CTAGS_LOCAL_ID		10501
 
-extern wxImageList* CreateSymbolTreeImages();
 //----------------------------------------------------------------
 // Our main frame
 //----------------------------------------------------------------
@@ -168,35 +165,22 @@ void Frame::CreateGUIControls(void)
     SetMenuBar(wxXmlResource::Get()->LoadMenuBar(wxT("main_menu")));
 	
 	//---------------------------------------------
-	// Add log window
+	// Add the output pane
 	//---------------------------------------------
-	m_debugWin = new wxTextCtrl(this, wxID_ANY, _T(""),
-                            wxDefaultPosition, wxSize(600, 200), wxTE_MULTILINE);
-	m_mgr.AddPane(m_debugWin, wxAuiPaneInfo().Name(wxT("Debug Window")).
-		Caption(wxT("Debug Window")).Bottom().Layer(1).Position(1).MaximizeButton(true).CloseButton(true));
-
-	// Add the explorer notebook
-	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_BOTTOM; 
-	m_explorerBook = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxSize(250, 600), style);
-
-	// Add the class view tree
-	m_tree = new CppSymbolTree(m_explorerBook, wxID_ANY);
-	m_explorerBook->AddPage(m_tree, wxT("Symbol View"), true);
-
-	m_fileView = new FileViewTree(m_explorerBook, wxID_ANY);
-	m_explorerBook->AddPage(m_fileView, wxT("File View"));
-
-	// Set the images for the symbols
-	m_tree->SetSymbolsImages( CreateSymbolTreeImages() );
+	m_outputPane = new OutputPane(this, wxT("Output"));
+	
+	m_mgr.AddPane(m_outputPane, wxAuiPaneInfo().Name(wxT("Output")).
+		Caption(wxT("Output")).Bottom().Layer(1).Position(1).MaximizeButton(true).CloseButton(true));
 
 	// Add the explorer pane
-	m_mgr.AddPane(m_explorerBook, wxAuiPaneInfo().
-		Name(wxT("Workspace")).Caption(wxT("Workspace")).
+	m_workspacePane = new WorkspacePane(this, wxT("Workspace"));
+	m_mgr.AddPane(m_workspacePane, wxAuiPaneInfo().
+		Name(m_workspacePane->GetCaption()).Caption(m_workspacePane->GetCaption()).
 		Left().Layer(1).Position(1).
 		CloseButton(true).MaximizeButton(true));
 
 	// Create the notebook for all the files
-	style = 
+	long style = 
 		wxFNB_TABS_BORDER_SIMPLE | 
 		wxFNB_NODRAG | 
 		wxFNB_VC8 | 
@@ -428,7 +412,7 @@ void Frame::OnAddSourceFile(wxCommandEvent& WXUNUSED(event))
 		// currently opened database
 		// Note that the tree is constructed from the tree only and not from the rejected tags
 		TagTreePtr dummy;
-		m_tree->BuildTree( dummy );
+		m_workspacePane->GetSymbolTree()->BuildTree( dummy );
 		GetStatusBar()->SetStatusText(wxString::Format(_("Workspace DB: '%s'"), dbName.GetFullPath().GetData()), 1);
 	}
 	dlg->Destroy();
@@ -504,7 +488,7 @@ void Frame::OnDeleteProject(wxCommandEvent& WXUNUSED(event))
 
 	// Notify the symbol tree to update the gui
 	SymbolTreeEvent evt(projectName, wxEVT_COMMAND_SYMBOL_TREE_DELETE_PROJECT);
-	wxPostEvent(m_tree, evt);
+	wxPostEvent(m_workspacePane->GetSymbolTree(), evt);
 }
 
 void Frame::OnBuildExternalDatabase(wxCommandEvent& WXUNUSED(event))
@@ -691,18 +675,18 @@ void Frame::OnSearchThread(wxCommandEvent &event)
 			msg.Append((*iter).GetMessage() + wxT("\n"));
 		}
 
-		m_debugWin->AppendText(msg);
+		m_outputPane->AppendText(OutputPane::FIND_IN_FILES_WIN, msg);
 		delete res;
 	}
 	else if(event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHCANCELED ||
 		event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHSTARTED)
 	{
-		m_debugWin->AppendText(event.GetString() + wxT("\n"));
+		m_outputPane->AppendText(OutputPane::FIND_IN_FILES_WIN, event.GetString() + wxT("\n"));
 	}
 	else if(event.GetEventType() == wxEVT_SEARCH_THREAD_SEARCHEND)
 	{
 		SearchSummary *summary = (SearchSummary*)event.GetClientData();
-		m_debugWin->AppendText(summary->GetMessage() + wxT("\n"));
+		m_outputPane->AppendText(OutputPane::FIND_IN_FILES_WIN, summary->GetMessage() + wxT("\n"));
 		delete summary;
 	}
 }

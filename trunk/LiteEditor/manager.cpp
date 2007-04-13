@@ -163,9 +163,9 @@ void Manager::CreateWorkspace(const wxString &name, const wxString &path)
 	CHECK_MSGBOX(res);
 
 	// Update the symbol tree
-	SymbolTree *tree = Frame::Get()->GetSymbolTree();
+	WorkspacePane *wp = Frame::Get()->GetWorkspacePane();
 	TagTreePtr dummy;
-	tree->BuildTree( dummy );
+	wp->BuildSymbolTree( dummy );
 }
 
 void Manager::CreateProject(const wxString &name, const wxString &path, const wxString &type)
@@ -177,9 +177,9 @@ void Manager::CreateProject(const wxString &name, const wxString &path, const wx
 	TagsManagerST::Get()->CreateProject(name);
 
 	// Update the symbol tree
-	SymbolTree *tree = Frame::Get()->GetSymbolTree();
+	WorkspacePane *wp = Frame::Get()->GetWorkspacePane();
 	TagTreePtr dummy;
-	tree->BuildTree( dummy );
+	wp->BuildSymbolTree( dummy );
 }
 
 void Manager::OpenWorkspace(const wxString &path)
@@ -195,9 +195,10 @@ void Manager::OpenWorkspace(const wxString &path)
 	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), exDbfile.GetData()), 2);
 
 	// update symbol tree
+	WorkspacePane *wp = Frame::Get()->GetWorkspacePane();
 	TagTreePtr dummy;
-	Frame::Get()->GetSymbolTree()->BuildTree( dummy );
-	Frame::Get()->GetFileViewTree()->BuildTree();
+	wp->BuildSymbolTree( dummy );
+	wp->BuildFileTree();
 }
 
 ProjectTreePtr Manager::GetProjectFileViewTree(const wxString &projectName)

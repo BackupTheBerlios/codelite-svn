@@ -8,15 +8,14 @@
 #include "wx/frame.h"
 #include "findinfilesdlg.h"
 #include "editor.h"
+#include "output_pane.h"
+#include "workspace_pane.h"
+#include "workspace_pane.h"
+#include "findinfilesdlg.h"
 
 // forward decls
-class SymbolTree;
 class TagEntry;
 class TagsProcess;
-class wxSplitterWindow;
-class wxConfigBase;
-class FindInFilesDialog;
-class FileViewTree;
 
 /**
  * The main frame class
@@ -24,20 +23,16 @@ class FileViewTree;
  */
 class Frame : public wxFrame
 {
-	SymbolTree* m_tree;
 	TagsProcess *m_ctags;
 	TagsProcess *m_localCtags;
 	bool m_restartCtags;
 	wxFlatNotebook *m_notebook;
-	wxFlatNotebook *m_explorerBook;
-	wxSplitterWindow *m_splitter;
-
 	static Frame* m_theFrame;
 	wxAuiManager m_mgr;
-	wxTextCtrl *m_debugWin;
+	OutputPane *m_outputPane;
 	FindInFilesDialog *m_findInFilesDlg;
 	FindReplaceData m_data;
-	FileViewTree *m_fileView;
+	WorkspacePane *m_workspacePane;
 
 public:
 	// the access method to the singleton frame is by using the Get method
@@ -45,9 +40,11 @@ public:
 	virtual ~Frame(void);
 
 	wxFlatNotebook *GetNotebook() { return m_notebook; }
-	SymbolTree *GetSymbolTree() { return m_tree; }
-	FileViewTree *GetFileViewTree() { return m_fileView; }
 	void CloseActiveFile();
+	
+	// Getters
+	OutputPane *GetOutputPane() { return m_outputPane; }
+	WorkspacePane *GetWorkspacePane() { return m_workspacePane; }
 
 private:
 	// make our frame's constructor private

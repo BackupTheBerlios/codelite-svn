@@ -541,6 +541,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Docking Windows"
+			>
+			<File
+				RelativePath=".\output_pane.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\output_pane.h"
+				>
+			</File>
+			<File
+				RelativePath=".\workspace_pane.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\workspace_pane.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
