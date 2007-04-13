@@ -19,5 +19,6 @@
 	<object class="wxBitmap" name="page_white_cplusplus">res/page_white_cplusplus.png</object>
 	<object class="wxBitmap" name="page_white_h">res/page_white_h.png</object>
 	<object class="wxBitmap" name="page_white_text">res/page_white_text.png</object>
+  <object class="wxBitmap" name="cross">res/cross.png</object>
 </resource>
    

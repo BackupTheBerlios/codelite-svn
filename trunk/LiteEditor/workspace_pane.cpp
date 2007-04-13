@@ -1,5 +1,6 @@
 #include "workspace_pane.h"
 
+
 const wxString WorkspacePane::SYMBOL_VIEW = wxT("Symbols");
 const wxString WorkspacePane::FILE_VIEW   = wxT("Files");
 

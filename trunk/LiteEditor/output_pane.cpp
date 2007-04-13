@@ -1,4 +1,6 @@
 #include "output_pane.h"
+#include "flat_menu_bar.h"
+#include <wx/xrc/xmlres.h>
 
 const wxString OutputPane::FIND_IN_FILES_WIN = wxT("Find Results");
 const wxString OutputPane::BUILD_WIN = wxT("Build");
@@ -18,8 +20,23 @@ OutputPane::~OutputPane()
 
 void OutputPane::CreateGUIControls()
 {
+	wxArtManagerST::Get()->SetMenuTheme( StyleXP );
+	wxArtManagerST::Get()->SetRaiseToolbar( false );
+	wxArtManagerST::Get()->DrawMenuBarBorder( false );
+	wxArtManagerST::Get()->SetMenuBarColour( wxT("Default") );
+	wxArtManagerST::Get()->SetMBVerticalGradient( true );
+
 	wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(mainSizer);
+
+	wxFlatMenuBar *mb = new wxFlatMenuBar(this, wxID_ANY, true, SmallIcons);
+	mb->SetSize(wxSize(-1, 36));
+	
+	wxBitmap bmp = wxXmlResource::Get()->LoadBitmap(_T("cross"));
+	wxFlatToolbarItem *tool = new wxFlatToolbarItem(bmp, wxID_ANY, wxT("Clear All"));
+	mb->AppendToolbarItem(tool);
+
+	mainSizer->Add(mb, 0, wxEXPAND | wxALL, 1);
 
 	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_BOTTOM; 
 	m_book = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
