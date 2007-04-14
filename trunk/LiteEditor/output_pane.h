@@ -41,7 +41,16 @@ private:
 	int CaptionToIndex(const wxString &caption);
 
 public:
+	/**
+	 * Destructor
+	 * \param parent parent window for this pane
+	 * \param caption the caption
+	 */
 	OutputPane(wxWindow *parent, const wxString &caption);
+
+	/**
+	 * Destructor
+	 */
 	virtual ~OutputPane();
 
 	//-----------------------------------------------
