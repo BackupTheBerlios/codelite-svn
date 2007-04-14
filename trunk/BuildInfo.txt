@@ -131,8 +131,6 @@ Code::Blocks (CB) workspace and project files are supplied
 //----------------------------------------------
 // VC71
 //----------------------------------------------
-For VC71, you need to build each component separately (wxScintilla, wxSQLite3) 
-both can be obtained from either the sdk or from http://wxcode.sourceforge.net
 
 1. Open the provided workspace (CodeLite.sln)
 2. Select the requested configuration 
@@ -141,10 +139,7 @@ both can be obtained from either the sdk or from http://wxcode.sourceforge.net
 --------------------------------------------------------------------------
 Notes:
 --------------------------------------------------------------------------
- - To run it you will need sqlite3.dll which is provided under sdk/sqlite3/lib/msw_vc
- - If you get an error (when running LiteEditor) "file 'liteeditor.xml' cant be found", 
-   copy it from LiteEditor/liteeditor.xml to the executable directory LiteEditor/bin//msw_vc
-   
+ - To run it you will need sqlite3.dll, so set the working directory to 'Runtime' dir
    
 Enjoy,
 Eran
