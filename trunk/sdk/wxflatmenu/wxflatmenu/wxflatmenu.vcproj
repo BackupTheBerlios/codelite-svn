@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.1"
 	Name="wxflatmenu"
 	ProjectGUID="{AED4ECE5-FB94-4ABF-AC23-610876F65B56}"
 	Keyword="Win32Proj"

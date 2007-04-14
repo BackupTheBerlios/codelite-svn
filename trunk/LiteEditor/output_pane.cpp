@@ -24,14 +24,14 @@ void OutputPane::CreateGUIControls()
 	wxArtManagerST::Get()->SetMenuTheme( StyleXP );
 	wxArtManagerST::Get()->SetRaiseToolbar( false );
 	wxArtManagerST::Get()->DrawMenuBarBorder( false );
-	wxArtManagerST::Get()->SetMenuBarColour( wxT("Generic") );
+	wxArtManagerST::Get()->SetMenuBarColour( wxT("Default") );
 	wxArtManagerST::Get()->SetMBVerticalGradient( false );
 
 	wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(mainSizer);
 
 	wxFlatMenuBar *mb = new wxFlatMenuBar(this, wxID_ANY, true, SmallIcons);
-	mb->SetSize(wxSize(-1, 42));
+	mb->SetSize(wxSize(-1, 28));
 	
 	wxBitmap bmp = wxXmlResource::Get()->LoadBitmap(_T("document_delete"));
 
