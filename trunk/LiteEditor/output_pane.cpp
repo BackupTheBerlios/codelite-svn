@@ -2,6 +2,7 @@
 #include "flat_menu_bar.h"
 #include <wx/xrc/xmlres.h>
 #include <wx/wxscintilla.h>
+#include "wx/wxFlatNotebook/wxFlatNotebook.h"
 
 const wxString OutputPane::FIND_IN_FILES_WIN = wxT("Find Results");
 const wxString OutputPane::BUILD_WIN = wxT("Build");

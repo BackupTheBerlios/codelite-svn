@@ -1,10 +1,12 @@
 #ifndef WORKSPACE_PANE_H
 #define WORKSPACE_PANE_H
 
-#include "wx/wxFlatNotebook/wxFlatNotebook.h"
 #include "wx/panel.h"
-#include "fileview.h"
-#include "cpp_symbol_tree.h"
+#include "tag_tree.h"
+
+class wxFlatNotebook;
+class FileViewTree;
+class SymbolTree;
 
 class WorkspacePane : public wxPanel 
 {

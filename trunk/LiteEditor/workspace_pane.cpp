@@ -1,5 +1,7 @@
 #include "workspace_pane.h"
-
+#include "wx/wxFlatNotebook/wxFlatNotebook.h"
+#include "fileview.h"
+#include "cpp_symbol_tree.h"
 
 const wxString WorkspacePane::SYMBOL_VIEW = wxT("Symbols");
 const wxString WorkspacePane::FILE_VIEW   = wxT("Files");
