@@ -91,7 +91,7 @@ wxWindow *NewDlg::CreateWorkspacePage()
 	wxBoxSizer *panelSizer = new wxBoxSizer(wxVERTICAL);
 	wxPanel *panel = new wxPanel(m_book);
 	panel->SetSizer(panelSizer);
-	panel->SetBackgroundColour( wxSystemSettings::GetColour(wxSYS_COLOUR_3DLIGHT) );
+	panel->SetBackgroundColour( wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE) );
 
 	wxStaticText* itemStaticText;
 	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("Workspace Name:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
