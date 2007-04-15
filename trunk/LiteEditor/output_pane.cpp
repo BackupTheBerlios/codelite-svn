@@ -26,7 +26,7 @@ void OutputPane::CreateGUIControls()
 	wxArtManagerST::Get()->SetRaiseToolbar( false );
 	wxArtManagerST::Get()->DrawMenuBarBorder( false );
 	wxArtManagerST::Get()->SetMenuBarColour( wxT("Default") );
-	wxArtManagerST::Get()->SetMBVerticalGradient( false );
+	wxArtManagerST::Get()->SetMBVerticalGradient(true);
 
 	wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(mainSizer);

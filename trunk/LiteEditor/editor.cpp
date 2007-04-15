@@ -89,11 +89,6 @@ LEditor::~LEditor()
 void LEditor::SetProperties()
 {
 	SetMouseDwellTime(200);
-
-	// Setup folding
-	SetMarginType(1, wxSCI_MARGIN_SYMBOL);
-	SetMarginMask(2, wxSCI_MASK_FOLDERS);
-
 	SetProperty(_("fold"), _("1"));
 	SetProperty(_("fold.compact"), _("0"));
 	SetProperty(_("styling.within.preprocessor"), _("1"));
@@ -102,7 +97,7 @@ void LEditor::SetProperties()
 	SetProperty(_("fold.comment"), _("1"));
 
 	//Set the selection color to grey/black as default
-	SetSelBackground(true, wxColor(192, 192, 192));
+	SetSelBackground(true, wxT("BLACK"));
 	SetSelForeground(true, wxColor(0x00, 0x00, 0x00));
 	SetModEventMask (wxSCI_MOD_DELETETEXT | wxSCI_MOD_INSERTTEXT  | wxSCI_PERFORMED_UNDO  | wxSCI_PERFORMED_REDO );
 
@@ -121,17 +116,54 @@ void LEditor::SetProperties()
 	caretJumps = 0;
 	SetYCaretPolicy(caretStrict | caretSlop | caretEven | caretJumps, caretZone);
 	SetCaretWidth(1);
-	SetMarginLeft(0);
+	SetMarginLeft(1);
 	SetMarginRight(0);
+	SetCaretLineBackgroundAlpha(70);
+	SetSelAlpha(70);
 
 	// Mark current line
 	SetCaretLineVisible(true);
-	SetCaretLineBackground(wxColor(213, 234, 255));
+	SetCaretLineBackground(wxT("BLUE"));
 
 	SetFoldFlags(0);
-	SetMarginWidth(2, 12);
-	
 
+	//------------------------------------------
+	// Margin settings
+	//------------------------------------------
+	
+	// symbol margin
+	SetMarginType(0, wxSCI_MARGIN_SYMBOL);
+	// Line numbes
+	SetMarginType(1, wxSCI_MARGIN_NUMBER);
+	// line number margin displays every thing but folding & bookmarks (256)
+	SetMarginMask(1, ~(256 | wxSCI_MASK_FOLDERS));
+
+	int v = GetMarginMask(1) & wxSCI_MASK_FOLDERS;
+	// Separator
+	SetMarginType(2, wxSCI_MARGIN_FORE);
+
+	// Fold margin - allow only folder symbols to display
+	SetMarginMask(3, wxSCI_MASK_FOLDERS);
+
+	// Set margins' width
+	SetMarginWidth(0, 16);	// Symbol margin
+	// allow everything except for the folding symbols
+	SetMarginMask(0, ~(wxSCI_MASK_FOLDERS));
+
+	// Line number margin
+	int pixelWidth = 4 + 6*TextWidth(wxSCI_STYLE_LINENUMBER, wxT("9"));
+	SetMarginWidth(1, pixelWidth);
+
+	SetMarginWidth(2, 1);	// Symbol margin which acts as separator
+	SetMarginWidth(3, 16);	// Fold margin
+	StyleSetForeground(wxSCI_STYLE_DEFAULT, wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW));
+	
+	// Mark fold margin as sensetive
+	SetMarginSensitive(3, true);
+
+	//---------------------------------------------------
+	// Fold settings
+	//---------------------------------------------------
 	// Define the folding style to be square
 	DefineMarker(wxSCI_MARKNUM_FOLDEROPEN, wxSCI_MARK_BOXMINUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
 	DefineMarker(wxSCI_MARKNUM_FOLDER, wxSCI_MARK_BOXPLUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
@@ -140,14 +172,15 @@ void LEditor::SetProperties()
 	DefineMarker(wxSCI_MARKNUM_FOLDEREND, wxSCI_MARK_BOXPLUSCONNECTED, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
 	DefineMarker(wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_BOXMINUSCONNECTED, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
 	DefineMarker(wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_TCORNER, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+
 	// Bookmark
-	MarkerDefine(0x8, wxSCI_MARK_ARROW);
+	MarkerDefine(0x8, wxSCI_MARK_SHORTARROW);
 	MarkerSetBackground(0x8, wxColour(12, 133, 222));
 	MarkerSetForeground(0x8, wxColour(66, 169, 244));
 
 	// Margin colours
-	SetFoldMarginColour(true, wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
-	SetFoldMarginHiColour(true, wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
+	SetFoldMarginColour(true, wxT("WHITE"));
+	SetFoldMarginHiColour(true, wxT("WHITE"));
 	
 	// calltip settings
     CallTipSetBackground(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
@@ -191,11 +224,7 @@ void LEditor::SetProperties()
 		StyleSetSize(iter->second, styles[i].GetFontSize());
 		StyleSetForeground(iter->second, styles[i].GetFgColour());
 	}
-	SetMarginSensitive(2, true);
-
-	// Set up line numbers margin
-	SetLineNumberWidth();
-
+	
 	//---------------------------------------------------
 	// Set autocompletion parameters
 	//---------------------------------------------------
@@ -205,6 +234,9 @@ void LEditor::SetProperties()
 	AutoCompSetIgnoreCase(true);
 	SetIndent(8);
 	StyleSetBold(wxSCI_STYLE_BRACELIGHT, true);
+
+	StyleSetBackground(wxSCI_STYLE_LINENUMBER, wxT("WHITE"));
+	StyleSetForeground(wxSCI_STYLE_LINENUMBER, wxColour(0, 63, 125));
 }
 
 void LEditor::SetDirty(bool dirty)
@@ -266,15 +298,6 @@ void LEditor::OnCharAdded(wxScintillaEvent& event)
 void LEditor::OnSciUpdateUI(wxScintillaEvent &event)
 {
 	wxUnusedVar(event);
-}
-
-void LEditor::SetLineNumberWidth()
-{
-	int pixelWidth = 4 + 5 * TextWidth(wxSCI_STYLE_LINENUMBER, _T("9"));
-	SetMarginWidth(0, pixelWidth);
-	StyleSetSize(wxSCI_STYLE_LINENUMBER, 10);
-	StyleSetBackground(wxSCI_STYLE_LINENUMBER, wxFNBRenderer::LightColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE), 50));
-	StyleSetForeground(wxSCI_STYLE_LINENUMBER, wxColour(0, 63, 125));
 }
 
 void LEditor::OnMarginClick(wxScintillaEvent& event)
