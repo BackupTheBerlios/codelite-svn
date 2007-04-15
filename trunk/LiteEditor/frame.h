@@ -82,17 +82,20 @@ protected:
 	void OnFileFindAndReplace(wxCommandEvent &event);
 	void OnFileExistUpdateUI(wxUpdateUIEvent &event);
 	void OnCompleteWordUpdateUI(wxUpdateUIEvent &event);
-	void OnWorkspaceOpen(wxUpdateUIEvent &event);
 	void OnFindInFiles(wxCommandEvent &event);
-	void OnCreateWorkspace(wxCommandEvent &event);
-	void OnSwitchWorkspace(wxCommandEvent &event);
 	
 	// New Dialog 'Create' button pressed
 	void OnNewDlgCreate(wxCommandEvent &event);
 	
-	// Project->New Workspace
+	// Project Menu
 	void OnProjectNewWorkspace(wxCommandEvent &event);
 	void OnProjectNewProject(wxCommandEvent &event);
+	void OnCreateWorkspace(wxCommandEvent &event);
+	void OnSwitchWorkspace(wxCommandEvent &event);
+	void OnProjectAddProject(wxCommandEvent &event);
+	void OnWorkspaceOpen(wxUpdateUIEvent &event);
+	void OnProjectRemoveProject(wxCommandEvent &event);
+	void OnProjectRemoveProjectUI(wxUpdateUIEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

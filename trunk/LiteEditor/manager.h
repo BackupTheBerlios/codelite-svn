@@ -117,9 +117,33 @@ public:
 	 */
 	void GetProjectList(wxArrayString &list);
 
+	/**
+	 * Add an existing project to the workspace. If no workspace is open,
+	 * this function does nothing
+	 * \param path project file path name to add
+	 */
+	void AddProject(const wxString &path);
+
+	/**
+	 * Remove the active project from the workspacert the error to the caller
+	 * \return true on success false otherwise
+	 */
+	bool RemoveProject() ;
+
+	/**
+	 * \return active project name
+	 */
+	wxString GetActiveProjectName();
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);
+
+private:
+	/**
+	 * Update the symbol & file tress
+	 */
+	void DoUpdateGUITrees();
 };
 
 typedef Singleton<Manager> ManagerST;

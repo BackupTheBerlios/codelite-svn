@@ -27,3 +27,17 @@ wxXmlNode *XmlUtils::FindLastByTagName(const wxXmlNode *parent, const wxString &
 	return last_node;
 }
 
+void XmlUtils::UpdateProperty(wxXmlNode *node, const wxString &name, const wxString &value)
+{
+	wxXmlProperty *prop = node->GetProperties();
+	while (prop){
+		if( prop->GetName() == name ){
+			prop->SetValue(value);
+			return;
+		}
+		prop = prop->GetNext();
+	}
+
+	// No such property, create new one and add it
+	node->AddProperty(name, value);
+}

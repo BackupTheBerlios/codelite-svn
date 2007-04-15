@@ -89,8 +89,24 @@ typedef SmartPtr<ProjectTree> ProjectTreePtr;
 typedef TreeNode<wxString, ProjectItem> ProjectTreeNode;
 
 /**
- * \class Project
- * A representation of project
+ * \ingroup LiteEditor
+ *
+ *
+ * \date 04-15-2007
+ *
+ * \author Eran
+ *
+ * \par license
+ * This code is absolutely free to use and modify. The code is provided "as is" with
+ * no expressed or implied warranty. The author accepts no liability if it causes
+ * any damage to your computer, causes your pet to fall ill, increases baldness
+ * or makes your car start emitting strange noises when you start it up.
+ * This code has no bugs, just undocumented features!
+ * 
+ * \todo 
+ *
+ * \bug 
+ *
  */
 class Project 
 {
@@ -110,17 +126,55 @@ public:
 	Project();
 	virtual ~Project();
 
-	/// Return project name
+	/**
+	 * \return project name
+	 */
 	wxString GetName() const;
 
 	//-----------------------------------
 	// Project operations
 	//-----------------------------------
-	bool Load(const wxString &path);
-	bool Create(const wxString &name, const wxString &path, const wxString &projType = Project::STATIC_LIBRARY);
+	/**
+	 * Load project from file
+	 * \param path 
+	 * \return 
+	 */
+	bool Load(const wxString &path); 
+	/**
+	 * Create new project 
+	 * \param name project name
+	 * \param path path of the file excluding  the file name (e.g. C:\)
+	 * \param projType project type: Project::STATIC_LIBRARY, Project::DYMANIC_LIBRARY, Project::EXECUTABLE
+	 * \param active set this project as active (will be marked with bold font in the gui trees)
+	 * \return 
+	 */
+	bool Create(const wxString &name, const wxString &path, const wxString &projType = Project::STATIC_LIBRARY, bool active = false);
+
+	/**
+	 * Add file to the project
+	 * \param fileName file full name and path
+	 * \param virtualDir owner virtual directory, if the virtual directory does not exist, a new one will be created
+	 *        and the file will be placed under it
+	 * \return 
+	 */
 	bool AddFile(const wxString &fileName, const wxString &virtualDir = wxEmptyString);
+	/**
+	 * Remove file from the project
+	 * \param fileName file full path
+	 * \return 
+	 */
 	bool RemoveFile(const wxString &fileName);
+	/**
+	 * Create new virtual directory
+	 * \param name VD name
+	 * \return 
+	 */
 	bool CreateVirtualDir(const wxString &name);
+	/**
+	 * remove a virtual directory
+	 * \param name VD name to remove
+	 * \return 
+	 */
 	bool DeleteVirtualDir(const wxString &name);
 
 	//-----------------------------------

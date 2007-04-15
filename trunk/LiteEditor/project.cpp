@@ -13,13 +13,14 @@ Project::~Project()
 {
 }
 
-bool Project::Create(const wxString &name, const wxString &path, const wxString &projType)
+bool Project::Create(const wxString &name, const wxString &path, const wxString &projType, bool active)
 {
 	m_fileName = path + wxT("/") + name + wxT(".project");
 	wxXmlNode *root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("CodeLite_Project"));   
 	m_doc.SetRoot(root);
-	m_doc.GetRoot()->AddProperty(wxT("Name"), m_fileName.GetFullPath());
+	m_doc.GetRoot()->AddProperty(wxT("Name"), name);
 	m_doc.GetRoot()->AddProperty(wxT("Type"), projType);
+	m_doc.GetRoot()->AddProperty(wxT("Active"), active ? wxT("Yes") : wxT("False"));
 
 	// Create the default virtual directories
 	wxXmlNode *srcNode = NULL, *headNode = NULL;
@@ -31,7 +32,7 @@ bool Project::Create(const wxString &name, const wxString &path, const wxString 
 	headNode = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
 	headNode->AddProperty(wxT("Name"), wxT("Header Files"));
 	m_doc.GetRoot()->AddChild(headNode);
-
+	
 	m_doc.Save(m_fileName.GetFullPath());
 	return true;
 }
@@ -172,3 +173,4 @@ void Project::RecursiveAdd(wxXmlNode *xmlNode, ProjectTreePtr &ptp, ProjectTreeN
 		children = children->GetNext();
 	}
 }
+

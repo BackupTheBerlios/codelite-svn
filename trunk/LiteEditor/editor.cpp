@@ -138,7 +138,6 @@ void LEditor::SetProperties()
 	// line number margin displays every thing but folding & bookmarks (256)
 	SetMarginMask(1, ~(256 | wxSCI_MASK_FOLDERS));
 
-	int v = GetMarginMask(1) & wxSCI_MASK_FOLDERS;
 	// Separator
 	SetMarginType(2, wxSCI_MARGIN_FORE);
 

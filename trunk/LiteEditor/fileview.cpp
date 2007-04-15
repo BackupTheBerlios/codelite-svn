@@ -124,6 +124,12 @@ void FileViewTree::BuildProjectNode(const wxString &projectName)
 										GetIconIndex(node->GetData()),		// item image index
 										GetIconIndex(node->GetData()),		// selected item image
 										new FilewViewTreeItemData(node->GetData()));
+		
+		// Set active project with bold
+		if( parentHti == GetRootItem() && ManagerST::Get()->GetActiveProjectName() == node->GetData().GetDisplayName()){
+			SetItemBold(hti);
+		}
+
 		items[node->GetKey()] = hti;
 	}
 

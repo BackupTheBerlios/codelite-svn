@@ -16,6 +16,16 @@ public:
 	/// \param parent  the parent node whom to be searched
 	/// \param name	   the element's tag name 
 	static wxXmlNode *FindLastByTagName(const wxXmlNode *parent, const wxString &tagName);
+
+	
+	/**
+	 * update node property. If multiple properties with the same name exist, this function updates
+     * the first occurance
+	 * \param node 
+	 * \param name property name
+	 * \param value new value to set
+	 */
+	static void UpdateProperty(wxXmlNode *node, const wxString &name, const wxString &value);
 };
 
 #endif // XMLUTILS_H

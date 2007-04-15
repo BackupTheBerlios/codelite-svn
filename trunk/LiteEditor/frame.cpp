@@ -76,7 +76,9 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("new_workspace"), Frame::OnProjectNewWorkspace)
 	EVT_MENU(XRCID("new_project"), Frame::OnProjectNewProject)
 	EVT_MENU(XRCID("switch_to_workspace"), Frame::OnSwitchWorkspace)
-	
+	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
+	EVT_MENU(XRCID("remove_project"), Frame::OnProjectRemoveProject)
+
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CLOSE, Frame::OnFileExistUpdateUI)
@@ -101,6 +103,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("removeall_bookmarks"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(XRCID("new_project"), Frame::OnWorkspaceOpen)
 	EVT_UPDATE_UI(XRCID("add_project"), Frame::OnWorkspaceOpen)
+	EVT_UPDATE_UI(XRCID("remove_project"), Frame::OnProjectRemoveProjectUI)
 
 	/*
 	EVT_MENU(ID_COMPLETE_WORD, Frame::OnCompleteWord)
@@ -353,10 +356,10 @@ wxString Frame::GetStringFromUser(const wxString& msg)
 //-----------------------------------------------------------
 void Frame::OnAddSourceFile(wxCommandEvent& WXUNUSED(event))
 {   
-	const wxString ALL( _T("C/C++ Files (*.c;*.cpp;*.cc;*.cxx;*.C;*.h;*.hpp;*.hh;*.hxx;*.H)|*.c;*.cpp;*.cc;*.cxx;*.C;*.h;*.hpp;*.hh;*.hxx;*.H|")
-                        _T("C/C++ Source Files (*.c;*.cpp;*.cc;*.cxx;*.C)|*.c;*.cpp;*.cc;*.cxx;*.C|")
-						_T("C/C++ Header Files (*.h;*.hpp;*.hh;*.hxx;*.H)|*.h;*.hpp;*.hh;*.hxx;*.H|")
-						_T("All Files (*.*)|*.*") );
+	const wxString ALL( wxT("C/C++ Files (*.c;*.cpp;*.cc;*.cxx;*.C;*.h;*.hpp;*.hh;*.hxx;*.H)|*.c;*.cpp;*.cc;*.cxx;*.C;*.h;*.hpp;*.hh;*.hxx;*.H|")
+                        wxT("C/C++ Source Files (*.c;*.cpp;*.cc;*.cxx;*.C)|*.c;*.cpp;*.cc;*.cxx;*.C|")
+						wxT("C/C++ Header Files (*.h;*.hpp;*.hh;*.hxx;*.H)|*.h;*.hpp;*.hh;*.hxx;*.H|")
+						wxT("All Files (*.*)|*.*") );
 	wxFileDialog *dlg = new wxFileDialog(this, _("Open file"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , wxDefaultPosition);
 
 	if (dlg->ShowModal() == wxID_OK)
@@ -440,7 +443,7 @@ void Frame::OnSaveAs(wxCommandEvent& WXUNUSED(event))
 void Frame::OnSwitchWorkspace(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	const wxString ALL(wxT("Code Lite Workspace files (*.workspace)|*.workspace|")
+	const wxString ALL(wxT("Lite Editor Workspace files (*.workspace)|*.workspace|")
 					   wxT("All Files (*.*)|*.*"));
 	wxFileDialog *dlg = new wxFileDialog(this, wxT("Open Workspace"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , wxDefaultPosition);
 	if (dlg->ShowModal() == wxID_OK){
@@ -516,8 +519,8 @@ void Frame::OnBuildExternalDatabase(wxCommandEvent& WXUNUSED(event))
 
 void Frame::OnUseExternalDatabase(wxCommandEvent& WXUNUSED(event))
 {
-	const wxString ALL(	_T("Tags Database File (*.db)|*.db|")
-						_T("All Files (*.*)|*.*"));
+	const wxString ALL(	wxT("Tags Database File (*.db)|*.db|")
+						wxT("All Files (*.*)|*.*"));
 	
 	wxFileDialog *dlg = new wxFileDialog(this, _("Select an external database:"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , wxDefaultPosition);
 
@@ -563,7 +566,7 @@ void Frame::OnFileNew(wxCommandEvent &event)
 
 void Frame::OnFileOpen(wxCommandEvent & WXUNUSED(event))
 {
-	const wxString ALL(	_T("All Files (*.*)|*.*"));
+	const wxString ALL(	wxT("All Files (*.*)|*.*"));
 	wxFileDialog *dlg = new wxFileDialog(this, _("Open File"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST , wxDefaultPosition);
 	if (dlg->ShowModal() == wxID_OK)
 	{
@@ -718,6 +721,13 @@ void Frame::OnWorkspaceOpen(wxUpdateUIEvent &event)
 	event.Enable(ManagerST::Get()->IsWorkspaceOpen());
 }
 
+void Frame::OnProjectRemoveProjectUI(wxUpdateUIEvent &event)
+{
+	wxArrayString list;
+	ManagerST::Get()->GetProjectList(list);
+	event.Enable(ManagerST::Get()->IsWorkspaceOpen() && list.GetCount() > 0);
+}
+
 // Project->New Workspace
 void Frame::OnProjectNewWorkspace(wxCommandEvent &event)
 {
@@ -736,6 +746,22 @@ void Frame::OnProjectNewProject(wxCommandEvent &event)
 	dlg->Destroy();
 }
 
+void Frame::OnProjectAddProject(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+
+	// Prompt user for project path
+	const wxString ALL(	wxT("Lite Editor Projects (*.project)|*.project|")
+						wxT("All Files (*.*)|*.*"));
+	wxFileDialog *dlg = new wxFileDialog(this, wxT("Open Project"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST , wxDefaultPosition);
+	if (dlg->ShowModal() == wxID_OK)
+	{
+		// Open it
+		ManagerST::Get()->AddProject(dlg->GetPath());
+	}
+	dlg->Destroy();	
+}
+
 // NewDlg->Create handler
 void Frame::OnNewDlgCreate(wxCommandEvent &event)
 {
@@ -748,5 +774,17 @@ void Frame::OnNewDlgCreate(wxCommandEvent &event)
 	} else if( dlg->GetSelection() == NEW_DLG_PROJECT ) {
 		ProjectData data = dlg->GetProjectData();
 		ManagerST::Get()->CreateProject(data.m_name, data.m_path, data.m_type);
+	}
+}
+
+void Frame::OnProjectRemoveProject(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+
+	wxString message (wxT("You are about to remove project '"));
+	message << ManagerST::Get()->GetActiveProjectName() << wxT("' ");
+	message << wxT(" from the workspace, click 'Yes' to proceed or 'No' to abort.");
+	if( wxMessageBox (message, wxT("Confirm"), wxYES) == wxYES ){
+		ManagerST::Get()->RemoveProject();
 	}
 }

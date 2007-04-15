@@ -31,13 +31,10 @@ bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 	while(child){
 		if(child->GetName() == wxT("Project")){
 			wxString projectPath = child->GetPropVal(wxT("Path"), wxEmptyString);
-			ProjectPtr proj(new Project());
-			if( !proj->Load(projectPath) ){
-				errMsg = wxT("Corrupted project file '");
-				errMsg << projectPath << wxT("'");
+
+			if( !DoAddProject(projectPath, errMsg) ){
 				return false;
 			}
-			m_projects[proj->GetName()] = proj;
 		}
 		child = child->GetNext();
 	}
@@ -123,7 +120,7 @@ bool Workspace::CreateProject(const wxString &name, const wxString &path, const 
 	m_projects[name] = proj;
 
 	// make the project path to be relative to the workspace
-	wxFileName tmp(path);
+	wxFileName tmp(path + wxT("/") + name + wxT(".project"));
 	tmp.MakeRelativeTo(m_fileName.GetPath());
 	
 	// Add an entry to the workspace file
@@ -158,4 +155,126 @@ void Workspace::GetProjectList(wxArrayString &list)
 	for(; iter != m_projects.end(); iter++){
 		list.Add(iter->first);	// add the name
 	}
+}
+
+bool Workspace::AddProject(const wxString & path, wxString &errMsg)
+{
+	if( !m_doc.IsOk() ){
+		errMsg = wxT("No workspace open");
+		return false;
+	}
+
+	wxFileName fn(path);
+	if( !fn.FileExists() ){
+		errMsg = wxT("File does not exist");
+		return false;
+	}
+
+	// Try first to find this project in the workspace
+	ProjectPtr proj = FindProjectByName(fn.GetName(), errMsg);
+	if( !proj ){
+		errMsg.Empty();
+		bool res = DoAddProject(path, errMsg);		
+		if( !res ){
+			return false;
+		}
+
+		// Add an entry to the workspace filewxFileName tmp(path);
+		fn.MakeRelativeTo(m_fileName.GetPath());
+
+		wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Project"));
+		node->AddProperty(wxT("Name"), fn.GetName());
+		node->AddProperty(wxT("Path"), fn.GetFullPath());
+		node->AddProperty(wxT("Active"), m_projects.size() == 1 ? wxT("Yes") : wxT("No"));
+		m_doc.GetRoot()->AddChild(node);
+		return m_doc.Save(m_fileName.GetFullPath());
+	}
+
+	errMsg = wxT("A project with this name already exist in the workspace");
+	return false;
+}
+
+
+bool Workspace::DoAddProject(const wxString &path, wxString &errMsg)
+{
+	// Add the project
+	ProjectPtr proj(new Project());
+	if( !proj->Load(path) ){
+		errMsg = wxT("Corrupted project file '");
+		errMsg << path << wxT("'");
+		return false;
+	}
+	// Add an entry to the projects map
+	m_projects[proj->GetName()] = proj;
+	return true;
+}
+
+bool Workspace::RemoveProject(const wxString &name, wxString &errMsg)
+{
+	ProjectPtr proj = FindProjectByName(name, errMsg);
+	if( !proj ){
+		return false;
+	}
+
+	// remove the project from the internal map
+	std::map<wxString, ProjectPtr>::iterator iter = m_projects.find(proj->GetName());
+	if( iter != m_projects.end() ){
+		m_projects.erase(iter);
+	}
+
+	// update the xml file
+	wxXmlNode *root = m_doc.GetRoot();
+	wxXmlNode *child = root->GetChildren();
+	while( child ){
+		if( child->GetName() == wxT("Project") && child->GetPropVal(wxT("Name"), wxEmptyString) == name ){
+			if( child->GetPropVal(wxT("Active"), wxEmptyString).CmpNoCase(wxT("Yes")) == 0){
+				// the removed project was active, 
+				// select new project to be active
+				if( !m_projects.empty() ){
+					std::map<wxString, ProjectPtr>::iterator iter = m_projects.begin();
+					SetActiveProject(iter->first, true);
+				}
+			}
+			root->RemoveChild( child );
+			delete child;
+			break;
+		}
+		child = child->GetNext();
+	}
+	return m_doc.Save( m_fileName.GetFullPath() );
+}
+
+wxString Workspace::GetActiveProjectName()
+{
+	if( !m_doc.IsOk() ){
+		return wxEmptyString;
+	}
+
+	wxXmlNode *root = m_doc.GetRoot();
+	wxXmlNode *child = root->GetChildren();
+	while( child ){
+		if( child->GetName() == wxT("Project") && child->GetPropVal(wxT("Active"), wxEmptyString).CmpNoCase(wxT("Yes")) == 0){
+			return child->GetPropVal(wxT("Name"), wxEmptyString);
+		}
+		child = child->GetNext();
+	}
+	return wxEmptyString;
+}
+
+void Workspace::SetActiveProject(const wxString &name, bool active)
+{
+	if( !m_doc.IsOk() )
+		return;
+
+	// update the xml file
+	wxXmlNode *root = m_doc.GetRoot();
+	wxXmlNode *child = root->GetChildren();
+	while( child ){
+		if( child->GetName() == wxT("Project") && child->GetPropVal(wxT("Name"), wxEmptyString) == name ){
+			XmlUtils::UpdateProperty(child, wxT("Active"), active ? wxT("Yes") : wxT("No"));
+			break;
+		}
+		child = child->GetNext();
+	}
+	m_doc.Save( m_fileName.GetFullPath() );
 }

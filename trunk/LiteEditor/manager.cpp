@@ -24,6 +24,13 @@ if( !res )													\
 	return;													\
 }
 
+#define CHECK_MSGBOX_BOOL(res)								\
+if( !res )													\
+{															\
+	wxMessageBox(errMsg, wxT("Error"), wxOK | wxICON_HAND);	\
+	return res;												\
+}
+
 Manager::Manager(void)
 {
 }
@@ -164,10 +171,7 @@ void Manager::CreateWorkspace(const wxString &name, const wxString &path)
 	bool res = WorkspaceST::Get()->CreateWorkspace(name, path, errMsg);
 	CHECK_MSGBOX(res);
 
-	// Update the symbol tree
-	WorkspacePane *wp = Frame::Get()->GetWorkspacePane();
-	TagTreePtr dummy;
-	wp->BuildSymbolTree( dummy );
+	DoUpdateGUITrees();
 }
 
 void Manager::CreateProject(const wxString &name, const wxString &path, const wxString &type)
@@ -178,10 +182,7 @@ void Manager::CreateProject(const wxString &name, const wxString &path, const wx
 
 	TagsManagerST::Get()->CreateProject(name);
 
-	// Update the symbol tree
-	WorkspacePane *wp = Frame::Get()->GetWorkspacePane();
-	TagTreePtr dummy;
-	wp->BuildSymbolTree( dummy );
+	DoUpdateGUITrees();
 }
 
 void Manager::OpenWorkspace(const wxString &path)
@@ -196,11 +197,7 @@ void Manager::OpenWorkspace(const wxString &path)
 	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("Workspace DB: '%s'"), dbfile.GetData()), 1);
 	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), exDbfile.GetData()), 2);
 
-	// update symbol tree
-	WorkspacePane *wp = Frame::Get()->GetWorkspacePane();
-	TagTreePtr dummy;
-	wp->BuildSymbolTree( dummy );
-	wp->BuildFileTree();
+	DoUpdateGUITrees();
 }
 
 ProjectTreePtr Manager::GetProjectFileViewTree(const wxString &projectName)
@@ -220,4 +217,51 @@ ProjectTreePtr Manager::GetProjectFileViewTree(const wxString &projectName)
 void Manager::GetProjectList(wxArrayString &list)
 {
 	WorkspaceST::Get()->GetProjectList(list);
+}
+
+void Manager::AddProject(const wxString & path)
+{
+	wxString errMsg;
+	bool res = WorkspaceST::Get()->AddProject(path, errMsg);
+	CHECK_MSGBOX(res);
+
+	// Create an entry in the CodeLite database
+	wxFileName fn(path);
+	TagsManagerST::Get()->CreateProject(fn.GetName());
+
+	// Update the trees
+	DoUpdateGUITrees();
+}
+
+void Manager::DoUpdateGUITrees()
+{
+	// update symbol tree
+	WorkspacePane *wp = Frame::Get()->GetWorkspacePane();
+	TagTreePtr dummy;
+	wp->BuildSymbolTree( dummy );
+	wp->BuildFileTree();
+}
+
+bool Manager::RemoveProject()
+{
+	wxString activeProj = WorkspaceST::Get()->GetActiveProjectName();
+	if( activeProj.IsEmpty() ){
+		return false;
+	}
+
+	wxString errMsg;
+	bool res = WorkspaceST::Get()->RemoveProject(activeProj, errMsg);
+	CHECK_MSGBOX_BOOL(res);
+
+	//  Update the database
+	TagsManagerST::Get()->DeleteProject(activeProj);
+
+	// update gui trees
+	DoUpdateGUITrees();
+	return true;
+}
+
+wxString Manager::GetActiveProjectName()
+{
+	return WorkspaceST::Get()->GetActiveProjectName();
 }

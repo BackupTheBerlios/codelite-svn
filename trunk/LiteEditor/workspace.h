@@ -92,6 +92,44 @@ public:
 	 * Return all project names under this workspace
 	 */
 	void GetProjectList(wxArrayString &list);
+	
+	/**
+	 * Add an existing project to the workspace. If no workspace is open,
+	 * this function does nothing
+	 * \param path project file path name to add
+	 * \param errMsg [output] incase an error, report the error to the caller
+	 */
+	bool AddProject(const wxString & path, wxString &errMsg);
+
+	/**
+	 * Remove project from the workspace. This function does not delete
+	 * any file related to the project but simply removes it from the workspace
+	 * \param name project name to remove
+	 * \param errMsg [output] incase an error, report the error to the caller
+	 * \return true on success false otherwise
+	 */
+	bool RemoveProject(const wxString &name, wxString &errMsg);
+
+	/**
+	 * \return The active project name or wxEmptyString
+	 */
+	wxString GetActiveProjectName();
+
+	/**
+	 * Set project as active
+	 * \param name  project name
+	 * \param active state
+	 */
+	void SetActiveProject(const wxString &name, bool active);
+
+private:
+
+	/**
+	 * Do the actual add project 
+	 * \param path project file path
+	 * \param errMsg [output] incase an error, report the error to the caller
+	 */
+	bool DoAddProject(const wxString &path, wxString &errMsg);
 };
 
 typedef Singleton<Workspace> WorkspaceST;
