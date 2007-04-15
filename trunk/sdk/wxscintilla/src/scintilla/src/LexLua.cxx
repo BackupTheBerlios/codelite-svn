@@ -149,7 +149,10 @@ static void ColouriseLuaDoc(
 			// We stop the number definition on non-numerical non-dot non-eE non-sign non-hexdigit char
 			if (!IsANumberChar(sc.ch)) {
 				sc.SetState(SCE_LUA_DEFAULT);
-			}
+			} else if (sc.ch == '-' || sc.ch == '+') {
+                                if (sc.chPrev != 'E' && sc.chPrev != 'e')
+                                        sc.SetState(SCE_LUA_DEFAULT);
+                        }
 		} else if (sc.state == SCE_LUA_IDENTIFIER) {
 			if (!IsAWordChar(sc.ch) || sc.Match('.', '.')) {
 				char s[100];
@@ -164,8 +167,6 @@ static void ColouriseLuaDoc(
 					sc.ChangeState(SCE_LUA_WORD4);
 				} else if (keywords5.InList(s)) {
 					sc.ChangeState(SCE_LUA_WORD5);
-				} else if (keywords6.InList(s)) {
-					sc.ChangeState(SCE_LUA_WORD6);
 				} else if (keywords6.InList(s)) {
 					sc.ChangeState(SCE_LUA_WORD6);
 				} else if (keywords7.InList(s)) {
