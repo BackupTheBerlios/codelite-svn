@@ -82,10 +82,14 @@ public:
 	 */
 	virtual void GetBitmap(wxDC& dc, const wxRect &rect, wxBitmap &bmp);
 
-	/** 
+	/**
 	 * Draw a bottom line for the tabs area
-	 */ 
-	void DrawTabsLine(wxWindow *pageContainer, wxDC& dc);
+	 * \param pageContainer the owner of this tabs 
+	 * \param dc device context to use
+	 * \param selTabX1 the selection tab X1 coord
+	 * \param selTabX2 the selection tab X2 coord
+	 */
+	void DrawTabsLine(wxWindow *pageContainer, wxDC& dc, wxCoord selTabX1 = -1, wxCoord selTabX2 = -1);
 
 	/**
 	 * Brighten a given colour with amount
@@ -161,6 +165,14 @@ class wxFNBRendererDefault : public wxFNBRenderer
 public:
 	wxFNBRendererDefault(){}
 	virtual ~wxFNBRendererDefault(){}
+	virtual void DrawTab(wxWindow* pageContainer, wxDC &dc, const int &posx, const int &tabIdx, const int &tabWidth, const int &tabHeight, const int btnStatus);
+};
+
+class wxFNBRendererFirefox2 : public wxFNBRenderer
+{
+public:
+	wxFNBRendererFirefox2(){}
+	virtual ~wxFNBRendererFirefox2(){}
 	virtual void DrawTab(wxWindow* pageContainer, wxDC &dc, const int &posx, const int &tabIdx, const int &tabWidth, const int &tabHeight, const int btnStatus);
 };
 

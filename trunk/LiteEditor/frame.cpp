@@ -186,7 +186,7 @@ void Frame::CreateGUIControls(void)
 	long style = 
 		wxFNB_TABS_BORDER_SIMPLE | 
 		wxFNB_NODRAG | 
-		wxFNB_VC8 | 
+		wxFNB_FF2 | 
 		wxFNB_BACKGROUND_GRADIENT | 
 		wxFNB_NO_X_BUTTON |
 		wxFNB_NO_NAV_BUTTONS |

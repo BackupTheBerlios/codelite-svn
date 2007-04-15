@@ -3,8 +3,8 @@
 
 #include "wx/panel.h"
 #include "tag_tree.h"
+#include "wx/wxFlatNotebook/wxFlatNotebook.h"
 
-class wxFlatNotebook;
 class FileViewTree;
 class SymbolTree;
 
@@ -18,7 +18,8 @@ public:
 	wxString m_caption;
 	FileViewTree *m_fileView;
 	SymbolTree* m_tree;
-	
+	wxFlatNotebookImageList m_images;
+
 private:
 	void CreateGUIControls();
 	int CaptionToIndex(const wxString &caption);

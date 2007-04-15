@@ -81,6 +81,7 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWindow*, wxWindowPtrArray, WXDLLIMPEXP_FNB);
 #define wxFNB_SMART_TABS				0x00002000
 #define wxFNB_DROPDOWN_TABS_LIST		0x00004000
 #define wxFNB_ALLOW_FOREIGN_DND			0x00008000
+#define wxFNB_FF2						0x00010000		// Firefox 2 tabs style
 
 /// General macros
 #define VERTICAL_BORDER_PADDING			4
@@ -734,6 +735,9 @@ public:
 	virtual void OnTabMenuSelection(wxCommandEvent &event);
 
 protected:
+	
+	void RotateLeft();
+	void RotateRight();
 
 	/**
 	 * Popup a menu that contains all the tabs to be selected by user

@@ -1,7 +1,7 @@
 #include "workspace_pane.h"
-#include "wx/wxFlatNotebook/wxFlatNotebook.h"
 #include "fileview.h"
 #include "cpp_symbol_tree.h"
+#include <wx/xrc/xmlres.h>
 
 const wxString WorkspacePane::SYMBOL_VIEW = wxT("Symbols");
 const wxString WorkspacePane::FILE_VIEW   = wxT("Files");
@@ -37,16 +37,20 @@ void WorkspacePane::CreateGUIControls()
 	wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(mainSizer);
 
-	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_BOTTOM; 
+	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_BOTTOM | wxFNB_FF2; 
 	m_book = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
 	mainSizer->Add(m_book, 1, wxEXPAND | wxALL, 1);
+	
+	m_images.Add(wxXmlResource::Get()->LoadBitmap(wxT("file_view")));
+	m_images.Add(wxXmlResource::Get()->LoadBitmap(wxT("class_view")));
+	m_book->SetImageList( &m_images );
 
 	// Add the class view tree
 	m_tree = new CppSymbolTree(m_book, wxID_ANY);
-	m_book->AddPage(m_tree, WorkspacePane::SYMBOL_VIEW, true);
+	m_book->AddPage(m_tree, WorkspacePane::SYMBOL_VIEW, true, 1);
 
 	m_fileView = new FileViewTree(m_book, wxID_ANY);
-	m_book->AddPage(m_fileView, WorkspacePane::FILE_VIEW);
+	m_book->AddPage(m_fileView, WorkspacePane::FILE_VIEW, false, 0);
 
 	// Set the images for the symbols
 	m_tree->SetSymbolsImages( CreateSymbolTreeImages() );
@@ -61,3 +65,4 @@ void WorkspacePane::BuildFileTree()
 {
 	m_fileView->BuildTree();
 }
+

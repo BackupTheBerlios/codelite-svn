@@ -9,6 +9,70 @@
 # define FNB_LOG_MSG( msg ) { wxString logmsg; logmsg << msg; }
 #endif
 
+//-----------------------------------------------------------------------------
+// Util functions
+//-----------------------------------------------------------------------------
+
+static void DrawButton(wxDC& dc, 
+			const wxRect& rect, 
+			const bool &focus, 
+			const bool &upperTabs)
+{
+	// Define the rounded rectangle base on the given rect
+	// we need an array of 9 points for it
+	wxPoint regPts[9];
+
+	// Define the middle points
+	wxPoint leftPt, rightPt;
+	if( focus ){
+		if( upperTabs ){
+			leftPt = wxPoint(rect.x, rect.y + (rect.height / 10)*8 );
+			rightPt = wxPoint(rect.x + rect.width - 2, rect.y + (rect.height / 10)*8);
+		} else {
+			leftPt = wxPoint(rect.x, rect.y + (rect.height / 10)*5 );
+			rightPt = wxPoint(rect.x + rect.width - 2, rect.y + (rect.height / 10)*5);
+		}
+	} else {
+		leftPt = wxPoint(rect.x, rect.y + (rect.height / 2) );
+		rightPt = wxPoint(rect.x + rect.width - 2, rect.y + (rect.height / 2));
+	}
+
+	// Define the top region
+	wxRect top(rect.GetLeftTop(), rightPt);
+	wxRect bottom(leftPt, rect.GetBottomRight());
+
+	wxColour topStartColor(wxT("WHITE"));
+
+	if( !focus ){
+		topStartColor = wxFNBRenderer::LightColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE), 50);
+	}
+
+	wxColour topEndColor( wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
+	wxColour bottomStartColor(topEndColor);
+	wxColour bottomEndColor(topEndColor);
+
+	// Incase we use bottom tabs, switch the colors
+	if( upperTabs ){
+		if( focus ){
+			wxFNBRenderer::PaintStraightGradientBox(dc, top, topStartColor, topEndColor);
+			wxFNBRenderer::PaintStraightGradientBox(dc, bottom, bottomStartColor, bottomEndColor);
+		} else {
+			wxFNBRenderer::PaintStraightGradientBox(dc, top, topEndColor , topStartColor);
+			wxFNBRenderer::PaintStraightGradientBox(dc, bottom, bottomStartColor, bottomEndColor);
+		}
+	} else {
+		if( focus ){
+			wxFNBRenderer::PaintStraightGradientBox(dc, bottom, topEndColor, bottomEndColor);
+			wxFNBRenderer::PaintStraightGradientBox(dc, top,topStartColor,  topStartColor);
+		} else {
+			wxFNBRenderer::PaintStraightGradientBox(dc, bottom, bottomStartColor, bottomEndColor);
+			wxFNBRenderer::PaintStraightGradientBox(dc, top, topEndColor, topStartColor);
+		}
+	}
+	
+	dc.SetBrush( *wxTRANSPARENT_BRUSH );
+}
+
 wxFNBRenderer::wxFNBRenderer()
 : m_tabXBgBmp(16, 16)
 , m_xBgBmp(16, 14)
@@ -367,43 +431,75 @@ wxColor wxFNBRenderer::LightColour(const wxColour& color, int percent)
 	return wxColor(r, g, b);
 }
 
-void wxFNBRenderer::DrawTabsLine(wxWindow* pageContainer, wxDC& dc)
+void wxFNBRenderer::DrawTabsLine(wxWindow* pageContainer, wxDC& dc, wxCoord selTabX1, wxCoord selTabX2)
 {
 	wxPageContainer *pc = static_cast<wxPageContainer*>( pageContainer );
 	wxRect clntRect = pc->GetClientRect();
 	wxRect clientRect, clientRect2, clientRect3;
 	clientRect3 = wxRect(0, 0, clntRect.width, clntRect.height);
 
-	if(pc->HasFlag(wxFNB_BOTTOM))
-	{
-		clientRect = wxRect(0, 2, clntRect.width, clntRect.height - 2);
-		clientRect2 = wxRect(0, 1, clntRect.width, clntRect.height - 1);
-	}
-	else
-	{
-		clientRect = wxRect(0, 0, clntRect.width, clntRect.height - 2);
-		clientRect2 = wxRect(0, 0, clntRect.width, clntRect.height - 1);
-	}
+	if( pc->HasFlag(wxFNB_FF2) ){
+		wxColour fillColor;
+		if( !pc->HasFlag(wxFNB_BOTTOM) ){
+			fillColor = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
+		} else {
+			fillColor = wxColor("WHITE");
+		}
 
-	dc.SetBrush(*wxTRANSPARENT_BRUSH);
-	dc.SetPen( wxPen(pc->GetSingleLineBorderColor()) );
-	dc.DrawRectangle(clientRect2);
-	dc.DrawRectangle(clientRect3);
+		dc.SetPen( wxPen(fillColor) );
+		if(pc->HasFlag(wxFNB_BOTTOM)){
 
-	dc.SetPen(wxPen(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW)));
-	dc.DrawRectangle(clientRect);
+			dc.DrawLine(1, 0, clntRect.width-1, 0);
+			dc.DrawLine(1, 1, clntRect.width-1, 1);
 
-	if( !pc->HasFlag(wxFNB_TABS_BORDER_SIMPLE) )
-	{
-		dc.SetPen(wxPen( pc->HasFlag( wxFNB_VC71) ? wxColour(247, 243, 233) : pc->m_tabAreaColor));
-		dc.DrawLine(0, 0, 0, clientRect.height+1);
+			dc.SetPen(wxPen(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW)));
+			dc.DrawLine(1, 2, clntRect.width-1, 2);
+
+			dc.SetPen(wxPen(fillColor));
+			dc.DrawLine(selTabX1 + 2, 2, selTabX2 - 1, 2);
+		} else {
+
+			dc.DrawLine(1, clntRect.height, clntRect.width-1, clntRect.height);
+			dc.DrawLine(1, clntRect.height-1, clntRect.width-1, clntRect.height-1);
+
+			dc.SetPen(wxPen(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW)));
+			dc.DrawLine(1, clntRect.height-2, clntRect.width-1, clntRect.height-2);
+
+			dc.SetPen(wxPen(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
+			dc.DrawLine(selTabX1 + 2, clntRect.height-2, selTabX2-1, clntRect.height-2);
+		}
+	} else {
 		if(pc->HasFlag(wxFNB_BOTTOM))
 		{
-			dc.DrawLine(0, clientRect.height+1, clientRect.width, clientRect.height+1);
+			clientRect = wxRect(0, 2, clntRect.width, clntRect.height - 2);
+			clientRect2 = wxRect(0, 1, clntRect.width, clntRect.height - 1);
 		}
 		else
-			dc.DrawLine(0, 0, clientRect.width, 0);
-		dc.DrawLine(clientRect.width - 1, 0, clientRect.width - 1, clientRect.height+1);
+		{
+			clientRect = wxRect(0, 0, clntRect.width, clntRect.height - 2);
+			clientRect2 = wxRect(0, 0, clntRect.width, clntRect.height - 1);
+		}
+
+		dc.SetBrush(*wxTRANSPARENT_BRUSH);
+		dc.SetPen( wxPen(pc->GetSingleLineBorderColor()) );
+		dc.DrawRectangle(clientRect2);
+		dc.DrawRectangle(clientRect3);
+
+		dc.SetPen(wxPen(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW)));
+		dc.DrawRectangle(clientRect);
+
+		if( !pc->HasFlag(wxFNB_TABS_BORDER_SIMPLE) )
+		{
+			dc.SetPen(wxPen( pc->HasFlag( wxFNB_VC71) ? wxColour(247, 243, 233) : pc->m_tabAreaColor));
+			dc.DrawLine(0, 0, 0, clientRect.height+1);
+			if(pc->HasFlag(wxFNB_BOTTOM))
+			{
+				dc.DrawLine(0, clientRect.height+1, clientRect.width, clientRect.height+1);
+			}
+			else
+				dc.DrawLine(0, 0, clientRect.width, 0);
+			dc.DrawLine(clientRect.width - 1, 0, clientRect.width - 1, clientRect.height+1);
+		}
 	}
 }
 
@@ -592,7 +688,15 @@ void wxFNBRenderer::DrawTabs(wxWindow *pageContainer, wxDC &dc, wxEvent &event)
 		wxColor colr = pc->HasFlag( wxFNB_VC71 ) ? wxColour(247, 243, 233) : pc->GetBackgroundColour();
 		dc.SetPen( wxPen(colr) );
 	}
-	dc.DrawRectangle(0, 0, size.x, size.y);
+
+	if( pc->HasFlag(wxFNB_FF2) ){
+		int lightFactor = pc->HasFlag(wxFNB_BACKGROUND_GRADIENT) ? 70 : 0;
+		PaintStraightGradientBox(dc, pc->GetClientRect(), pc->m_tabAreaColor, LightColour(pc->m_tabAreaColor, lightFactor));
+		dc.SetBrush( *wxTRANSPARENT_BRUSH );
+		dc.DrawRectangle(0, 0, size.x, size.y);
+	} else {
+		dc.DrawRectangle(0, 0, size.x, size.y);
+	}
 
 	// Take 3 bitmaps for the background for the buttons
 	{
@@ -627,7 +731,10 @@ void wxFNBRenderer::DrawTabs(wxWindow *pageContainer, wxDC &dc, wxEvent &event)
 	// We always draw the bottom/upper line of the tabs
 	// regradless the style
 	dc.SetPen(borderPen);
-	DrawTabsLine(pc, dc);
+
+	if( pc->HasFlag(wxFNB_FF2) == false ){
+		DrawTabsLine(pc, dc);
+	}
 
 	// Restore the pen
 	dc.SetPen(borderPen);
@@ -682,10 +789,13 @@ void wxFNBRenderer::DrawTabs(wxWindow *pageContainer, wxDC &dc, wxEvent &event)
 	//----------------------------------------------------------
 	// Go over and draw the visible tabs
 	//----------------------------------------------------------
+	wxCoord x1(-1), x2(-1);
 	for(i=pc->m_nFrom; i<(int)pc->GetPageInfoVector().GetCount(); i++)
 	{
 		dc.SetPen(borderPen);
-		dc.SetBrush((i==pc->GetSelection()) ? selBrush : noselBrush);
+		if( !pc->HasFlag(wxFNB_FF2) ){
+			dc.SetBrush((i==pc->GetSelection()) ? selBrush : noselBrush);
+		}
 
 		// Now set the font to the correct font
 		dc.SetFont((i==pc->GetSelection()) ? boldFont : normalFont);
@@ -711,6 +821,11 @@ void wxFNBRenderer::DrawTabs(wxWindow *pageContainer, wxDC &dc, wxEvent &event)
 
 		// Draw the tab (border, text, image & 'x' on tab)
 		DrawTab(pc, dc, posx, i, tabWidth, tabHeight, pc->m_nTabXButtonStatus);
+		
+		if(pc->GetSelection() == i){
+			x1 = posx;
+			x2 = posx + tabWidth + 2;
+		}
 
 		// Restore the text forground
 		dc.SetTextForeground(pc->m_activeTextColor);
@@ -736,6 +851,10 @@ void wxFNBRenderer::DrawTabs(wxWindow *pageContainer, wxDC &dc, wxEvent &event)
 	DrawRightArrow(pc, dc);
 	DrawX(pc, dc);
 	DrawDropDownArrow(pc, dc);
+
+	if( pc->HasFlag(wxFNB_FF2) ){
+		DrawTabsLine(pc, dc, x1, x2);
+	}
 }
 
 //------------------------------------------
@@ -748,6 +867,7 @@ wxFNBRendererMgr::wxFNBRendererMgr()
 	m_renderers[wxFNB_VC71] = wxFNBRendererPtr(new wxFNBRendererVC71());
 	m_renderers[wxFNB_FANCY_TABS] = wxFNBRendererPtr(new wxFNBRendererFancy());
 	m_renderers[wxFNB_VC8] = wxFNBRendererPtr(new wxFNBRendererVC8());
+	m_renderers[wxFNB_FF2] = wxFNBRendererPtr(new wxFNBRendererFirefox2());
 }
 
 wxFNBRendererMgr::~wxFNBRendererMgr()
@@ -756,11 +876,7 @@ wxFNBRendererMgr::~wxFNBRendererMgr()
 
 wxFNBRendererPtr wxFNBRendererMgr::GetRenderer(long style)
 {
-	// since we dont have a style for default tabs, we 
-	// test for all others - FIXME: add style for default tabs
-	if( !(style & wxFNB_VC71) && !(style & wxFNB_VC8) && !(style & wxFNB_FANCY_TABS) )
-		return m_renderers[-1];
-
+	// Do the ugly switch/case
 	if( style & wxFNB_VC71 )
 		return m_renderers[wxFNB_VC71];
 
@@ -769,6 +885,9 @@ wxFNBRendererPtr wxFNBRendererMgr::GetRenderer(long style)
 
 	if( style & wxFNB_VC8 )
 		return m_renderers[wxFNB_VC8];
+
+	if( style & wxFNB_FF2 )
+		return m_renderers[wxFNB_FF2];
 
 	// the default is to return the default renderer
 	return m_renderers[-1];
@@ -889,6 +1008,101 @@ void wxFNBRendererDefault::DrawTab(wxWindow* pageContainer, wxDC &dc, const int 
 	}
 }
 
+//------------------------------------------
+// Firefox2 renderer 
+//------------------------------------------
+void wxFNBRendererFirefox2::DrawTab(wxWindow* pageContainer, wxDC &dc, const int &posx, const int &tabIdx, const int &tabWidth, const int &tabHeight, const int btnStatus)
+{
+		// Default style
+	wxPen borderPen = wxPen(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
+	wxPageContainer *pc = static_cast<wxPageContainer*>( pageContainer );
+
+	wxPoint tabPoints[7];
+	tabPoints[0].x = posx + 2;
+	tabPoints[0].y = pc->HasFlag(wxFNB_BOTTOM) ? 2 : tabHeight - 2;
+
+	tabPoints[1].x = tabPoints[0].x;
+	tabPoints[1].y = pc->HasFlag(wxFNB_BOTTOM) ? tabHeight - (VERTICAL_BORDER_PADDING+2) : (VERTICAL_BORDER_PADDING+2);
+
+	tabPoints[2].x = tabPoints[1].x+2;
+	tabPoints[2].y = pc->HasFlag(wxFNB_BOTTOM) ? tabHeight - VERTICAL_BORDER_PADDING : VERTICAL_BORDER_PADDING;
+
+	tabPoints[3].x = posx +tabWidth - 2;
+	tabPoints[3].y = pc->HasFlag(wxFNB_BOTTOM) ? tabHeight - VERTICAL_BORDER_PADDING : VERTICAL_BORDER_PADDING;
+
+	tabPoints[4].x = tabPoints[3].x+2;
+	tabPoints[4].y = pc->HasFlag(wxFNB_BOTTOM) ? tabHeight - (VERTICAL_BORDER_PADDING+2) : (VERTICAL_BORDER_PADDING+2);
+
+	tabPoints[5].x = tabPoints[4].x;
+	tabPoints[5].y = pc->HasFlag(wxFNB_BOTTOM) ? 2 : tabHeight - 2;
+
+	tabPoints[6].x = tabPoints[0].x;
+	tabPoints[6].y = tabPoints[0].y;
+
+	//------------------------------------
+	// Paint the tab with gradient
+	//------------------------------------
+	wxRect rr(tabPoints[2], tabPoints[5]);
+	DrawButton( dc, 
+				rr, 
+				pc->GetSelection() == tabIdx , 
+				!pc->HasFlag(wxFNB_BOTTOM));
+
+	dc.SetBrush( *wxTRANSPARENT_BRUSH );
+	dc.SetPen( borderPen );
+
+	// Draw the tab as rounded rectangle
+	dc.DrawPolygon(7, tabPoints);
+
+	// -----------------------------------
+	// Text and image drawing
+	// -----------------------------------
+
+	// Text drawing offset from the left border of the
+	// rectangle
+	int textOffset;
+
+	// The width of the images are 16 pixels
+	int padding = static_cast<wxFlatNotebook*>( pc->GetParent() )->GetPadding();
+	int shapePoints = (int)(tabHeight * tan((double)pc->GetPageInfoVector()[tabIdx].GetTabAngle()/180.0*M_PI));
+	bool hasImage = pc->GetPageInfoVector()[tabIdx].GetImageIndex() != -1;
+	int imageYCoord = pc->HasFlag(wxFNB_BOTTOM) ? 4 : 8;
+
+	hasImage ? textOffset = padding * 2 + 16 + shapePoints / 2 : textOffset = padding + shapePoints / 2 ;
+	textOffset += 2;
+
+	if(tabIdx != pc->GetSelection())
+	{
+		// Set the text background to be like the vertical lines
+		dc.SetTextForeground( pc->GetNonoActiveTextColor() );
+	}
+
+	if(hasImage)
+	{
+		int imageXOffset = textOffset - 16 - padding;
+		dc.DrawBitmap((*pc->GetImageList())[pc->GetPageInfoVector()[tabIdx].GetImageIndex()],
+			posx + imageXOffset, imageYCoord, true);
+	}
+
+	dc.DrawText(pc->GetPageText(tabIdx), posx + textOffset, imageYCoord);
+
+	// draw 'x' on tab (if enabled)
+	if(pc->HasFlag(wxFNB_X_ON_TAB) && tabIdx == pc->GetSelection())
+	{
+		int textWidth, textHeight;
+		dc.GetTextExtent(pc->GetPageText(tabIdx), &textWidth, &textHeight);
+		int tabCloseButtonXCoord = posx + textOffset + textWidth + 1;
+
+		// take a bitmap from the position of the 'x' button (the x on tab button)
+		// this bitmap will be used later to delete old buttons
+		int tabCloseButtonYCoord = imageYCoord;
+		wxRect x_rect(tabCloseButtonXCoord, tabCloseButtonYCoord, 16, 16);
+		GetBitmap(dc, x_rect, m_tabXBgBmp);
+
+		// Draw the tab
+		DrawTabX(pc, dc, x_rect, tabIdx, btnStatus);			
+	}
+}
 //------------------------------------------------------------------
 // Visual studio 7.1 
 //------------------------------------------------------------------
@@ -1614,13 +1828,14 @@ int wxFNBRendererVC8::GetEndX(const wxPoint tabPoints[], const int &y, long styl
 	// According to the equation y = ax + b => x = (y-b)/a
 	// We know the first 2 points
 	double a = (y2 - y1) / (x2 - x1);
-	double b = y1 - ((y2 - y1) / (x2 - x1)) * x1;
-
-	if(a == 0) 
-		return (int)x1;
 
 	// Vertical line
 	if(x1 == x2)
+		return (int)x1;
+
+	double b = y1 - ((y2 - y1) / (x2 - x1)) * x1;
+
+	if(a == 0) 
 		return (int)x1;
 
 	double x = (y - b) / a;

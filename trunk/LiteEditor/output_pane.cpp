@@ -44,7 +44,7 @@ void OutputPane::CreateGUIControls()
 
 	mainSizer->Add(mb, 0, wxEXPAND | wxALL, 1);
 
-	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_BOTTOM; 
+	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_BOTTOM | wxFNB_FF2; 
 	m_book = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
 	mainSizer->Add(m_book, 1, wxEXPAND | wxALL, 1);
 

@@ -712,7 +712,7 @@ wxPageContainer::wxPageContainer(wxWindow* parent, wxWindowID id, const wxPoint&
 	m_colorFrom   = wxColor(*wxWHITE);
 	m_activeTabColor = wxColor(*wxWHITE);
 	m_activeTextColor = wxColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
-	m_nonActiveTextColor = wxColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
+	m_nonActiveTextColor = wxColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
 	m_tabAreaColor = wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE);
 
 	// Set default page height, this is done according to the system font
@@ -915,6 +915,48 @@ void wxPageContainer::OnLeftDown(wxMouseEvent& event)
 	}
 }
 
+void wxPageContainer::RotateLeft()
+{
+	if(m_nFrom == 0)
+		return;
+
+	// Make sure that the button was pressed before
+	if(m_nLeftButtonStatus != wxFNB_BTN_PRESSED)
+		return;
+
+	m_nLeftButtonStatus = wxFNB_BTN_HOVER;
+
+	// We scroll left with bulks of 5
+	int scrollLeft = GetNumTabsCanScrollLeft();
+
+	m_nFrom -= scrollLeft;
+	if(m_nFrom < 0)
+		m_nFrom = 0;
+
+	Refresh();
+	return;
+}
+
+void wxPageContainer::RotateRight()
+{
+	if(m_nFrom >= (int)m_pagesInfoVec.GetCount() - 1)
+		return;
+
+	// Make sure that the button was pressed before
+	if(m_nRightButtonStatus != wxFNB_BTN_PRESSED)
+		return;
+
+	m_nRightButtonStatus = wxFNB_BTN_HOVER;
+
+	// Check if the right most tab is visible, if it is
+	// don't rotate right anymore
+	if(m_pagesInfoVec[m_pagesInfoVec.GetCount()-1].GetPosition() != wxPoint(-1, -1))
+		return;
+
+	m_nFrom += 1;
+	Refresh();
+}
+
 void wxPageContainer::OnLeftUp(wxMouseEvent& event)
 {
 	wxPageInfo pgInfo;
@@ -928,51 +970,12 @@ void wxPageContainer::OnLeftUp(wxMouseEvent& event)
 	{
 	case wxFNB_LEFT_ARROW:
 		{
-			if(m_nFrom == 0)
-				break;
-
-			// Make sure that the button was pressed before
-			if(m_nLeftButtonStatus != wxFNB_BTN_PRESSED)
-				break;
-
-			m_nLeftButtonStatus = wxFNB_BTN_HOVER;
-
-			// We scroll left with bulks of 5
-			int scrollLeft = GetNumTabsCanScrollLeft();
-
-			m_nFrom -= scrollLeft;
-			if(m_nFrom < 0)
-				m_nFrom = 0;
-
-			Refresh();
+			RotateLeft();
 			break;
 		}
 	case wxFNB_RIGHT_ARROW:
 		{
-			if(m_nFrom >= (int)m_pagesInfoVec.GetCount() - 1)
-				break;
-
-			// Make sure that the button was pressed before
-			if(m_nRightButtonStatus != wxFNB_BTN_PRESSED)
-				break;
-
-			m_nRightButtonStatus = wxFNB_BTN_HOVER;
-
-			// Check if the right most tab is visible, if it is
-			// don't rotate right anymore
-			if(m_pagesInfoVec[m_pagesInfoVec.GetCount()-1].GetPosition() != wxPoint(-1, -1))
-				break;
-
-			int lastVisibleTab = GetLastVisibleTab();
-			if(lastVisibleTab < 0)
-			{
-				// Probably the screen is too small for displaying even a single
-				// tab, in this case we do nothing
-				break;
-			}
-
-			m_nFrom += GetNumOfVisibleTabs();
-			Refresh();
+			RotateRight();
 			break;
 		}
 	case wxFNB_X:
@@ -1014,6 +1017,7 @@ void wxPageContainer::OnLeftUp(wxMouseEvent& event)
 			break;
 		}
 	}
+	event.Skip();
 }
 
 int wxPageContainer::HitTest(const wxPoint& pt, wxPageInfo& pageInfo, int &tabIdx)
@@ -1401,33 +1405,11 @@ int wxPageContainer::GetLastVisibleTab()
 
 int wxPageContainer::GetNumTabsCanScrollLeft()
 {
-	int i;
-
-	// Reserved area for the buttons (<>x)
-	wxRect rect = GetClientRect();
-	int clientWidth = rect.width;
-	int posx = ((wxFlatNotebook *)m_pParent)->GetPadding(), numTabs = 0, tabHeight, tabWidth;
-
-	wxClientDC dc(this);
-
-	// Incase we have error prevent crash
-	if(m_nFrom < 0)
+	if( m_nFrom - 1 >= 0){
+		return 1;
+	} else {
 		return 0;
-
-	long style = GetParent()->GetWindowStyleFlag();
-	wxFNBRendererPtr render = wxFNBRendererMgrST::Get()->GetRenderer(style);
-
-	tabHeight = render->CalcTabHeight(this);
-	for(i=m_nFrom; i>=0; i--)
-	{
-		tabWidth = render->CalcTabWidth(this, i, tabHeight);
-		if(posx + tabWidth + render->GetButtonsAreaLength(this) >= clientWidth)
-			break;
-
-		numTabs++;
-		posx += tabWidth;
 	}
-	return numTabs;
 }
 
 bool wxPageContainer::IsDefaultTabs()
@@ -1711,6 +1693,12 @@ void wxPageContainer::OnLeftDClick(wxMouseEvent& event)
 	int where = HitTest(event.GetPosition(), pgInfo, tabIdx);
 	switch(where)
 	{
+	case wxFNB_RIGHT_ARROW:
+		RotateRight();
+		break;
+	case wxFNB_LEFT_ARROW:
+		RotateLeft();
+		break;
 	case wxFNB_TAB:
 		if(HasFlag(wxFNB_DCLICK_CLOSES_TABS))
 		{
