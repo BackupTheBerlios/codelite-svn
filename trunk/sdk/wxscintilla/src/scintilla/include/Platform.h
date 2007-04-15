@@ -27,14 +27,10 @@
 #elif defined(__WX__)
 #undef PLAT_WX
 #define PLAT_WX  1
-#undef PLAT_WIN
-#define PLAT_WIN 1
 
 #elif defined(GTK)
 #undef PLAT_GTK
 #define PLAT_GTK 1
-#undef PLAT_WX
-#define PLAT_WX  1
 
 #ifdef _MSC_VER
 #undef PLAT_GTK_WIN32
