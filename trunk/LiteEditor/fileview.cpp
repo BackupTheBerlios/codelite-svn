@@ -294,6 +294,14 @@ void FileViewTree::DoAddVirtualFolder(wxTreeItemId &parent)
 		path += wxT(".");
 		path += dlg->GetValue();
 		ManagerST::Get()->AddVirtualDirectory(path);
+
+		ProjectItem itemData(path, dlg->GetValue(), wxEmptyString, ProjectItem::TypeVirtualDirectory);
+		AppendItem(	parent,								// parent
+			itemData.GetDisplayName(),	// display name
+			GetIconIndex(itemData),		// item image index
+			GetIconIndex(itemData),		// selected item image
+			new FilewViewTreeItemData(itemData));
+		Refresh();
 	}
 	dlg->Destroy();
 }
@@ -312,18 +320,19 @@ wxString FileViewTree::GetItemPath(wxTreeItemId &item)
 		p = GetItemParent(p);
 	}
 
-	if( queue.empty() ){
-		return wxEmptyString;
-	}
-
 	wxString path;
 	for(size_t i=0; i<queue.size(); i++){
 		path += queue.front();
 		path += wxT(".");
 		queue.pop_front();
 	}
+
+	if( !queue.empty() ){
+		path += queue.front();
+	} else {
+		path = path.BeforeLast(wxT('.'));
+	}
 	
-	path += queue.front();
 	return path;
 }
 
