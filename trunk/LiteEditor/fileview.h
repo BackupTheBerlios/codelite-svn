@@ -25,7 +25,8 @@ class FileViewTree : public wxTreeCtrl
 {
 	wxMenu *m_folderMenu;
 	wxMenu *m_projectMenu;
-
+	wxMenu *m_defaultMenu;
+	std::list<wxTreeItemId> m_itemsToSort;
 public:
 	/**
 	 * Default cosntructor.
@@ -61,7 +62,8 @@ public:
 	void BuildTree();
 
 protected:
-	virtual void OnMouseRightUp(wxTreeEvent &event);
+	virtual void OnMouseRightDown(wxMouseEvent &event);
+	virtual void OnPopupMenu(wxTreeEvent &event);
 	virtual void OnMouseDblClick(wxMouseEvent &event);
 	virtual void OnRemoveProject(wxCommandEvent &event);
 	virtual void OnSetActive(wxCommandEvent &event);
@@ -70,6 +72,10 @@ protected:
 	virtual void OnNewVirtualFolder(wxCommandEvent &event);
 	virtual void OnProjectProperties(wxCommandEvent &event);
 	
+	// Tree sorting
+	virtual int OnCompareItems(const wxTreeItemId& item1, const wxTreeItemId& item2);
+	virtual void SortItems();
+
 private:
 	// Build project node
 	void BuildProjectNode(const wxString &projectName);

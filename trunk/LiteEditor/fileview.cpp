@@ -34,14 +34,16 @@ FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint&
 	images->Add(wxXmlResource::Get()->LoadBitmap(_T("page_white_text")));		//5
 	AssignImageList( images );
 
-	Connect(GetId(), wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler(FileViewTree::OnMouseRightUp));
+	Connect(GetId(), wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler(FileViewTree::OnPopupMenu));
 	Connect(GetId(), wxEVT_LEFT_DCLICK, wxMouseEventHandler(FileViewTree::OnMouseDblClick));
+	//Connect(GetId(), wxEVT_RIGHT_DOWN, wxMouseEventHandler(FileViewTree::OnMouseRightDown));
 }
 
 FileViewTree::~FileViewTree()
 {
 	delete m_folderMenu;
 	delete m_projectMenu;
+	delete m_defaultMenu;
 }
 
 void FileViewTree::Create(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -58,7 +60,7 @@ void FileViewTree::Create(wxWindow *parent, const wxWindowID id, const wxPoint& 
 	// Load the popup menu
 	m_folderMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_folder"));
 	m_projectMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_project"));
-
+	m_defaultMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_default"));
 	ConnectEvents();
 } 
 
@@ -71,11 +73,13 @@ void FileViewTree::BuildTree()
 		wxTreeItemId root = AddRoot(wxT("Workspace"));
 		wxArrayString list;
 		ManagerST::Get()->GetProjectList(list);
-
+		
 		Freeze();
 		for(size_t n=0; n<list.GetCount(); n++){
 			BuildProjectNode(list.Item(n));		
 		}
+
+		SortItems();
 		Thaw();
 	}
 }
@@ -146,6 +150,8 @@ void FileViewTree::BuildProjectNode(const wxString &projectName)
 										GetIconIndex(node->GetData()),		// selected item image
 										new FilewViewTreeItemData(node->GetData()));
 		
+		m_itemsToSort.push_back(hti);
+
 		// Set active project with bold
 		if( parentHti == GetRootItem() && ManagerST::Get()->GetActiveProjectName() == node->GetData().GetDisplayName()){
 			SetItemBold(hti);
@@ -153,14 +159,12 @@ void FileViewTree::BuildProjectNode(const wxString &projectName)
 
 		items[node->GetKey()] = hti;
 	}
-
-//	SortTree(m_sortItems);
 }
 
 //-----------------------------------------------
 // Event handlers
 //-----------------------------------------------
-void FileViewTree::OnMouseRightUp(wxTreeEvent &event)
+void FileViewTree::OnPopupMenu(wxTreeEvent &event)
 {
 	wxTreeItemId item = event.GetItem();
 	if(item.IsOk()){
@@ -171,13 +175,46 @@ void FileViewTree::OnMouseRightUp(wxTreeEvent &event)
 		{
 		case ProjectItem::TypeProject:
 			PopupMenu( m_projectMenu );
+			event.Skip();
 			break;
 		case ProjectItem::TypeVirtualDirectory:
 			PopupMenu( m_folderMenu );
+			event.Skip();
 			break;
 		default:
 			break;
 		}
+	}
+}
+
+void FileViewTree::OnMouseRightDown(wxMouseEvent &event)
+{
+	// Make sure the double click was done on an actual item
+	int flags = wxTREE_HITTEST_ONITEMLABEL;
+	wxTreeItemId item = HitTest(event.GetPosition(), flags);
+	if( item.IsOk() == false )
+	{
+		PopupMenu(m_defaultMenu);
+		return;
+		//event.Skip();
+	}
+
+	// click was on valid item, popup the menu
+	SelectItem(item, true);
+
+	FilewViewTreeItemData *data = static_cast<FilewViewTreeItemData*>(GetItemData(item));
+	switch( data->GetData().GetKind() )
+	{
+	case ProjectItem::TypeProject:
+		PopupMenu( m_projectMenu );
+		event.Skip();
+		break;
+	case ProjectItem::TypeVirtualDirectory:
+		PopupMenu( m_folderMenu );
+		event.Skip();
+		break;
+	default:
+		break;
 	}
 }
 
@@ -217,7 +254,7 @@ void FileViewTree::OnMouseDblClick(wxMouseEvent &event)
 		event.Skip();
 		return;
 	}
-	return;
+	event.Skip();
 }
 
 void FileViewTree::OnRemoveProject(wxCommandEvent &event)
@@ -301,6 +338,8 @@ void FileViewTree::DoAddVirtualFolder(wxTreeItemId &parent)
 			GetIconIndex(itemData),		// item image index
 			GetIconIndex(itemData),		// selected item image
 			new FilewViewTreeItemData(itemData));
+		m_itemsToSort.push_back(parent);
+		SortItems();
 		Refresh();
 	}
 	dlg->Destroy();
@@ -350,3 +389,19 @@ void FileViewTree::DoRemoveProject(const wxString &name)
 	}
 }
 
+void FileViewTree::SortItems()
+{
+	size_t i=0;
+	for(; i<m_itemsToSort.size(); i++){
+		wxTreeItemId item = m_itemsToSort.front();
+		m_itemsToSort.pop_front();
+		SortChildren(item);
+	}
+	m_itemsToSort.clear();
+}
+
+int FileViewTree::OnCompareItems(const wxTreeItemId& item1, const wxTreeItemId& item2)
+{
+	// Items  has the same icons, compare text
+	return wxTreeCtrl::OnCompareItems(item1, item2);
+}
