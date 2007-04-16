@@ -4,6 +4,8 @@
 #include "wx/treectrl.h" 
 #include "project.h"
 
+class wxMenu;
+
 /**
  * Class FilewViewTreeItemData, a user defined class which stores a node private information
  *
@@ -21,6 +23,9 @@ public:
 
 class FileViewTree : public wxTreeCtrl
 {
+	wxMenu *m_folderMenu;
+	wxMenu *m_projectMenu;
+
 public:
 	/**
 	 * Default cosntructor.

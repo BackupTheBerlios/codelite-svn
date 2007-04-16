@@ -27,6 +27,8 @@ FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint&
 
 FileViewTree::~FileViewTree()
 {
+	delete m_folderMenu;
+	delete m_projectMenu;
 }
 
 void FileViewTree::Create(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -39,6 +41,10 @@ void FileViewTree::Create(wxWindow *parent, const wxWindowID id, const wxPoint& 
 	wxTreeCtrl::Create(parent, id, pos, size, style);
 
 	BuildTree();
+
+	// Load the popup menu
+	m_folderMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_folder"));
+	m_projectMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_project"));
 } 
 
 void FileViewTree::BuildTree()
@@ -144,6 +150,19 @@ void FileViewTree::OnMouseRightUp(wxTreeEvent &event)
 	wxTreeItemId item = event.GetItem();
 	if(item.IsOk()){
 		SelectItem(item, true);
+
+		FilewViewTreeItemData *data = static_cast<FilewViewTreeItemData*>(GetItemData(item));
+		switch( data->GetData().GetKind() )
+		{
+		case ProjectItem::TypeProject:
+			PopupMenu( m_projectMenu );
+			break;
+		case ProjectItem::TypeVirtualDirectory:
+			PopupMenu( m_folderMenu );
+			break;
+		default:
+			break;
+		}
 	}
 }
 
