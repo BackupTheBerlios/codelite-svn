@@ -18,6 +18,7 @@ void FileViewTree::ConnectEvents()
 	Connect(XRCID("add_existing_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnAddExistingItem), NULL, this);
 	Connect(XRCID("new_virtual_folder"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnNewVirtualFolder), NULL, this);
 	Connect(XRCID("project_properties"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnProjectProperties), NULL, this);
+	Connect(XRCID("sort_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnSortItem), NULL, this);
 }
 
 FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -79,7 +80,6 @@ void FileViewTree::BuildTree()
 			BuildProjectNode(list.Item(n));		
 		}
 
-		SortItems();
 		Thaw();
 	}
 }
@@ -150,8 +150,6 @@ void FileViewTree::BuildProjectNode(const wxString &projectName)
 										GetIconIndex(node->GetData()),		// selected item image
 										new FilewViewTreeItemData(node->GetData()));
 		
-		m_itemsToSort.push_back(hti);
-
 		// Set active project with bold
 		if( parentHti == GetRootItem() && ManagerST::Get()->GetActiveProjectName() == node->GetData().GetDisplayName()){
 			SetItemBold(hti);
@@ -269,6 +267,15 @@ void FileViewTree::OnRemoveProject(wxCommandEvent &event)
 	}
 }
 
+void FileViewTree::OnSortItem(wxCommandEvent &WXUNUSED( event))
+{
+	wxTreeItemId item = GetSelection();
+	if(item.IsOk()){
+		SortChildren(item);
+		ManagerST::Get()->SaveWorkspace();
+	}
+}
+
 void FileViewTree::OnAddExistingItem(wxCommandEvent & WXUNUSED(event))
 {
 }
@@ -321,7 +328,7 @@ void FileViewTree::DoAddVirtualFolder(wxTreeItemId &parent)
 	static int count = 0;
 	wxString defaultName(wxT("NewDirectory"));
 	defaultName << count++;
-
+	
 	wxTextEntryDialog *dlg = new wxTextEntryDialog(this, wxT("Virtual Directory Name:"), wxT("New Virtual Directory"), defaultName);
 	if(dlg->ShowModal() == wxID_OK){
 		wxString path = GetItemPath(parent);
@@ -338,8 +345,6 @@ void FileViewTree::DoAddVirtualFolder(wxTreeItemId &parent)
 			GetIconIndex(itemData),		// item image index
 			GetIconIndex(itemData),		// selected item image
 			new FilewViewTreeItemData(itemData));
-		m_itemsToSort.push_back(parent);
-		SortItems();
 		Refresh();
 	}
 	dlg->Destroy();
@@ -387,17 +392,6 @@ void FileViewTree::DoRemoveProject(const wxString &name)
 	if( wxMessageBox (message, wxT("Confirm"), wxYES_NO) == wxYES ){
 		ManagerST::Get()->RemoveProject(name);
 	}
-}
-
-void FileViewTree::SortItems()
-{
-	size_t i=0;
-	for(; i<m_itemsToSort.size(); i++){
-		wxTreeItemId item = m_itemsToSort.front();
-		m_itemsToSort.pop_front();
-		SortChildren(item);
-	}
-	m_itemsToSort.clear();
 }
 
 int FileViewTree::OnCompareItems(const wxTreeItemId& item1, const wxTreeItemId& item2)

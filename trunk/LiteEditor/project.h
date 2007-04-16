@@ -179,6 +179,10 @@ public:
 	 */
 	bool DeleteVirtualDir(const wxString &vdFullPath);
 
+	/**
+	 * Save project settings
+	 */
+	void Save();
 	//-----------------------------------
 	// visual operations
 	//-----------------------------------

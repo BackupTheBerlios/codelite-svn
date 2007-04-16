@@ -130,6 +130,12 @@ public:
 	 */
 	bool CreateVirtualDirectory(const wxString &vdFullPath, wxString &errMsg);
 
+
+	/**
+	 * Save workspace & projects settings
+	 */
+	void Save();
+
 private:
 
 	/**

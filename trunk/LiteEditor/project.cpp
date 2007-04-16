@@ -186,3 +186,9 @@ void Project::RecursiveAdd(wxXmlNode *xmlNode, ProjectTreePtr &ptp, ProjectTreeN
 	}
 }
 
+void Project::Save()
+{
+	if( m_doc.IsOk() )
+		m_doc.Save(m_fileName.GetFullPath());
+}
+

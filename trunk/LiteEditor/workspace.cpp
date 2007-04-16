@@ -303,3 +303,14 @@ bool Workspace::CreateVirtualDirectory(const wxString &vdFullPath, wxString &err
 	ProjectPtr proj = FindProjectByName(projName, errMsg);
 	return proj->CreateVirtualDir(fixedPath);
 }
+
+void Workspace::Save()
+{
+	if( m_doc.IsOk() ){
+		std::map<wxString, ProjectPtr>::iterator iter = m_projects.begin();
+		for(; iter != m_projects.end(); iter ++){
+			iter->second->Save();
+		}
+		m_doc.Save(m_fileName.GetFullPath());
+	}
+}

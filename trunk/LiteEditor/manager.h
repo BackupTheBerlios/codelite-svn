@@ -150,6 +150,11 @@ public:
 	 */
 	void AddVirtualDirectory(const wxString &virtualDirFullPath);
 
+
+	/**
+	 * Save workspace
+	 */
+	void SaveWorkspace();
 protected:
 	Manager(void);
 	virtual ~Manager(void);

@@ -71,10 +71,10 @@ protected:
 	virtual void OnAddExistingItem(wxCommandEvent &event);
 	virtual void OnNewVirtualFolder(wxCommandEvent &event);
 	virtual void OnProjectProperties(wxCommandEvent &event);
-	
+	virtual void OnSortItem(wxCommandEvent &event);
+
 	// Tree sorting
 	virtual int OnCompareItems(const wxTreeItemId& item1, const wxTreeItemId& item2);
-	virtual void SortItems();
 
 private:
 	// Build project node

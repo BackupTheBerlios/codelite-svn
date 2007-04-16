@@ -278,3 +278,9 @@ void Manager::AddVirtualDirectory(const wxString &virtualDirFullPath)
 	bool res = WorkspaceST::Get()->CreateVirtualDirectory(virtualDirFullPath, errMsg);
 	CHECK_MSGBOX(res);
 }
+
+void Manager::SaveWorkspace()
+{
+	WorkspaceST::Get()->Save();
+}
+
