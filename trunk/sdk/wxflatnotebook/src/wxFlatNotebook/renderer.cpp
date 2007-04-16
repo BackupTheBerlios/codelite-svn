@@ -443,7 +443,7 @@ void wxFNBRenderer::DrawTabsLine(wxWindow* pageContainer, wxDC& dc, wxCoord selT
 		if( !pc->HasFlag(wxFNB_BOTTOM) ){
 			fillColor = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
 		} else {
-			fillColor = wxColor("WHITE");
+			fillColor = wxColor(wxT("WHITE"));
 		}
 
 		dc.SetPen( wxPen(fillColor) );

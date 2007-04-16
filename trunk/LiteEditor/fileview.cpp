@@ -2,6 +2,8 @@
 #include "manager.h"
 #include "tree.h"
 #include <wx/xrc/xmlres.h>
+#include "wx/imaglist.h"
+
 
 FileViewTree::FileViewTree()
 {

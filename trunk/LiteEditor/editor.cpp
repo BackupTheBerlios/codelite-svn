@@ -97,8 +97,10 @@ void LEditor::SetProperties()
 	SetProperty(_("fold.comment"), _("1"));
 
 	//Set the selection color to grey/black as default
+#ifdef __WXMSW__
 	SetSelBackground(true, wxT("BLACK"));
 	SetSelForeground(true, wxColor(0x00, 0x00, 0x00));
+#endif
 	SetModEventMask (wxSCI_MOD_DELETETEXT | wxSCI_MOD_INSERTTEXT  | wxSCI_PERFORMED_UNDO  | wxSCI_PERFORMED_REDO );
 
 	int caretSlop = 1;
@@ -118,13 +120,18 @@ void LEditor::SetProperties()
 	SetCaretWidth(1);
 	SetMarginLeft(1);
 	SetMarginRight(0);
+
+#ifdef __WXMSW__
 	SetCaretLineBackgroundAlpha(70);
 	SetSelAlpha(70);
-
+#endif
 	// Mark current line
 	SetCaretLineVisible(true);
+#ifdef __WXMSW__
 	SetCaretLineBackground(wxT("BLUE"));
-
+#else
+	SetCaretLineBackground(wxColour(255, 255, 220));
+#endif // __WXMSW__
 	SetFoldFlags(0);
 
 	//------------------------------------------

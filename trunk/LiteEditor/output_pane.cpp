@@ -42,19 +42,21 @@ void OutputPane::CreateGUIControls()
 	// Connect handlers
 	Connect( tool->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( OutputPane::OnClearAll ));
 
-	mainSizer->Add(mb, 0, wxEXPAND | wxALL, 1);
+	mainSizer->Add(mb, 0, wxGROW | wxALL, 1);
 
 	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_BOTTOM | wxFNB_FF2; 
 	m_book = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
-	mainSizer->Add(m_book, 1, wxEXPAND | wxALL, 1);
+	mainSizer->Add(m_book, 1, wxEXPAND | wxALL | wxGROW, 1);
 
 	// Create the 'Find In Files Window'
-	wxScintilla *findInFilesWin = new wxScintilla(m_book, wxID_ANY, wxDefaultPosition, wxSize(600, 200));
+	wxScintilla *findInFilesWin = new wxScintilla(m_book, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 	m_book->AddPage(findInFilesWin, FIND_IN_FILES_WIN, true);
 	findInFilesWin->SetReadOnly(true);
 
 	wxFont font(8, wxFONTFAMILY_TELETYPE, wxNORMAL, wxNORMAL);
 	findInFilesWin->StyleSetFont(wxSCI_STYLE_DEFAULT, font);
+	mainSizer->Fit(this);
+	mainSizer->Layout();
 }
 
 void OutputPane::OnClearAll(wxCommandEvent &event)
