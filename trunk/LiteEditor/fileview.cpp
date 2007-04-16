@@ -3,10 +3,21 @@
 #include "tree.h"
 #include <wx/xrc/xmlres.h>
 #include "wx/imaglist.h"
-
+#include <wx/textdlg.h>
+#include <deque>
 
 FileViewTree::FileViewTree()
 {
+}
+
+void FileViewTree::ConnectEvents()
+{
+	Connect(XRCID("remove_project"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnRemoveProject), NULL, this);
+	Connect(XRCID("set_as_active"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnSetActive), NULL, this);
+	Connect(XRCID("new_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnNewItem), NULL, this);
+	Connect(XRCID("add_existing_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnAddExistingItem), NULL, this);
+	Connect(XRCID("new_virtual_folder"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnNewVirtualFolder), NULL, this);
+	Connect(XRCID("project_properties"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnProjectProperties), NULL, this);
 }
 
 FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -47,6 +58,8 @@ void FileViewTree::Create(wxWindow *parent, const wxWindowID id, const wxPoint& 
 	// Load the popup menu
 	m_folderMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_folder"));
 	m_projectMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_project"));
+
+	ConnectEvents();
 } 
 
 void FileViewTree::BuildTree()
@@ -206,3 +219,125 @@ void FileViewTree::OnMouseDblClick(wxMouseEvent &event)
 	}
 	return;
 }
+
+void FileViewTree::OnRemoveProject(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	wxTreeItemId item = GetSelection();
+	if(item.IsOk()){
+		FilewViewTreeItemData *data = static_cast<FilewViewTreeItemData*>(GetItemData(item));
+		if( data->GetData().GetKind() == ProjectItem::TypeProject ){
+			DoRemoveProject(data->GetData().GetDisplayName());
+		}
+	}
+}
+
+void FileViewTree::OnAddExistingItem(wxCommandEvent & WXUNUSED(event))
+{
+}
+
+void FileViewTree::OnNewItem(wxCommandEvent & WXUNUSED(event))
+{
+}
+
+void FileViewTree::OnSetActive(wxCommandEvent & WXUNUSED(event))
+{
+	wxTreeItemId item = GetSelection();
+	DoSetProjectActive(item);
+}
+
+void FileViewTree::DoSetProjectActive(wxTreeItemId &item)
+{
+	if(item.IsOk()){
+		FilewViewTreeItemData *data = static_cast<FilewViewTreeItemData*>(GetItemData(item));
+		if( data->GetData().GetKind() == ProjectItem::TypeProject ){
+
+			wxString curActiveProj = ManagerST::Get()->GetActiveProjectName();
+			
+			// find previous active project and remove its bold style
+			wxTreeItemIdValue cookie;
+			wxTreeItemId child = GetFirstChild(GetRootItem(), cookie);
+			while( child.IsOk() ){
+				FilewViewTreeItemData *childData = static_cast<FilewViewTreeItemData*>(GetItemData(child));
+				if( childData->GetData().GetDisplayName() == curActiveProj ){
+					SetItemBold(child, false);
+					break;
+				}
+				child = GetNextChild(GetRootItem(), cookie);
+			}
+
+			ManagerST::Get()->SetActiveProject(data->GetData().GetDisplayName());
+			SetItemBold(item);
+		}
+	}
+
+}
+
+void FileViewTree::OnNewVirtualFolder(wxCommandEvent & WXUNUSED(event))
+{
+	wxTreeItemId item = GetSelection();
+	DoAddVirtualFolder(item);
+}
+
+void FileViewTree::DoAddVirtualFolder(wxTreeItemId &parent)
+{
+	static int count = 0;
+	wxString defaultName(wxT("NewDirectory"));
+	defaultName << count++;
+
+	wxTextEntryDialog *dlg = new wxTextEntryDialog(this, wxT("Virtual Directory Name:"), wxT("New Virtual Directory"), defaultName);
+	if(dlg->ShowModal() == wxID_OK){
+		wxString path = GetItemPath(parent);
+		if(dlg->GetValue().Trim().IsEmpty())
+			return;
+
+		path += wxT(".");
+		path += dlg->GetValue();
+		ManagerST::Get()->AddVirtualDirectory(path);
+	}
+	dlg->Destroy();
+}
+
+wxString FileViewTree::GetItemPath(wxTreeItemId &item)
+{
+	std::deque<wxString> queue;
+	wxString text = GetItemText(item);
+	queue.push_front(text);
+
+	wxTreeItemId p = GetItemParent(item);
+	while( p.IsOk() && p != GetRootItem()){
+		
+		text = GetItemText(p);
+		queue.push_front(text);
+		p = GetItemParent(p);
+	}
+
+	if( queue.empty() ){
+		return wxEmptyString;
+	}
+
+	wxString path;
+	for(size_t i=0; i<queue.size(); i++){
+		path += queue.front();
+		path += wxT(".");
+		queue.pop_front();
+	}
+	
+	path += queue.front();
+	return path;
+}
+
+void FileViewTree::OnProjectProperties(wxCommandEvent & WXUNUSED(event))
+{
+}
+
+void FileViewTree::DoRemoveProject(const wxString &name)
+{
+	wxString message (wxT("You are about to remove project '"));
+	message << name << wxT("' ");
+	message << wxT(" from the workspace, click 'Yes' to proceed or 'No' to abort.");
+	if( wxMessageBox (message, wxT("Confirm"), wxYES_NO) == wxYES ){
+		ManagerST::Get()->RemoveProject(name);
+	}
+}
+

@@ -77,7 +77,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("new_project"), Frame::OnProjectNewProject)
 	EVT_MENU(XRCID("switch_to_workspace"), Frame::OnSwitchWorkspace)
 	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
-	EVT_MENU(XRCID("remove_project"), Frame::OnProjectRemoveProject)
 
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
@@ -103,7 +102,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("removeall_bookmarks"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(XRCID("new_project"), Frame::OnWorkspaceOpen)
 	EVT_UPDATE_UI(XRCID("add_project"), Frame::OnWorkspaceOpen)
-	EVT_UPDATE_UI(XRCID("remove_project"), Frame::OnProjectRemoveProjectUI)
+	
 
 	/*
 	EVT_MENU(ID_COMPLETE_WORD, Frame::OnCompleteWord)
@@ -721,12 +720,13 @@ void Frame::OnWorkspaceOpen(wxUpdateUIEvent &event)
 	event.Enable(ManagerST::Get()->IsWorkspaceOpen());
 }
 
-void Frame::OnProjectRemoveProjectUI(wxUpdateUIEvent &event)
+/*void Frame::OnProjectRemoveProjectUI(wxUpdateUIEvent &event)
 {
 	wxArrayString list;
 	ManagerST::Get()->GetProjectList(list);
 	event.Enable(ManagerST::Get()->IsWorkspaceOpen() && list.GetCount() > 0);
 }
+*/
 
 // Project->New Workspace
 void Frame::OnProjectNewWorkspace(wxCommandEvent &event)
@@ -777,6 +777,7 @@ void Frame::OnNewDlgCreate(wxCommandEvent &event)
 	}
 }
 
+/*
 void Frame::OnProjectRemoveProject(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
@@ -788,3 +789,4 @@ void Frame::OnProjectRemoveProject(wxCommandEvent &event)
 		ManagerST::Get()->RemoveProject();
 	}
 }
+*/

@@ -164,18 +164,20 @@ public:
 	 * \return 
 	 */
 	bool RemoveFile(const wxString &fileName);
+
 	/**
 	 * Create new virtual directory
-	 * \param name VD name
+	 * \param vdFullPath VD path to add
 	 * \return 
 	 */
-	bool CreateVirtualDir(const wxString &name);
+	bool CreateVirtualDir(const wxString &vdFullPath);
+
 	/**
 	 * remove a virtual directory
-	 * \param name VD name to remove
+	 * \param vdFullPath VD path to remove
 	 * \return 
 	 */
-	bool DeleteVirtualDir(const wxString &name);
+	bool DeleteVirtualDir(const wxString &vdFullPath);
 
 	//-----------------------------------
 	// visual operations
@@ -188,10 +190,10 @@ private:
 
 	// Return the node representing a virtual dir by name
 	// if no such virtual dir exist, create it.
-	wxXmlNode *GetVirtualDir(const wxString &name);
+	wxXmlNode *GetVirtualDir(const wxString &vdFullPath);
 
 	// Create virtual dir and return its xml node
-	wxXmlNode *CreateVD(const wxString &name);
+	wxXmlNode *CreateVD(const wxString &vdFullPath);
 };
 
 typedef SmartPtr<Project> ProjectPtr;

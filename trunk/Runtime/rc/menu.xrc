@@ -153,10 +153,6 @@
                 <label>&amp;Add an &amp;Existing Project\tCtrl+Shift+A</label>
                 <help>Add an existing project to the current workspace</help>
             </object>            
-            <object class="wxMenuItem" name="remove_project">
-                <label>&amp;Remove Project \tCtrl+Shift+R</label>
-                <help>Remove project from the workspace</help>
-            </object>            
         </object>
         <!--- 
             Help menu 

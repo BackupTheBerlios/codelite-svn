@@ -242,19 +242,18 @@ void Manager::DoUpdateGUITrees()
 	wp->BuildFileTree();
 }
 
-bool Manager::RemoveProject()
+bool Manager::RemoveProject(const wxString &name)
 {
-	wxString activeProj = WorkspaceST::Get()->GetActiveProjectName();
-	if( activeProj.IsEmpty() ){
+	if( name.IsEmpty() ){
 		return false;
 	}
 
 	wxString errMsg;
-	bool res = WorkspaceST::Get()->RemoveProject(activeProj, errMsg);
+	bool res = WorkspaceST::Get()->RemoveProject(name, errMsg);
 	CHECK_MSGBOX_BOOL(res);
 
 	//  Update the database
-	TagsManagerST::Get()->DeleteProject(activeProj);
+	TagsManagerST::Get()->DeleteProject(name);
 
 	// update gui trees
 	DoUpdateGUITrees();
@@ -264,4 +263,18 @@ bool Manager::RemoveProject()
 wxString Manager::GetActiveProjectName()
 {
 	return WorkspaceST::Get()->GetActiveProjectName();
+}
+
+void Manager::SetActiveProject(const wxString &name)
+{
+	WorkspaceST::Get()->SetActiveProject(WorkspaceST::Get()->GetActiveProjectName(), false);
+	WorkspaceST::Get()->SetActiveProject(name, true);
+}
+
+
+void Manager::AddVirtualDirectory(const wxString &virtualDirFullPath)
+{
+	wxString errMsg;
+	bool res = WorkspaceST::Get()->CreateVirtualDirectory(virtualDirFullPath, errMsg);
+	CHECK_MSGBOX(res);
 }

@@ -63,11 +63,23 @@ public:
 protected:
 	virtual void OnMouseRightUp(wxTreeEvent &event);
 	virtual void OnMouseDblClick(wxMouseEvent &event);
-
+	virtual void OnRemoveProject(wxCommandEvent &event);
+	virtual void OnSetActive(wxCommandEvent &event);
+	virtual void OnNewItem(wxCommandEvent &event);
+	virtual void OnAddExistingItem(wxCommandEvent &event);
+	virtual void OnNewVirtualFolder(wxCommandEvent &event);
+	virtual void OnProjectProperties(wxCommandEvent &event);
+	
 private:
 	// Build project node
 	void BuildProjectNode(const wxString &projectName);
 	int GetIconIndex(const ProjectItem &item);
+	void ConnectEvents();
+	wxString GetItemPath(wxTreeItemId &item);
+
+	void DoRemoveProject(const wxString &name);
+	void DoSetProjectActive(wxTreeItemId &item);
+	void DoAddVirtualFolder(wxTreeItemId &parent);
 };
 
 #endif // FILE_VIEW_TREE_H

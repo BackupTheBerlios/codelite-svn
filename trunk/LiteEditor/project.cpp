@@ -1,5 +1,6 @@
 #include "project.h"
 #include "xmlutils.h"
+#include <wx/tokenzr.h>
 
 const wxString Project::STATIC_LIBRARY = wxT("Static Library");
 const wxString Project::DYMANIC_LIBRARY = wxT("Dynamic Library");
@@ -47,34 +48,50 @@ bool Project::Load(const wxString &path)
 	return true;
 }
 
-wxXmlNode *Project::GetVirtualDir(const wxString &name)
+wxXmlNode *Project::GetVirtualDir(const wxString &vdFullPath)
 {
-	wxXmlNode *child = m_doc.GetRoot()->GetChildren();
-	while (child) {
-		if (child->GetName() == wxT("VirtualDirectory")) {
-			if(child->GetPropVal(wxT("Name"), wxEmptyString) == name){
-				return child;
-			}
+	wxStringTokenizer tkz(vdFullPath, wxT("."));
+	
+	wxXmlNode *parent = m_doc.GetRoot();
+	while( tkz.HasMoreTokens() ){
+		parent = XmlUtils::FindNodeByName(parent, wxT("VirtualDirectory"), tkz.GetNextToken());
+		if( !parent ){
+			return NULL;
 		}
-		child = child->GetNext();
 	}
-
-	// No match found, create new node and return it
-	return CreateVD(name);
+	return parent;
 }
 
-wxXmlNode *Project::CreateVD(const wxString &name)
+wxXmlNode *Project::CreateVD(const wxString &vdFullPath)
 {
+	wxXmlNode *oldVd = GetVirtualDir(vdFullPath);
+	if( oldVd ){
+		// VD already exist
+		return oldVd;
+	}
+
+	wxStringTokenizer tkz(vdFullPath, wxT("."));
+
+	wxXmlNode *parent = m_doc.GetRoot();
+	size_t count = tkz.CountTokens();
+	for(size_t i=0; i<count-1; i++){
+		parent = XmlUtils::FindNodeByName(parent, wxT("VirtualDirectory"), tkz.GetNextToken());
+		if( !parent ){
+			return NULL;
+		}
+	}
+
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
-	node->AddProperty(wxT("Name"), name);
+	node->AddProperty(wxT("Name"), tkz.GetNextToken());
 	
-	m_doc.GetRoot()->AddChild(node);
+	parent->AddChild(node);
+	m_doc.Save(m_fileName.GetFullPath());
 	return node;
 }
 
-bool Project::AddFile(const wxString &fileName, const wxString &virtualDir)
+bool Project::AddFile(const wxString &fileName, const wxString &virtualDirPath)
 {
-	wxXmlNode *vd = GetVirtualDir(virtualDir);
+	wxXmlNode *vd = GetVirtualDir(virtualDirPath);
 	if( !vd ){
 		return false;
 	}
@@ -90,22 +107,17 @@ bool Project::AddFile(const wxString &fileName, const wxString &virtualDir)
 	return true;
 }
 
-bool Project::CreateVirtualDir(const wxString &name)
+bool Project::CreateVirtualDir(const wxString &vdFullPath)
 {
-	return CreateVD(name) != NULL;
+	return CreateVD(vdFullPath) != NULL;
 }
 
-bool Project::DeleteVirtualDir(const wxString &name)
+bool Project::DeleteVirtualDir(const wxString &vdFullPath)
 {
-	wxXmlNode *child = m_doc.GetRoot()->GetChildren();
-	while( child ){
-		if( child->GetName() == wxT("VirtualDirectory")){
-			if(child->GetPropVal(wxT("Name"), wxEmptyString) == name){
-				m_doc.GetRoot()->RemoveChild(child);
-				delete child;
-				return true;
-			}
-		}
+	wxXmlNode *vd = GetVirtualDir(vdFullPath);
+	if( vd ){
+		delete vd;
+		return m_doc.Save(m_fileName.GetFullPath());
 	}
 	return false;
 }

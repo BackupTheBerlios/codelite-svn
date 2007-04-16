@@ -122,6 +122,14 @@ public:
 	 */
 	void SetActiveProject(const wxString &name, bool active);
 
+	/**
+	 * Add new virtual directoy to workspace
+	 * \param vdFullPath virtual directory full path
+	 * \param errMsg [output] incase an error, report the error to the caller
+	 * \return true on success false otherwise
+	 */
+	bool CreateVirtualDirectory(const wxString &vdFullPath, wxString &errMsg);
+
 private:
 
 	/**

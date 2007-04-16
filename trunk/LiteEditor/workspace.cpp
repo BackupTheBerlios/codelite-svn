@@ -2,6 +2,7 @@
 #include "ctags_manager.h"
 #include "project.h"
 #include "xmlutils.h"
+#include <wx/tokenzr.h>
 
 Workspace::Workspace()
 {
@@ -129,6 +130,11 @@ bool Workspace::CreateProject(const wxString &name, const wxString &path, const 
 	node->AddProperty(wxT("Path"), tmp.GetFullPath());
 
 	m_doc.GetRoot()->AddChild(node);
+
+	if( m_projects.size() == 1 ){
+		SetActiveProject(name, true);
+	}
+
 	m_doc.Save(m_fileName.GetFullPath());
 	return true;
 }
@@ -277,4 +283,23 @@ void Workspace::SetActiveProject(const wxString &name, bool active)
 		child = child->GetNext();
 	}
 	m_doc.Save( m_fileName.GetFullPath() );
+}
+
+bool Workspace::CreateVirtualDirectory(const wxString &vdFullPath, wxString &errMsg)
+{
+	wxStringTokenizer tkz(vdFullPath, wxT("."));
+	wxString projName = tkz.GetNextToken();
+
+	wxString fixedPath;
+	// Construct new path excluding the first token
+	size_t count = tkz.CountTokens();
+
+	for(size_t i=0; i<count-1; i++){
+		fixedPath += tkz.GetNextToken();
+		fixedPath += wxT(".");
+	}
+	fixedPath += tkz.GetNextToken();
+
+	ProjectPtr proj = FindProjectByName(projName, errMsg);
+	return proj->CreateVirtualDir(fixedPath);
 }

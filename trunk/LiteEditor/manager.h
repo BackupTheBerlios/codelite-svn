@@ -125,15 +125,30 @@ public:
 	void AddProject(const wxString &path);
 
 	/**
-	 * Remove the active project from the workspacert the error to the caller
+	 * Remove the a project from the workspace
+	 * \param name project name to remove
 	 * \return true on success false otherwise
 	 */
-	bool RemoveProject() ;
+	bool RemoveProject(const wxString &name) ;
 
 	/**
 	 * \return active project name
 	 */
 	wxString GetActiveProjectName();
+
+	/**
+	 * Set project as active
+	 * \param name project name to set as active
+	 */
+	void SetActiveProject(const wxString &name);
+
+
+	/**
+	 * Add new virtual directory to the workspace.
+	 * \param virtualDirFullPath a dot separated string of the new virtual directory full path up to the parent project
+	 *        for example: to add a new VD name VD3 under: Project1->VD1->VD2 path should contain: Project1.VD1.VD2.VD3
+	 */
+	void AddVirtualDirectory(const wxString &virtualDirFullPath);
 
 protected:
 	Manager(void);
