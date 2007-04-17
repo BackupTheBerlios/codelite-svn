@@ -105,7 +105,6 @@ void ParseThread::ProcessRequest(wxString& file, wxString& project, wxString& db
 	}
 	catch (wxSQLite3Exception& e)
 	{
-		std::cerr << e.GetErrorCode() << ":" << e.GetMessage().mb_str() << std::endl;
 	}
 
 	// Build second tree from the updated file

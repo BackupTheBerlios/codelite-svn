@@ -214,7 +214,6 @@ void TagsDatabase::Store(const std::vector<DbRecordPtr> &records, const wxFileNa
 	{
 		if( autoCommit )
 			m_db->Rollback();
-		std::cerr << e.GetErrorCode() << ":" << e.GetMessage().mb_str() << std::endl;
 	}	
 }
 
@@ -279,7 +278,6 @@ void TagsDatabase::Store(TagTreePtr tree, const wxFileName& path, bool autoCommi
 	{
 		if( autoCommit )
 			m_db->Rollback();
-		std::cerr << e.GetErrorCode() << ":" << e.GetMessage().mb_str() << std::endl;
 	}
 }
 
@@ -334,7 +332,6 @@ void TagsDatabase::Delete(const wxFileName& path, const wxString& project, const
 	{
 		if( autoCommit )
 			m_db->Rollback();
-		std::cerr << e.GetErrorCode() << ":" << e.GetMessage().mb_str() << std::endl;
 	}
 }
 
@@ -349,7 +346,6 @@ wxSQLite3ResultSet TagsDatabase::Query(const wxString& sql, const wxFileName& pa
 	}
 	catch (wxSQLite3Exception& e)
 	{
-		std::cerr << e.GetErrorCode() << ":" << e.GetMessage().mb_str() << std::endl;
 	}
 	return wxSQLite3ResultSet();
 }
@@ -362,7 +358,6 @@ void TagsDatabase::ExecuteUpdate(const wxString& sql)
 	}
 	catch (wxSQLite3Exception& e)
 	{
-		std::cerr << e.GetErrorCode() << ":" << e.GetMessage().mb_str() << std::endl;
 	}
 }
 

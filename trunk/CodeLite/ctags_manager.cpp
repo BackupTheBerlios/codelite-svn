@@ -425,7 +425,6 @@ TagTreePtr TagsManager::Load(const wxFileName& path, const wxString& project)
 	}
 	catch (wxSQLite3Exception& e)
 	{
-		std::cerr << e.GetErrorCode() << wxT(":") << e.GetMessage().mb_str() << std::endl;
 	}
 	return tree;
 }
@@ -580,7 +579,6 @@ bool TagsManager::FunctionByLine(const int lineNo, const wxString& fileName, con
 	}
 	catch (wxSQLite3Exception& e)
 	{
-		std::cerr << e.GetErrorCode() << ":" << e.GetMessage().mb_str() << std::endl;
 		return false;
 	}
 	return true;

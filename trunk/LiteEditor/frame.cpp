@@ -554,10 +554,10 @@ void Frame::OnFileNew(wxCommandEvent &event)
 	wxFileName fileName(fileNameStr);
 
 	// Create new editor and add it to the notebook
-	//m_notebook->Freeze();
-	LEditor *editor = new LEditor(this, wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), wxEmptyString);
+	m_notebook->Freeze();
+	LEditor *editor = new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), wxEmptyString);
 	m_notebook->AddPage(editor, fileName.GetFullName(), true);
-	//m_notebook->Thaw();
+	m_notebook->Thaw();
 
 	editor->SetFocus ();
 	editor->SetSCIFocus(true);
