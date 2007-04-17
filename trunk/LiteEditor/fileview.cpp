@@ -365,7 +365,8 @@ wxString FileViewTree::GetItemPath(wxTreeItemId &item)
 	}
 
 	wxString path;
-	for(size_t i=0; i<queue.size(); i++){
+	size_t count = queue.size();
+	for(size_t i=0; i<count; i++){
 		path += queue.front();
 		path += wxT(".");
 		queue.pop_front();
