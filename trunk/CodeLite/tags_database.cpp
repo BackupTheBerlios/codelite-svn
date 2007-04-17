@@ -212,6 +212,7 @@ void TagsDatabase::Store(const std::vector<DbRecordPtr> &records, const wxFileNa
 	}
 	catch (wxSQLite3Exception& e)
 	{
+		wxUnusedVar(e);
 		if( autoCommit )
 			m_db->Rollback();
 	}	
@@ -276,6 +277,7 @@ void TagsDatabase::Store(TagTreePtr tree, const wxFileName& path, bool autoCommi
 	}
 	catch (wxSQLite3Exception& e)
 	{
+		wxUnusedVar(e);
 		if( autoCommit )
 			m_db->Rollback();
 	}
@@ -330,6 +332,7 @@ void TagsDatabase::Delete(const wxFileName& path, const wxString& project, const
 	}
 	catch (wxSQLite3Exception& e)
 	{
+		wxUnusedVar(e);
 		if( autoCommit )
 			m_db->Rollback();
 	}
@@ -346,6 +349,7 @@ wxSQLite3ResultSet TagsDatabase::Query(const wxString& sql, const wxFileName& pa
 	}
 	catch (wxSQLite3Exception& e)
 	{
+		wxUnusedVar(e);
 	}
 	return wxSQLite3ResultSet();
 }
@@ -358,6 +362,7 @@ void TagsDatabase::ExecuteUpdate(const wxString& sql)
 	}
 	catch (wxSQLite3Exception& e)
 	{
+		wxUnusedVar(e);
 	}
 }
 

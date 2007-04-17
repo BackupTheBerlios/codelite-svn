@@ -425,6 +425,7 @@ TagTreePtr TagsManager::Load(const wxFileName& path, const wxString& project)
 	}
 	catch (wxSQLite3Exception& e)
 	{
+		wxUnusedVar(e);
 	}
 	return tree;
 }
@@ -579,6 +580,7 @@ bool TagsManager::FunctionByLine(const int lineNo, const wxString& fileName, con
 	}
 	catch (wxSQLite3Exception& e)
 	{
+		wxUnusedVar(e);
 		return false;
 	}
 	return true;

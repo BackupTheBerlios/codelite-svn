@@ -122,7 +122,7 @@ void LEditor::SetProperties()
 	SetMarginRight(0);
 
 #ifdef __WXMSW__
-	SetCaretLineBackgroundAlpha(70);
+	SetCaretLineBackgroundAlpha(30);
 	SetSelAlpha(70);
 #endif
 	// Mark current line

@@ -68,12 +68,19 @@ void NewDlg::CreateGUIControls()
 	wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(mainSizer);
 	m_book = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxSize(500, -1), 
-								wxFNB_NO_NAV_BUTTONS | wxFNB_NO_X_BUTTON | wxFNB_NODRAG);
+								wxFNB_NO_NAV_BUTTONS | wxFNB_NO_X_BUTTON | wxFNB_NODRAG | wxFNB_FF2 |
+								wxFNB_BACKGROUND_GRADIENT);
 
 	m_book->AddPage(CreateProjectPage(), wxT("Project"), m_selection == NEW_DLG_PROJECT);
 	m_book->AddPage(CreateWorkspacePage(), wxT("Workspace"), m_selection == NEW_DLG_WORKSPACE);
 	mainSizer->Add(m_book, 1, wxEXPAND | wxALL, 5);
 	
+	if( m_selection == NEW_DLG_PROJECT ){
+		m_projName->SetFocus();
+	} else {
+		m_name->SetFocus();
+	}
+
 	// Add the buttons
 	m_create = new wxButton(this, wxID_OK, wxT("&Create"));
 	btnSizer->Add(m_create, 0, wxALL | wxEXPAND | wxALIGN_RIGHT, 5 ); 

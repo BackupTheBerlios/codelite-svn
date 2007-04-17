@@ -105,6 +105,7 @@ void ParseThread::ProcessRequest(wxString& file, wxString& project, wxString& db
 	}
 	catch (wxSQLite3Exception& e)
 	{
+		wxUnusedVar(e);
 	}
 
 	// Build second tree from the updated file

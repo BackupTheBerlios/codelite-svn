@@ -5,10 +5,11 @@
 #include "wx/imaglist.h"
 #include <wx/textdlg.h>
 #include <deque>
+#include "new_item_dlg.h"
 
 FileViewTree::FileViewTree()
 {
-}
+}   
 
 void FileViewTree::ConnectEvents()
 {
@@ -282,6 +283,14 @@ void FileViewTree::OnAddExistingItem(wxCommandEvent & WXUNUSED(event))
 
 void FileViewTree::OnNewItem(wxCommandEvent & WXUNUSED(event))
 {
+	NewItemDlg *dlg = new NewItemDlg(this, wxID_ANY, wxT("New Item"));
+	if( dlg->ShowModal() == wxID_OK ){
+		wxString filename = dlg->GetFileName().GetFullPath();
+
+		// TODO :: create the file
+	}
+
+	dlg->Destroy();
 }
 
 void FileViewTree::OnSetActive(wxCommandEvent & WXUNUSED(event))
