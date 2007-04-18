@@ -19,9 +19,8 @@ DEFINE_EVENT_TYPE(wxEVT_COMMAND_SYMBOL_TREE_ADD_ITEM)
 DEFINE_EVENT_TYPE(wxEVT_COMMAND_SYMBOL_TREE_DELETE_PROJECT)
 
 ParseThread::ParseThread()
-: wxThread(wxTHREAD_JOINABLE)
+: WorkerThread()
 , m_pDb( new TagsDatabase() )
-, m_notifiedWindow( NULL )
 {
 }
 
@@ -29,60 +28,14 @@ ParseThread::~ParseThread()
 {
 }
 
-void* ParseThread::Entry()
+void ParseThread::ProcessRequest(ThreadRequest * request)
 {
-	while( true )
-	{
-		// Did we get a request to terminate?
-		if(TestDestroy())
-			break;
-
-		wxString sourceFile;
-		wxString project;
-		wxString dbfile;
-		
-		if( GetRequest( sourceFile, project, dbfile ) )
-		{
-			ProcessRequest( sourceFile, project, dbfile );
-			wxThread::Sleep(10);  // Allow other threads to work as well
-			continue; // to avoid the sleep
-		}
-
-		// Sleep for 1 seconds, and then try again
-		wxThread::Sleep(1000);
-	}
-	return NULL;
-}
-
-void ParseThread::Add(const wxString& file, const wxString& project, const wxString& dbfile)
-{
-	std::pair<wxString, wxString> p;
-	p.first = project;
-	p.second = file;
-
-	{
-		wxCriticalSectionLocker locker(m_cs);
-		m_requests[p] = dbfile;
-	}
-}
-
-bool ParseThread::GetRequest(wxString& file, wxString& project, wxString& dbfile)
-{
-	wxCriticalSectionLocker locker(m_cs);
-	std::map<std::pair<wxString, wxString>, wxString>::iterator iter = m_requests.begin();
-	if( iter != m_requests.end() )
-	{
-		project = iter->first.first;
-		file    = iter->first.second;
-		dbfile  = iter->second;
-		m_requests.erase( iter );
-		return true;
-	}
-	return false;
-}
-
-void ParseThread::ProcessRequest(wxString& file, wxString& project, wxString& dbfile)
-{
+	ParseRequest *req = (ParseRequest*)request;
+	
+	wxString project = req->project;
+	wxString dbfile  = req->dbfile;
+	wxString file  = req->file;
+	
 	//----------------------------------------------
 	// Build a tree from project/file/project 
 	// from the value which are set in the database
@@ -189,24 +142,6 @@ void ParseThread::ProcessRequest(wxString& file, wxString& project, wxString& db
 		SendEvent(wxEVT_COMMAND_SYMBOL_TREE_UPDATE_ITEM, modifiedItems);
 }
 
-void ParseThread::Stop()
-{
-	// Notify the thread to stop
-	// and wait for its termination
-	if( IsAlive() )
-		Delete();
-	
-	while( IsAlive() )
-	{
-		wxThread::Sleep( 1 );
-	}
-}
-
-void ParseThread::Start()
-{
-	Create();
-	Run();	 
-}
 
 void ParseThread::SendEvent(int evtType, std::vector<std::pair<wxString, TagEntry> >  &items)
 {

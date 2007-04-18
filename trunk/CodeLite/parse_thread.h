@@ -1,4 +1,3 @@
-
 #ifndef CODELITE_PARSE_THREAD_H
 #define CODELITE_PARSE_THREAD_H
 
@@ -8,6 +7,8 @@
 #include <vector>
 #include <memory>
 #include <wx/stopwatch.h>
+#include "worker_thread.h"
+
 #ifndef WXDLLIMPEXP_SYM_TREE
     #ifdef WXMAKINGDLL_SYM
     #    define WXDLLIMPEXP_SYM_TREE WXEXPORT
@@ -20,13 +21,19 @@
 
 class TagsDatabase;
 
-class ParseThread : public wxThread
+class ParseRequest : public ThreadRequest 
+{
+public:
+	wxString file;
+	wxString project;
+	wxString dbfile;
+};
+
+class ParseThread : public WorkerThread
 {
 	friend class Singleton<ParseThread>;
 	std::auto_ptr<TagsDatabase> m_pDb;
-	std::map<std::pair<wxString, wxString>, wxString> m_requests;
-	wxCriticalSection m_cs;
-	wxEvtHandler *m_notifiedWindow;
+	
 	wxStopWatch m_watch;
 
 private:
@@ -40,62 +47,13 @@ private:
 	 */
 	virtual ~ParseThread();
 
-public:
-	/**
-	 * Thread execution point.
-	 */
-	void* Entry();
-
-	/**
-	 * Called when the thread exits
-	 * whether it terminates normally or is stopped with Delete() (but not when it is Kill()'ed!)
-	 */
-	virtual void OnExit(){};
-
-	/**
-	 * Add a request to the parser thread to parse files.
-	 * \param file File name
-	 * \param project Project which this file belongs too
-	 * \param dbfile Database file name
-	 */
-	void Add(const wxString& file, const wxString& project, const wxString& dbfile);
-
-	/**
-	 * Set the window to be notified when a change was done
-	 * between current source file tree and the actual tree.
-	 * \param evtHandler
-	 */
-	void SetNotifyWindow( wxEvtHandler* evtHandler ) { m_notifiedWindow  = evtHandler; }
-
-	/**
-	 * Stops the thread
-	 * This function returns only when the thread is terminated.
-	 * \note This call must be called from the context of other thread (e.g. main thread)
-	 */
-	void Stop();
-
-	/**
-	 * Start the thread as joinable thread.
-	 * \note This call must be called from the context of other thread (e.g. main thread)
-	 */
-	void Start();
 private:
-	/**
-	 * Get next request from queue.
-	 * \param file [output] source file that was updated
-	 * \param project [output] project name where file belongs to
-	 * \param dbfile [output] dataabase file name
-	 * \return true if there is a request to process
-	 */
-	bool GetRequest(wxString& file, wxString& project, wxString& dbfile);
 
 	/**
 	 * Process request from the editor.
-	 * \param file Source file that was updated
-	 * \param project Project name where file belongs to
-	 * \param dbfile Database file name
+	 * \param request the request to process
 	 */
-	void ProcessRequest(wxString& file, wxString& project, wxString& dbfile);
+	void ProcessRequest(ThreadRequest *request);
 
 	/**
 	 * Send an event to the window with an array of items that where changed.
