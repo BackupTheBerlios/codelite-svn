@@ -5,11 +5,11 @@
 #include <list>
 #include <wx/string.h>
 #include <map>
-#include <wx/thread.h>
 #include "singleton.h"
 #include "wx/event.h"
 #include "wx/filename.h"
 #include <wx/regex.h>
+#include "worker_thread.h"
 
 // Possible search data options:
 enum {
@@ -24,7 +24,7 @@ class wxEvtHandler;
 // The searched data class to be passed to the search thread
 //----------------------------------------------------------
 
-class SearchData
+class SearchData : public ThreadRequest
 {
 	wxString m_rootDir;
 	wxString m_findString;
@@ -44,13 +44,15 @@ private:
 public:
 	// Ctor-Dtor
 	SearchData() 
-		: m_rootDir(wxEmptyString)
+		: ThreadRequest()
+		, m_rootDir(wxEmptyString)
 		, m_findString(wxEmptyString) 
 		, m_flags(0)
 	{}
 
 	SearchData(const wxString &rootDir, const wxString &findString, const int flags, const wxString &exts)
-		: m_rootDir(rootDir)
+		: ThreadRequest()
+		, m_rootDir(rootDir)
 		, m_findString(findString)
 		, m_flags(flags)
 		, m_validExt(exts)
@@ -190,12 +192,9 @@ public:
 // The search thread 
 //----------------------------------------------------------
 
-class SearchThread : public wxThread
+class SearchThread : public WorkerThread
 {
 	friend class Singleton<SearchThread>;
-	wxCriticalSection m_cs;
-	wxEvtHandler *m_notifiedWindow;
-	std::deque<SearchData*> m_queue;
 	wxString m_wordChars;
 	std::map<wxChar, bool> m_wordCharsMap; //< Internal
 	SearchResultList m_results;
@@ -218,15 +217,9 @@ private:
 
 public:
 	/**
-	 * Thread execution point.
+	 * Process request from caller
 	 */
-	void* Entry();
-
-	/**
-	 * Called when the thread exits
-	 * whether it terminates normally or is stopped with Delete() (but not when it is Kill()'ed!)
-	 */
-	virtual void OnExit(){};
+	void ProcessRequest(ThreadRequest *req);
 
 	/**
 	 * Add a request to the search thread to start
@@ -235,29 +228,10 @@ public:
 	void PerformSearch(const SearchData &data);
 
 	/**
-	 * Set the window to be notified about the progress
-	 * \param evtHandler
-	 */
-	void SetNotifyWindow( wxEvtHandler* evtHandler ) { m_notifiedWindow  = evtHandler; }
-
-	/**
-	 * Stops the thread
-	 * This function returns only when the thread is terminated.
-	 * \note This call must be called from the context of other thread (e.g. main thread)
-	 */
-	void Stop();
-
-	/**
 	 * Stops the current search operation
 	 * \note This call must be called from the context of other thread (e.g. main thread)
 	 */
 	void StopSearch(bool stop = true);
-
-	/**
-	 * Start the thread as joinable thread.
-	 * \note This call must be called from the context of other thread (e.g. main thread)
-	 */
-	void Start();
 
 	/**
 	 *  The search thread has several functions that operate on words, 
@@ -274,13 +248,6 @@ private:
 	 */
 	void IndexWordChars();
 
-	/**
-	 * Try to get a request from the ipc queue
-	 * \param data output, return the searchdata from the queue
-	 * \return true if test succeeded, false otherwise
-	 */
-	bool TestRequest(SearchData **data);
-
 	// Test to see if user asked to cancel the search
 	bool TestStopSearch();
 
@@ -288,7 +255,7 @@ private:
 	 * Do the actual search operation
 	 * \param data inpunt contains information about the search
 	 */
-	void DoSearchFiles(const SearchData *data);
+	void DoSearchFiles(ThreadRequest *data);
 
 	// Perform search on a single file
 	void DoSearchFile(const wxString &fileName, const SearchData *data);

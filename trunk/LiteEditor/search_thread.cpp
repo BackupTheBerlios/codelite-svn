@@ -36,8 +36,7 @@ const wxString& SearchData::GetExtensions() const
 //----------------------------------------------------------------
 
 SearchThread::SearchThread()
-: wxThread(wxTHREAD_JOINABLE)
-, m_notifiedWindow( NULL )
+: WorkerThread()
 , m_wordChars(wxT("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"))
 , m_reExpr(wxT(""))
 {
@@ -46,13 +45,6 @@ SearchThread::SearchThread()
 
 SearchThread::~SearchThread()
 {
-	if( !m_queue.empty() ){
-		std::deque<SearchData*>::iterator iter = m_queue.begin();
-		for(; iter != m_queue.end(); iter++){
-			delete (*iter);
-		}
-		m_queue.clear();
-	}
 }
 
 void SearchThread::IndexWordChars()
@@ -84,43 +76,23 @@ wxRegEx& SearchThread::GetRegex(const wxString &expr, bool matchCase)
 	return m_regex;
 }
 
-void* SearchThread::Entry()
-{
-	SearchData *data;
-	while( true )
-	{
-		// Did we get a request to terminate?
-		if(TestDestroy())
-			break;
-
-		// Clean the previous search data
-		data = NULL;
-		if( TestRequest( &data ) ){
-
-			m_summary = SearchSummary();
-			DoSearchFiles(data);
-			delete data;
-
-			// Send search end event 
-			SendEvent(wxEVT_SEARCH_THREAD_SEARCHEND);
-		}
-		
-		// Sleep for 100 seconds, and then try again
-		wxThread::Sleep(5);
-	}
-	return NULL;
-}
-
 void SearchThread::PerformSearch(const SearchData &data)
 {
-	wxCriticalSectionLocker locker(m_cs);
-	m_queue.push_back( new SearchData(data) );
+	Add( new SearchData(data) );
 }
 
-void SearchThread::DoSearchFiles(const SearchData *data)
+void SearchThread::ProcessRequest(ThreadRequest *req)
 {
-	wxUnusedVar(data);
+	m_summary = SearchSummary();
+	DoSearchFiles(req);
+	
+	// Send search end event 
+	SendEvent(wxEVT_SEARCH_THREAD_SEARCHEND);
+}
 
+void SearchThread::DoSearchFiles(ThreadRequest *req)
+{
+	SearchData *data = static_cast<SearchData*>(req);
 	// Get all files
 	if( data->GetRootDir().IsEmpty())
 		return;
@@ -323,37 +295,6 @@ bool SearchThread::AdjustLine(wxString &line, int &pos, wxString &findString)
 	}
 }
 
-void SearchThread::Stop()
-{
-	// Notify the thread to stop
-	// and wait for its termination
-	if( IsAlive() )
-		Delete();
-	
-	while( IsAlive() )
-	{
-		wxThread::Sleep( 10 );
-	}
-}
-
-void SearchThread::Start()
-{
-	Create();
-	Run();	 
-}
-
-// Pop a request from the queue
-bool SearchThread::TestRequest(SearchData **data)
-{
-	wxCriticalSectionLocker locker( m_cs );
-	if( m_queue.empty() )
-		return false;
-
-	*data = m_queue.front();
-	
-	m_queue.pop_front();
-	return true;
-}
 
 void SearchThread::SendEvent(wxEventType type)
 {

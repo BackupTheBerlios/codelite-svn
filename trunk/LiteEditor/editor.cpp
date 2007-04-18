@@ -343,7 +343,13 @@ bool LEditor::SaveFile()
 
 	// Put a request on the parsing thread to update the GUI tree for this file
 	wxFileName fn = TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName();
-	ParseThreadST::Get()->Add(m_fileName.GetFullPath(), m_project, fn.GetFullPath());
+
+	ParseRequest *req = new ParseRequest();
+	req->dbfile = fn.GetFullPath();
+	req->file = m_fileName.GetFullPath();
+	req->project = m_project;
+
+	ParseThreadST::Get()->Add(req);
 	return true;
 }
 
