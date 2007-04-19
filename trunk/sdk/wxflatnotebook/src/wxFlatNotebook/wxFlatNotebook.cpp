@@ -12,6 +12,7 @@
 #include <wx/wxFlatNotebook/wxFlatNotebook.h>
 #include <wx/wxFlatNotebook/renderer.h>
 #include <wx/wxFlatNotebook/popup_dlg.h>
+#include <wx/wxFlatNotebook/fnb_customize_dlg.h>
 #include <algorithm>
 #include <wx/tooltip.h>
 #include <wx/tipwin.h>
@@ -685,6 +686,7 @@ EVT_SIZE(wxPageContainer::OnSize)
 EVT_LEFT_DOWN(wxPageContainer::OnLeftDown)
 EVT_LEFT_UP(wxPageContainer::OnLeftUp)
 EVT_RIGHT_DOWN(wxPageContainer::OnRightDown)
+EVT_RIGHT_UP(wxPageContainer::OnRightUp)
 EVT_MIDDLE_DOWN(wxPageContainer::OnMiddleDown)
 EVT_MOTION(wxPageContainer::OnMouseMove)
 EVT_ERASE_BACKGROUND(wxPageContainer::OnEraseBackground)
@@ -707,6 +709,7 @@ wxPageContainer::wxPageContainer(wxWindow* parent, wxWindowID id, const wxPoint&
 	m_nRightButtonStatus = wxFNB_BTN_NONE;
 	m_nLeftButtonStatus = wxFNB_BTN_NONE;
 	m_nTabXButtonStatus = wxFNB_BTN_NONE;
+	m_customMenu = NULL;
 
 	m_colorTo = wxColour(wxSystemSettings::GetColour(wxSYS_COLOUR_ACTIVECAPTION));
 	m_colorFrom   = wxColor(*wxWHITE);
@@ -744,6 +747,12 @@ wxPageContainer::~wxPageContainer(void)
 	{
 		delete m_pRightClickMenu;
 		m_pRightClickMenu = NULL;
+	}
+
+	if( m_customMenu )
+	{
+		delete m_customMenu;
+		m_customMenu = NULL;
 	}
 }
 
@@ -824,8 +833,62 @@ void wxPageContainer::OnMiddleDown(wxMouseEvent& event)
 		}
 	default:
 		break;
-	}
+	}   
+
 	event.Skip();
+}
+
+void wxPageContainer::OnShowCustomizeDialog(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	wxFNBCustomizeDialog *dlg = new wxFNBCustomizeDialog(this);
+	dlg->ShowModal();
+	dlg->Destroy();
+}
+
+void wxPageContainer::OnRightUp(wxMouseEvent &event)
+{
+	wxPageInfo pgInfo;
+	int tabIdx;
+	int where = HitTest(event.GetPosition(), pgInfo, tabIdx);
+	switch(where)
+	{
+	case wxFNB_NOWHERE:
+		{
+			// Incase user right clicked on 'anywhere' and style wxFNB_CUSTOM_DLG is set,
+			// popup the customize dialog
+			long style = GetParent()->GetWindowStyleFlag();
+			if( style & wxFNB_CUSTOM_DLG ){
+				if( !m_customMenu ){
+					m_customMenu = new wxMenu();
+					wxMenuItem *item = new wxMenuItem(m_customMenu, wxID_ANY, wxT("Properties..."));
+					m_customMenu->Append(item);
+					Connect( item->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxPageContainer::OnShowCustomizeDialog ));
+				}
+				PopupMenu(m_customMenu);
+			}
+		}
+		break;
+	case wxFNB_TAB:
+	case wxFNB_TAB_X:
+		// If the owner has defined a context menu for the tabs,
+		// popup the right click menu
+		if (m_pRightClickMenu)
+			PopupMenu(m_pRightClickMenu);
+		else
+		{
+			// send a message to popup a custom menu
+			wxFlatNotebookEvent event(wxEVT_COMMAND_FLATNOTEBOOK_CONTEXT_MENU, GetParent()->GetId());
+			event.SetSelection((int)tabIdx);
+			event.SetOldSelection((int)m_iActivePage);
+			event.SetEventObject(GetParent());
+			GetParent()->GetEventHandler()->ProcessEvent(event);
+		}
+		break;
+			
+	default:
+		break;
+	}
 }
 
 void wxPageContainer::OnRightDown(wxMouseEvent& event)
@@ -843,22 +906,9 @@ void wxPageContainer::OnRightDown(wxMouseEvent& event)
 
 			// Set the current tab to be active
 			SetSelection((size_t)tabIdx);
-
-			// If the owner has defined a context menu for the tabs,
-			// popup the right click menu
-			if (m_pRightClickMenu)
-				PopupMenu(m_pRightClickMenu);
-			else
-			{
-				// send a message to popup a custom menu
-				wxFlatNotebookEvent event(wxEVT_COMMAND_FLATNOTEBOOK_CONTEXT_MENU, GetParent()->GetId());
-				event.SetSelection((int)tabIdx);
-				event.SetOldSelection((int)m_iActivePage);
-				event.SetEventObject(GetParent());
-				GetParent()->GetEventHandler()->ProcessEvent(event);
-			}
 		}
 		break;
+	
 	default:
 		break;
 	}

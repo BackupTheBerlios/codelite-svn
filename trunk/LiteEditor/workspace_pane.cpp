@@ -37,7 +37,7 @@ void WorkspacePane::CreateGUIControls()
 	wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(mainSizer);
 
-	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_FF2 | wxFNB_BACKGROUND_GRADIENT; 
+	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_FF2 | wxFNB_BACKGROUND_GRADIENT | wxFNB_CUSTOM_DLG; 
 	m_book = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
 	mainSizer->Add(m_book, 1, wxEXPAND | wxALL, 1);
 	

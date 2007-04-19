@@ -191,7 +191,7 @@ void Frame::CreateGUIControls(void)
 		wxFNB_NO_NAV_BUTTONS |
 		wxFNB_DROPDOWN_TABS_LIST |
 		wxFNB_SMART_TABS |
-		wxFNB_X_ON_TAB ;
+		wxFNB_X_ON_TAB;
 
 	m_notebook = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
 	m_mgr.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("Editor")).
@@ -250,9 +250,10 @@ void Frame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void Frame::DispatchCommandEvent(wxCommandEvent &event)
 {
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
-	if( !editor )
+	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
+	if( !editor ){
 		return;	
+	}
 
 	editor->OnMenuCommand(event);
 }
@@ -583,7 +584,7 @@ void Frame::OnFileOpen(wxCommandEvent & WXUNUSED(event))
 void Frame::OnFileClose(wxCommandEvent &event)
 {
 	wxUnusedVar( event );
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetCurrentPage());
+	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetCurrentPage());
 	if( !editor )
 		return;
 	
@@ -594,7 +595,7 @@ void Frame::OnFileClose(wxCommandEvent &event)
 void Frame::OnFileClosing(wxFlatNotebookEvent &event)
 {
 	// get the page that is now closing
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(event.GetSelection()));
+	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetPage(event.GetSelection()));
 	if( !editor )
 		return;	
 
@@ -607,7 +608,10 @@ void Frame::OnFileClosing(wxFlatNotebookEvent &event)
 void Frame::OnPageChanged(wxFlatNotebookEvent &event)
 {
 	// pass the event to the editor
-	LEditor *editor = static_cast<LEditor*>(m_notebook->GetPage(event.GetSelection()));
+	LEditor *editor = dynamic_cast<LEditor*>( m_notebook->GetPage(event.GetSelection()) );
+	if( !editor ){
+		return;
+	}
 	editor->SetActive();
 	event.Skip();
 }
@@ -620,7 +624,10 @@ void Frame::OnFileSaveAll(wxCommandEvent &event)
 
 void Frame::OnCompleteWordUpdateUI(wxUpdateUIEvent &event)
 {
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
+	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
+	if ( !editor ){
+		return;
+	}
 
 	// This menu item is enabled only if the current editor
 	// belongs to a project 
@@ -767,13 +774,15 @@ void Frame::OnNewDlgCreate(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 
-	NewDlg *dlg = static_cast<NewDlg*>(event.GetEventObject());
-	if( dlg->GetSelection() == NEW_DLG_WORKSPACE ){
-		WorkspaceData data = dlg->GetWorksapceData();
-		ManagerST::Get()->CreateWorkspace(data.m_name, data.m_path);
-	} else if( dlg->GetSelection() == NEW_DLG_PROJECT ) {
-		ProjectData data = dlg->GetProjectData();
-		ManagerST::Get()->CreateProject(data.m_name, data.m_path, data.m_type);
+	NewDlg *dlg = dynamic_cast<NewDlg*>(event.GetEventObject());
+	if( dlg ){
+		if( dlg->GetSelection() == NEW_DLG_WORKSPACE ){
+			WorkspaceData data = dlg->GetWorksapceData();
+			ManagerST::Get()->CreateWorkspace(data.m_name, data.m_path);
+		} else if( dlg->GetSelection() == NEW_DLG_PROJECT ) {
+			ProjectData data = dlg->GetProjectData();
+			ManagerST::Get()->CreateProject(data.m_name, data.m_path, data.m_type);
+		}
 	}
 }
 

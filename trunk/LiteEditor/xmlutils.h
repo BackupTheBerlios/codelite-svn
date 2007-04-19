@@ -26,6 +26,13 @@ public:
 	 * \param value new value to set
 	 */
 	static void UpdateProperty(wxXmlNode *node, const wxString &name, const wxString &value);
+
+	/**
+	 * Find the first child node of parent with a given name. NULL if no childs exist
+	 * \param the parent node whom to be searched
+	 * \param the element's tag name 
+	 */
+	static wxXmlNode *FindFirstByTagName(const wxXmlNode *parent, const wxString &tagName);
 };
 
 #endif // XMLUTILS_H

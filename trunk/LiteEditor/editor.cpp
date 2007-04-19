@@ -203,8 +203,8 @@ void LEditor::SetProperties()
 	// Read the configuration file
 	if(EditorConfigST::Get()->IsOk())
 	{
-		EditorConfigST::Get()->LoadWords(wxT("LEX_CPP"), keyWords);
-		EditorConfigST::Get()->LoadStyle(wxT("LEX_CPP"), styles);
+		EditorConfigST::Get()->LoadWords(wxT("Cpp"), keyWords);
+		EditorConfigST::Get()->LoadStyle(wxT("Cpp"), styles);
 	}
 
 	// Update the control

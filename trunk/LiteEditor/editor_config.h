@@ -60,6 +60,17 @@ public:
 };
 
 
+/**
+ * \ingroup LiteEditor
+ * \brief EditorConfig a singleton class that manages the liteeditor.xml configuration file
+ *
+ * \version 1.0
+ * first version
+ *
+ * \date 04-19-2007
+ *
+ * \author Eran
+ */
 class EditorConfig
 {
 	friend class Singleton<EditorConfig>;
@@ -70,6 +81,20 @@ public:
 	void LoadStyle(const wxString& lexer, std::vector<AttributeStyle>& styles);
 	void LoadWords(const wxString& lexer, wxString& words);
 	bool IsOk() const { return m_doc->IsOk(); }
+
+	/**
+	 * Load notebook style from configuration
+	 * \param nbName notebook name
+	 * \return wxNOT_FOUND when notebook not found or style
+	 */
+	long LoadNotebookStyle(wxString &nbName);
+
+	/**
+	 * Save notebook style to configuration
+	 * \param nbName notebook name
+	 * \param style style value to save
+	 */
+	void SaveNotebookStyle(wxString &nbName, long style);
 
 private:
 	EditorConfig();

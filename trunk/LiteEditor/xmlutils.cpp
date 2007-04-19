@@ -14,6 +14,18 @@ wxXmlNode *XmlUtils::FindNodeByName(const wxXmlNode *parent, const wxString &tag
 	return NULL;
 }
 
+wxXmlNode *XmlUtils::FindFirstByTagName(const wxXmlNode *parent, const wxString &tagName)
+{
+	wxXmlNode *child = parent->GetChildren();
+	while( child ){
+		if( child->GetName() == tagName){
+			return child;
+		}
+		child = child->GetNext();
+	}
+	return NULL;
+}
+
 wxXmlNode *XmlUtils::FindLastByTagName(const wxXmlNode *parent, const wxString &tagName)
 {
 	wxXmlNode *last_node = NULL;
