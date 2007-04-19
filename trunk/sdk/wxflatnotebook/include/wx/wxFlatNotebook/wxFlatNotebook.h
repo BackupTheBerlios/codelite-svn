@@ -82,6 +82,7 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWindow*, wxWindowPtrArray, WXDLLIMPEXP_FNB);
 #define wxFNB_DROPDOWN_TABS_LIST		0x00004000
 #define wxFNB_ALLOW_FOREIGN_DND			0x00008000
 #define wxFNB_FF2						0x00010000		// Firefox 2 tabs style
+#define wxFNB_CUSTOM_DLG				0x00020000		// Popup customize dialog using right click
 
 /// General macros
 #define VERTICAL_BORDER_PADDING			4
@@ -733,6 +734,8 @@ public:
 	virtual void OnMouseEnterWindow(wxMouseEvent& event);
 	virtual void OnLeftDClick(wxMouseEvent &event);
 	virtual void OnTabMenuSelection(wxCommandEvent &event);
+	virtual void OnRightUp(wxMouseEvent &event);
+	virtual void OnShowCustomizeDialog(wxCommandEvent &event);
 
 protected:
 	
@@ -843,6 +846,8 @@ private:
 	int m_iPreviousActivePage;
 	int m_nArrowDownButtonStatus;
 
+	/// Customize menu
+	wxMenu *m_customMenu;
 };
 
 /**
