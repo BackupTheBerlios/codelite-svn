@@ -686,7 +686,6 @@ EVT_SIZE(wxPageContainer::OnSize)
 EVT_LEFT_DOWN(wxPageContainer::OnLeftDown)
 EVT_LEFT_UP(wxPageContainer::OnLeftUp)
 EVT_RIGHT_DOWN(wxPageContainer::OnRightDown)
-EVT_RIGHT_UP(wxPageContainer::OnRightUp)
 EVT_MIDDLE_DOWN(wxPageContainer::OnMiddleDown)
 EVT_MOTION(wxPageContainer::OnMouseMove)
 EVT_ERASE_BACKGROUND(wxPageContainer::OnEraseBackground)
@@ -846,58 +845,31 @@ void wxPageContainer::OnShowCustomizeDialog(wxCommandEvent &event)
 	dlg->Destroy();
 }
 
-void wxPageContainer::OnRightUp(wxMouseEvent &event)
+void wxPageContainer::OnRightDown(wxMouseEvent& event)
 {
+	FNB_LOG_MSG(wxT("OnRightDown") << event.GetPosition().x << wxT(",") << event.GetPosition().y );
 	wxPageInfo pgInfo;
 	int tabIdx;
 	int where = HitTest(event.GetPosition(), pgInfo, tabIdx);
 	switch(where)
 	{
 	case wxFNB_NOWHERE:
-		{
-			// Incase user right clicked on 'anywhere' and style wxFNB_CUSTOM_DLG is set,
-			// popup the customize dialog
-			long style = GetParent()->GetWindowStyleFlag();
-			if( style & wxFNB_CUSTOM_DLG ){
-				if( !m_customMenu ){
-					m_customMenu = new wxMenu();
-					wxMenuItem *item = new wxMenuItem(m_customMenu, wxID_ANY, wxT("Properties..."));
-					m_customMenu->Append(item);
-					Connect( item->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxPageContainer::OnShowCustomizeDialog ));
-				}
-				PopupMenu(m_customMenu);
-			}
-		}
-		break;
-	case wxFNB_TAB:
-	case wxFNB_TAB_X:
-		// If the owner has defined a context menu for the tabs,
-		// popup the right click menu
-		if (m_pRightClickMenu)
-			PopupMenu(m_pRightClickMenu);
-		else
-		{
-			// send a message to popup a custom menu
-			wxFlatNotebookEvent event(wxEVT_COMMAND_FLATNOTEBOOK_CONTEXT_MENU, GetParent()->GetId());
-			event.SetSelection((int)tabIdx);
-			event.SetOldSelection((int)m_iActivePage);
-			event.SetEventObject(GetParent());
-			GetParent()->GetEventHandler()->ProcessEvent(event);
-		}
-		break;
-			
-	default:
-		break;
-	}
-}
+                {
+                        // Incase user right clicked on 'anywhere' and style wxFNB_CUSTOM_DLG is set,
+                        // popup the customize dialog
+                        long style = GetParent()->GetWindowStyleFlag();
+                        if( style & wxFNB_CUSTOM_DLG ){
+                                if( !m_customMenu ){
+                                        m_customMenu = new wxMenu();
+                                        wxMenuItem *item = new wxMenuItem(m_customMenu, wxID_ANY, wxT("Properties..."));
+                                        m_customMenu->Append(item);
+                                        Connect( item->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxPageContainer::OnShowCustomizeDialog ));
+                                }
+                                PopupMenu(m_customMenu);
+                        }
+                }
+                break;
 
-void wxPageContainer::OnRightDown(wxMouseEvent& event)
-{
-	wxPageInfo pgInfo;
-	int tabIdx;
-	int where = HitTest(event.GetPosition(), pgInfo, tabIdx);
-	switch(where)
-	{
 	case wxFNB_TAB:
 	case wxFNB_TAB_X:
 		{
@@ -906,13 +878,26 @@ void wxPageContainer::OnRightDown(wxMouseEvent& event)
 
 			// Set the current tab to be active
 			SetSelection((size_t)tabIdx);
+ 			// If the owner has defined a context menu for the tabs,
+                	// popup the right click menu
+                if (m_pRightClickMenu)
+                        PopupMenu(m_pRightClickMenu);
+                else
+                {
+                        // send a message to popup a custom menu
+                        wxFlatNotebookEvent event(wxEVT_COMMAND_FLATNOTEBOOK_CONTEXT_MENU, GetParent()->GetId());
+                        event.SetSelection((int)tabIdx);
+                        event.SetOldSelection((int)m_iActivePage);
+                        event.SetEventObject(GetParent());
+                        GetParent()->GetEventHandler()->ProcessEvent(event);
+                }
+
 		}
 		break;
 	
 	default:
 		break;
 	}
-	event.Skip();
 }
 
 void wxPageContainer::OnLeftDown(wxMouseEvent& event)

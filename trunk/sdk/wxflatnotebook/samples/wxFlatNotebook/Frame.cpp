@@ -278,6 +278,7 @@ bool Frame::Create(wxFrame * parent, wxWindowID id, const wxString& caption, con
 	bookStyle |= wxFNB_NODRAG;
 	bookStyle |= wxFNB_DROPDOWN_TABS_LIST;
 	bookStyle |= wxFNB_NO_NAV_BUTTONS;
+	bookStyle |= wxFNB_CUSTOM_DLG;
 
 	book = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxSize(300, 400), bookStyle);
 

@@ -734,7 +734,6 @@ public:
 	virtual void OnMouseEnterWindow(wxMouseEvent& event);
 	virtual void OnLeftDClick(wxMouseEvent &event);
 	virtual void OnTabMenuSelection(wxCommandEvent &event);
-	virtual void OnRightUp(wxMouseEvent &event);
 	virtual void OnShowCustomizeDialog(wxCommandEvent &event);
 
 protected:

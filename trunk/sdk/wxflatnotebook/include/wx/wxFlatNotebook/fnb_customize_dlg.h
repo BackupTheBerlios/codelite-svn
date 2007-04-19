@@ -4,6 +4,7 @@
 #include <wx/statline.h>
 #include <wx/button.h>
 #include "wx/dialog.h"
+#include "wx/panel.h"
 
 class wxCheckBox;
 class wxRadioBox;
