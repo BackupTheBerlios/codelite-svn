@@ -225,12 +225,9 @@
         </object>
     </object>
     
-	<object class="wxMenu" name="file_tree_default">
-        <object class="wxMenuItem" name="new_project">
-            <label>&amp;Create New &amp;Project\tCtrl+Shift+N</label>
+	<object class="wxMenu" name="file_tree_file">
+        <object class="wxMenuItem" name="remove_item">
+            <label>Remove</label>
         </object>
-        <object class="wxMenuItem" name="add_project">
-            <label>&amp;Add an &amp;Existing Project\tCtrl+Shift+A</label>
-        </object>            
     </object>
 </resource>
