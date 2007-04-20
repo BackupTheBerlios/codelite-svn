@@ -282,9 +282,9 @@ void Frame::OnFileExistUpdateUI(wxUpdateUIEvent &event)
 void Frame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
 	wxAboutDialogInfo info;
-    info.SetName(wxT("CodeLite"));
+    info.SetName(wxT("Lite Editor"));
     info.SetVersion(wxT("0.1 Alpha"));
-    info.SetDescription(wxT("A lighweight cross-platform editor for C/C++ "));
+    info.SetDescription(wxT("A lightweight cross-platform editor for C/C++ "));
     info.SetCopyright(wxT("(C) 2007 By Eran Ifrah <eran.ifrah@gmail.com>"));
     wxAboutBox(info);
 }
