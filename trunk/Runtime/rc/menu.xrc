@@ -203,12 +203,6 @@
     <object class="wxMenu" name="file_tree_project">
         <label>&amp;Project</label>
         <style>wxMENU_TEAROFF</style>
-        <object class="wxMenuItem" name="new_item">
-            <label>Add New &amp;Item...</label>
-        </object>
-        <object class="wxMenuItem" name="add_existing_item">
-            <label>Add E&amp;xisting Item...</label>
-        </object>
         <object class="wxMenuItem" name="new_virtual_folder">
             <label>New &amp;Virtual Folder</label>
         </object>

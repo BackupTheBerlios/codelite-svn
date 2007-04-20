@@ -287,7 +287,7 @@ void Workspace::SetActiveProject(const wxString &name, bool active)
 
 bool Workspace::CreateVirtualDirectory(const wxString &vdFullPath, wxString &errMsg)
 {
-	wxStringTokenizer tkz(vdFullPath, wxT("."));
+	wxStringTokenizer tkz(vdFullPath, wxT(":"));
 	wxString projName = tkz.GetNextToken();
 
 	wxString fixedPath;
@@ -296,12 +296,31 @@ bool Workspace::CreateVirtualDirectory(const wxString &vdFullPath, wxString &err
 
 	for(size_t i=0; i<count-1; i++){
 		fixedPath += tkz.GetNextToken();
-		fixedPath += wxT(".");
+		fixedPath += wxT(":");
 	}
 	fixedPath += tkz.GetNextToken();
 
 	ProjectPtr proj = FindProjectByName(projName, errMsg);
 	return proj->CreateVirtualDir(fixedPath);
+}
+
+bool Workspace::RemoveVirtualDirectory(const wxString &vdFullPath, wxString &errMsg)
+{
+	wxStringTokenizer tkz(vdFullPath, wxT(":"));
+	wxString projName = tkz.GetNextToken();
+
+	wxString fixedPath;
+	// Construct new path excluding the first token
+	size_t count = tkz.CountTokens();
+
+	for(size_t i=0; i<count-1; i++){
+		fixedPath += tkz.GetNextToken();
+		fixedPath += wxT(":");
+	}
+	fixedPath += tkz.GetNextToken();
+
+	ProjectPtr proj = FindProjectByName(projName, errMsg);
+	return proj->DeleteVirtualDir(fixedPath);
 }
 
 void Workspace::Save()
@@ -313,4 +332,27 @@ void Workspace::Save()
 		}
 		m_doc.Save(m_fileName.GetFullPath());
 	}
+}
+
+bool Workspace::AddNewFile(const wxString &vdFullPath, const wxString &fileName, wxString &errMsg)
+{
+	wxStringTokenizer tkz(vdFullPath, wxT(":"));
+	wxString projName = tkz.GetNextToken();
+	wxString fixedPath;
+	// Construct new path excluding the first token
+	size_t count = tkz.CountTokens();
+
+	for(size_t i=0; i<count-1; i++){
+		fixedPath += tkz.GetNextToken();
+		fixedPath += wxT(":");
+	}
+	fixedPath += tkz.GetNextToken();
+
+	ProjectPtr proj = FindProjectByName(projName, errMsg);
+	if( !proj ){
+		errMsg = wxT("No such project");
+		return false;
+	}
+
+	return proj->AddFile(fileName, fixedPath);
 }

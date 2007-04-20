@@ -49,7 +49,15 @@ public:
 	 * \param projectName project name, can be wxEmptyString
 	 * \param lineno the cursor will be placed at lineno
 	 */
-	void OpenFile(const wxString &file_name, const wxString &projectName, const int lineno);
+	void OpenFile(const wxString &file_name, const wxString &projectName, const int lineno = -1);
+
+
+	/**
+	 * Create new file on the disk and open it in the main editor
+	 * \param fileName file full path (including directories)
+	 * \param vdFullPath path of the virtual directory
+	 */
+	void AddNewFileToProject(const wxString &fileName, const wxString &vdFullPath);
 
 	/*!
 	 * \brief
@@ -150,6 +158,11 @@ public:
 	 */
 	void AddVirtualDirectory(const wxString &virtualDirFullPath);
 
+	/**
+	 * Remove virtual directory from the workspace.
+	 * \param virtualDirFullPath a dot separated string of the virtual directory to be removed
+	 */
+	void RemoveVirtualDirectory(const wxString &virtualDirFullPath);
 
 	/**
 	 * Save workspace

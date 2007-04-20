@@ -10,6 +10,7 @@ const wxString OutputPane::BUILD_WIN = wxT("Build");
 OutputPane::OutputPane(wxWindow *parent, const wxString &caption)
 : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 300))
 , m_caption(caption)
+, m_canFocus(true)
 {
 	CreateGUIControls();	
 }
@@ -52,11 +53,24 @@ void OutputPane::CreateGUIControls()
 	wxScintilla *findInFilesWin = new wxScintilla(m_book, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 	m_book->AddPage(findInFilesWin, FIND_IN_FILES_WIN, true);
 	findInFilesWin->SetReadOnly(true);
-
+	
+	findInFilesWin->Connect(wxID_ANY, wxEVT_SET_FOCUS, wxFocusEventHandler(OutputPane::OnSetFocus), NULL, this);
 	wxFont font(8, wxFONTFAMILY_TELETYPE, wxNORMAL, wxNORMAL);
 	findInFilesWin->StyleSetFont(wxSCI_STYLE_DEFAULT, font);
 	mainSizer->Fit(this);
 	mainSizer->Layout();
+}
+
+void OutputPane::OnSetFocus(wxFocusEvent &event)
+{
+	if( m_canFocus ){
+		return;
+	}
+
+	wxWindow *prevFocusWin = event.GetWindow();
+	if( prevFocusWin ){
+		prevFocusWin->SetFocus();
+	}
 }
 
 void OutputPane::OnClearAll(wxCommandEvent &event)
@@ -88,7 +102,8 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 			win->SetCurrentPos(win->GetLength());
 			win->EnsureCaretVisible();
 			// enable readonly mode 
-			win->SetReadOnly(true);						
+			win->SetReadOnly(true);	
+			
 			break;
 		}
 	default:

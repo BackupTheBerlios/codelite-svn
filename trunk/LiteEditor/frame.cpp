@@ -568,15 +568,8 @@ void Frame::OnFileOpen(wxCommandEvent & WXUNUSED(event))
 {
 	const wxString ALL(	wxT("All Files (*.*)|*.*"));
 	wxFileDialog *dlg = new wxFileDialog(this, _("Open File"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST , wxDefaultPosition);
-	if (dlg->ShowModal() == wxID_OK)
-	{
-		// get the path
-		wxFileName fname(dlg->GetPath());
-		m_notebook->Freeze();
-		LEditor *editor = new LEditor(this, wxID_ANY, wxSize(1, 1), fname.GetFullPath(), wxEmptyString);
-		m_notebook->AddPage(editor, fname.GetFullName(), true);
-		m_notebook->Thaw();
-		editor->SetFocus ();
+	if (dlg->ShowModal() == wxID_OK){
+		ManagerST::Get()->OpenFile(dlg->GetPath(), wxEmptyString);
 	}
 	dlg->Destroy();	
 }
@@ -674,6 +667,7 @@ void Frame::ClosePage(LEditor *editor, int index, bool doDelete, bool &veto)
 
 void Frame::OnSearchThread(wxCommandEvent &event)
 {
+	m_outputPane->CanFocus(false);
 	if( event.GetEventType() == wxEVT_SEARCH_THREAD_MATCHFOUND)
 	{
 		SearchResultList *res = (SearchResultList*)event.GetClientData();
@@ -683,7 +677,6 @@ void Frame::OnSearchThread(wxCommandEvent &event)
 		for(; iter != res->end(); iter++){
 			msg.Append((*iter).GetMessage() + wxT("\n"));
 		}
-
 		m_outputPane->AppendText(OutputPane::FIND_IN_FILES_WIN, msg);
 		delete res;
 	}
@@ -702,6 +695,7 @@ void Frame::OnSearchThread(wxCommandEvent &event)
 		m_outputPane->AppendText(OutputPane::FIND_IN_FILES_WIN, summary->GetMessage() + wxT("\n"));
 		delete summary;
 	}
+	m_outputPane->CanFocus(true);
 }
 
 void Frame::OnFindInFiles(wxCommandEvent &event)

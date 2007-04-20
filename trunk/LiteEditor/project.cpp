@@ -14,14 +14,13 @@ Project::~Project()
 {
 }
 
-bool Project::Create(const wxString &name, const wxString &path, const wxString &projType, bool active)
+bool Project::Create(const wxString &name, const wxString &path, const wxString &projType)
 {
 	m_fileName = path + wxT("/") + name + wxT(".project");
 	wxXmlNode *root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("CodeLite_Project"));   
 	m_doc.SetRoot(root);
 	m_doc.GetRoot()->AddProperty(wxT("Name"), name);
 	m_doc.GetRoot()->AddProperty(wxT("Type"), projType);
-	m_doc.GetRoot()->AddProperty(wxT("Active"), active ? wxT("Yes") : wxT("False"));
 
 	// Create the default virtual directories
 	wxXmlNode *srcNode = NULL, *headNode = NULL;
@@ -50,7 +49,7 @@ bool Project::Load(const wxString &path)
 
 wxXmlNode *Project::GetVirtualDir(const wxString &vdFullPath)
 {
-	wxStringTokenizer tkz(vdFullPath, wxT("."));
+	wxStringTokenizer tkz(vdFullPath, wxT(":"));
 	
 	wxXmlNode *parent = m_doc.GetRoot();
 	while( tkz.HasMoreTokens() ){
@@ -70,7 +69,7 @@ wxXmlNode *Project::CreateVD(const wxString &vdFullPath)
 		return oldVd;
 	}
 
-	wxStringTokenizer tkz(vdFullPath, wxT("."));
+	wxStringTokenizer tkz(vdFullPath, wxT(":"));
 
 	wxXmlNode *parent = m_doc.GetRoot();
 	size_t count = tkz.CountTokens();
@@ -104,7 +103,7 @@ bool Project::AddFile(const wxString &fileName, const wxString &virtualDirPath)
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("File"));
 	node->AddProperty(wxT("Name"), tmp.GetFullPath());
 	vd->AddChild(node);
-	return true;
+	return m_doc.Save(m_fileName.GetFullPath());;
 }
 
 bool Project::CreateVirtualDir(const wxString &vdFullPath)
@@ -116,6 +115,11 @@ bool Project::DeleteVirtualDir(const wxString &vdFullPath)
 {
 	wxXmlNode *vd = GetVirtualDir(vdFullPath);
 	if( vd ){
+		wxXmlNode *parent = vd->GetParent();
+		if( parent ){
+			parent->RemoveChild( vd );
+		}
+
 		delete vd;
 		return m_doc.Save(m_fileName.GetFullPath());
 	}
@@ -160,7 +164,7 @@ void Project::RecursiveAdd(wxXmlNode *xmlNode, ProjectTreePtr &ptp, ProjectTreeN
 	wxString key;
 	for(size_t i=0; i<nameList.size(); i++){
 		key += nameList.front();
-		key += wxT(".");
+		key += wxT(":");
 		nameList.pop_front();
 	}
 	key += xmlNode->GetPropVal(wxT("Name"), wxEmptyString);

@@ -346,7 +346,11 @@ bool LEditor::SaveFile()
 
 	ParseRequest *req = new ParseRequest();
 	req->dbfile = fn.GetFullPath();
-	req->file = m_fileName.GetFullPath();
+
+	// Construct an absolute file name for ctags
+	wxFileName absFile( m_fileName);
+	absFile.MakeAbsolute();
+	req->file = absFile.GetFullPath();
 	req->project = m_project;
 
 	ParseThreadST::Get()->Add(req);

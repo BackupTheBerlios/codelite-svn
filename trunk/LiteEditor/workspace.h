@@ -29,6 +29,10 @@ private:
 	virtual ~Workspace();
 
 public:
+	/**
+	 * Returns the workspace file name
+	 */
+	const wxFileName& GetWorkspaceFileName() const { return m_fileName; }
 
 	/**
 	 * \brief
@@ -130,6 +134,22 @@ public:
 	 */
 	bool CreateVirtualDirectory(const wxString &vdFullPath, wxString &errMsg);
 
+	/**
+	 * Remove virtual directoy to workspace
+	 * \param vdFullPath virtual directory full path
+	 * \param errMsg [output] incase an error, report the error to the caller
+	 * \return true on success false otherwise
+	 */
+	bool RemoveVirtualDirectory(const wxString &vdFullPath, wxString &errMsg);
+
+	/**
+	 * Add new file to project. The project is taken from the virtual directory full path
+	 * \param vdFullPath vritual directory full path including project
+	 * \param fileName file name to add
+	 * \param errMsg output
+	 * \return true on success, false otherwise
+	 */
+	bool AddNewFile(const wxString &vdFullPath, const wxString &fileName, wxString &errMsg);
 
 	/**
 	 * Save workspace & projects settings

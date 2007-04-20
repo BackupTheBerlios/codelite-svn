@@ -18,6 +18,7 @@ void FileViewTree::ConnectEvents()
 	Connect(XRCID("new_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnNewItem), NULL, this);
 	Connect(XRCID("add_existing_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnAddExistingItem), NULL, this);
 	Connect(XRCID("new_virtual_folder"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnNewVirtualFolder), NULL, this);
+	Connect(XRCID("remove_virtual_folder"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnRemoveVirtualFolder), NULL, this);
 	Connect(XRCID("project_properties"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnProjectProperties), NULL, this);
 	Connect(XRCID("sort_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnSortItem), NULL, this);
 }
@@ -248,12 +249,10 @@ void FileViewTree::OnMouseDblClick(wxMouseEvent &event)
 
 	if( itemData->GetData().GetKind() == ProjectItem::TypeFile ){
 		wxString filename = itemData->GetData().GetFile();
-		wxString project  = itemData->GetData().Key().BeforeFirst(wxT('.'));
+		wxString project  = itemData->GetData().Key().BeforeFirst(wxT(':'));
 		ManagerST::Get()->OpenFile(filename, project, -1);
-		event.Skip();
 		return;
 	}
-	event.Skip();
 }
 
 void FileViewTree::OnRemoveProject(wxCommandEvent &event)
@@ -283,11 +282,30 @@ void FileViewTree::OnAddExistingItem(wxCommandEvent & WXUNUSED(event))
 
 void FileViewTree::OnNewItem(wxCommandEvent & WXUNUSED(event))
 {
+	wxTreeItemId item = GetSelection();
+	if(!item.IsOk()){
+		return;
+	}
+
+	wxString path = GetItemPath(item);
 	NewItemDlg *dlg = new NewItemDlg(this, wxID_ANY, wxT("New Item"));
+
 	if( dlg->ShowModal() == wxID_OK ){
 		wxString filename = dlg->GetFileName().GetFullPath();
+		ManagerST::Get()->AddNewFileToProject(filename, path);
 
-		// TODO :: create the file
+		// Add the tree node
+		wxFileName fnFileName(filename);
+		path += wxT(":");
+		path += fnFileName.GetFullName();
+		ProjectItem projItem(path, fnFileName.GetFullName(), fnFileName.GetFullPath(), ProjectItem::TypeFile);
+
+		wxTreeItemId hti = AppendItem(	item,						// parent
+										projItem.GetDisplayName(),	// display name
+										GetIconIndex(projItem),		// item image index
+										GetIconIndex(projItem),		// selected item image
+										new FilewViewTreeItemData(projItem));		
+		wxUnusedVar(hti);
 	}
 
 	dlg->Destroy();
@@ -326,6 +344,26 @@ void FileViewTree::DoSetProjectActive(wxTreeItemId &item)
 
 }
 
+void FileViewTree::OnRemoveVirtualFolder(wxCommandEvent & WXUNUSED(event))
+{
+	wxTreeItemId item = GetSelection();
+	DoRemoveVirtualFolder(item);
+}
+
+void FileViewTree::DoRemoveVirtualFolder(wxTreeItemId &item)
+{
+	wxString name = GetItemText(item);
+	wxString message(wxT("'") + name + wxT("'"));
+	message << wxT(" and all its content will be removed from the project.");
+
+	if(wxMessageBox(message, wxT("Lite Editor"), wxYES_NO|wxICON_WARNING) == wxYES){
+		wxString path = GetItemPath(item);
+		ManagerST::Get()->RemoveVirtualDirectory(path);	
+		DeleteChildren( item );
+		Delete( item );
+	}
+}
+
 void FileViewTree::OnNewVirtualFolder(wxCommandEvent & WXUNUSED(event))
 {
 	wxTreeItemId item = GetSelection();
@@ -344,7 +382,7 @@ void FileViewTree::DoAddVirtualFolder(wxTreeItemId &parent)
 		if(dlg->GetValue().Trim().IsEmpty())
 			return;
 
-		path += wxT(".");
+		path += wxT(":");
 		path += dlg->GetValue();
 		ManagerST::Get()->AddVirtualDirectory(path);
 
@@ -377,14 +415,14 @@ wxString FileViewTree::GetItemPath(wxTreeItemId &item)
 	size_t count = queue.size();
 	for(size_t i=0; i<count; i++){
 		path += queue.front();
-		path += wxT(".");
+		path += wxT(":");
 		queue.pop_front();
 	}
 
 	if( !queue.empty() ){
 		path += queue.front();
 	} else {
-		path = path.BeforeLast(wxT('.'));
+		path = path.BeforeLast(wxT(':'));
 	}
 	
 	return path;

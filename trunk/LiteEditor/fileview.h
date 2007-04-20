@@ -72,6 +72,7 @@ protected:
 	virtual void OnNewVirtualFolder(wxCommandEvent &event);
 	virtual void OnProjectProperties(wxCommandEvent &event);
 	virtual void OnSortItem(wxCommandEvent &event);
+	virtual void OnRemoveVirtualFolder(wxCommandEvent &event);
 
 	// Tree sorting
 	virtual int OnCompareItems(const wxTreeItemId& item1, const wxTreeItemId& item2);
@@ -86,6 +87,7 @@ private:
 	void DoRemoveProject(const wxString &name);
 	void DoSetProjectActive(wxTreeItemId &item);
 	void DoAddVirtualFolder(wxTreeItemId &parent);
+	void DoRemoveVirtualFolder(wxTreeItemId &parent);
 };
 
 #endif // FILE_VIEW_TREE_H

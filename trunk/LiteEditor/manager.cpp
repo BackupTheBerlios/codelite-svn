@@ -16,6 +16,7 @@
 #include "cpp_symbol_tree.h"
 #include "fileview.h"
 #include "art_manager.h"
+#include <wx/file.h>
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -60,13 +61,15 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, c
 	size_t nCount = 0;
 	for(; nCount < (size_t)notebook ->GetPageCount(); nCount++)
 	{
-		editor = static_cast<LEditor*>(notebook ->GetPage(nCount));
-		if( editor->GetFileName() == fileName.GetFullPath() )
-		{
-			notebook ->SetSelection( nCount );
-			break;
+		editor = dynamic_cast<LEditor*>(notebook ->GetPage(nCount));
+		if( editor ){
+			if( editor->GetFileName() == fileName.GetFullPath() )
+			{
+				notebook ->SetSelection( nCount );
+				break;
+			}
+			editor = NULL;
 		}
-		editor = NULL;
 	}
 
 	if( !editor )
@@ -90,6 +93,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, c
 	editor->GotoLine( lineno );
 	editor->SetProject( projectName );
 	editor->SetFocus ();
+	editor->SetSCIFocus (true);
 
 }
 
@@ -126,7 +130,7 @@ void Manager::SaveAll()
 
 	for(size_t i=0; i<count; i++)
 	{
-		LEditor* editor = static_cast<LEditor*>(book->GetPage(i));
+		LEditor* editor = dynamic_cast<LEditor*>(book->GetPage(i));
 		if( !editor )
 			continue;
 		
@@ -279,8 +283,36 @@ void Manager::AddVirtualDirectory(const wxString &virtualDirFullPath)
 	CHECK_MSGBOX(res);
 }
 
+void Manager::RemoveVirtualDirectory(const wxString &virtualDirFullPath)
+{
+	wxString errMsg;
+	bool res = WorkspaceST::Get()->RemoveVirtualDirectory(virtualDirFullPath, errMsg);
+	CHECK_MSGBOX(res);
+}
+
 void Manager::SaveWorkspace()
 {
 	WorkspaceST::Get()->Save();
+}
+
+void Manager::AddNewFileToProject(const wxString &fileName, const wxString &vdFullPath)
+{
+	wxFile file;
+	if (!file.Create(fileName.GetData(), true))
+		return;
+
+	if(file.IsOpened()){
+		file.Close();
+	}
+
+	wxString project;
+	project = vdFullPath.BeforeFirst(wxT(':'));
+
+	OpenFile(fileName, project);
+
+	// Add the file to the project
+	wxString errMsg;
+	bool res = WorkspaceST::Get()->AddNewFile(vdFullPath, fileName, errMsg);
+	CHECK_MSGBOX(res);
 }
 

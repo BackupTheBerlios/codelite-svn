@@ -145,10 +145,9 @@ public:
 	 * \param name project name
 	 * \param path path of the file excluding  the file name (e.g. C:\)
 	 * \param projType project type: Project::STATIC_LIBRARY, Project::DYMANIC_LIBRARY, Project::EXECUTABLE
-	 * \param active set this project as active (will be marked with bold font in the gui trees)
 	 * \return 
 	 */
-	bool Create(const wxString &name, const wxString &path, const wxString &projType = Project::STATIC_LIBRARY, bool active = false);
+	bool Create(const wxString &name, const wxString &path, const wxString &projType = Project::STATIC_LIBRARY);
 
 	/**
 	 * Add file to the project

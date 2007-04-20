@@ -35,6 +35,7 @@ public:
 
 	wxFlatNotebook *m_book;
 	wxString m_caption;
+	bool m_canFocus;
 
 private:
 	void CreateGUIControls();
@@ -64,11 +65,13 @@ public:
 	//-----------------------------------------------
 	wxFlatNotebook *GetNotebook() { return m_book; }
 	const wxString &GetCaption() const { return m_caption; }
+	void CanFocus(bool can) { m_canFocus = can; }
 
 	//-----------------------------------------------
 	// Event handlers
 	//-----------------------------------------------
 	void OnClearAll(wxCommandEvent &event);
+	void OnSetFocus(wxFocusEvent &event);
 };
 
 #endif // OUTPUT_PANE_H
