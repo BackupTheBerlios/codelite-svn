@@ -143,8 +143,8 @@ Frame::~Frame(void)
 Frame* Frame::Get()
 {
     // Startup size will be 90% of the screen size
-    int frameWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X) * 90/100;
-    int frameHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y) * 90/100;
+    int frameWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X);
+    int frameHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y);
     
 	if( !m_theFrame )
 		m_theFrame = new Frame(NULL, wxID_ANY, _("Lite Editor"), wxDefaultPosition, wxSize(frameWidth, frameHeight));

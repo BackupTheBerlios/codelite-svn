@@ -221,6 +221,8 @@ private:
 
 	// Create virtual dir and return its xml node
 	wxXmlNode *CreateVD(const wxString &vdFullPath);
+
+	void GetFiles(wxXmlNode *parent, std::vector<wxFileName> &files);
 };
 
 typedef SmartPtr<Project> ProjectPtr;

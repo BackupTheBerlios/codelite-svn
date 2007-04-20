@@ -231,8 +231,9 @@ void Manager::AddProject(const wxString & path)
 
 	// Create an entry in the CodeLite database
 	wxFileName fn(path);
+	TagsManagerST::Get()->CreateProject(fn.GetName());
 
-	ProjectPtr p = WorkspaceST::Get()->FindProjectByName(path, errMsg);
+	ProjectPtr p = WorkspaceST::Get()->FindProjectByName(fn.GetName(), errMsg);
 	if( !p ){
 		return;
 	}

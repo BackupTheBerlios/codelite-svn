@@ -229,3 +229,33 @@ void Project::GetFilesByVirtualDir(const wxString &vdFullPath, wxArrayString &fi
 		}
 	}
 }
+
+void Project::GetFiles(std::vector<wxFileName> &files)
+{
+	GetFiles(m_doc.GetRoot(), files);
+}
+
+void Project::GetFiles(wxArrayString &files)
+{
+	wxUnusedVar(files);
+}
+
+void Project::GetFiles(wxXmlNode *parent, std::vector<wxFileName> &files)
+{
+	if( !parent ){
+		return;
+	}
+
+	wxXmlNode *child = parent->GetChildren();
+	while (child) {
+		if(child->GetName() == wxT("File")){
+			wxString fileName = child->GetPropVal(wxT("Name"), wxEmptyString);
+			wxFileName tmp = fileName;
+			tmp.MakeAbsolute(m_fileName.GetPath());
+			files.push_back(tmp);
+		} else if(child->GetChildren()){// we could also add a check for VirtualDirectory only 
+			GetFiles(child, files);
+		}
+		child = child->GetNext();
+	}
+}
