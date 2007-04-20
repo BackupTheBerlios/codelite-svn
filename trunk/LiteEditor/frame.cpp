@@ -50,7 +50,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(wxID_SAVEAS, Frame::OnSaveAs)
 	EVT_MENU(XRCID("about"), Frame::OnAbout)
 	EVT_MENU(wxID_NEW, Frame::OnFileNew)
-	EVT_MENU(XRCID("add_file_to_project"), Frame::OnAddSourceFile)
 	EVT_MENU(wxID_OPEN, Frame::OnFileOpen)
 	
 	EVT_MENU(wxID_CLOSE, Frame::OnFileClose)
@@ -104,11 +103,12 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("add_project"), Frame::OnWorkspaceOpen)
 	
 
+	
+	EVT_MENU(XRCID("complete_word"), Frame::OnCompleteWord)
+
 	/*
-	EVT_MENU(ID_COMPLETE_WORD, Frame::OnCompleteWord)
 	EVT_MENU(ID_GOTO_DEFINTION, Frame::OnGotoDefinition)
 	EVT_MENU(ID_GOTO_PREV_DEFINTION, Frame::OnGotoPreviousDefinition)
-	EVT_MENU(ID_DELETE_PROJECT, Frame::OnDeleteProject)
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
 	EVT_MENU(ID_USE_EXTERNAL_DB, Frame::OnUseExternalDatabase)
 	EVT_MENU(ID_PARSE_COMMENTS, Frame::OnParseComments)
@@ -351,76 +351,6 @@ wxString Frame::GetStringFromUser(const wxString& msg)
 	return userString;
 }
 
-//-----------------------------------------------------------
-// Demonstrate adding source file to an existing database
-//-----------------------------------------------------------
-void Frame::OnAddSourceFile(wxCommandEvent& WXUNUSED(event))
-{   
-	const wxString ALL( wxT("C/C++ Files (*.c;*.cpp;*.cc;*.cxx;*.C;*.h;*.hpp;*.hh;*.hxx;*.H)|*.c;*.cpp;*.cc;*.cxx;*.C;*.h;*.hpp;*.hh;*.hxx;*.H|")
-                        wxT("C/C++ Source Files (*.c;*.cpp;*.cc;*.cxx;*.C)|*.c;*.cpp;*.cc;*.cxx;*.C|")
-						wxT("C/C++ Header Files (*.h;*.hpp;*.hh;*.hxx;*.H)|*.h;*.hpp;*.hh;*.hxx;*.H|")
-						wxT("All Files (*.*)|*.*") );
-	wxFileDialog *dlg = new wxFileDialog(this, _("Open file"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , wxDefaultPosition);
-
-	if (dlg->ShowModal() == wxID_OK)
-	{
-		wxArrayString files;
-		wxString projectName;
-
-		// get the paths
-		dlg->GetPaths(files);
-		
-		// Prompt user for project name for this source file
-		projectName = GetStringFromUser(_("Enter a project name for this source files (can be a new project name):"));
-
-		if(projectName.IsEmpty())
-			projectName = _("Project One");
-		
-		// Convert the string array into wxFileName vector
-		std::vector<wxFileName> fp_vector;
-		for(size_t i=0; i<files.GetCount(); i++)
-			fp_vector.push_back(wxFileName(files[i]));
-					
-		// Get tags from the source files, and save them to the database
-		std::vector<DbRecordPtr> comments;
-
-		TagTreePtr tree;
-		if( TagsManagerST::Get()->GetParseComments() )
-			tree = TagsManagerST::Get()->ParseSourceFiles(fp_vector, projectName, &comments);
-		else
-			tree = TagsManagerST::Get()->ParseSourceFiles(fp_vector, projectName);
-
-		// We store it to database, we don't provide database name since we want to use
-		// the one that is opened, if no database is open, we will prompt the user for 
-		// database
-		wxFileName dbName;
-		if(TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName().IsOk() == false)
-		{
-			dbName = wxFileName( GetStringFromUser(_("No database is currently open, please insert name of database to use (example: C:\\Tags.db):")) );
-			if(dbName.IsOk() == false)
-				return;
-		}
-		else
-			dbName = TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName();
-
-		// Store the tree into the database using dbName as the underlying file
-		TagsManagerST::Get()->Store(tree, dbName);
-
-		// if comments are enabled, store them as well
-		if( TagsManagerST::Get()->GetParseComments() && comments.empty() == false )
-			TagsManagerST::Get()->StoreComments( comments, dbName );
-
-		// Rebuild the gui tree. The data to build the gui tree is taken from the database.
-		// Since we dont provide a paramter to the BuildTree() function, it will use the 
-		// currently opened database
-		// Note that the tree is constructed from the tree only and not from the rejected tags
-		TagTreePtr dummy;
-		m_workspacePane->GetSymbolTree()->BuildTree( dummy );
-		GetStatusBar()->SetStatusText(wxString::Format(_("Workspace DB: '%s'"), dbName.GetFullPath().GetData()), 1);
-	}
-	dlg->Destroy();
-}
-
 void Frame::OnSave(wxCommandEvent& WXUNUSED(event))
 {
 	LEditor* editor = static_cast<LEditor*>(m_notebook->GetCurrentPage());
@@ -460,9 +390,10 @@ void Frame::OnSwitchWorkspace(wxCommandEvent &event)
 //------------------------------------------------------
 void Frame::OnCompleteWord(wxCommandEvent& WXUNUSED(event))
 {
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetCurrentPage());
+	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetCurrentPage());
 	if( !editor )
 		return;
+
 	editor->CompleteWord();	
 }
 
@@ -480,18 +411,6 @@ void Frame::OnGotoPreviousDefinition(wxCommandEvent& WXUNUSED(event))
 	if( !editor )
 		return;
 	editor->GotoPreviousDefintion();	
-}
-
-void Frame::OnDeleteProject(wxCommandEvent& WXUNUSED(event))
-{
-	wxString projectName = GetStringFromUser(_("Insert Project name to delete:"));
-
-	// this function will validate the project name for us
-	TagsManagerST::Get()->DeleteProject(projectName);
-
-	// Notify the symbol tree to update the gui
-	SymbolTreeEvent evt(projectName, wxEVT_COMMAND_SYMBOL_TREE_DELETE_PROJECT);
-	wxPostEvent(m_workspacePane->GetSymbolTree(), evt);
 }
 
 void Frame::OnBuildExternalDatabase(wxCommandEvent& WXUNUSED(event))
@@ -618,9 +537,6 @@ void Frame::OnFileSaveAll(wxCommandEvent &event)
 void Frame::OnCompleteWordUpdateUI(wxUpdateUIEvent &event)
 {
 	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
-	if ( !editor ){
-		return;
-	}
 
 	// This menu item is enabled only if the current editor
 	// belongs to a project 

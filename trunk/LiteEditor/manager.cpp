@@ -17,6 +17,7 @@
 #include "fileview.h"
 #include "art_manager.h"
 #include <wx/file.h>
+#include "wx/arrstr.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -94,7 +95,6 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, c
 	editor->SetProject( projectName );
 	editor->SetFocus ();
 	editor->SetSCIFocus (true);
-
 }
 
 /// Open file and set the cursor to be on the line
@@ -231,7 +231,19 @@ void Manager::AddProject(const wxString & path)
 
 	// Create an entry in the CodeLite database
 	wxFileName fn(path);
-	TagsManagerST::Get()->CreateProject(fn.GetName());
+
+	ProjectPtr p = WorkspaceST::Get()->FindProjectByName(path, errMsg);
+	if( !p ){
+		return;
+	}
+
+	// Get list of all files from the project and parse them
+	std::vector<wxFileName> vList;
+	p->GetFiles(vList);
+
+	// Parse & Store
+	TagTreePtr ttp = TagsManagerST::Get()->ParseSourceFiles(vList, p->GetName());
+	TagsManagerST::Get()->Store(ttp);
 
 	// Update the trees
 	DoUpdateGUITrees();
@@ -260,7 +272,11 @@ bool Manager::RemoveProject(const wxString &name)
 	TagsManagerST::Get()->DeleteProject(name);
 
 	// update gui trees
-	DoUpdateGUITrees();
+
+	// Notify the symbol tree to update the gui
+	SymbolTreeEvent evt(name, wxEVT_COMMAND_SYMBOL_TREE_DELETE_PROJECT);
+	wxPostEvent(Frame::Get()->GetWorkspacePane()->GetSymbolTree(), evt);
+	Frame::Get()->GetWorkspacePane()->GetFileViewTree()->BuildTree();
 	return true;
 }
 
@@ -286,6 +302,23 @@ void Manager::AddVirtualDirectory(const wxString &virtualDirFullPath)
 void Manager::RemoveVirtualDirectory(const wxString &virtualDirFullPath)
 {
 	wxString errMsg;
+	wxString project = virtualDirFullPath.BeforeFirst(wxT(':'));
+	ProjectPtr p = WorkspaceST::Get()->FindProjectByName(project, errMsg);
+	if( !p ){
+		return;
+	}
+
+	wxString vdPath = virtualDirFullPath.AfterFirst(wxT(':'));
+	wxArrayString files;
+	p->GetFilesByVirtualDir(vdPath, files);
+	for(size_t i=0; i<files.Count(); i++){
+		TagsManagerST::Get()->Delete(TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName(), project, files.Item(i));
+	}
+
+	// Update 
+	TagTreePtr dummy;
+	Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(dummy );
+
 	bool res = WorkspaceST::Get()->RemoveVirtualDirectory(virtualDirFullPath, errMsg);
 	CHECK_MSGBOX(res);
 }
@@ -321,6 +354,15 @@ void Manager::AddFileToProject(const wxString &fileName, const wxString &vdFullP
 	wxString errMsg;
 	bool res = WorkspaceST::Get()->AddNewFile(vdFullPath, fileName, errMsg);
 	CHECK_MSGBOX(res);
+
+	if( project.IsEmpty() == false ){
+		TagTreePtr ttp = TagsManagerST::Get()->ParseSourceFile(fileName, project);
+		TagsManagerST::Get()->Store(ttp);
+
+		// Update 
+		TagTreePtr dummy;
+		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(dummy );
+	}
 }
 
 bool Manager::RemoveFile(const wxString &fileName, const wxString &vdFullPath)
@@ -346,6 +388,15 @@ bool Manager::RemoveFile(const wxString &fileName, const wxString &vdFullPath)
 	wxString errMsg;
 	bool res = WorkspaceST::Get()->RemoveFile(vdFullPath, fileName, errMsg);
 	CHECK_MSGBOX_BOOL(res);
+
+	if( project.IsEmpty() == false ){
+		// Remove the file from the tags database as well
+		TagsManagerST::Get()->Delete(TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName(), project, fileName);
+		
+		// Update 
+		TagTreePtr dummy;
+		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(dummy );
+	}
 	return true;
 }
 

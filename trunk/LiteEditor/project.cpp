@@ -1,6 +1,7 @@
 #include "project.h"
 #include "xmlutils.h"
 #include <wx/tokenzr.h>
+#include "wx/arrstr.h"
 
 const wxString Project::STATIC_LIBRARY = wxT("Static Library");
 const wxString Project::DYMANIC_LIBRARY = wxT("Dynamic Library");
@@ -211,3 +212,20 @@ void Project::Save()
 		m_doc.Save(m_fileName.GetFullPath());
 }
 
+void Project::GetFilesByVirtualDir(const wxString &vdFullPath, wxArrayString &files)
+{
+	wxXmlNode *vd = GetVirtualDir(vdFullPath);
+	if( vd ){
+		wxXmlNode *child = vd->GetChildren();
+		while( child ){
+			if( child->GetName() == wxT("File")){
+				wxFileName fileName(
+					child->GetPropVal(wxT("Name"), wxEmptyString)
+					);
+				fileName.MakeAbsolute(m_fileName.GetPath());
+				files.Add(fileName.GetFullPath());
+			}
+			child = child->GetNext();
+		}
+	}
+}

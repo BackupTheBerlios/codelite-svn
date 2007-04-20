@@ -238,9 +238,11 @@ void LEditor::SetProperties()
 	AutoCompSetSeparator(static_cast<int>('@'));	// set the separator to be non valid language wxChar
 	AutoCompSetChooseSingle(true);					// If only one match, insert it automatically
 	AutoCompSetIgnoreCase(true);
+	AutoCompSetMaxWidth(80);
+
 	SetIndent(8);
 	StyleSetBold(wxSCI_STYLE_BRACELIGHT, true);
-
+	
 	StyleSetBackground(wxSCI_STYLE_LINENUMBER, wxT("WHITE"));
 	StyleSetForeground(wxSCI_STYLE_LINENUMBER, wxColour(0, 63, 125));
 }

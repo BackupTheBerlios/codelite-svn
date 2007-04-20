@@ -120,6 +120,8 @@ private:
 	wxFileName m_fileName;
 
 public:
+	const wxFileName &GetFileName() const { return m_fileName; }
+
 	// Ctor - Dtor
 
 	// default constructor
@@ -180,9 +182,30 @@ public:
 	bool DeleteVirtualDir(const wxString &vdFullPath);
 
 	/**
+	 * Return list of files by a virtual directory
+	 * \param vdFullPath virtual directory
+	 * \param files [output] list of files under this vdFullPath. The files format are in absolute path!
+	 */
+	void GetFilesByVirtualDir(const wxString &vdFullPath, wxArrayString &files);
+
+	/**
 	 * Save project settings
 	 */
 	void Save();
+
+
+	/**
+	 * Return list of files in this project
+	 * \param files 
+	 */
+	void GetFiles(std::vector<wxFileName> &files);
+
+	/**
+	 * Return list of files in this project
+	 * \param files 
+	 */
+	void GetFiles(wxArrayString &files);
+
 	//-----------------------------------
 	// visual operations
 	//-----------------------------------
