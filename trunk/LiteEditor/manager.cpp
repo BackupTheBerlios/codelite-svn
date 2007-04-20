@@ -295,7 +295,7 @@ void Manager::SaveWorkspace()
 	WorkspaceST::Get()->Save();
 }
 
-void Manager::AddNewFileToProject(const wxString &fileName, const wxString &vdFullPath)
+void Manager::AddNewFileToProject(const wxString &fileName, const wxString &vdFullPath, bool openIt )
 {
 	wxFile file;
 	if (!file.Create(fileName.GetData(), true))
@@ -305,14 +305,20 @@ void Manager::AddNewFileToProject(const wxString &fileName, const wxString &vdFu
 		file.Close();
 	}
 
+	AddFileToProject(fileName, vdFullPath, openIt);
+}
+
+void Manager::AddFileToProject(const wxString &fileName, const wxString &vdFullPath, bool openIt )
+{
 	wxString project;
 	project = vdFullPath.BeforeFirst(wxT(':'));
 
-	OpenFile(fileName, project);
+	if( openIt ){
+		OpenFile(fileName, project);
+	}
 
 	// Add the file to the project
 	wxString errMsg;
 	bool res = WorkspaceST::Get()->AddNewFile(vdFullPath, fileName, errMsg);
 	CHECK_MSGBOX(res);
 }
-

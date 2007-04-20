@@ -278,6 +278,43 @@ void FileViewTree::OnSortItem(wxCommandEvent &WXUNUSED( event))
 
 void FileViewTree::OnAddExistingItem(wxCommandEvent & WXUNUSED(event))
 {
+	wxTreeItemId item = GetSelection();
+	if(!item.IsOk()){
+		return;
+	}
+
+	const wxString ALL(	wxT("All Files (*.*)|*.*"));
+	wxString vdPath = GetItemPath(item);
+
+	wxFileDialog *dlg = new wxFileDialog(this, wxT("Add Existing Item"), wxEmptyString, wxEmptyString, ALL, wxFD_MULTIPLE | wxOPEN | wxFILE_MUST_EXIST , wxDefaultPosition);
+	if (dlg->ShowModal() == wxID_OK){
+		wxString project;
+		project = vdPath.BeforeFirst(wxT(':'));
+
+		wxArrayString paths;
+		dlg->GetPaths( paths );
+		for(size_t i=0; i<paths.Count(); i++){
+			ManagerST::Get()->AddFileToProject(paths.Item(i), vdPath, false);
+
+			// Add the tree node
+			wxFileName fnFileName(paths.Item(i));
+			wxString path( vdPath );
+			path += wxT(":");
+			path += fnFileName.GetFullName();
+			ProjectItem projItem(path, fnFileName.GetFullName(), fnFileName.GetFullPath(), ProjectItem::TypeFile);
+
+			wxTreeItemId hti = AppendItem(	item,						// parent
+				projItem.GetDisplayName(),	// display name
+				GetIconIndex(projItem),		// item image index
+				GetIconIndex(projItem),		// selected item image
+				new FilewViewTreeItemData(projItem));		
+			wxUnusedVar(hti);
+		}
+
+		Expand(item);
+	}
+	
+	dlg->Destroy();
 }
 
 void FileViewTree::OnNewItem(wxCommandEvent & WXUNUSED(event))
@@ -306,6 +343,7 @@ void FileViewTree::OnNewItem(wxCommandEvent & WXUNUSED(event))
 										GetIconIndex(projItem),		// selected item image
 										new FilewViewTreeItemData(projItem));		
 		wxUnusedVar(hti);
+		Expand(item);
 	}
 
 	dlg->Destroy();
@@ -392,7 +430,8 @@ void FileViewTree::DoAddVirtualFolder(wxTreeItemId &parent)
 			GetIconIndex(itemData),		// item image index
 			GetIconIndex(itemData),		// selected item image
 			new FilewViewTreeItemData(itemData));
-		Refresh();
+
+		Expand(parent);
 	}
 	dlg->Destroy();
 }
