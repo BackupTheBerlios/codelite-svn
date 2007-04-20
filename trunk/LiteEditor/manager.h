@@ -157,7 +157,6 @@ public:
 	 */
 	void SetActiveProject(const wxString &name);
 
-
 	/**
 	 * Add new virtual directory to the workspace.
 	 * \param virtualDirFullPath a dot separated string of the new virtual directory full path up to the parent project
@@ -175,6 +174,15 @@ public:
 	 * Save workspace
 	 */
 	void SaveWorkspace();
+
+	
+	/**
+	 * remove file from the workspace
+	 * \param fileName the full path of the file to be removed
+	 * \param vdFullPath the files' virtual directory path (including project)
+	 */
+	bool RemoveFile(const wxString &fileName, const wxString &vdFullPath);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

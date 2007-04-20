@@ -143,13 +143,22 @@ public:
 	bool RemoveVirtualDirectory(const wxString &vdFullPath, wxString &errMsg);
 
 	/**
-	 * Add new file to project. The project is taken from the virtual directory full path
+	 * Add new file to project. The project name is taken from the virtual directory full path
 	 * \param vdFullPath vritual directory full path including project
 	 * \param fileName file name to add
 	 * \param errMsg output
 	 * \return true on success, false otherwise
 	 */
 	bool AddNewFile(const wxString &vdFullPath, const wxString &fileName, wxString &errMsg);
+
+	/**
+	 * Remove file from a project. The project name is taken from the virtual directory full path
+	 * \param vdFullPath vritual directory full path including project
+	 * \param fileName file name to remove
+	 * \param errMsg output
+	 * \return true on success, false otherwise
+	 */
+	bool RemoveFile(const wxString &vdFullPath, const wxString &fileName, wxString &errMsg);
 
 	/**
 	 * Save workspace & projects settings

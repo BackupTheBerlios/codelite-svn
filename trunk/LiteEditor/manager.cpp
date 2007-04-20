@@ -322,3 +322,30 @@ void Manager::AddFileToProject(const wxString &fileName, const wxString &vdFullP
 	bool res = WorkspaceST::Get()->AddNewFile(vdFullPath, fileName, errMsg);
 	CHECK_MSGBOX(res);
 }
+
+bool Manager::RemoveFile(const wxString &fileName, const wxString &vdFullPath)
+{
+	// First, close any open tab with this file
+	wxFlatNotebook* nb = dynamic_cast<wxFlatNotebook*>(Frame::Get()->GetNotebook());
+	if( !nb ){
+		return false;	
+	}
+
+	wxString project = vdFullPath.BeforeFirst(wxT(':'));
+	int count = nb->GetPageCount();
+	for(int i=0; i<count; i++){
+		LEditor *editor = dynamic_cast<LEditor*>(nb->GetPage(static_cast<size_t>(i)));
+		if( editor ){
+			if( editor->GetFileName().GetFullPath() == fileName && editor->GetProject() == project){
+				nb->DeletePage(static_cast<size_t>(i));
+				break;
+			}
+		}
+	}
+
+	wxString errMsg;
+	bool res = WorkspaceST::Get()->RemoveFile(vdFullPath, fileName, errMsg);
+	CHECK_MSGBOX_BOOL(res);
+	return true;
+}
+

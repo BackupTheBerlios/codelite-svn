@@ -356,3 +356,27 @@ bool Workspace::AddNewFile(const wxString &vdFullPath, const wxString &fileName,
 
 	return proj->AddFile(fileName, fixedPath);
 }
+
+bool Workspace::RemoveFile(const wxString &vdFullPath, const wxString &fileName, wxString &errMsg)
+{
+	wxStringTokenizer tkz(vdFullPath, wxT(":"));
+	wxString projName = tkz.GetNextToken();
+	wxString fixedPath;
+
+	// Construct new path excluding the first token
+	size_t count = tkz.CountTokens();
+
+	for(size_t i=0; i<count-1; i++){
+		fixedPath += tkz.GetNextToken();
+		fixedPath += wxT(":");
+	}
+	fixedPath += tkz.GetNextToken();
+
+	ProjectPtr proj = FindProjectByName(projName, errMsg);
+	if( !proj ){
+		errMsg = wxT("No such project");
+		return false;
+	}
+
+	return proj->RemoveFile(fileName, fixedPath);
+}

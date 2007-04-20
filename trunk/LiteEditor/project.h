@@ -160,9 +160,10 @@ public:
 	/**
 	 * Remove file from the project
 	 * \param fileName file full path
+	 * \param virtualDir owner virtual directory
 	 * \return 
 	 */
-	bool RemoveFile(const wxString &fileName);
+	bool RemoveFile(const wxString &fileName, const wxString &virtualDir = wxEmptyString);
 
 	/**
 	 * Create new virtual directory

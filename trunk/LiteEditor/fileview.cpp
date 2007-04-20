@@ -21,6 +21,7 @@ void FileViewTree::ConnectEvents()
 	Connect(XRCID("remove_virtual_folder"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnRemoveVirtualFolder), NULL, this);
 	Connect(XRCID("project_properties"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnProjectProperties), NULL, this);
 	Connect(XRCID("sort_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnSortItem), NULL, this);
+	Connect(XRCID("remove_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnRemoveItem), NULL, this);
 }
 
 FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -39,14 +40,13 @@ FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint&
 
 	Connect(GetId(), wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler(FileViewTree::OnPopupMenu));
 	Connect(GetId(), wxEVT_LEFT_DCLICK, wxMouseEventHandler(FileViewTree::OnMouseDblClick));
-	//Connect(GetId(), wxEVT_RIGHT_DOWN, wxMouseEventHandler(FileViewTree::OnMouseRightDown));
 }
 
 FileViewTree::~FileViewTree()
 {
 	delete m_folderMenu;
 	delete m_projectMenu;
-	delete m_defaultMenu;
+	delete m_fileMenu;
 }
 
 void FileViewTree::Create(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -63,7 +63,7 @@ void FileViewTree::Create(wxWindow *parent, const wxWindowID id, const wxPoint& 
 	// Load the popup menu
 	m_folderMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_folder"));
 	m_projectMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_project"));
-	m_defaultMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_default"));
+	m_fileMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_file"));
 	ConnectEvents();
 } 
 
@@ -175,46 +175,15 @@ void FileViewTree::OnPopupMenu(wxTreeEvent &event)
 		{
 		case ProjectItem::TypeProject:
 			PopupMenu( m_projectMenu );
-			event.Skip();
 			break;
 		case ProjectItem::TypeVirtualDirectory:
 			PopupMenu( m_folderMenu );
-			event.Skip();
 			break;
+		case ProjectItem::TypeFile:
+			PopupMenu( m_fileMenu );
 		default:
 			break;
 		}
-	}
-}
-
-void FileViewTree::OnMouseRightDown(wxMouseEvent &event)
-{
-	// Make sure the double click was done on an actual item
-	int flags = wxTREE_HITTEST_ONITEMLABEL;
-	wxTreeItemId item = HitTest(event.GetPosition(), flags);
-	if( item.IsOk() == false )
-	{
-		PopupMenu(m_defaultMenu);
-		return;
-		//event.Skip();
-	}
-
-	// click was on valid item, popup the menu
-	SelectItem(item, true);
-
-	FilewViewTreeItemData *data = static_cast<FilewViewTreeItemData*>(GetItemData(item));
-	switch( data->GetData().GetKind() )
-	{
-	case ProjectItem::TypeProject:
-		PopupMenu( m_projectMenu );
-		event.Skip();
-		break;
-	case ProjectItem::TypeVirtualDirectory:
-		PopupMenu( m_folderMenu );
-		event.Skip();
-		break;
-	default:
-		break;
 	}
 }
 
@@ -386,6 +355,30 @@ void FileViewTree::OnRemoveVirtualFolder(wxCommandEvent & WXUNUSED(event))
 {
 	wxTreeItemId item = GetSelection();
 	DoRemoveVirtualFolder(item);
+}
+
+void FileViewTree::OnRemoveItem(wxCommandEvent &WXUNUSED( event))
+{
+	wxTreeItemId item = GetSelection();
+	DoRemoveItem( item );
+}
+
+void FileViewTree::DoRemoveItem(wxTreeItemId &item)
+{
+	wxString name = GetItemText(item);
+	wxString message;
+	message << wxT("Are you sure you want remove '") << name << wxT("' ?");
+	
+	FilewViewTreeItemData *data = static_cast<FilewViewTreeItemData*>(GetItemData(item));
+	
+	if(wxMessageBox(message, wxT("Lite Editor"), wxYES_NO | wxICON_QUESTION) == wxYES){
+		wxTreeItemId parent = GetItemParent(item);
+		if( parent.IsOk() ){
+			wxString path = GetItemPath(parent);
+			ManagerST::Get()->RemoveFile(data->GetData().GetFile(), path);
+			Delete( item );
+		}
+	}
 }
 
 void FileViewTree::DoRemoveVirtualFolder(wxTreeItemId &item)
