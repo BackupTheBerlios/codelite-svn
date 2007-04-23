@@ -51,9 +51,14 @@ void OutputPane::CreateGUIControls()
 
 	// Create the 'Find In Files Window'
 	wxScintilla *findInFilesWin = new wxScintilla(m_book, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+	// Hide margins
+	findInFilesWin->SetMarginWidth(0, 0);
+	findInFilesWin->SetMarginWidth(1, 0);
+	findInFilesWin->SetMarginWidth(2, 0);
+
 	m_book->AddPage(findInFilesWin, FIND_IN_FILES_WIN, true);
 	findInFilesWin->SetReadOnly(true);
-	
+		
 	findInFilesWin->Connect(wxID_ANY, wxEVT_SET_FOCUS, wxFocusEventHandler(OutputPane::OnSetFocus), NULL, this);
 	wxFont font(8, wxFONTFAMILY_TELETYPE, wxNORMAL, wxNORMAL);
 	findInFilesWin->StyleSetFont(wxSCI_STYLE_DEFAULT, font);
@@ -134,3 +139,4 @@ int OutputPane::CaptionToIndex(const wxString &caption)
 	}
 	return wxNOT_FOUND;
 }
+

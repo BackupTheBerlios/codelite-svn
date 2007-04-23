@@ -164,6 +164,19 @@ wxString TagEntry::GetDisplayName() const
 	return name;
 }
 
+wxString TagEntry::GetFullDisplayName() const
+{
+	wxString name;
+
+	if( GetParent() == wxT("<global>") ){
+		name << GetDisplayName(); 
+	} else {
+		name << GetParent() << wxT("::") << GetName() << GetSignature();
+	}
+		
+	return name;
+}
+
 TagEntry::TagEntry(wxSQLite3ResultSet& rs)
 {
 	m_extFields.clear();

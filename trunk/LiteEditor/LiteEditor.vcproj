@@ -340,6 +340,18 @@
 			<File
 				RelativePath=".\newdlg.h">
 			</File>
+			<File
+				RelativePath=".\symbols_dialog.cpp">
+			</File>
+			<File
+				RelativePath=".\symbols_dialog.h">
+			</File>
+			<File
+				RelativePath=".\symbols_dialog_base.cpp">
+			</File>
+			<File
+				RelativePath=".\symbols_dialog_base.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Trees">

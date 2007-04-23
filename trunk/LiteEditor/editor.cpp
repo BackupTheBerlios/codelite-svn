@@ -12,6 +12,7 @@
 #include <wx/fdrepdlg.h>
 #include "findreplacedlg.h"
 #include <wx/wxFlatNotebook/renderer.h>
+#include "symbols_dialog.h"
 
 // fix bug in wxscintilla.h
 #ifdef EVT_SCI_CALLTIP_CLICK
@@ -649,33 +650,31 @@ void LEditor::GotoDefinition()
 	if(tags.empty())
 		return;
 
+	// Remember this position before skipping to the next one
+	TagEntry tag;
+	tag.SetLine(LineFromPosition(GetCurrentPos())+1 /** scintilla counts from zero, while tagentry from 1**/);
+	tag.SetFile(m_fileName.GetFullPath());
+	tag.SetProject(m_project);
+	tag.SetPosition(GetCurrentPos());
+
+	// Keep the current position as well
+	m_history.push(tag);
+
 	// Did we get a single match?
 	if(tags.size() == 1)
 	{
-		// Remember this position before skipping to the next one
-		TagEntry tag;
-		tag.SetLine(LineFromPosition(GetCurrentPos())+1 /** scintilla counts from zero, while tagentry from 1**/);
-		tag.SetFile(m_fileName.GetFullPath());
-		tag.SetProject(m_project);
-		tag.SetPosition(GetCurrentPos());
-
-		// Keep the current position as well
-		m_history.push(tag);
-
 		// Just open the file and set the cursor on the match we found
 		ManagerST::Get()->OpenFile(tags[0]);
 	}
 	else
 	{
-		// Write the symbols found to the log, in normal editors,
-		// I suggest poping up a dialog with ListBox suggesting user
-		// to resolve the ambiguity
-#ifdef USE_TRACE
-		wxString logmsg;
-		for(size_t i=0; i<tags.size(); i++)
-			logmsg << _T("\n") << tags[i].GetName() << _T(" : ") << tags[i].GetFile() << _T(" : ") << tags[i].GetLine();
-		wxLogMessage(logmsg);
-#endif
+		// popup a dialog offering the results to the user
+		SymbolsDialog *dlg = new SymbolsDialog(this);
+		dlg->AddSymbols( tags, 0 );
+		if(dlg->ShowModal() == wxID_OK){
+			ManagerST::Get()->OpenFile(dlg->GetFile(), GetProject(), dlg->GetLine()-1);
+		}
+		dlg->Destroy();
 	}
 }
 

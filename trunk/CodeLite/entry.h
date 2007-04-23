@@ -172,6 +172,13 @@ public:
 	wxString GetDisplayName() const;
 
 	/**
+	 * Generate a full display name for this tag that includes:
+	 * full scope + name + signature
+	 * \return tag full display name
+	 */
+	wxString GetFullDisplayName() const;
+
+	/**
 	 * Return the actual name as described in the 'typeref' field
 	 * \return real name or wxEmptyString
 	 */
