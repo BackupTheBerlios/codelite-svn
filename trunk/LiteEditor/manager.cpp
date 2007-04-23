@@ -52,7 +52,7 @@ bool Manager::IsWorkspaceOpen() const
 	return TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName().IsOk();
 }
 
-void Manager::OpenFile(const wxString &file_name, const wxString &projectName, const int lineno)
+void Manager::OpenFile(const wxString &file_name, const wxString &projectName, int lineno, long position)
 {
 	wxFileName fileName(file_name);
 	wxFlatNotebook *notebook = Frame::Get()->GetNotebook();
@@ -91,7 +91,12 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, c
 	}
 
 	// Go to tag line number and gives scintilla the focus
-	editor->GotoLine( lineno );
+	if( position != wxNOT_FOUND ){
+		editor->SetCaretAt( position );
+	} else {
+		editor->GotoLine( lineno );
+	}
+
 	editor->SetProject( projectName );
 	editor->SetFocus ();
 	editor->SetSCIFocus (true);
@@ -100,7 +105,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, c
 /// Open file and set the cursor to be on the line
 void Manager::OpenFile(const TagEntry& tag)
 {
-	OpenFile(tag.GetFile(), tag.GetProject(), tag.GetLine() - 1);
+	OpenFile(tag.GetFile(), tag.GetProject(), tag.GetLine() - 1, tag.GetPosition());
 }
 
 void Manager::SetPageTitle(wxWindow *page, const wxString &name)
@@ -243,9 +248,17 @@ void Manager::AddProject(const wxString & path)
 	p->GetFiles(vList);
 
 	// Parse & Store
-	TagTreePtr ttp = TagsManagerST::Get()->ParseSourceFiles(vList, p->GetName());
-	TagsManagerST::Get()->Store(ttp);
+	TagTreePtr ttp;
+	std::vector<DbRecordPtr> comments;
+	if (TagsManagerST::Get()->GetParseComments()) {
+		ttp = TagsManagerST::Get()->ParseSourceFiles(vList, p->GetName(), &comments);
+		TagsManagerST::Get()->StoreComments(comments);
+	} else {
+		ttp = TagsManagerST::Get()->ParseSourceFiles(vList, p->GetName());
+	}
 
+	TagsManagerST::Get()->Store(ttp);
+	
 	// Update the trees
 	DoUpdateGUITrees();
 }
@@ -356,8 +369,15 @@ void Manager::AddFileToProject(const wxString &fileName, const wxString &vdFullP
 	bool res = WorkspaceST::Get()->AddNewFile(vdFullPath, fileName, errMsg);
 	CHECK_MSGBOX(res);
 
+	TagTreePtr ttp;
 	if( project.IsEmpty() == false ){
-		TagTreePtr ttp = TagsManagerST::Get()->ParseSourceFile(fileName, project);
+		std::vector<DbRecordPtr> comments;
+		if(TagsManagerST::Get()->GetParseComments()){
+			ttp = TagsManagerST::Get()->ParseSourceFile(fileName, project, &comments);
+			TagsManagerST::Get()->StoreComments(comments);
+		}else{
+			ttp = TagsManagerST::Get()->ParseSourceFile(fileName, project);
+		}
 		TagsManagerST::Get()->Store(ttp);
 
 		// Update 
@@ -401,3 +421,15 @@ bool Manager::RemoveFile(const wxString &fileName, const wxString &vdFullPath)
 	return true;
 }
 
+wxString Manager::GetProjectCwd(const wxString &project) const 
+{
+	wxString errMsg;
+	ProjectPtr p = WorkspaceST::Get()->FindProjectByName(project, errMsg);
+	if ( !p ){
+		return wxGetCwd();
+	}
+
+	wxFileName projectFileName(p->GetFileName());
+	projectFileName.MakeAbsolute();
+	return projectFileName.GetPath();
+}

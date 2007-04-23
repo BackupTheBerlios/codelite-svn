@@ -47,9 +47,10 @@ protected:
 	wxButton* m_cancel;
 	wxString m_fileTypeValue;
 	wxFileName m_newFileName;
+	wxString m_cwd;
 
 public:
-	NewItemDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxEmptyString, wxPoint pos = wxDefaultPosition, wxSize size = wxSize(500, 350), int style = wxDEFAULT_DIALOG_STYLE );
+	NewItemDlg( wxWindow* parent, wxString cwd, int id = wxID_ANY, wxString title = wxEmptyString, wxPoint pos = wxDefaultPosition, wxSize size = wxSize(500, 350), int style = wxDEFAULT_DIALOG_STYLE );
 	const wxFileName &GetFileName() const { return m_newFileName; }
 
 protected:

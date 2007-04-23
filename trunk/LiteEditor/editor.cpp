@@ -459,7 +459,7 @@ void LEditor::GetWordAndScope(wxString& word, wxString &scope, wxString& scopeNa
 	TagEntry tag;
 
 	int line = 1;
-	if( TagsManagerST::Get()->FunctionByLine(LineFromPosition(start), m_fileName.GetFullName(), m_project, tag) )
+	if( TagsManagerST::Get()->FunctionByLine(LineFromPosition(start), m_fileName.GetFullPath(), m_project, tag) )
 		line = tag.GetLine();
 
 	long scopeStartPos = PositionFromLine(line - 1/* wxScintilla counts line from zero */);
@@ -573,7 +573,7 @@ void LEditor::CodeComplete()
 	// good idea of the scope we are in it
 	if( TagsManagerST::Get()->FunctionByLine(LineFromPosition(start)+1,	// scintilla are counting from zero,
 																		// while ctags are counting from one
-												m_fileName.GetFullName(), m_project, tag) )
+											 m_fileName.GetFullPath(), m_project, tag) )
 	{
 		line = tag.GetLine();
 	}
@@ -653,14 +653,17 @@ void LEditor::GotoDefinition()
 	if(tags.size() == 1)
 	{
 		// Remember this position before skipping to the next one
-		TagEntry history;
-		history.SetLine(LineFromPosition(GetCurrentPos())+1 /** scintilla counts from zero, while tagentry from 1**/);
-		history.SetFile(m_fileName.GetFullPath());
-		history.SetProject(m_project);
+		TagEntry tag;
+		tag.SetLine(LineFromPosition(GetCurrentPos())+1 /** scintilla counts from zero, while tagentry from 1**/);
+		tag.SetFile(m_fileName.GetFullPath());
+		tag.SetProject(m_project);
+		tag.SetPosition(GetCurrentPos());
+
+		// Keep the current position as well
+		m_history.push(tag);
 
 		// Just open the file and set the cursor on the match we found
 		ManagerST::Get()->OpenFile(tags[0]);
-		m_history.push(history);
 	}
 	else
 	{

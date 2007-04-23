@@ -186,5 +186,19 @@ public:
 	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
 };
 
+//------------------------------------
+// Go to definition
+//------------------------------------
+class GotoDefinitionHandler : public MenuEventHandler 
+{
+public:
+	GotoDefinitionHandler(int id) : MenuEventHandler(id){};
+	virtual ~GotoDefinitionHandler(){};
+
+public:
+	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
+	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
+};
+
 #endif // MENU_EVENT_HANDLERS_H
 

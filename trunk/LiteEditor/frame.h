@@ -68,8 +68,6 @@ protected:
 	void OnSave(wxCommandEvent& event);
 	void OnSaveAs(wxCommandEvent& event);
 	void OnCompleteWord(wxCommandEvent& event);
-	void OnGotoDefinition(wxCommandEvent& event);
-	void OnGotoPreviousDefinition(wxCommandEvent& event);
 	void OnDeleteProject(wxCommandEvent& event);
 	void OnBuildExternalDatabase(wxCommandEvent& event);
 	void OnUseExternalDatabase(wxCommandEvent& event);
@@ -94,8 +92,6 @@ protected:
 	void OnSwitchWorkspace(wxCommandEvent &event);
 	void OnProjectAddProject(wxCommandEvent &event);
 	void OnWorkspaceOpen(wxUpdateUIEvent &event);
-	void OnProjectRemoveProject(wxCommandEvent &event);
-	void OnProjectRemoveProjectUI(wxUpdateUIEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

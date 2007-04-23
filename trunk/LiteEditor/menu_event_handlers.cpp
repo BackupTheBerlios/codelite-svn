@@ -258,3 +258,31 @@ void BookmarkHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &eve
 	wxUnusedVar(owner);
 	wxUnusedVar(event);
 }
+
+
+//------------------------------------
+// Go to definition
+//------------------------------------
+void GotoDefinitionHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
+{
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
+
+	if (event.GetId() == XRCID("goto_definition")){
+		editor->GotoDefinition();
+	} else if(event.GetId() == XRCID("goto_previous_definition")){
+		editor->GotoPreviousDefintion();
+	}
+}
+
+void GotoDefinitionHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
+{
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if(event.GetId() == XRCID("goto_previous_definition")){
+		event.Enable(editor && editor->CanGotoPreviousDefintion());
+	} else {
+		event.Enable(editor != NULL);
+	}
+}

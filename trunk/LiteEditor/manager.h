@@ -48,8 +48,9 @@ public:
 	 * \param fileName full path of the file name
 	 * \param projectName project name, can be wxEmptyString
 	 * \param lineno the cursor will be placed at lineno
+	 * \param position the position of the match starting from begining
 	 */
-	void OpenFile(const wxString &file_name, const wxString &projectName, const int lineno = -1);
+	void OpenFile(const wxString &file_name, const wxString &projectName, int lineno = wxNOT_FOUND, long position = wxNOT_FOUND);
 
 
 	/**
@@ -175,13 +176,18 @@ public:
 	 */
 	void SaveWorkspace();
 
-	
 	/**
 	 * remove file from the workspace
 	 * \param fileName the full path of the file to be removed
 	 * \param vdFullPath the files' virtual directory path (including project)
 	 */
 	bool RemoveFile(const wxString &fileName, const wxString &vdFullPath);
+
+	/**
+	 * Return a project working directory
+	 * \param project project name
+	 */
+	wxString GetProjectCwd(const wxString &project) const;
 
 protected:
 	Manager(void);

@@ -71,6 +71,9 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("next_bookmark"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("previous_bookmark"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("removeall_bookmarks"), Frame::DispatchCommandEvent)
+	EVT_MENU(XRCID("goto_definition"), Frame::DispatchCommandEvent)
+	EVT_MENU(XRCID("goto_previous_definition"), Frame::DispatchCommandEvent)
+
 	EVT_MENU(XRCID("find_in_files"), Frame::OnFindInFiles)
 	EVT_MENU(XRCID("new_workspace"), Frame::OnProjectNewWorkspace)
 	EVT_MENU(XRCID("new_project"), Frame::OnProjectNewProject)
@@ -101,14 +104,12 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("removeall_bookmarks"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(XRCID("new_project"), Frame::OnWorkspaceOpen)
 	EVT_UPDATE_UI(XRCID("add_project"), Frame::OnWorkspaceOpen)
-	
-
+	EVT_UPDATE_UI(XRCID("goto_definition"), Frame::DispatchUpdateUIEvent)
+	EVT_UPDATE_UI(XRCID("goto_previous_definition"), Frame::DispatchUpdateUIEvent)
 	
 	EVT_MENU(XRCID("complete_word"), Frame::OnCompleteWord)
 
 	/*
-	EVT_MENU(ID_GOTO_DEFINTION, Frame::OnGotoDefinition)
-	EVT_MENU(ID_GOTO_PREV_DEFINTION, Frame::OnGotoPreviousDefinition)
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
 	EVT_MENU(ID_USE_EXTERNAL_DB, Frame::OnUseExternalDatabase)
 	EVT_MENU(ID_PARSE_COMMENTS, Frame::OnParseComments)
@@ -260,7 +261,12 @@ void Frame::DispatchCommandEvent(wxCommandEvent &event)
 
 void Frame::DispatchUpdateUIEvent(wxUpdateUIEvent &event)
 {
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
+	if( m_notebook->GetPageCount() == 0 ){
+		event.Enable(false);
+		return;	
+	}
+
+	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
 	if( !editor ){ 
 		event.Enable(false);
 		return;	
@@ -395,22 +401,6 @@ void Frame::OnCompleteWord(wxCommandEvent& WXUNUSED(event))
 		return;
 
 	editor->CompleteWord();	
-}
-
-void Frame::OnGotoDefinition(wxCommandEvent& WXUNUSED(event))
-{
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetCurrentPage());
-	if( !editor )
-		return;
-	editor->GotoDefinition();	
-}
-
-void Frame::OnGotoPreviousDefinition(wxCommandEvent& WXUNUSED(event))
-{
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetCurrentPage());
-	if( !editor )
-		return;
-	editor->GotoPreviousDefintion();	
 }
 
 void Frame::OnBuildExternalDatabase(wxCommandEvent& WXUNUSED(event))
@@ -637,14 +627,6 @@ void Frame::OnWorkspaceOpen(wxUpdateUIEvent &event)
 	event.Enable(ManagerST::Get()->IsWorkspaceOpen());
 }
 
-/*void Frame::OnProjectRemoveProjectUI(wxUpdateUIEvent &event)
-{
-	wxArrayString list;
-	ManagerST::Get()->GetProjectList(list);
-	event.Enable(ManagerST::Get()->IsWorkspaceOpen() && list.GetCount() > 0);
-}
-*/
-
 // Project->New Workspace
 void Frame::OnProjectNewWorkspace(wxCommandEvent &event)
 {
@@ -695,17 +677,3 @@ void Frame::OnNewDlgCreate(wxCommandEvent &event)
 		}
 	}
 }
-
-/*
-void Frame::OnProjectRemoveProject(wxCommandEvent &event)
-{
-	wxUnusedVar(event);
-
-	wxString message (wxT("You are about to remove project '"));
-	message << ManagerST::Get()->GetActiveProjectName() << wxT("' ");
-	message << wxT(" from the workspace, click 'Yes' to proceed or 'No' to abort.");
-	if( wxMessageBox (message, wxT("Confirm"), wxYES) == wxYES ){
-		ManagerST::Get()->RemoveProject();
-	}
-}
-*/

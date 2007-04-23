@@ -24,6 +24,7 @@ TagEntry::TagEntry()
 , m_kind(_T("<unknown>"))
 , m_parent(wxEmptyString)
 , m_name(wxEmptyString)
+, m_position(wxNOT_FOUND)
 {
 }
 
@@ -47,6 +48,7 @@ TagEntry& TagEntry::operator=(const TagEntry& rhs)
 	m_name = rhs.m_name;
 	m_path = rhs.m_path;
 	m_hti = rhs.m_hti;
+	m_position = rhs.m_position;
 	m_extFields = std::map<wxString, wxString>(rhs.m_extFields);
 	return *this;
 }
@@ -66,11 +68,13 @@ bool TagEntry::operator ==(const TagEntry& rhs)
 		GetInherits() == rhs.GetInherits() &&
 		GetAccess() == rhs.GetAccess() &&
 		GetSignature() == rhs.GetSignature() &&
+		GetPosition() == rhs.GetPosition() &&
 		GetTyperef() == rhs.GetTyperef();
 }
 
 void TagEntry::Create(const char *fileName, const char *name, int lineNumber, const char *pattern, const char *kind, std::map<wxString, wxString>& extFields, const wxString& project)
 {
+	SetPosition( wxNOT_FOUND );
 	SetName( _U(name) );
 	SetLine( lineNumber );
 	SetKind( kind == NULL ? _T("<unknown>") : _U(kind) );
@@ -175,6 +179,7 @@ TagEntry::TagEntry(wxSQLite3ResultSet& rs)
 	m_extFields[_T("inherits")] = rs.GetString(9);
 	m_path = rs.GetString(10);
 	m_extFields[_T("typeref")] = rs.GetString(11);
+	m_position = wxNOT_FOUND;
 }
 
 //----------------------------------------------------------------------------

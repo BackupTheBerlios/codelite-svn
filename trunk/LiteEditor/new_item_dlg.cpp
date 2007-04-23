@@ -26,8 +26,9 @@ static const wxString FileTypeAny = wxT("Any File");
 
 ///////////////////////////////////////////////////////////////////////////
 
-NewItemDlg::NewItemDlg( wxWindow* parent, int id, wxString title, wxPoint pos, wxSize size, int style ) : wxDialog( parent, id, title, pos, size, style )
+NewItemDlg::NewItemDlg( wxWindow* parent, wxString cwd, int id, wxString title, wxPoint pos, wxSize size, int style ) : wxDialog( parent, id, title, pos, size, style )
 {
+	m_cwd = cwd;
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
 	wxBoxSizer* m_mainSizer;
@@ -80,7 +81,7 @@ NewItemDlg::NewItemDlg( wxWindow* parent, int id, wxString title, wxPoint pos, w
 	
 	m_location = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer2->Add( m_location, 1, wxALL|wxEXPAND, 5 );
-	m_location->SetValue(wxGetCwd());
+	m_location->SetValue(m_cwd);
 	
 	m_browseBtn = new wxButton( this, wxID_ANY, wxT("&Browse"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer2->Add( m_browseBtn, 0, wxALL, 5 );
@@ -133,7 +134,7 @@ void NewItemDlg::OnClick(wxCommandEvent &event)
 	} else if( id == m_cancel->GetId() ){
 		EndModal(wxID_CANCEL);
 	} else if( id == m_browseBtn->GetId() ){
-		wxDirDialog *dlg = new wxDirDialog(this, wxT("Location:"), wxGetCwd());
+		wxDirDialog *dlg = new wxDirDialog(this, wxT("Location:"),  m_cwd);
 		if(dlg->ShowModal() == wxID_OK)
 		{
 			m_location->SetValue(dlg->GetPath());

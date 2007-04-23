@@ -9,13 +9,28 @@
 #include "findreplacedlg.h"
 #include <wx/wxFlatNotebook/wxFlatNotebook.h>
 
-//------------------------------------------------------------------------------
-// The editor:
-// I tried to provide a real life example for using the AutoCompletion
-// mechanism, so i derived a class from wxScintilla
-//------------------------------------------------------------------------------
+
 class wxFindReplaceDialog;
 
+/**
+ * \ingroup LiteEditor
+ * LEditor Lite Editor editing component based on Scintilla
+ * LEditor provides most of the C++/C editing capablities including:
+ * -# Auto Completion
+ * -# Find and replace
+ * -# Bookmarks
+ * -# Folding
+ * -# Find definition of a symbol 
+ * and many many more
+ *
+ * \version 1.0
+ * first version
+ *
+ * \date 04-21-2007
+ *
+ * \author Eran
+ *
+ */
 class LEditor : public wxScintilla
 {
 	wxFileName m_fileName;
@@ -81,6 +96,12 @@ public:
 	// User clicked Ctrl+,
 	void GotoPreviousDefintion();
 
+	/**
+	 * Return true if editor definition contains more
+	 * on its stack
+	 */
+	bool CanGotoPreviousDefintion() { return m_history.empty() == false; }
+
 	// Load a file 
 	void OpenFile(const wxString& fileName, const wxString& project);
 
@@ -125,6 +146,13 @@ public:
 	// mark all occurances
 	bool MarkAll();
 
+
+	/** 
+	 * Position caret at given position
+	 * \param pos zero based offset to place the caret
+	 */
+	void SetCaretAt(long pos);	
+
 	static FindReplaceDialog* GetFindReplaceDialog() { return m_findReplaceDlg; }
 
 protected:
@@ -135,7 +163,7 @@ protected:
 	int  FindString (const wxString &str, int flags, const bool down, long pos);
 	bool IsCommentOrString(long pos);
 	void SetDirty(bool dirty);
-	void SetCaretAt(long pos);	
+	
 	
 	bool FindAndSelect();
 	bool FindAndSelect(const FindReplaceData &data);

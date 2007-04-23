@@ -19,6 +19,8 @@ MenuManager::MenuManager(void)
 	PushHandler(new BookmarkHandler(XRCID("next_bookmark")));
 	PushHandler(new BookmarkHandler(XRCID("previous_bookmark")));
 	PushHandler(new BookmarkHandler(XRCID("removeall_bookmarks")));
+	PushHandler(new GotoDefinitionHandler(XRCID("goto_definition")));
+	PushHandler(new GotoDefinitionHandler(XRCID("goto_previous_definition")));
 }
 
 MenuManager::~MenuManager(void)

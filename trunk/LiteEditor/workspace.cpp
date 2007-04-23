@@ -24,6 +24,9 @@ bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 		return false;
 	}
 
+	// reset the internal cache objects
+	m_projects.clear();
+
 	// This function sets the working directory to the workspace directory!
 	::wxSetWorkingDirectory(m_fileName.GetPath());
 
@@ -56,6 +59,7 @@ bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 	if( exDbfile.IsEmpty() == false ){
 		TagsManagerST::Get()->OpenExternalDatabase(m_fileName.GetPath() + wxT("/") + exDbfile);
 	}
+	
 	return true;
 }
 

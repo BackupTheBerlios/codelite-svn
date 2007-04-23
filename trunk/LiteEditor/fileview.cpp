@@ -219,7 +219,11 @@ void FileViewTree::OnMouseDblClick(wxMouseEvent &event)
 	if( itemData->GetData().GetKind() == ProjectItem::TypeFile ){
 		wxString filename = itemData->GetData().GetFile();
 		wxString project  = itemData->GetData().Key().BeforeFirst(wxT(':'));
-		ManagerST::Get()->OpenFile(filename, project, -1);
+
+		// Convert the file name to be in absolute path
+		wxFileName fn(filename);
+		fn.MakeAbsolute(ManagerST::Get()->GetProjectCwd(project));
+		ManagerST::Get()->OpenFile(fn.GetFullPath(), project, -1);
 		return;
 	}
 }
@@ -294,7 +298,12 @@ void FileViewTree::OnNewItem(wxCommandEvent & WXUNUSED(event))
 	}
 
 	wxString path = GetItemPath(item);
-	NewItemDlg *dlg = new NewItemDlg(this, wxID_ANY, wxT("New Item"));
+
+	// Project name
+	wxString projName = path.BeforeFirst(wxT(':'));
+	wxString projCwd = ManagerST::Get()->GetProjectCwd(projName);
+
+	NewItemDlg *dlg = new NewItemDlg(this, projCwd, wxID_ANY, wxT("New Item"));
 
 	if( dlg->ShowModal() == wxID_OK ){
 		wxString filename = dlg->GetFileName().GetFullPath();

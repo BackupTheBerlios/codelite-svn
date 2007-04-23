@@ -31,9 +31,10 @@ class TagEntry : public DbRecord
 	wxString m_pattern;		///< A pattern that can be used to locate the tag in the file
 	wxString m_kind;		///< Member, function, class, typedef etc.
 	wxString m_parent;		///< Direct parent 
-	wxTreeItemId m_hti;		///< Handle to tree item
+	wxTreeItemId m_hti;		///< Handle to tree item, not persistent item
 	wxString m_name;		///< Tag name (short name, excluding any scope names)
 	std::map<wxString, wxString> m_extFields; ///< Additional extension fields
+	long	m_position;		///< Position in the document - optional field, not persistent item
 	
 public:
 	/**
@@ -100,7 +101,7 @@ public:
 				const char *pattern, 
 				const char *kind, 
 				std::map<wxString, wxString>& extFields, 
-				const wxString& project);
+				const wxString& project	);
 
 	/**
 	 * Test if this entry has been initialised.
@@ -147,6 +148,9 @@ public:
 	wxString GetSignature() const { return GetExtField(_T("signature")); }
 	wxString GetInherits() const { return GetExtField(_T("inherits")); }
 	wxString GetTyperef() const { return GetExtField(_T("typeref")); }
+	
+	int GetPosition() const { return m_position; }
+	void SetPosition(int col) { m_position = col; }
 
 	/**
 	 * \return Scope name of the tag.

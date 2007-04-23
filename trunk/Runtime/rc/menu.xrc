@@ -75,7 +75,7 @@
                 <label>&amp;Paste\tCtrl+V</label>
             </object>
             <object class="wxMenuItem" name="wxID_DUPLICATE">
-                <label>&amp;Duplicate Line\tCtrl+D</label>
+                <label>&amp;Duplicate Line\tCtrl+U</label>
                 <help>Duplcate the current line</help>
             </object>
             <object class="wxMenuItem" name="wxID_SELECTALL">
@@ -88,9 +88,17 @@
             <object class="wxMenuItem" name="select_to_brace">
                 <label>&amp;Select to Brace\tCtrl+Shift+E</label>
             </object>            
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
             <object class="wxMenuItem" name="complete_word">
                 <label>&amp;Complete Word\tCtrl+Space</label>
             </object>                        
+            <object class="wxMenuItem" name="goto_definition">
+                <label>Go To Definition\tCtrl+D</label>
+            </object>                        
+            <object class="wxMenuItem" name="goto_previous_definition">
+                <label>Go To Previous Definition\tCtrl+P</label>
+            </object>                        
+           
         </object>
         
         <object class="wxMenu" name="search_menu">
@@ -154,6 +162,21 @@
                 <help>Add an existing project to the current workspace</help>
             </object>            
         </object>
+        
+        <object class="wxMenu" name="tags_menu">
+            <label>&amp;Tags</label>
+            <style>wxMENU_TEAROFF</style>
+            <object class="wxMenuItem" name="parse_comments">
+                <label>&amp;Parse Comments</label>
+                <checkable>1</checkable>
+                <checked>1</checked>
+            </object>
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            <object class="wxMenuItem" name="tags_options">
+                <label>&amp;Options...</label>
+            </object>
+        </object>
+        
         <!--- 
             Help menu 
          -->
@@ -230,4 +253,6 @@
             <label>Remove</label>
         </object>
     </object>
+    
+    
 </resource>
