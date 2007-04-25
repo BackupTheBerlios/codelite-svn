@@ -1,0 +1,31 @@
+TODO List:
+==========================
+1.
+handle anonymous structs, for example:
+
+typedef struct {
+	int a;
+} StamStruct;
+
+This will appear as two entries in the symbol tree/database:
+
+___anony1  --> For the actual struct
+     a
+
+StamStruct --> For the typedef
+
+If name contains __anony* try to replace it with the typedef name
+
+2. 
+Gather all macros under a single entry in the symbol tree
+
+3. Change the default icon from class to struct (the case for typedef struct {} Somthing is much more common than class)
+4. Add option to search for single symbol (like eclips's Ctrl+Shift+O)
+5. Add option to open resource in the document
+6. Replace the editor default menu 
+7. Add Tags options dialog that will allow user to do the following:
+	- Add external database to the current workspace
+	- Create database from source
+	- Select language for the parser (ctags)
+	- Allow user to set list of macros that will be ignored by ctags
+
