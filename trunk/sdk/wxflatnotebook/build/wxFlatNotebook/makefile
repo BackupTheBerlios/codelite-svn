@@ -15,11 +15,13 @@
 # make 
 ###################################################################################################################
 
+
 ifeq ($(type),debug)
    WXCFG=--debug=yes --unicode=no
    DEBUG_FLAG=d
    OBJ_DIR = ../../gcc_debug
    UNICODE=
+   OPT=-O0
 endif 
 
 ifeq ($(type),release)
@@ -27,6 +29,7 @@ ifeq ($(type),release)
    DEBUG_FLAG=
    OBJ_DIR = ../../gcc_release
    UNICODE=
+   OPT=-O3
 endif
 
 ifeq ($(type),release_unicode)
@@ -34,6 +37,7 @@ ifeq ($(type),release_unicode)
    DEBUG_FLAG=
    OBJ_DIR = ../../gcc_release_unicode
    UNICODE=u
+   OPT=-O3
 endif
 
 ifeq ($(type),debug_unicode)
@@ -41,9 +45,10 @@ ifeq ($(type),debug_unicode)
    DEBUG_FLAG=d
    OBJ_DIR = ../../gcc_debug_unicode
    UNICODE=u
+   OPT=-O0
 endif
 
-CMP = g++ 
+CMP = g++ $(OPT) 
 CXXFLAGS =  -I../../include $(shell wx-config --cxxflags $(WXCFG))
 
 ## Libraries required to link the sample program and their path
