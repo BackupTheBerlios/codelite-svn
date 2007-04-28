@@ -99,12 +99,12 @@ void FindInFilesDialog::CreateGUIControls()
 	sz->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
 
 	wxString options [] = {
-			wxT("*.c;*.cpp;*.cxx;*.cc;*.tli;*.tlh;*.h;*.hpp;*.hxx;*.hh;*.inl;*.rc;*.resx;*.idl;*.asm;*.inc"), 
+			wxT("*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx;*.hh;*.inl;*.inc"), 
 			wxT("*.*") };
 
 	m_fileTypes = new wxComboBox(this, 
 								wxID_ANY, 
-								wxT("*.c;*.cpp;*.cxx;*.cc;*.tli;*.tlh;*.h;*.hpp;*.hxx;*.hh;*.inl;*.rc;*.resx;*.idl;*.asm;*.inc"), 
+								wxT("*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx;*.hh;*.inl;*.inc"), 
 								wxDefaultPosition, wxDefaultSize,
 								2, options, wxCB_DROPDOWN);
 	sz->Add(m_fileTypes, 0, wxEXPAND | wxALL, 5);

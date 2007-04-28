@@ -116,6 +116,7 @@ void SymbolTree::BuildTree( TagTreePtr& tree )
 	m_globalsMap.clear();
 	m_prototypesMap.clear();
 	m_sortItems.clear();
+	m_macrosMap.clear();
 
 	// Get the current tree
 	if( ! tree )
@@ -202,6 +203,21 @@ void SymbolTree::AddItem(TagNode* node)
 			return;
 	}
 
+	//---------------------------------------------------------------------------------
+	// Macros are gathered under the 'Macros' node
+	//---------------------------------------------------------------------------------
+
+	if(nodeData.GetKind() == wxT("macro"))
+	{
+		std::map<wxString, wxTreeItemId>::iterator iter = m_macrosMap.find(node->GetData().GetProject());
+		if(iter != m_macrosMap.end())
+		{
+			parentHti = iter->second;
+		}
+		else
+			return;
+	}
+
 	wxTreeItemId hti = AppendItem(	parentHti,				// parent
 									displayName,			// display name
 									iconIndex,				// item image index
@@ -224,6 +240,7 @@ void SymbolTree::AddItem(TagNode* node)
 	{
 		// First time, add a 'global' node under the root
 		m_globalsMap[nodeData.GetName()] = AppendItem(hti, _("Global Functions and Variables"), 2, 2, new MyTreeItemData(_("Global Functions and Variables")));
+		m_macrosMap[nodeData.GetName()] = AppendItem(hti, _("Macros"), 2, 2, new MyTreeItemData(_("Macros")));
 	}
 
 	m_sortItems[parentHti.m_pItem] = true;

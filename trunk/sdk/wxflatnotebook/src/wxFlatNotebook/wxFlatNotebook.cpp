@@ -435,6 +435,7 @@ void wxFlatNotebook::OnNavigationKey(wxNavigationKeyEvent& event)
 				m_popupWin = new wxTabNavigatorWindow( this );
 				m_popupWin->ShowModal();
 				m_popupWin->Destroy(); 
+				SetSelection((size_t)GetSelection());
 				m_popupWin = NULL;
 			}
 			else

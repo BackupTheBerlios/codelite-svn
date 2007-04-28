@@ -256,7 +256,9 @@ void FileViewTree::OnAddExistingItem(wxCommandEvent & WXUNUSED(event))
 		return;
 	}
 
-	const wxString ALL(	wxT("All Files (*.*)|*.*"));
+	const wxString ALL(	wxT("All Files (*.*)|*.*|")
+						wxT("C/C++ Source Files (*.c;*.cpp;*.cxx;*.cc)|*.c;*.cpp;*.cxx;*.cc|")
+						wxT("C/C++ Header Files (*.h;*.hpp;*.hxx;*.hh;*.inl;*.inc)|*.h;*.hpp;*.hxx;*.hh;*.inl;*.inc"));
 	wxString vdPath = GetItemPath(item);
 
 	wxFileDialog *dlg = new wxFileDialog(this, wxT("Add Existing Item"), wxEmptyString, wxEmptyString, ALL, wxFD_MULTIPLE | wxOPEN | wxFILE_MUST_EXIST , wxDefaultPosition);

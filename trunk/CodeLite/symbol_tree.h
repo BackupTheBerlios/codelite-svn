@@ -44,6 +44,7 @@ protected:
 	TagTreePtr m_tree;
 	std::map<wxString, wxTreeItemId> m_globalsMap;
 	std::map<wxString, wxTreeItemId> m_prototypesMap;
+	std::map<wxString, wxTreeItemId> m_macrosMap;
 	std::map<void*, bool> m_sortItems;
 	std::map<wxString, bool> m_globalsKind;
 
