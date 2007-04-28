@@ -430,7 +430,7 @@ void wxFlatNotebook::OnNavigationKey(wxNavigationKeyEvent& event)
 	{
 		if( HasFlag(wxFNB_SMART_TABS) )
 		{
-			if( !m_popupWin )
+			if( !m_popupWin && GetPageCount() > 0)
 			{
 				m_popupWin = new wxTabNavigatorWindow( this );
 				m_popupWin->ShowModal();
@@ -438,7 +438,7 @@ void wxFlatNotebook::OnNavigationKey(wxNavigationKeyEvent& event)
 				SetSelection((size_t)GetSelection());
 				m_popupWin = NULL;
 			}
-			else
+			else if( m_popupWin )
 			{
 				// a dialog is already opened
 				m_popupWin->OnNavigationKey( event );
