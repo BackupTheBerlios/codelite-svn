@@ -1,0 +1,31 @@
+<LiteEditor>
+	<Layout/>
+	<Lexers>
+		<Lexer Name="Cpp">
+			<KeyWords>
+			and and_eq asm auto bitand bitor bool break case catch char class compl const const_cast continue default delete do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace new not not_eq operator or or_eq private protected public register reinterpret_cast return short signed sizeof static static_cast struct switch template this throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while xor xor_eq 
+			</KeyWords>
+			<Properties>
+				<property name="wxSCI_C_DEFAULT" bold="no" size="10" face="Courier" colour="medium blue"/>
+				<property name="wxSCI_C_COMMENT" bold="no" size="10" face="Courier" colour="FOREST GREEN"/>
+				<property name="wxSCI_C_COMMENTLINE" bold="no" size="10" face="Courier" colour="FOREST GREEN"/>
+				<property name="wxSCI_C_COMMENTDOC" bold="no" size="10" face="Courier" colour="FOREST GREEN"/>
+				<property name="wxSCI_C_NUMBER" bold="no" size="10" face="Courier" colour="medium blue"/>
+				<property name="wxSCI_C_WORD" bold="no" size="10" face="Courier" colour="medium blue"/>
+				<property name="wxSCI_C_STRING" bold="no" size="10" face="Courier" colour="grey"/>
+				<property name="wxSCI_C_CHARACTER" bold="no" size="10" face="Courier" colour="black"/>
+				<property name="wxSCI_C_UUID" bold="no" size="10" face="Courier" colour="medium blue"/>
+				<property name="wxSCI_C_PREPROCESSOR" bold="no" size="10" face="Courier" colour="salmon"/>
+				<property name="wxSCI_C_OPERATOR" bold="no" size="10" face="Courier" colour="black"/>
+				<property name="wxSCI_C_IDENTIFIER" bold="no" size="10" face="Courier" colour="black"/>
+				<property name="wxSCI_C_STRINGEOL" bold="no" size="10" face="Courier" colour="grey"/>
+				<property name="wxSCI_C_VERBATIM" bold="no" size="10" face="Courier" colour="medium blue"/>
+				<property name="wxSCI_C_COMMENTLINEDOC" bold="no" size="10" face="Courier" colour="FOREST GREEN"/>
+				<property name="wxSCI_C_WORD2" bold="no" size="10" face="Courier" colour="medium blue"/>
+				<property name="wxSCI_C_COMMENTDOCKEYWORD" bold="no" size="10" face="Courier" colour="blue"/>
+				<property name="wxSCI_C_COMMENTDOCKEYWORDERROR" bold="no" size="10" face="Courier" colour="red"/>
+				<property name="wxSCI_C_GLOBALCLASS" bold="no" size="10" face="Courier" colour="medium blue"/>
+			</Properties>
+		</Lexer>
+	</Lexers>
+</LiteEditor>
