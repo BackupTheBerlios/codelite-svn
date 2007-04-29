@@ -8,7 +8,7 @@
 #include "wx/filename.h"
 #include "findreplacedlg.h"
 #include <wx/wxFlatNotebook/wxFlatNotebook.h>
-
+#include "editor_base.h"
 
 class wxFindReplaceDialog;
 
@@ -36,27 +36,10 @@ class LEditor : public wxScintilla
 	wxFileName m_fileName;
 	wxString m_project;
 	wxStopWatch m_watch;
-	std::map<wxString, int> m_propertyInt;
+	EditorBasePtr m_editor;
 
 	// static cache among editors to keep track of jumping between editors
 	static std::stack<TagEntry> m_history;
-	CallTipPtr m_ct;
-	
-	enum TipKind
-	{
-		TipNone = -1,
-		TipHover,
-		TipFuncProto
-	};
-
-	enum CalltipClickPos
-	{
-		Elsewhere = 0,
-		ArrowUp ,
-		ArrowDown
-	};
-
-	TipKind m_tipKind;
 	static FindReplaceDialog *m_findReplaceDlg;
 	static FindReplaceData m_findReplaceData;
 	int m_lastMatchPos;
@@ -146,7 +129,6 @@ public:
 	// mark all occurances
 	bool MarkAll();
 
-
 	/** 
 	 * Position caret at given position
 	 * \param pos zero based offset to place the caret
@@ -155,15 +137,11 @@ public:
 
 	static FindReplaceDialog* GetFindReplaceDialog() { return m_findReplaceDlg; }
 
-protected:
-
 	// Util function
 	wxChar PreviousChar(const int& pos, int &foundPos);
 	wxChar NextChar(const int& pos, int &foundPos);
 	int  FindString (const wxString &str, int flags, const bool down, long pos);
-	bool IsCommentOrString(long pos);
 	void SetDirty(bool dirty);
-	
 	
 	bool FindAndSelect();
 	bool FindAndSelect(const FindReplaceData &data);
@@ -171,21 +149,36 @@ protected:
 	bool Replace();
 	bool Replace(const FindReplaceData &data);
 
-	
-	// Add marker at the current line
+	/**
+	 * Add marker to the current line
+	 */
 	void AddMarker();
 
-	// Delete the marker from the current line
+	/**
+	 * Delete a marker from the current line
+	 */
 	void DelMarker();
 
+	/**
+	 * Attempt to match brace backward
+	 * \param chCloseBrace the closing brace character (can be one of: '}' ')' ']') 
+	 * \param pos position to start the match
+	 * \param matchedPos output, the position of the matched brace
+	 * \return true on match false otherwise
+	 */
+	bool MatchBraceBack(const wxChar& chCloseBrace, const long &pos, long &matchedPos);
+
+	/**
+	 * Return the current LEditor history stack
+	 */
+	static std::stack<TagEntry> &GetHistory() { return m_history; }
+
 private:
+
 	void SetProperties();
 	void DefineMarker(int marker, int markerType, wxColor fore, wxColor back);
-	void GetWordAndScope(wxString& word, wxString &scope, wxString &scopeName);
 	void SetLineNumberWidth();
 	bool SaveToFile(const wxFileName &fileName);
-	void AutoIndent(const wxChar& nChar);
-	bool MatchBraceBack(const wxChar& chCloseBrace, const long &pos, long &matchedPos);
 	void BraceMatch(const bool& bSelRegion);
 
 	// Conevert FindReplaceDialog flags to wxSCI flags

@@ -5,14 +5,12 @@
 #include <wx/settings.h>
 #include "parse_thread.h"
 #include "ctags_manager.h"
-#include "language.h"
-#include "editor_config.h"
 #include "manager.h"
 #include "menumanager.h"
 #include <wx/fdrepdlg.h>
 #include "findreplacedlg.h"
 #include <wx/wxFlatNotebook/renderer.h>
-#include "symbols_dialog.h"
+#include "editor_cpp.h"
 
 // fix bug in wxscintilla.h
 #ifdef EVT_SCI_CALLTIP_CLICK
@@ -47,35 +45,13 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 : wxScintilla(parent, id, wxDefaultPosition, size)
 , m_fileName(fileName)
 , m_project(project)
-, m_tipKind(TipNone)
 , m_lastMatchPos(0)
 {
-	// Initialise the map between a macro of proerpty and its value
-	m_propertyInt[_T("wxSCI_C_DEFAULT")] = 0;
-	m_propertyInt[_T("wxSCI_C_COMMENT")] = 1;
-	m_propertyInt[_T("wxSCI_C_COMMENTLINE")] = 2;
-	m_propertyInt[_T("wxSCI_C_COMMENTDOC")] = 3;
-	m_propertyInt[_T("wxSCI_C_NUMBER")] = 4;
-	m_propertyInt[_T("wxSCI_C_WORD")] = 5;
-	m_propertyInt[_T("wxSCI_C_STRING")] = 6;
-	m_propertyInt[_T("wxSCI_C_CHARACTER")] = 7;
-	m_propertyInt[_T("wxSCI_C_UUID")] = 8;
-	m_propertyInt[_T("wxSCI_C_PREPROCESSOR")] = 9;
-	m_propertyInt[_T("wxSCI_C_OPERATOR")] = 10;
-	m_propertyInt[_T("wxSCI_C_IDENTIFIER")] = 11;
-	m_propertyInt[_T("wxSCI_C_STRINGEOL")] = 12;
-	m_propertyInt[_T("wxSCI_C_VERBATIM")] = 13;
-	m_propertyInt[_T("wxSCI_C_REGEX")] = 14;
-	m_propertyInt[_T("wxSCI_C_COMMENTLINEDOC")] = 15;
-	m_propertyInt[_T("wxSCI_C_WORD2")] = 16;
-	m_propertyInt[_T("wxSCI_C_COMMENTDOCKEYWORD")] = 17;
-	m_propertyInt[_T("wxSCI_C_COMMENTDOCKEYWORDERROR")] = 18;
-	m_propertyInt[_T("wxSCI_C_GLOBALCLASS")] = 19;
-
+	m_editor = EditorBasePtr( new EditorBase(this) );
 	SetProperties();
 
 	// If file name is provided, open it
-	if(	false == m_fileName.GetFullPath().IsEmpty() &&		// valid file name was passed
+	if(	false == m_fileName.GetFullPath().IsEmpty() &&			// valid file name was passed
 		m_fileName.GetFullPath().Find(wxT("Untitled")) == -1)	// file name does not contain 'Untitiled'
 	{
 		OpenFile(m_fileName.GetFullPath(), m_project);
@@ -193,45 +169,6 @@ void LEditor::SetProperties()
     CallTipSetBackground(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
 	CallTipSetForeground(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOTEXT));
 	
-	//-----------------------------------------------
-	// Load laguage settings from configuration file
-	//-----------------------------------------------
-
-	// Set the key words and the lexer
-	wxString keyWords;
-	std::vector<AttributeStyle> styles;
-
-	// Read the configuration file
-	if(EditorConfigST::Get()->IsOk())
-	{
-		EditorConfigST::Get()->LoadWords(wxT("Cpp"), keyWords);
-		EditorConfigST::Get()->LoadStyle(wxT("Cpp"), styles);
-	}
-
-	// Update the control
-	SetLexer(wxSCI_LEX_CPP);
-	SetKeyWords(0, keyWords);
-	StyleClearAll();
-
-	for(size_t i=0; i<styles.size(); i++)
-	{
-		AttributeStyle st = styles[i];
-		std::map<wxString, int>::iterator iter = m_propertyInt.find(st.GetName());
-		if(iter == m_propertyInt.end())
-			continue;
-
-		int size = styles[i].GetFontSize();
-		wxString face = styles[i].GetFaceName();
-		bool bold = styles[i].IsBold();
-
-		wxFont font(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
-		font.SetFaceName(face);
-
-		StyleSetFont(iter->second, font);
-		StyleSetSize(iter->second, styles[i].GetFontSize());
-		StyleSetForeground(iter->second, styles[i].GetFgColour());
-	}
-	
 	//---------------------------------------------------
 	// Set autocompletion parameters
 	//---------------------------------------------------
@@ -272,7 +209,7 @@ void LEditor::OnCharAdded(wxScintillaEvent& event)
 
 	// Always do auto-indentation
 	if(event.GetKey() == ':' || event.GetKey() == '}' || event.GetKey() == '\n')
-		AutoIndent(event.GetKey());
+		m_editor->AutoIndent(event.GetKey());
 
 	if(false == GetProjectName().IsEmpty())
 	{
@@ -286,8 +223,7 @@ void LEditor::OnCharAdded(wxScintillaEvent& event)
 			break;
 		case ')':
 			{
-				CallTipCancel();
-				m_tipKind = TipNone;
+				m_editor->CallTipCancel();
 				break;
 			}
 		case '\n':
@@ -442,32 +378,6 @@ wxString LEditor::GetWordUnderCursor()
 	return GetTextRange(start, end);
 }
 
-void LEditor::GetWordAndScope(wxString& word, wxString &scope, wxString& scopeName)
-{
-	// Get the partial word that we have
-	long pos = GetCurrentPos();
-	long start = WordStartPosition(pos, true);
-	long end   = WordEndPosition(pos, true);
-
-	word = GetTextRange(start, end);
-	if(word.IsEmpty())
-		return;
-
-	// Get the visible scope: to reduce the overhead of scanning the entire file
-	// we will work on a smaller scope which will be extracted using the following
-	// logic: scope will be from 'start' exprStart, up to the first function that starts from
-	// here and up or start of file of no function was found
-	TagEntry tag;
-
-	int line = 1;
-	if( TagsManagerST::Get()->FunctionByLine(LineFromPosition(start), m_fileName.GetFullPath(), m_project, tag) )
-		line = tag.GetLine();
-
-	long scopeStartPos = PositionFromLine(line - 1/* wxScintilla counts line from zero */);
-	scope = GetTextRange(scopeStartPos, start);
-	scopeName = tag.GetScopeName();
-}
-
 //---------------------------------------------------------------------------
 // Most of the functionality for this functionality
 // is done in the Language & TagsManager objects, however,
@@ -477,33 +387,7 @@ void LEditor::GetWordAndScope(wxString& word, wxString &scope, wxString& scopeNa
 //---------------------------------------------------------------------------
 void LEditor::CompleteWord()
 {
-	std::vector<TagEntry> tags;
-	wxString scope;
-	wxString scopeName;
-	wxString word;
-
-	//	Make sure we are not on a comment section
-	if(IsCommentOrString(GetCurrentPos()))
-		return;
-
-	// Get the local scope and the word under the cursor
-	GetWordAndScope(word, scope ,scopeName);
-
-	if(word.IsEmpty())
-		return;
-
-	TagsManagerST::Get()->GetTags(word, scopeName, tags, PartialMatch, scope);
-
-	/// Convert the vector to a string delimited
-	wxString list;
-	size_t i=0;
-	if( tags.empty() == false )
-	{
-		for(; i<tags.size()-1; i++)
-			list.Append(tags[i].GetName() + _T("@"));
-		list.Append(tags[i].GetName());
-		AutoCompShow(static_cast<int>(word.Length()), list);
-	}
+	m_editor->CompleteWord();
 }
 
 //------------------------------------------------------------------
@@ -514,105 +398,9 @@ void LEditor::CompleteWord()
 //------------------------------------------------------------------
 void LEditor::CodeComplete()
 {
-	long pos = GetCurrentPos();
-	bool showFuncProto = false;
-
-	wxChar ch;
-
-	//	Make sure we are not on a comment section
-	if(IsCommentOrString(pos))
-		return;
-
-	// Search for first non-whitespace wxChar
-	int pos1, pos2, end;
-	ch = PreviousChar(pos, pos1);
-
-	switch(ch)
-	{
-	case '.':
-		// Class / Struct completion
-		PreviousChar(pos1, end);
-		break;
-	case '>':
-		// Check previous character if is '-'
-		// We open drop box as well
-		if(PreviousChar(pos1, pos2) == '-')
-		{
-			PreviousChar(pos2, end);
-			break;
-		}
-	case ':':
-		// Check previous character if is ':'
-		// We open drop box as well
-		if(PreviousChar(pos1, pos2) == _T(':'))
-		{
-			PreviousChar(pos2, end);
-			break;
-		}
-	case '(':
-		showFuncProto = true;
-		PreviousChar(pos1, end);
-		break;
-	default:
-		return;
-	}
-
-	// Get a full expression and pass it, along with the local scope
-	// to the Language parser
-	// We define an expression, by reading from pos and up until we find
-	// the first '{' or ';' or SOT
-	int semiColPos = FindString(_T(";"), 0, false, GetCurrentPos());
-	int lcurlyPos  = FindString(_T("{"), 0, false, GetCurrentPos());
-	int start;
-	TagEntry tag;
-	int line = 1;
-
-	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
-	wxString expr = GetTextRange(start, pos);
-
-	// Get the closest function to the current caret position, this will give us a
-	// good idea of the scope we are in it
-	if( TagsManagerST::Get()->FunctionByLine(LineFromPosition(start)+1,	// scintilla are counting from zero,
-																		// while ctags are counting from one
-											 m_fileName.GetFullPath(), m_project, tag) )
-	{
-		line = tag.GetLine();
-	}
-
-	long scopeStartPos = PositionFromLine(line - 1/* wxScintilla counts line from zero */);
-	wxString scope = GetTextRange(scopeStartPos, end);
-	wxString scopeName = tag.GetScopeName();
-
-	if( showFuncProto )
-	{
-		// display call tip with function prototype
-		m_ct = TagsManagerST::Get()->GetFunctionTip(expr, scope, scopeName);
-		if( m_ct->Count() > 0 )
-		{
-			// we have a match
-			CallTipShow(GetCurrentPos(), m_ct->Next());
-			m_tipKind = TipFuncProto;
-		}
-	}
-	else
-	{
-		//--------------------------------------------------------------
-		// Get list of candidates if any and popup the Autucomplete box
-		//--------------------------------------------------------------
-
-		std::vector<TagEntry> candidates;
-		if( TagsManagerST::Get()->AutoCompleteCandidates(expr, scope, scopeName, candidates) )
-		{
-			/// Convert the vector to a string delimited
-			wxString list;
-			size_t i=0;
-			for(; i<candidates.size()-1; i++)
-				list.Append(candidates[i].GetName() + _T("@"));
-			list.Append(candidates[i].GetName());
-			AutoCompShow(0, list);
-		}
-	}
+	m_editor->CodeComplete();
 }
+
 
 //----------------------------------------------------------------
 // Demonstrate how to achieve symbol browsing using the CodeLite
@@ -621,173 +409,27 @@ void LEditor::CodeComplete()
 //----------------------------------------------------------------
 void LEditor::GotoDefinition()
 {
-	std::vector<TagEntry> tags;
-
-	//	Make sure we are not on a comment section
-	if(IsCommentOrString(GetCurrentPos()))
-		return;
-
-	// Get the word under the cursor OR the selected word
-	wxString word = GetSelectedText();
-	if(word.IsEmpty())
-	{
-		// No selection, try to find the word under the cursor
-		long pos = GetCurrentPos();
-		long end = WordEndPosition(pos, true);
-		long start = WordStartPosition(pos, true);
-
-		// Get the word
-		word = GetTextRange(start, end);
-		if(word.IsEmpty())
-			return;
-	}
-
-	wxString logmsg;
-	logmsg << _T("Searching for symbol: ") << word;
-	
-	// get all tags that matches the name (we use exact match)
-	TagsManagerST::Get()->FindSymbol(word, tags);
-	if(tags.empty())
-		return;
-
-	// Remember this position before skipping to the next one
-	TagEntry tag;
-	tag.SetLine(LineFromPosition(GetCurrentPos())+1 /** scintilla counts from zero, while tagentry from 1**/);
-	tag.SetFile(m_fileName.GetFullPath());
-	tag.SetProject(m_project);
-	tag.SetPosition(GetCurrentPos());
-
-	// Keep the current position as well
-	m_history.push(tag);
-
-	// Did we get a single match?
-	if(tags.size() == 1)
-	{
-		// Just open the file and set the cursor on the match we found
-		ManagerST::Get()->OpenFile(tags[0]);
-	}
-	else
-	{
-		// popup a dialog offering the results to the user
-		SymbolsDialog *dlg = new SymbolsDialog(this);
-		dlg->AddSymbols( tags, 0 );
-		if(dlg->ShowModal() == wxID_OK){
-			ManagerST::Get()->OpenFile(dlg->GetFile(), GetProject(), dlg->GetLine()-1);
-		}
-		dlg->Destroy();
-	}
+	m_editor->GotoDefinition();
 }
 
 void LEditor::GotoPreviousDefintion()
 {
-	if(m_history.empty())
-		return;
-
-	// Get the last tag visited
-	TagEntry tag(m_history.top());
-	ManagerST::Get()->OpenFile(tag);
-
-	// remove it from the stack
-	m_history.pop();
+	m_editor->GotoPreviousDefintion();
 }
 
 void LEditor::OnDwellStart(wxScintillaEvent & event)
 {
-	// Handle dewell only if a project is opened
-	if( GetProjectName().IsEmpty())
-		return;
-
-	int start;
-	int line = 1;
-	long pos = event.GetPosition();
-	int  end = WordEndPosition(pos, true);
-	int word_start = WordStartPosition(pos, true);
-
-	// try to guess whether we are "standing" over a function
-	int foundPos = wxNOT_FOUND;
-	wxChar nextchar = NextChar( end, foundPos );
-	bool isFunc = nextchar == _T('(') ? true : false;
-
-	// get the expression we are standing on it
-	if( IsCommentOrString( pos ) )
-		return;
-	
-	// get the token
-	wxString token = GetTextRange(word_start, end);
-
-	// Get a full expression
-	// We define an expression, by reading from pos and up until we find
-	// the first '{' , ';' or SOT
-	int semiColPos = FindString(_T(";"), 0, false, end);
-	int lcurlyPos  = FindString(_T("{"), 0, false, end);
-	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
-
-	//---------------------------------
-	// Get the scope name
-	//---------------------------------
-	
-	// Get the closest function to the current caret position, this will give us a
-	// good idea of the scope we are in it
-	TagEntry tag;
-	if( TagsManagerST::Get()->FunctionByLine(LineFromPosition(start)+1,	// scintilla are counting from zero, while ctags are counting from one
-	        								 m_fileName.GetFullName(), m_project, tag) )
-	{
-		line = tag.GetLine();
-	}
-
-	long scopeStartPos = PositionFromLine(line - 1/* wxScintilla counts line from zero */);
-	wxString scope = GetTextRange(scopeStartPos, end);
-	wxString scopeName = tag.GetScopeName();
-
-	//-------------------------------------------------------------
-	// now we are ready to process the scope and build our tips
-	//-------------------------------------------------------------
-	std::vector<wxString> tips;
-	TagsManagerST::Get()->GetHoverTip(token, scope, scopeName, isFunc, tips);
-
-	//-------------------------------------------------------------
-	// display a tooltip
-	//-------------------------------------------------------------
-	wxString tooltip;
-	if( tips.size() > 0 )
-	{
-		tooltip << tips[0];
-		for( size_t i=1; i<tips.size(); i++ )
-			tooltip << _T("\n\n") << tips[i];
-
-		// cancel any old calltip and display the new one
-		CallTipCancel();
-		CallTipShow( event.GetPosition(), tooltip );
-		m_tipKind = TipHover;
-	}
+	m_editor->OnDwellStart(event);
 }
 
-void LEditor::OnDwellEnd(wxScintillaEvent & WXUNUSED(event))
+void LEditor::OnDwellEnd(wxScintillaEvent & event)
 {
-	// cancel hover tip
-	if( m_tipKind == TipHover )
-	{
-		if( CallTipActive() )
-			CallTipCancel();
-		m_tipKind = TipNone;
-	}
+	m_editor->OnDwellEnd(event);
 }
 
 void LEditor::OnCallTipClick(wxScintillaEvent& event)
 {
-	switch( event.GetPosition() )
-	{
-	case ArrowUp:
-		CallTipCancel();
-		CallTipShow(GetCurrentPos(), m_ct->Prev());
-		break;
-	case ArrowDown:
-		CallTipCancel();
-		CallTipShow(GetCurrentPos(), m_ct->Next());
-		break;
-	case Elsewhere:
-		break;
-	}
+	m_editor->OnCallTipClick(event);
 }
 
 void LEditor::OnModified(wxScintillaEvent& event)
@@ -913,121 +555,6 @@ int LEditor::FindString (const wxString &str, int flags, const bool down, long p
 	else return -1;
 }
 
-bool LEditor::IsCommentOrString(long pos)
-{
-	int style;
-	style = GetStyleAt(pos);
-	return (style == wxSCI_C_COMMENT				||
-			style == wxSCI_C_COMMENTLINE			||
-			style == wxSCI_C_COMMENTDOC				||
-			style == wxSCI_C_COMMENTLINEDOC			||
-			style == wxSCI_C_COMMENTDOCKEYWORD		||
-			style == wxSCI_C_COMMENTDOCKEYWORDERROR ||
-			style == wxSCI_C_STRING					||
-			style == wxSCI_C_STRINGEOL				||
-			style == wxSCI_C_CHARACTER);
-}
-
-void LEditor::AutoIndent(const wxChar& nChar)
-{
-	int nPos = PositionBefore(GetCurrentPos());
-	int nLine = LineFromPosition(nPos);
-	int lineIndent = GetLineIndentation(nLine);	// Default line indentation
-	int savedLineIndent = lineIndent;
-	int indentSize = GetIndent();
-	int newPos;
-
-	// Find the previous types char, if it is '{' 
-	// then increase the indentation level
-	// if not, the indentation level is the same as 
-	// previous line
-	int prevPos = nPos;
-	long nMatchPos;
-	bool bFirstCharOfDoc = true;
-	wxChar ch;
-	switch(nChar)
-	{
-	case '\n':
-		if(prevPos == 0) 
-			// Probably we are at the firs line of the document
-			bFirstCharOfDoc = true;
-
-		while(PositionBefore(prevPos) || bFirstCharOfDoc)
-		{
-			prevPos = PositionBefore(prevPos);
-			bFirstCharOfDoc = false;
-			if((GetCharAt(prevPos) != '\r') &&
-				(GetCharAt(prevPos) != '\t') &&
-				(GetCharAt(prevPos) != '\v') &&
-				(GetCharAt(prevPos) != ' ') )
-			{
-				ch = GetCharAt(prevPos);
-				if(ch == '{')
-				{
-					// Make sure that this char is not in a comment
-					// Check the style at the char position
-					if(IsCommentOrString(prevPos))
-						continue;
-					lineIndent = GetLineIndentation(LineFromPosition(prevPos)) + indentSize;
-					break;
-				}
-				else if(ch == ':')
-				{
-					if(IsCommentOrString(prevPos))
-						continue;
-					lineIndent = GetLineIndentation(LineFromPosition(prevPos)) - indentSize;
-
-					// Keep indentation positive
-					lineIndent = (lineIndent > 0) ? lineIndent : 0;
-
-					// Reduce the line indentation for this line
-					SetLineIndentation(LineFromPosition(prevPos), lineIndent);
-
-					// Restore the line number
-					if(lineIndent == 0)
-						lineIndent = indentSize;
-					else
-						lineIndent = savedLineIndent;
-					break;
-				}
-				else
-					break;
-			}
-		}
-
-		// Set the new indentation and postion the cursor
-		SetLineIndentation(nLine + 1, lineIndent);
-		newPos = GetLineEndPosition(nLine + 1);
-		SetCurrentPos(newPos);
-		SetSelectionStart(newPos);
-		SetSelectionEnd(newPos);
-		break;
-	case '}':
-		if(IsCommentOrString(prevPos))
-			break;
-
-		// Find the matching OPENING brace
-		if(!MatchBraceBack('}', prevPos, nMatchPos))
-			return;
-
-		lineIndent = GetLineIndentation(LineFromPosition(nMatchPos));
-		//lineIndent -= indentSize;
-		if(lineIndent<0)
-			lineIndent=0;
-
-		// Set the new indentation and postion the cursor
-		SetLineIndentation(nLine, lineIndent);
-		newPos = GetLineEndPosition(nLine);
-		SetCurrentPos(newPos);
-		SetSelectionStart(newPos);
-		SetSelectionEnd(newPos);
-		break;
-	default:
-		// Do nothing
-		break;
-	}
-}
-
 bool LEditor::MatchBraceBack(const wxChar& chCloseBrace, const long &pos, long &matchedPos)
 {
 	if(pos<=0)
@@ -1056,7 +583,7 @@ bool LEditor::MatchBraceBack(const wxChar& chCloseBrace, const long &pos, long &
 		nPrevPos = PositionBefore(nPrevPos);
 
 		// Make sure we are not in a comment
-		if(IsCommentOrString(nPrevPos))
+		if(m_editor->IsCommentOrString(nPrevPos))
 			continue;
 
 		ch = GetCharAt(nPrevPos);
@@ -1087,26 +614,26 @@ void LEditor::MatchBraceAndSelect(bool selRegion)
 	// Get current position
 	long pos = GetCurrentPos();
 
-	if(GetCharAt(pos) == '{' && !IsCommentOrString(pos))
+	if(GetCharAt(pos) == '{' && !m_editor->IsCommentOrString(pos))
 	{
 		BraceMatch(selRegion);
 		return;
 	}
 
-	if(GetCharAt(PositionBefore(pos)) == '{' && !IsCommentOrString(PositionBefore(pos)))
+	if(GetCharAt(PositionBefore(pos)) == '{' && !m_editor->IsCommentOrString(PositionBefore(pos)))
 	{
 		SetCurrentPos(PositionBefore(pos));
 		BraceMatch(selRegion);
 		return;
 	}
 
-	if(GetCharAt(pos) == '}' && !IsCommentOrString(pos))
+	if(GetCharAt(pos) == '}' && !m_editor->IsCommentOrString(pos))
 	{
 		BraceMatch(selRegion);
 		return;
 	}
 
-	if(GetCharAt(PositionBefore(pos)) == '}' && !IsCommentOrString(PositionBefore(pos)))
+	if(GetCharAt(PositionBefore(pos)) == '}' && !m_editor->IsCommentOrString(PositionBefore(pos)))
 	{
 		SetCurrentPos(PositionBefore(pos));
 		BraceMatch(selRegion);

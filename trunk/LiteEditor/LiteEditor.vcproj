@@ -249,10 +249,22 @@
 				RelativePath=".\editor.h">
 			</File>
 			<File
+				RelativePath=".\editor_base.cpp">
+			</File>
+			<File
+				RelativePath=".\editor_base.h">
+			</File>
+			<File
 				RelativePath=".\editor_config.cpp">
 			</File>
 			<File
 				RelativePath=".\editor_config.h">
+			</File>
+			<File
+				RelativePath=".\editor_cpp.cpp">
+			</File>
+			<File
+				RelativePath=".\editor_cpp.h">
 			</File>
 		</Filter>
 		<Filter
