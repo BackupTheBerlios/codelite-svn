@@ -47,12 +47,12 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 , m_project(project)
 , m_lastMatchPos(0)
 {
-	m_editor = EditorBasePtr( new EditorBase(this) );
+	m_editor = EditorBasePtr( new EditorCpp(this) );
 	SetProperties();
 
 	// If file name is provided, open it
-	if(	false == m_fileName.GetFullPath().IsEmpty() &&			// valid file name was passed
-		m_fileName.GetFullPath().Find(wxT("Untitled")) == -1)	// file name does not contain 'Untitiled'
+	if(	false == m_fileName.GetFullPath().IsEmpty() &&					// valid file name was passed
+		m_fileName.GetFullPath().Find(wxT("Untitled")) == wxNOT_FOUND)	// file name does not contain 'Untitiled'
 	{
 		OpenFile(m_fileName.GetFullPath(), m_project);
 	}
@@ -316,7 +316,7 @@ bool LEditor::SaveFileAs()
 		m_fileName = name;
 	}
 	
-	delete dlg;
+	dlg->Destroy();
 	return true;
 }
 
