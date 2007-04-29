@@ -236,12 +236,17 @@ void Frame::CreateGUIControls(void)
 	GetStatusBar()->SetStatusText(_("Ready"));
 
 	// "commit" all changes made to wxAuiManager
-    m_mgr.Update();
+	wxString pers = EditorConfigST::Get()->LoadPerspective(wxT("default"));
+
+	// if we have a perspective, use it, else use the default persprective
+	if( pers.IsEmpty() == false ){
+		m_mgr.LoadPerspective(pers);
+	} else {
+		m_mgr.Update();
+	}
 
 	SetAutoLayout (true);
 	Layout();
-
-	
 }
 
 void Frame::OnQuit(wxCommandEvent& WXUNUSED(event))
@@ -311,6 +316,7 @@ void Frame::OnClose(wxCloseEvent& event)
 	// Stop the search thread
 	SearchThreadST::Get()->StopSearch();
 
+	EditorConfigST::Get()->SavePerspective(wxT("default"), m_mgr.SavePerspective());
 	event.Skip();
 }
 

@@ -75,6 +75,7 @@ class EditorConfig
 {
 	friend class Singleton<EditorConfig>;
 	wxXmlDocument* m_doc;
+	wxFileName m_fileName; 
 
 public:
 	bool Load(const wxFileName &fileName);
@@ -95,6 +96,20 @@ public:
 	 * \param style style value to save
 	 */
 	void SaveNotebookStyle(wxString &nbName, long style);
+
+	/**
+	 * Save the perspective to the configuration file
+	 * \param name perspective name
+	 * \param pers perspective to save
+	 */
+	void SavePerspective(const wxString &name, const wxString &pers);
+
+	/**
+	 * Load perspective from configuration file
+	 * \param name perspective name
+ 	 * \return perspective
+	 */
+	wxString LoadPerspective(const wxString &name) const ;
 
 private:
 	EditorConfig();
