@@ -29,9 +29,11 @@ If name contains __anony* try to replace it with the typedef name
 	
 8. Indentation bug: when pressing enter, the caret goes to the end of the line
 9. Add other lexers other than C++
-10. Save layout
+10. ******** FIXED ********* Save layout
 11. Move options from the xml file to the editor
 12. When using editor, write in status bar the current line and column.
 13. Add toolbar
 14. ******** FIXED ********* Fix a focus problem when using the 'Smart Tabbing' dialog, focus remains on the old editor page
 15. ******** FIXED ********* Add filter to 'Add Item...' dialog (for headers, sources and *.*)
+16. Add a 'View' Menu that allows showing/hiding windows
+17. When using the 'Find In Files' dialog, make sure that the Output pane is visible
