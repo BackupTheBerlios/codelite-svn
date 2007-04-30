@@ -63,7 +63,7 @@
             </object>
             <object class="wxMenuItem" name="wxID_REDO">
                 <label>&amp;Redo\tCtrl+Y</label>
-            </object>Courier New
+            </object>
             <object class="wxMenuItem" name="wxID_SEPARATOR"/>            
             <object class="wxMenuItem" name="wxID_CUT">
                 <label>Cut\tCtrl+X</label>
@@ -100,7 +100,29 @@
             </object>                        
            
         </object>
-        
+
+        <object class="wxMenu" name="view_menu">
+            <label>&amp;View</label>
+            <style>wxMENU_TEAROFF</style>
+            <object class="wxMenu" name="workspace_pane_submenu">
+                <label>&amp;Workspace</label>
+                <style>wxMENU_TEAROFF</style>
+                <object class="wxMenuItem" name="win_class_view">
+                    <label>&amp;Class View\tCtrl+Shift+C</label>
+                </object>
+                <object class="wxMenuItem" name="win_file_view">
+                    <label>&amp;File View\tCtrl+Alt+L</label>
+                </object>
+            </object>		  
+            <object class="wxMenu" name="output_pane_submenu">
+                <label>&amp;Output</label>
+                <style>wxMENU_TEAROFF</style>
+                <object class="wxMenuItem" name="win_find_in_files">
+                    <label>&amp;Find In Files</label>
+                </object>
+            </object>		  
+	    </object>		  
+	    
         <object class="wxMenu" name="search_menu">
             <label>&amp;Search</label>
             <style>wxMENU_TEAROFF</style>

@@ -37,3 +37,6 @@ If name contains __anony* try to replace it with the typedef name
 15. ******** FIXED ********* Add filter to 'Add Item...' dialog (for headers, sources and *.*)
 16. Add a 'View' Menu that allows showing/hiding windows
 17. When using the 'Find In Files' dialog, make sure that the Output pane is visible
+18. Add dependencies dialog for build order
+19. Add build options to project
+20. Add right click menu to tab
