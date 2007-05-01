@@ -57,3 +57,20 @@ void XmlUtils::UpdateProperty(wxXmlNode *node, const wxString &name, const wxStr
 	// No such property, create new one and add it
 	node->AddProperty(name, value);
 }
+
+wxString XmlUtils::ReadString(wxXmlNode *node, const wxString &propName, const wxString &defaultValue)
+{
+	return node->GetPropVal(propName, defaultValue);
+}
+
+long XmlUtils::ReadLong(wxXmlNode *node, const wxString &propName, long defaultValue)
+{
+	wxString val = node->GetPropVal(propName, wxEmptyString);
+	if( val.IsEmpty() ){
+		return defaultValue;
+	}
+
+	long retVal = defaultValue;
+	val.ToLong(&retVal);
+	return retVal;
+}

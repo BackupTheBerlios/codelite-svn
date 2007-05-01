@@ -33,6 +33,21 @@ public:
 	 * \param the element's tag name 
 	 */
 	static wxXmlNode *FindFirstByTagName(const wxXmlNode *parent, const wxString &tagName);
+
+
+	/**
+	 * Read string property from the given node
+	 * \param propName the property name
+	 * \param defaultValue default value to return if no property exist
+	 */
+	static wxString ReadString(wxXmlNode *node, const wxString &propName, const wxString &defaultValue = wxEmptyString);
+
+	/**
+	 * Read long property from the given node
+	 * \param propName the property name
+	 * \param defaultValue default value to return if no property exist
+	 */
+	static long ReadLong(wxXmlNode *node, const wxString &propName, long defaultValue = -1);
 };
 
 #endif // XMLUTILS_H

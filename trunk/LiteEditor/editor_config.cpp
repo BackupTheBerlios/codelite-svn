@@ -61,18 +61,13 @@ void EditorConfig::LoadStyle(const wxString& lexer, std::vector<AttributeStyle>&
 				wxXmlNode* prop = node->GetChildren();
 				while( prop )
 				{
-					long   fontSize;
-					wxString colour;
-
 					// Read the font attributes
-					wxString Name = prop->GetPropVal(wxT("Name"), wxT("wxSCI_C_DEFAULT"));
-					wxString bold = prop->GetPropVal(wxT("Bold"), wxT("no"));
-					wxString size = prop->GetPropVal(wxT("Size"), wxT("10"));
-					wxString face = prop->GetPropVal(wxT("Face"), wxT("Courier"));
-
-					size.ToLong(&fontSize);
-					colour = prop->GetPropVal(wxT("Colour"), wxT("black"));
-
+					wxString Name = XmlUtils::ReadString(prop, wxT("Name"), wxT("wxSCI_C_DEFAULT"));
+					wxString bold = XmlUtils::ReadString(prop, wxT("Bold"), wxT("no"));
+					wxString face = XmlUtils::ReadString(prop, wxT("Face"), wxT("Courier"));
+					wxString colour = XmlUtils::ReadString(prop, wxT("Colour"), wxT("black"));
+					long fontSize = XmlUtils::ReadLong(prop, wxT("Size"), 10);
+					
 					AttributeStyle style = AttributeStyle(colour, fontSize, Name, face, bold == wxT("Yes"));
 					styles.push_back( style );
 
