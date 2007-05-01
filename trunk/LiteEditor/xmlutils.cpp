@@ -16,6 +16,10 @@ wxXmlNode *XmlUtils::FindNodeByName(const wxXmlNode *parent, const wxString &tag
 
 wxXmlNode *XmlUtils::FindFirstByTagName(const wxXmlNode *parent, const wxString &tagName)
 {
+	if( !parent ){
+		return NULL;
+	}
+
 	wxXmlNode *child = parent->GetChildren();
 	while( child ){
 		if( child->GetName() == tagName){
