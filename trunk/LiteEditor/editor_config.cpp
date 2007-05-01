@@ -88,6 +88,10 @@ void EditorConfig::LoadStyle(const wxString& lexer, std::vector<AttributeStyle>&
 wxString EditorConfig::LoadPerspective(const wxString &Name) const
 {
 	wxXmlNode *layoutNode = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("Layout"));
+	if( !layoutNode ){
+		return wxEmptyString;
+	}
+
 	wxXmlNode *child = layoutNode->GetChildren();
 	while( child ){
 		if( child->GetName() == wxT("Perspective") ){
