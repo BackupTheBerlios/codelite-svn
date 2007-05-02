@@ -52,6 +52,7 @@ bool FindInFilesDialog::Create(wxWindow* parent,
 	ConnectEvents();
 
 	GetSizer()->Fit(this);
+	GetSizer()->SetMinSize(wxSize(600, 300));
 	GetSizer()->SetSizeHints(this);
 	return true;
 }

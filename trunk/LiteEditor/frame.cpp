@@ -108,6 +108,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("goto_previous_definition"), Frame::DispatchUpdateUIEvent)
 	
 	EVT_MENU(XRCID("complete_word"), Frame::OnCompleteWord)
+	EVT_MENU(XRCID("tags_options"), Frame::OnCtagsOptions)
 
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
@@ -143,12 +144,8 @@ Frame::~Frame(void)
 
 Frame* Frame::Get()
 {
-    // Startup size will be 90% of the screen size
-    int frameWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X);
-    int frameHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y);
-    
-	if( !m_theFrame )
-		m_theFrame = new Frame(NULL, wxID_ANY, _("Lite Editor"), wxDefaultPosition, wxSize(frameWidth, frameHeight));
+    if( !m_theFrame )
+		m_theFrame = new Frame(NULL, wxID_ANY, _("Lite Editor"), wxDefaultPosition, wxSize(800, 600), wxDEFAULT_FRAME_STYLE | wxMAXIMIZE | wxNO_FULL_REPAINT_ON_RESIZE);
 	return m_theFrame;
 }
 
@@ -662,7 +659,7 @@ void Frame::OnProjectAddProject(wxCommandEvent &event)
 	if (dlg->ShowModal() == wxID_OK)
 	{
 		// Open it
-		ManagerST::Get()->AddProject(dlg->GetPath());
+		ManagerST::Get()->AddProject(dlg->GetPath());  
 	}
 	dlg->Destroy();	
 }
@@ -670,8 +667,8 @@ void Frame::OnProjectAddProject(wxCommandEvent &event)
 // NewDlg->Create handler
 void Frame::OnNewDlgCreate(wxCommandEvent &event)
 {
-	wxUnusedVar(event);
-
+	wxUnusedVar(event);            
+    
 	NewDlg *dlg = dynamic_cast<NewDlg*>(event.GetEventObject());
 	if( dlg ){
 		if( dlg->GetSelection() == NEW_DLG_WORKSPACE ){
@@ -682,4 +679,12 @@ void Frame::OnNewDlgCreate(wxCommandEvent &event)
 			ManagerST::Get()->CreateProject(data.m_name, data.m_path, data.m_type);
 		}
 	}
+}
+
+void Frame::OnCtagsOptions(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	CtagsOptionsDlg *dlg = new CtagsOptionsDlg(this);
+	dlg->ShowModal();
+	dlg->Destroy();
 }

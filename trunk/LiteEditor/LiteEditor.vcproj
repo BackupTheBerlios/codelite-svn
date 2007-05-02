@@ -329,6 +329,12 @@
 		<Filter
 			Name="Dialogs">
 			<File
+				RelativePath=".\ctags_dialog.cpp">
+			</File>
+			<File
+				RelativePath=".\ctags_dialog.h">
+			</File>
+			<File
 				RelativePath=".\findinfilesdlg.cpp">
 			</File>
 			<File
@@ -351,6 +357,12 @@
 			</File>
 			<File
 				RelativePath=".\newdlg.h">
+			</File>
+			<File
+				RelativePath=".\options_panel.cpp">
+			</File>
+			<File
+				RelativePath=".\options_panel.h">
 			</File>
 			<File
 				RelativePath=".\symbols_dialog.cpp">

@@ -12,6 +12,7 @@
 #include "workspace_pane.h"
 #include "workspace_pane.h"
 #include "findinfilesdlg.h"
+#include "ctags_dialog.h"
 
 // forward decls
 class TagEntry;
@@ -92,6 +93,9 @@ protected:
 	void OnSwitchWorkspace(wxCommandEvent &event);
 	void OnProjectAddProject(wxCommandEvent &event);
 	void OnWorkspaceOpen(wxUpdateUIEvent &event);
+
+	// tags menu
+	void OnCtagsOptions(wxCommandEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);
