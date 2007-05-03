@@ -47,7 +47,7 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 , m_project(project)
 , m_lastMatchPos(0)
 {
-	m_editor = EditorBasePtr( new EditorCpp(this) );
+	m_editor = ContextBasePtr( new ContextCpp(this) );
 	SetProperties();
 
 	// If file name is provided, open it

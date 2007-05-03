@@ -5,8 +5,8 @@
 #include "symbols_dialog.h"
 #include "editor_config.h"
 
-EditorCpp::EditorCpp(LEditor *container)
-: EditorBase(container)
+ContextCpp::ContextCpp(LEditor *container)
+: ContextBase(container)
 , m_tipKind(TipNone)
 {
 	// Initialise the map between a macro of proerpty and its value
@@ -73,11 +73,11 @@ EditorCpp::EditorCpp(LEditor *container)
 	}
 }
 
-EditorCpp::~EditorCpp()
+ContextCpp::~ContextCpp()
 {
 }
 
-void EditorCpp::CodeComplete()
+void ContextCpp::CodeComplete()
 {
 	LEditor &rCtrl = GetCtrl();
 	long pos = rCtrl.GetCurrentPos();
@@ -177,7 +177,7 @@ void EditorCpp::CodeComplete()
 		}
 	}
 }
-void EditorCpp::AutoIndent(const wxChar &nChar)
+void ContextCpp::AutoIndent(const wxChar &nChar)
 {
 	LEditor &rCtrl = GetCtrl();
 	int nPos = rCtrl.PositionBefore(rCtrl.GetCurrentPos());
@@ -278,7 +278,7 @@ void EditorCpp::AutoIndent(const wxChar &nChar)
 	}
 }
 
-bool EditorCpp::IsCommentOrString(long pos)
+bool ContextCpp::IsCommentOrString(long pos)
 {
 	int style;
 	style = GetCtrl().GetStyleAt(pos);
@@ -293,7 +293,7 @@ bool EditorCpp::IsCommentOrString(long pos)
 			style == wxSCI_C_CHARACTER);
 }
 
-void EditorCpp::OnDwellEnd(wxScintillaEvent &WXUNUSED(event))
+void ContextCpp::OnDwellEnd(wxScintillaEvent &WXUNUSED(event))
 {
 	// cancel hover tip
 	LEditor &rCtrl = GetCtrl();
@@ -305,7 +305,7 @@ void EditorCpp::OnDwellEnd(wxScintillaEvent &WXUNUSED(event))
 	}
 }
 
-void EditorCpp::OnCallTipClick(wxScintillaEvent &event)
+void ContextCpp::OnCallTipClick(wxScintillaEvent &event)
 {
 	LEditor &rCtrl = GetCtrl();
 	switch( event.GetPosition() )
@@ -323,7 +323,7 @@ void EditorCpp::OnCallTipClick(wxScintillaEvent &event)
 	}
 }
 
-void EditorCpp::OnDwellStart(wxScintillaEvent &event)
+void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 {
 	LEditor &rCtrl = GetCtrl();
 	// Handle dewell only if a project is opened
@@ -395,7 +395,7 @@ void EditorCpp::OnDwellStart(wxScintillaEvent &event)
 	}
 }
 
-void EditorCpp::GotoPreviousDefintion()
+void ContextCpp::GotoPreviousDefintion()
 {
 	if(LEditor::GetHistory().empty())
 		return;
@@ -408,7 +408,7 @@ void EditorCpp::GotoPreviousDefintion()
 	LEditor::GetHistory().pop();
 }
 
-void EditorCpp::GotoDefinition()
+void ContextCpp::GotoDefinition()
 {
 	LEditor &rCtrl = GetCtrl();
 	std::vector<TagEntry> tags;
@@ -465,14 +465,14 @@ void EditorCpp::GotoDefinition()
 	}
 }
 
-void EditorCpp::CallTipCancel()
+void ContextCpp::CallTipCancel()
 {
 	LEditor &rCtrl = GetCtrl();
 	rCtrl.CallTipCancel();
 	m_tipKind = TipNone;
 }
 
-void EditorCpp::GetWordAndScope(wxString& word, wxString &scope, wxString& scopeName)
+void ContextCpp::GetWordAndScope(wxString& word, wxString &scope, wxString& scopeName)
 {
 	LEditor &rCtrl = GetCtrl();
 	// Get the partial word that we have
@@ -499,7 +499,7 @@ void EditorCpp::GetWordAndScope(wxString& word, wxString &scope, wxString& scope
 	scopeName = tag.GetScopeName();
 }
 
-void EditorCpp::CompleteWord()
+void ContextCpp::CompleteWord()
 {
 	LEditor &rCtrl = GetCtrl();
 	std::vector<TagEntry> tags;

@@ -36,7 +36,7 @@ class LEditor : public wxScintilla
 	wxFileName m_fileName;
 	wxString m_project;
 	wxStopWatch m_watch;
-	EditorBasePtr m_editor;
+	ContextBasePtr m_editor;
 
 	// static cache among editors to keep track of jumping between editors
 	static std::stack<TagEntry> m_history;

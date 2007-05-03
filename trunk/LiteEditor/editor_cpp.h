@@ -5,7 +5,7 @@
 #include "calltip.h"
 #include <map>
 
-class EditorCpp : public EditorBase {
+class ContextCpp : public ContextBase {
 	CallTipPtr m_ct;
 	std::map<wxString, int> m_propertyInt;
 
@@ -26,8 +26,8 @@ class EditorCpp : public EditorBase {
 	TipKind m_tipKind;
 
 public:
-	EditorCpp(LEditor *container);
-	virtual ~EditorCpp();
+	ContextCpp(LEditor *container);
+	virtual ~ContextCpp();
 
 	virtual void CompleteWord();
 	virtual void CodeComplete();

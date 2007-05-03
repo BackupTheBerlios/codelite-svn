@@ -1,5 +1,5 @@
-#ifndef EDITOR_BASE_H
-#define EDITOR_BASE_H
+#ifndef CONTEXT_BASE_H
+#define CONTEXT_BASE_H
 
 #include "wx/string.h"
 #include "wx/wxscintilla.h"
@@ -9,7 +9,7 @@ class LEditor;
 
 /**
  * \ingroup LiteEditor
- * \brief the basic editor from which complicated editors derives from (e.g. EditorCpp)
+ * \brief This class defines the language context of the editor
  *
  * \version 1.0
  * first version
@@ -18,31 +18,30 @@ class LEditor;
  *
  * \author Eran
  *
- *
  */
-class EditorBase {
+class ContextBase {
 	LEditor *m_container;
 
 public:
-	EditorBase(LEditor *container);
-	virtual ~EditorBase();
+	ContextBase(LEditor *container);
+	virtual ~ContextBase();
 	LEditor &GetCtrl() { return *m_container; }
 
-	virtual void CompleteWord();
-	virtual void CodeComplete();
-	virtual void GotoDefinition();
-	virtual void GotoPreviousDefintion();
-	virtual void AutoIndent(const wxChar&);
-	virtual void CallTipCancel(){};
+	virtual void CompleteWord() = 0;
+	virtual void CodeComplete() = 0;
+	virtual void GotoDefinition() = 0;
+	virtual void GotoPreviousDefintion() = 0;
+	virtual void AutoIndent(const wxChar&) = 0;
+	virtual void CallTipCancel() = 0;
 
-	virtual bool IsCommentOrString(long WXUNUSED(pos)){ return false; }
+	virtual bool IsCommentOrString(long WXUNUSED(pos)) = 0;
 
 	// event handlers
-	virtual void OnDwellEnd(wxScintillaEvent & WXUNUSED(event)) {};
-	virtual void OnCallTipClick(wxScintillaEvent& WXUNUSED(event)) {};
-	virtual void OnDwellStart(wxScintillaEvent & WXUNUSED(event)) {};
+	virtual void OnDwellEnd(wxScintillaEvent & WXUNUSED(event)) = 0;
+	virtual void OnCallTipClick(wxScintillaEvent& WXUNUSED(event)) = 0;
+	virtual void OnDwellStart(wxScintillaEvent & WXUNUSED(event)) = 0;
 };
-typedef SmartPtr<EditorBase> EditorBasePtr;
+typedef SmartPtr<ContextBase> ContextBasePtr;
 
 #endif // EDITOR_BASE_H
 

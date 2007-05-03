@@ -23,6 +23,7 @@
 #include "project.h"
 #include "newdlg.h"
 #include "fileview.h"
+#include "wx/aui/framemanager.h"
 
 #define ID_CTAGS_GLOBAL_ID		10500
 #define ID_CTAGS_LOCAL_ID		10501
