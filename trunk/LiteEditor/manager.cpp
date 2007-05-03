@@ -433,3 +433,53 @@ wxString Manager::GetProjectCwd(const wxString &project) const
 	projectFileName.MakeAbsolute();
 	return projectFileName.GetPath();
 }
+
+void Manager::ShowOutputPane(wxString focusWin){
+	// make the output pane visible
+	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Output"));
+	if( info.IsOk() ){
+		info.Show();
+		Frame::Get()->GetDockingManager().Update();
+	}
+
+	// set the selection to focus win
+	OutputPane *pane = Frame::Get()->GetOutputPane();
+	int index = pane->CaptionToIndex(focusWin);
+	if( index != wxNOT_FOUND ){
+		pane->GetNotebook()->SetSelection((size_t)index);
+	}
+}
+
+void Manager::ShowWorkspacePane(wxString focusWin){
+	// make the output pane visible
+	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Workspace"));
+	if( info.IsOk() ){
+		info.Show();
+		Frame::Get()->GetDockingManager().Update();
+	}
+
+	// set the selection to focus win
+	WorkspacePane *pane = Frame::Get()->GetWorkspacePane();
+	int index = pane->CaptionToIndex(focusWin);
+	if( index != wxNOT_FOUND ){
+		pane->GetNotebook()->SetSelection((size_t)index);
+	}
+}
+
+void Manager::HideOutputPane()
+{
+	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Output"));
+	if( info.IsOk() ){
+		info.Hide();
+		Frame::Get()->GetDockingManager().Update();
+	}
+}
+
+void Manager::HideWorkspacePane()
+{
+	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Workspace"));
+	if( info.IsOk() ){
+		info.Hide();
+		Frame::Get()->GetDockingManager().Update();
+	}	
+}

@@ -111,6 +111,12 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("complete_word"), Frame::OnCompleteWord)
 	EVT_MENU(XRCID("tags_options"), Frame::OnCtagsOptions)
 
+
+	EVT_MENU(XRCID("workspace_pane"), Frame::OnViewWorkspacePane)
+	EVT_MENU(XRCID("output_pane"), Frame::OnViewOutputPane)
+	EVT_UPDATE_UI(XRCID("output_pane"), Frame::OnViewOutputPaneUI)
+	EVT_UPDATE_UI(XRCID("workspace_pane"), Frame::OnViewWorkspacePaneUI)
+
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
 	EVT_MENU(ID_USE_EXTERNAL_DB, Frame::OnUseExternalDatabase)
@@ -577,6 +583,10 @@ void Frame::ClosePage(LEditor *editor, int index, bool doDelete, bool &veto)
 
 void Frame::OnSearchThread(wxCommandEvent &event)
 {
+	// make sure that the output pane is visible and selection
+	// is set to the 'Find In Files' tab
+	ManagerST::Get()->ShowOutputPane(OutputPane::FIND_IN_FILES_WIN);
+
 	m_outputPane->CanFocus(false);
 	if( event.GetEventType() == wxEVT_SEARCH_THREAD_MATCHFOUND)
 	{
@@ -688,4 +698,44 @@ void Frame::OnCtagsOptions(wxCommandEvent &event)
 	CtagsOptionsDlg *dlg = new CtagsOptionsDlg(this);
 	dlg->ShowModal();
 	dlg->Destroy();
+}
+
+void Frame::OnViewOutputPane(wxCommandEvent &event)
+{
+	wxAuiPaneInfo &info = m_mgr.GetPane(wxT("Output"));
+	if(info.IsOk()){
+		if( event.IsChecked() ){
+			info.Show();
+		} else {
+			info.Hide();
+		}
+		m_mgr.Update();
+	}
+}
+
+void Frame::OnViewWorkspacePane(wxCommandEvent &event)
+{
+	wxAuiPaneInfo &info = m_mgr.GetPane(wxT("Workspace"));
+	if(info.IsOk()){
+		if( event.IsChecked() ){
+			info.Show();
+		} else {
+			info.Hide();
+		}
+		m_mgr.Update();
+	}
+}
+
+void Frame::OnViewWorkspacePaneUI(wxUpdateUIEvent &event){
+	wxAuiPaneInfo &info = m_mgr.GetPane(wxT("Workspace"));
+	if(info.IsOk()){
+		event.Check(info.IsShown());
+	}
+}
+
+void Frame::OnViewOutputPaneUI(wxUpdateUIEvent &event){
+	wxAuiPaneInfo &info = m_mgr.GetPane(wxT("Output"));
+	if(info.IsOk()){
+		event.Check(info.IsShown());
+	}
 }

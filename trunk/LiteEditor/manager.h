@@ -189,6 +189,28 @@ public:
 	 */
 	wxString GetProjectCwd(const wxString &project) const;
 
+	/**
+	 * Show output pane and set focus to focusWin
+	 * \param focusWin tab name to set the focus
+	 */
+	void ShowOutputPane(wxString focusWin = wxEmptyString );
+
+	/**
+	 * Hide the output pane
+	 */
+	void HideOutputPane();
+
+	/**
+	 * Show the workspace pane and set focus to focusWin
+	 * \param focusWin tab name to set the focus
+	 */
+	void ShowWorkspacePane(wxString focusWin = wxEmptyString );
+
+	/**
+	 * Hide the output pane
+	 */
+	void HideWorkspacePane();
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

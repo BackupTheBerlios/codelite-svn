@@ -39,9 +39,13 @@ public:
 
 private:
 	void CreateGUIControls();
+	
+public:
+	/**
+	 * Return the index of a given window by its caption
+	 */
 	int CaptionToIndex(const wxString &caption);
 
-public:
 	/**
 	 * Destructor
 	 * \param parent parent window for this pane

@@ -22,8 +22,7 @@ public:
 
 private:
 	void CreateGUIControls();
-	int CaptionToIndex(const wxString &caption);
-
+	
 public:
 	WorkspacePane(wxWindow *parent, const wxString &caption);
 	virtual ~WorkspacePane();
@@ -33,6 +32,9 @@ public:
 	//-----------------------------------------------
 	void BuildSymbolTree(TagTreePtr tree);
 	void BuildFileTree();
+
+	// Return the index of the given tab by name
+	int CaptionToIndex(const wxString &caption);
 
 	//-----------------------------------------------
 	// Setters/Getters

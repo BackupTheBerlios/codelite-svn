@@ -104,23 +104,14 @@
         <object class="wxMenu" name="view_menu">
             <label>&amp;View</label>
             <style>wxMENU_TEAROFF</style>
-            <object class="wxMenu" name="workspace_pane_submenu">
-                <label>&amp;Workspace</label>
-                <style>wxMENU_TEAROFF</style>
-                <object class="wxMenuItem" name="win_class_view">
-                    <label>&amp;Class View\tCtrl+Shift+C</label>
-                </object>
-                <object class="wxMenuItem" name="win_file_view">
-                    <label>&amp;File View\tCtrl+Alt+L</label>
-                </object>
-            </object>		  
-            <object class="wxMenu" name="output_pane_submenu">
-                <label>&amp;Output</label>
-                <style>wxMENU_TEAROFF</style>
-                <object class="wxMenuItem" name="win_find_in_files">
-                    <label>&amp;Find In Files</label>
-                </object>
-            </object>		  
+            <object class="wxMenuItem" name="workspace_pane">
+                 <label>&amp;Workspace Pane\tCtrl+Shift+W</label>
+				<checkable>1</checkable>
+            </object>
+            <object class="wxMenuItem" name="output_pane">
+				<label>&amp;Output Pane\tCtrl+Alt+O</label>
+				<checkable>1</checkable>
+			</object>
 	    </object>		  
 	    
         <object class="wxMenu" name="search_menu">

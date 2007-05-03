@@ -46,6 +46,7 @@ public:
 	// Getters
 	OutputPane *GetOutputPane() { return m_outputPane; }
 	WorkspacePane *GetWorkspacePane() { return m_workspacePane; }
+	wxAuiManager& GetDockingManager() { return m_mgr; }
 
 private:
 	// make our frame's constructor private
@@ -82,6 +83,12 @@ protected:
 	void OnFileExistUpdateUI(wxUpdateUIEvent &event);
 	void OnCompleteWordUpdateUI(wxUpdateUIEvent &event);
 	void OnFindInFiles(wxCommandEvent &event);
+	
+	// View menu
+	void OnViewWorkspacePane(wxCommandEvent &event);
+	void OnViewOutputPane(wxCommandEvent &event);
+	void OnViewWorkspacePaneUI(wxUpdateUIEvent &event);
+	void OnViewOutputPaneUI(wxUpdateUIEvent &event);
 	
 	// New Dialog 'Create' button pressed
 	void OnNewDlgCreate(wxCommandEvent &event);
