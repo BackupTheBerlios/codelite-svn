@@ -67,7 +67,6 @@ void LEditor::SetProperties()
 {
 	SetMouseDwellTime(200);
 	SetProperty(_("fold"), _("1"));
-	SetProperty(_("fold.compact"), _("0"));
 	SetProperty(_("styling.within.preprocessor"), _("1"));
 
 	// Fold and comments as well
