@@ -17,8 +17,8 @@ If name contains __anony* try to replace it with the typedef name
 
 2.  ******** FIXED ********* Gather all macros under a single entry in the symbol tree
 3. Change the default icon from class to struct (the case for typedef struct {} Somthing is much more common than class)
-4. Add option to search for single symbol (like eclips's Ctrl+Shift+O)
-5. Add option to open resource in the document
+4. Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
+5. Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
 6. Replace the editor default menu 
 7. Add Tags options dialog that will allow user to do the following:
 	- Add external database to the current workspace
@@ -35,8 +35,12 @@ If name contains __anony* try to replace it with the typedef name
 13. Add toolbar
 14. ******** FIXED ********* Fix a focus problem when using the 'Smart Tabbing' dialog, focus remains on the old editor page
 15. ******** FIXED ********* Add filter to 'Add Item...' dialog (for headers, sources and *.*)
-16. Add a 'View' Menu that allows showing/hiding windows
-17. When using the 'Find In Files' dialog, make sure that the Output pane is visible
+16. ******** FIXED ********* Add a 'View' Menu that allows showing/hiding windows
+17. ******** FIXED ********* When using the 'Find In Files' dialog, make sure that the Output pane is visible
 18. Add dependencies dialog for build order
 19. Add build options to project
 20. Add right click menu to tab
+21. When using 'Ctrl+F' (find dialog) or 'Ctrl+Shift+F' (find in files), open the dialog with selected text set in the 
+	'Find What:' field
+22. Add option to open type in the workspace (eclips's Ctrl+Shift+T)
+23. Add option to open file from the command line 'LiteEditor <file_name> &'
