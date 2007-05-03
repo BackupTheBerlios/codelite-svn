@@ -1,8 +1,13 @@
 #include "output_pane.h"
 #include "flat_menu_bar.h"
 #include <wx/xrc/xmlres.h>
-#include <wx/wxscintilla.h>
 #include "wx/wxFlatNotebook/wxFlatNotebook.h"
+#include "manager.h"
+
+#ifndef wxScintillaEventHandler
+#define wxScintillaEventHandler(func) \
+	(wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxScintillaEventFunction, &func)
+#endif
 
 const wxString OutputPane::FIND_IN_FILES_WIN = wxT("Find Results");
 const wxString OutputPane::BUILD_WIN = wxT("Build");
@@ -60,6 +65,8 @@ void OutputPane::CreateGUIControls()
 	findInFilesWin->SetReadOnly(true);
 		
 	findInFilesWin->Connect(wxID_ANY, wxEVT_SET_FOCUS, wxFocusEventHandler(OutputPane::OnSetFocus), NULL, this);
+	findInFilesWin->Connect(wxID_ANY, wxEVT_SCI_DOUBLECLICK, wxScintillaEventHandler(OutputPane::OnMouseDClick), NULL, this);
+
 	wxFont font(8, wxFONTFAMILY_TELETYPE, wxNORMAL, wxNORMAL);
 	findInFilesWin->StyleSetFont(wxSCI_STYLE_DEFAULT, font);
 	mainSizer->Fit(this);
@@ -139,4 +146,36 @@ int OutputPane::CaptionToIndex(const wxString &caption)
 	}
 	return wxNOT_FOUND;
 }
+
+void OutputPane::OnMouseDClick(wxScintillaEvent &event)
+{
+	long pos = event.GetPosition();
+	int index = CaptionToIndex(OutputPane::FIND_IN_FILES_WIN);
+	if( index == wxNOT_FOUND )
+		return;
+
+	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage((size_t)index));
+	if( !win ){
+		return;
+	}
+
+	int line = win->LineFromPosition(pos);
+	wxString lineText = win->GetLine(line);
+
+	win->SetSelectionStart(pos);
+	win->SetSelectionEnd(pos);
+
+	// each line has the format of 
+	// file(line, col): text
+	wxString fileName = lineText.BeforeFirst(wxT('('));
+	wxString strLineNumber = lineText.AfterFirst(wxT('('));
+	strLineNumber = strLineNumber.BeforeFirst(wxT(','));
+	strLineNumber = strLineNumber.Trim();
+	long lineNumber = -1;
+	strLineNumber.ToLong(&lineNumber);
+
+	// open the file in the editor
+	ManagerST::Get()->OpenFile(fileName, wxEmptyString, lineNumber - 1 );
+}
+
 

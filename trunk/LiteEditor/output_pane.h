@@ -3,6 +3,7 @@
 
 
 #include "wx/panel.h"
+#include "wx/wxscintilla.h"
 
 class OutputPane;
 class wxFlatNotebook;
@@ -76,6 +77,7 @@ public:
 	//-----------------------------------------------
 	void OnClearAll(wxCommandEvent &event);
 	void OnSetFocus(wxFocusEvent &event);
+	void OnMouseDClick(wxScintillaEvent &event);
 };
 
 #endif // OUTPUT_PANE_H
