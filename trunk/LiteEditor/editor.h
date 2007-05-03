@@ -8,7 +8,7 @@
 #include "wx/filename.h"
 #include "findreplacedlg.h"
 #include <wx/wxFlatNotebook/wxFlatNotebook.h>
-#include "editor_base.h"
+#include "context_base.h"
 
 class wxFindReplaceDialog;
 
@@ -36,7 +36,7 @@ class LEditor : public wxScintilla
 	wxFileName m_fileName;
 	wxString m_project;
 	wxStopWatch m_watch;
-	ContextBasePtr m_editor;
+	ContextBasePtr m_context;
 
 	// static cache among editors to keep track of jumping between editors
 	static std::stack<TagEntry> m_history;

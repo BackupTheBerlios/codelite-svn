@@ -43,5 +43,5 @@ public:
 };
 typedef SmartPtr<ContextBase> ContextBasePtr;
 
-#endif // EDITOR_BASE_H
+#endif // CONTEXT_BASE_H
 

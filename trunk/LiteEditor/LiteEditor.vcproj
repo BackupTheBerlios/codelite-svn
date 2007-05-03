@@ -369,6 +369,22 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
+				RelativePath=".\context_base.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\context_base.h"
+				>
+			</File>
+			<File
+				RelativePath=".\context_cpp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\context_cpp.h"
+				>
+			</File>
+			<File
 				RelativePath=".\context_text.cpp"
 				>
 			</File>
@@ -385,27 +401,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\editor_base.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\editor_base.h"
-				>
-			</File>
-			<File
 				RelativePath=".\editor_config.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\editor_config.h"
-				>
-			</File>
-			<File
-				RelativePath=".\editor_cpp.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\editor_cpp.h"
 				>
 			</File>
 		</Filter>

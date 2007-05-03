@@ -10,7 +10,7 @@
 #include <wx/fdrepdlg.h>
 #include "findreplacedlg.h"
 #include <wx/wxFlatNotebook/renderer.h>
-#include "editor_cpp.h"
+#include "context_cpp.h"
 
 // fix bug in wxscintilla.h
 #ifdef EVT_SCI_CALLTIP_CLICK
@@ -47,7 +47,7 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 , m_project(project)
 , m_lastMatchPos(0)
 {
-	m_editor = ContextBasePtr( new ContextCpp(this) );
+	m_context = ContextBasePtr( new ContextCpp(this) );
 	SetProperties();
 
 	// If file name is provided, open it
@@ -209,7 +209,7 @@ void LEditor::OnCharAdded(wxScintillaEvent& event)
 
 	// Always do auto-indentation
 	if(event.GetKey() == ':' || event.GetKey() == '}' || event.GetKey() == '\n')
-		m_editor->AutoIndent(event.GetKey());
+		m_context->AutoIndent(event.GetKey());
 
 	if(false == GetProjectName().IsEmpty())
 	{
@@ -223,7 +223,7 @@ void LEditor::OnCharAdded(wxScintillaEvent& event)
 			break;
 		case ')':
 			{
-				m_editor->CallTipCancel();
+				m_context->CallTipCancel();
 				break;
 			}
 		case '\n':
@@ -387,7 +387,7 @@ wxString LEditor::GetWordUnderCursor()
 //---------------------------------------------------------------------------
 void LEditor::CompleteWord()
 {
-	m_editor->CompleteWord();
+	m_context->CompleteWord();
 }
 
 //------------------------------------------------------------------
@@ -398,7 +398,7 @@ void LEditor::CompleteWord()
 //------------------------------------------------------------------
 void LEditor::CodeComplete()
 {
-	m_editor->CodeComplete();
+	m_context->CodeComplete();
 }
 
 
@@ -409,27 +409,27 @@ void LEditor::CodeComplete()
 //----------------------------------------------------------------
 void LEditor::GotoDefinition()
 {
-	m_editor->GotoDefinition();
+	m_context->GotoDefinition();
 }
 
 void LEditor::GotoPreviousDefintion()
 {
-	m_editor->GotoPreviousDefintion();
+	m_context->GotoPreviousDefintion();
 }
 
 void LEditor::OnDwellStart(wxScintillaEvent & event)
 {
-	m_editor->OnDwellStart(event);
+	m_context->OnDwellStart(event);
 }
 
 void LEditor::OnDwellEnd(wxScintillaEvent & event)
 {
-	m_editor->OnDwellEnd(event);
+	m_context->OnDwellEnd(event);
 }
 
 void LEditor::OnCallTipClick(wxScintillaEvent& event)
 {
-	m_editor->OnCallTipClick(event);
+	m_context->OnCallTipClick(event);
 }
 
 void LEditor::OnModified(wxScintillaEvent& event)
@@ -583,7 +583,7 @@ bool LEditor::MatchBraceBack(const wxChar& chCloseBrace, const long &pos, long &
 		nPrevPos = PositionBefore(nPrevPos);
 
 		// Make sure we are not in a comment
-		if(m_editor->IsCommentOrString(nPrevPos))
+		if(m_context->IsCommentOrString(nPrevPos))
 			continue;
 
 		ch = GetCharAt(nPrevPos);
@@ -614,26 +614,26 @@ void LEditor::MatchBraceAndSelect(bool selRegion)
 	// Get current position
 	long pos = GetCurrentPos();
 
-	if(GetCharAt(pos) == '{' && !m_editor->IsCommentOrString(pos))
+	if(GetCharAt(pos) == '{' && !m_context->IsCommentOrString(pos))
 	{
 		BraceMatch(selRegion);
 		return;
 	}
 
-	if(GetCharAt(PositionBefore(pos)) == '{' && !m_editor->IsCommentOrString(PositionBefore(pos)))
+	if(GetCharAt(PositionBefore(pos)) == '{' && !m_context->IsCommentOrString(PositionBefore(pos)))
 	{
 		SetCurrentPos(PositionBefore(pos));
 		BraceMatch(selRegion);
 		return;
 	}
 
-	if(GetCharAt(pos) == '}' && !m_editor->IsCommentOrString(pos))
+	if(GetCharAt(pos) == '}' && !m_context->IsCommentOrString(pos))
 	{
 		BraceMatch(selRegion);
 		return;
 	}
 
-	if(GetCharAt(PositionBefore(pos)) == '}' && !m_editor->IsCommentOrString(PositionBefore(pos)))
+	if(GetCharAt(PositionBefore(pos)) == '}' && !m_context->IsCommentOrString(PositionBefore(pos)))
 	{
 		SetCurrentPos(PositionBefore(pos));
 		BraceMatch(selRegion);

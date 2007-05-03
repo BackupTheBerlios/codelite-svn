@@ -1,7 +1,7 @@
-#ifndef EDITOR_CPP_H
-#define EDITOR_CPP_H
+#ifndef CONTEXT_CPP_H
+#define CONTEXT_CPP_H
 
-#include "editor_base.h"
+#include "context_base.h"
 #include "calltip.h"
 #include <map>
 
@@ -46,4 +46,4 @@ private:
 	void GetWordAndScope(wxString& word, wxString &scope, wxString &scopeName);
 };
 
-#endif // EDITOR_CPP_H
+#endif // CONTEXT_CPP_H

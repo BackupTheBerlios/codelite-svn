@@ -42,5 +42,5 @@ public:
 	virtual void OnCallTipClick(wxScintillaEvent& WXUNUSED(event)) {};
 	virtual void OnDwellStart(wxScintillaEvent & WXUNUSED(event)) {};
 };
-#endif // EDITOR_BASE_H
+#endif // CONTEXT_TEXT_H
 
