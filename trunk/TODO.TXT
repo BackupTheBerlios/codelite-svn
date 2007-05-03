@@ -44,3 +44,4 @@ If name contains __anony* try to replace it with the typedef name
 	'Find What:' field
 22. Add option to open type in the workspace (eclips's Ctrl+Shift+T)
 23. Add option to open file from the command line 'LiteEditor <file_name> &'
+24. ******** FIXED ********* Double click on a 'Find In Files' line result, should open the matched file
