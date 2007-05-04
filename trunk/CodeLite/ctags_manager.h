@@ -1,6 +1,9 @@
 #ifndef CODELITE_CTAGS_MANAGER_H
 #define CODELITE_CTAGS_MANAGER_H
 
+#include "wx/event.h"
+#include "wx/process.h"
+#include "process.h"
 #include "tree.h"
 #include "entry.h"
 #include "tags_database.h"
@@ -15,7 +18,7 @@
 #endif
 
 /// Forward declaration
-class TagsProcess;
+class clProcess;
 class DirTraverser;
 class Language;
 
@@ -32,6 +35,65 @@ enum SearchFlags
 };
 
 /**
+ * \ingroup CodeLite
+ * \brief a wrapper around ctags options: --force-language and -I[macros]
+ * see http://ctags.sourceforge.net/ctags.html for more details about the ctags options
+ *
+ * \version 1.0
+ * first version
+ *
+ * \date 05-04-2007
+ *
+ * \author Eran
+ *
+ */
+class CtagsOptions{
+	wxString forceLanguage;
+	wxString fileSpec;
+	wxString ignoreMacros;
+
+public:
+	CtagsOptions() 
+		: forceLanguage(wxT("C++"))
+		, fileSpec(wxEmptyString)
+		, ignoreMacros(wxEmptyString)
+	{}
+
+	~CtagsOptions(){}
+
+	/**
+	 * Format a single string from this class 
+	 * \return CTAGS options
+	 */
+	wxString ToString() const;
+
+	//----------------------------------
+	// setters / getters
+	//----------------------------------
+	void SetLanguage(const wxString &lang){
+		forceLanguage = lang;
+		forceLanguage = forceLanguage.Trim();
+		forceLanguage = forceLanguage.Trim(false);
+	}
+
+	void SetFileSpec(const wxString &spec){
+		fileSpec = spec;
+		fileSpec = fileSpec.Trim();
+		fileSpec = fileSpec.Trim(false);
+	}
+
+	void SetIgnoreMacros(const wxString &macros) {
+		ignoreMacros = macros;
+		ignoreMacros = ignoreMacros.Trim();
+		ignoreMacros = ignoreMacros.Trim(false);
+	}
+
+	wxString GetLanguage() const { return forceLanguage; }
+	wxString GetFileSpec() const { return fileSpec; }
+	wxString GetIgnoreMacros() const { return ignoreMacros; }
+};
+
+/**
  * This class is the interface to ctags and SQLite database. 
  * It contains various APIs that allows the caller to parse source file(s), 
  * store it into the database and return a symbol tree.
@@ -44,19 +106,19 @@ enum SearchFlags
  * // Create ctags processes, one for local scope and one for global scope.
  * // 'this' is a pointer to the main frame or any other window that wishes to be notified 
  * // if ctags process died
- * TagsProcess* m_ctags = TagsManagerST::Get()->StartCtagsProcess(this, 10500, TagsGlobal);
- * TagsProcess* m_localCtags = TagsManagerST::Get()->StartCtagsProcess(this, 10501, TagsLocal);
+ * clProcess* m_ctags = TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
+ * clProcess* m_localCtags = TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
  * \endcode
  *
  * In the destructor of your main frame it is recommended to call Free() to avoid memory leaks:
  *
  * \code
- * // First make sure no ctags processes exist
- * wxKill(m_localCtags->GetPid(), wxSIGKILL);
- * wxKill(m_ctags->GetPid(), wxSIGKILL);
- *
- * // Now it is safe to free tagsmanager
+ * // kill the TagsManager object first, so it will not restart
+ * // terminating ctags processes
  * TagsManager::Free();
+ * m_localCtags->Terminate();
+ * m_ctags->Terminate()
+ *
  * \endcode
  *
  * \ingroup CodeLite
@@ -81,19 +143,30 @@ class TagsManager
 	wxCriticalSection m_cs;
 
 	wxFileName m_ctagsPath;
-	TagsProcess* m_ctags;
-	TagsProcess* m_localCtags;
+	clProcessPtr m_ctags;
+	clProcessPtr m_localCtags;
 	std::map<int, wxString> m_ctagsCmd;
+	
 #ifdef USE_TRACE
 	wxStopWatch m_watch;
 #endif
 	bool m_parseComments;
 	std::map<wxString, bool> m_validExtensions;
+	CtagsOptions m_options;
 
 public:
-	//--------------------------------
-	// Operations
-	//--------------------------------
+	/**
+	 * Return the CtagsOptions used by the tags manager
+	 * \return 
+	 */
+	const CtagsOptions& GetCtagsOptions() const { return m_options; }
+
+	/**
+	 * Set Ctags Options
+	 * \param options options to use
+	 */
+	void SetCtagsOptions(CtagsOptions &options) { m_options = options; }
+
 	/**
 	 * Locate symbol by name in database
 	 * \param name name to search
@@ -205,23 +278,14 @@ public:
 
 	/**
 	 * Start a ctags process on a filter mode. 
-	 * TagsManager will try to launch the ctags process using the following command line:
+	 * By default, TagsManager will try to launch the ctags process using the following command line:
 	 * \code
-	 * ctags.exe --fields=aKmSsni --filter=yes --filter-terminator="<<EOF>>\n"
+	 * ctags --fields=aKmSsni --filter=yes --filter-terminator="<<EOF>>\n"
 	 * \endcode
 	 * 
 	 * It is possible to add a full path to ctags exectuable by calling the SetCtagsPath() function.
-	 * This function throws a std::exception*.
-	 *
-	 * \param evtHandler Event handler that will receive the wxEVT_PROCESS_END event in case the process terminates
-	 * \param id id of an event
-	 * \param kind TagsManager can start two kind of ctags processes, 
-	 * - one for processing local variables: TagsLocal (for WordCompletion & CodeCompletion) 
-	 * - and the second: TagsGlobal - processes globals (classes, namespaces, structs, functions, etc)
-	 * \return A pointer to TagsProcess (derived from wxProcess) allocated on the heap.
-	 * It is under the user reponsibility to delete it
 	 */
-	TagsProcess* StartCtagsProcess(wxEvtHandler* evtHandler = NULL, int id = wxID_ANY, int kind = TagsGlobal);
+	clProcessPtr StartCtagsProcess(int kind = TagsGlobal);
 
 	/**
 	 * Set the event handler to handle notifications of tree changes. 
@@ -359,6 +423,12 @@ public:
 	 * \param file file name
 	 */
 	wxString GetComment(const wxString &file, const int line);
+protected:
+
+	/**
+	 * Handler ctags process termination
+	 */
+	void OnCtagsEnd(wxProcessEvent& event);
 
 private: 
 	/**
@@ -379,7 +449,7 @@ private:
 	 * \param ctags Ctags process to use for the parsing of the source file - ctags manager holds two 
 	 * ctags processes, one for parsing local variables and one for global scope
 	 */
-	void SourceToTags(const wxFileName& source, wxString& tags, TagsProcess* ctags);
+	void SourceToTags(const wxFileName& source, wxString& tags, clProcessPtr ctags);
 
 	/**
 	 * Parse tags from memory construct a TagTree. 

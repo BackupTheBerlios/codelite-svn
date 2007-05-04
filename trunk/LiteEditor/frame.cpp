@@ -42,8 +42,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	// New dialog handlers
 	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE, Frame::OnNewDlgCreate)
 
-	EVT_END_PROCESS(ID_CTAGS_GLOBAL_ID, Frame::OnCtagsEnd)
-	EVT_END_PROCESS(ID_CTAGS_LOCAL_ID, Frame::OnCtagsEnd)
+	//EVT_END_PROCESS(ID_CTAGS_GLOBAL_ID, Frame::OnCtagsEnd)
+	//EVT_END_PROCESS(ID_CTAGS_LOCAL_ID, Frame::OnCtagsEnd)
 
 	// Handler menu events
 	EVT_MENU(wxID_EXIT, Frame::OnQuit)
@@ -214,8 +214,8 @@ void Frame::CreateGUIControls(void)
 	//--------------------------------------------------------------------------------------
 	
 	// We keep a pointer to wxProcess object returend from ctags starting process
-	m_ctags = TagsManagerST::Get()->StartCtagsProcess(this, 10500, TagsGlobal);
-	m_localCtags = TagsManagerST::Get()->StartCtagsProcess(this, 10501, TagsLocal);
+	TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
+	TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
 	
 
 	//--------------------------------------------------------------------------------------
@@ -306,24 +306,13 @@ void Frame::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 void Frame::OnClose(wxCloseEvent& event)
 {
-	// Since we dont want CTAGS process to be restarted
-	// we turn the 'restartCtags' flag to false
-	m_restartCtags = false;
-	wxKill(m_localCtags->GetPid(), wxSIGKILL);
-	wxKill(m_ctags->GetPid(), wxSIGKILL);
-
-	// Sleep for 20 ms to allow the process to be killed and 
-	// the main frame to handle the event or else we can get 
-	// memory leak
-	wxMilliSleep( 20 );
-
 	// Stop the search thread
 	SearchThreadST::Get()->StopSearch();
 
 	EditorConfigST::Get()->SavePerspective(wxT("default"), m_mgr.SavePerspective());
 	event.Skip();
 }
-
+/*
 // Provide a callback function for the process termination
 void Frame::OnCtagsEnd(wxProcessEvent& event)
 {
@@ -341,12 +330,10 @@ void Frame::OnCtagsEnd(wxProcessEvent& event)
 	switch( event.GetId() )
 	{
 	case ID_CTAGS_GLOBAL_ID:
-		delete m_ctags;
 		if(m_restartCtags)
 			m_ctags = TagsManagerST::Get()->StartCtagsProcess(this, ID_CTAGS_GLOBAL_ID, TagsGlobal);
 		break;
 	case ID_CTAGS_LOCAL_ID:
-		delete m_localCtags;
 		if(m_restartCtags)
 			m_localCtags = TagsManagerST::Get()->StartCtagsProcess(this, ID_CTAGS_LOCAL_ID, TagsLocal);
 		break;
@@ -354,6 +341,7 @@ void Frame::OnCtagsEnd(wxProcessEvent& event)
 		break;
 	}
 }
+*/
 
 wxString Frame::GetStringFromUser(const wxString& msg)
 {
@@ -696,7 +684,17 @@ void Frame::OnCtagsOptions(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 	CtagsOptionsDlg *dlg = new CtagsOptionsDlg(this);
-	dlg->ShowModal();
+
+	if(dlg->ShowModal() == wxID_OK){
+
+		// terminate ctags processes
+		//m_ctags->Terminate();
+		//m_localCtags->Terminate();
+		
+		//m_ctags = TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
+		//m_localCtags = TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
+	}
+
 	dlg->Destroy();
 }
 
@@ -739,3 +737,4 @@ void Frame::OnViewOutputPaneUI(wxUpdateUIEvent &event){
 		event.Check(info.IsShown());
 	}
 }
+

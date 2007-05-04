@@ -280,7 +280,7 @@ int SymbolTree::OnCompareItems(const wxTreeItemId& item1, const wxTreeItemId& it
 int SymbolTree::GetItemIconIndex(const wxString &kind, const wxString &access)
 {
 	wxString key(kind);
-	int index(3);       // class will be the default icon index
+	int index(4);       // structs will be the default icon index
 
 	if( !access.IsEmpty() )
 		key += _T("_") + access;

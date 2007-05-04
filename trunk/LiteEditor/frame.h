@@ -13,10 +13,11 @@
 #include "workspace_pane.h"
 #include "findinfilesdlg.h"
 #include "ctags_dialog.h"
+#include "process.h"
 
 // forward decls
 class TagEntry;
-class TagsProcess;
+
 
 /**
  * The main frame class
@@ -24,8 +25,8 @@ class TagsProcess;
  */
 class Frame : public wxFrame
 {
-	TagsProcess *m_ctags;
-	TagsProcess *m_localCtags;
+	clProcessPtr m_ctags;
+	clProcessPtr m_localCtags;
 	bool m_restartCtags;
 	wxFlatNotebook *m_notebook;
 	static Frame* m_theFrame;

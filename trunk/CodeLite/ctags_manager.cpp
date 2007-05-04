@@ -8,6 +8,7 @@
 #include "language.h"
 #include <wx/progdlg.h>
 #include "dirtraverser.h"
+#include "wx/tokenzr.h"
 
 #ifdef __VISUALC__
 #ifdef _DEBUG
@@ -33,6 +34,64 @@ struct SAscendingSort
 	}
 };
 
+//------------------------------------------------------------------------------
+// CtagsOptions
+//------------------------------------------------------------------------------
+wxString CtagsOptions::ToString() const
+{
+	wxString options(wxEmptyString);
+	if(GetLanguage().IsEmpty() == false){
+		options += wxT(" --language-force=");
+		options += GetLanguage();
+		options += wxT(" ");
+	}
+
+	if(GetIgnoreMacros().IsEmpty() == false){
+		bool first = true;
+		options += wxT("-I");
+		wxStringTokenizer tkz(GetIgnoreMacros(), wxT(","));
+		while( tkz.HasMoreTokens() ){
+			wxString token = tkz.NextToken();
+			token = token.Trim();
+			token = token.Trim(false);
+
+			if(token.Find(wxT("=")) != wxNOT_FOUND){
+				// we found a MACRO=VALUE
+				wxString name = token.BeforeFirst(wxT('='));
+				wxString value = token.AfterFirst(wxT('='));
+
+				// construct new entry
+				if(!first) { 
+					options += wxT(","); 
+				}else{
+					first = false;
+				}
+
+				options += name;
+				options += wxT("=");
+				options += value;
+			} else if(token.Find(wxT(" "))!= wxNOT_FOUND){
+				// Skip macro with a space in its name
+				continue;
+			} else {
+				// add the entry as is
+				if(!first) { 
+					options += wxT(","); 
+				}else{
+					first = false;
+				}
+
+				options += token;
+			}
+		}
+	}
+
+	return options;
+}
+
+//------------------------------------------------------------------------------
+// CTAGS Manager
+//------------------------------------------------------------------------------
 TagsManager::TagsManager()
 : m_ctagsPath(_T("ctags"))
 , m_ctags(NULL)
@@ -43,8 +102,8 @@ TagsManager::TagsManager()
 	m_pExternalDb = new TagsDatabase(true);	// use it as memory database
 
 	// Initialise ctags command pattern
-	m_ctagsCmd[TagsGlobal] = _T("  --language-force=C++ --fields=aKmSsnit --c-kinds=+p --C++-kinds=+p --filter=yes --filter-terminator=\"<<EOF>>\" ");
-	m_ctagsCmd[TagsLocal] =  _T("  --language-force=C++ --fields=aKmSsnit --c-kinds=+l --C++-kinds=+l --filter=yes --filter-terminator=\"<<EOF>>\" ");
+	m_ctagsCmd[TagsGlobal] = _T("  --fields=aKmSsnit --c-kinds=+p --C++-kinds=+p --filter=yes --filter-terminator=\"<<EOF>>\" ");
+	m_ctagsCmd[TagsLocal] =  _T("  --fields=aKmSsnit --c-kinds=+l --C++-kinds=+l --filter=yes --filter-terminator=\"<<EOF>>\" ");
 	
 	m_validExtensions[wxT("cxx")] = true;
 	m_validExtensions[wxT("cpp")] = true;
@@ -58,6 +117,15 @@ TagsManager::~TagsManager()
 {
 	delete m_pDb;
 	delete m_pExternalDb;
+
+	bool debug;
+//	debug = m_ctags->Disconnect(m_ctags->GetId(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+//	debug = m_localCtags->Disconnect(m_localCtags->GetId(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+	wxUnusedVar(debug);
+
+	// terminate ctags processes
+	m_localCtags->Terminate();
+	m_ctags->Terminate();
 }
 
 void TagsManager::OpenDatabase(const wxFileName& fileName)
@@ -246,8 +314,7 @@ TagTreePtr TagsManager::ParseSourceFile(const wxFileName& fp, const wxString& pr
 
 	wxString tags;
 	
-	if(m_ctags == NULL)
-	{
+	if( !m_ctags ){
 		return TagTreePtr( NULL );
 	}
 
@@ -292,7 +359,7 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 
 	wxString tags;
 	
-	if(m_ctags == NULL)
+	if( !m_ctags )
 	{
 		return TagTreePtr(NULL);
 	}
@@ -322,7 +389,7 @@ std::vector<TagEntry>* TagsManager::ParseLocals(const wxString& scope)
 
 	wxString tags;
 
-	if(m_localCtags == NULL)
+	if( !m_localCtags )
 	{
 		return NULL;
 	}
@@ -442,7 +509,7 @@ void TagsManager::Delete(const wxFileName& path, const wxString& project, const 
 // Process Handling of CTAGS
 //--------------------------------------------------------
 
-TagsProcess* TagsManager::StartCtagsProcess(wxEvtHandler* evtHandler, int id, int kind)
+clProcessPtr TagsManager::StartCtagsProcess(int kind)
 {
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
@@ -452,32 +519,29 @@ TagsProcess* TagsManager::StartCtagsProcess(wxEvtHandler* evtHandler, int id, in
 	
 	// Get ctags flags from the map
 	std::map<int, wxString>::iterator iter = m_ctagsCmd.find(kind);
-	if( iter == m_ctagsCmd.end() )
-	{
+	if( iter == m_ctagsCmd.end() ){
 		return NULL;
 	}
 	
+	wxString ctagsCmd;
+	ctagsCmd << m_options.ToString() << wxT(" ") << iter->second;
+	
 	// build the command, we surround ctags name with double quatations
-	cmd << _T("\"") << m_ctagsPath.GetFullPath() << _T("\"") << iter->second;
-	TagsProcess* process;
+	cmd << _T("\"") << m_ctagsPath.GetFullPath() << _T("\"") << ctagsCmd;
+	clProcess* process;
 
-	if(evtHandler == NULL)
-		process = new TagsProcess(wxPROCESS_REDIRECT);
-	else
-	{
-		process = new TagsProcess(evtHandler, id);
-		process->Redirect();
-	}
+	process = new clProcess(NULL, wxNewId());
+	process->Redirect();
 
 	// Launch it!
 	long pid = wxExecute(cmd, wxEXEC_ASYNC, process);
 	process->SetPid( pid );
-
-	if( process->GetPid() <= 0 )
-	{
+	if( process->GetPid() <= 0 ){
 		return NULL;
 	}
 
+	// attach the termination event to the tags manager class
+	//process->Connect(process->GetId(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
 	kind == TagsGlobal ? m_ctags = process : m_localCtags = process;
 	return process;
 }
@@ -490,7 +554,32 @@ void TagsManager::SetCtagsPath(const wxString& path)
 	m_ctagsPath = wxFileName(path, _T("ctags"));
 }
 
-void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, TagsProcess* ctags)
+void TagsManager::OnCtagsEnd(wxProcessEvent& event)
+{
+	//-----------------------------------------------------------
+	// This event handler is a must if you wish to delete 
+	// the process and prevent memory leaks
+	// In addition, I implemented here some kind of a watchdog
+	// mechanism: if ctags process terminated abnormally, it will
+	// be restarted automatically by this function (unless the 
+	// termination of it was from OnClose() function, then we 
+	// choose to ignore the restart)
+	//-----------------------------------------------------------
+
+	// Which ctags process died?
+	if( event.GetId() == m_ctags->GetId()){
+//		m_ctags->Disconnect(m_ctags->GetId(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+		m_ctags = StartCtagsProcess(TagsGlobal);
+	} else if( event.GetId() == m_localCtags->GetId()){
+//		m_localCtags->Disconnect(m_localCtags->GetId(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+		m_localCtags = StartCtagsProcess(TagsLocal);
+	}
+}
+
+//---------------------------------------------------------------------
+// Parsing
+//---------------------------------------------------------------------
+void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, clProcessPtr ctags)
 {
 	// Send the command to ctags
 	wxOutputStream *out = ctags->GetOutputStream();
