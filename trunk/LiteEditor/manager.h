@@ -109,7 +109,7 @@ public:
 	 * workspace path
 	 * 
 	 */
-	void CreateWorkspace(const wxString& name, const wxString &path);
+	void CreateWorkspace(const wxString &name, const wxString &path, const CtagsOptions &options);
 	 
 	/**
 	 * \brief create an empty project

@@ -159,7 +159,7 @@ public:
 	 * Set Ctags Options
 	 * \param options options to use
 	 */
-	void SetCtagsOptions(CtagsOptions &options) { 
+	void SetCtagsOptions(const CtagsOptions &options) { 
 		m_options = options; 
 		RestartCtagsProcess(TagsLocal);
 		RestartCtagsProcess(TagsGlobal);

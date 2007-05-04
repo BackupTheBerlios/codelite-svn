@@ -119,14 +119,10 @@ void CtagsOptionsDlg::OnButtonClose(wxCommandEvent &event)
 
 void CtagsOptionsDlg::OnButtonOK(wxCommandEvent &event)
 {
-	CtagsOptions options;
-	options.SetFileSpec(m_fileTypes->GetValue());
-	options.SetIgnoreMacros(m_macros->GetValue());
-	options.SetLanguage(m_languages->GetStringSelection());
-	TagsManagerST::Get()->SetCtagsOptions( options );
+	m_options.SetFileSpec(m_fileTypes->GetValue());
+	m_options.SetIgnoreMacros(m_macros->GetValue());
+	m_options.SetLanguage(m_languages->GetStringSelection());
 
-	// save new settings to the workspace
-	ManagerST::Get()->SetWorkspaceCtagsOptions( options );
 	EndModal(wxID_OK);
 	wxUnusedVar(event);
 }

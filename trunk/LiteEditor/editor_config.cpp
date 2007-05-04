@@ -15,7 +15,8 @@ EditorConfig::~EditorConfig()
 bool EditorConfig::Load(const wxFileName &filename)
 {
 	m_fileName = filename;
-	return m_doc->Load(filename.GetFullPath());
+	m_fileName.MakeAbsolute();
+	return m_doc->Load(m_fileName.GetFullPath());
 }
 
 wxXmlNode* EditorConfig::GetLexerNode(const wxString& lexerName)

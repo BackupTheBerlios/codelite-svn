@@ -15,6 +15,7 @@
 #include "wx/stattext.h"
 #include "wx/choice.h"
 #include "wx/checkbox.h"
+#include "ctags_manager.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -37,6 +38,7 @@ private:
 
 	// methods
 	wxPanel *CreateGeneralPage();
+	CtagsOptions m_options;
 
 protected:
 	wxStaticLine* m_staticline1;
@@ -49,6 +51,7 @@ protected:
 	virtual void OnClose(wxCloseEvent &event);
 public:
 	CtagsOptionsDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("CTags Options"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize(513, 300), int style = wxDEFAULT_DIALOG_STYLE );
+	const CtagsOptions &GetCtagsOptions() const { return m_options; }
 };
 
 #endif //__ctags_dialog__

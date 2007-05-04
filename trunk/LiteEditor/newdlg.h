@@ -3,6 +3,7 @@
 
 #include "wx/dialog.h"
 #include "wx/listctrl.h"
+#include "ctags_manager.h"
 
 DECLARE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE, -1)
 
@@ -52,8 +53,11 @@ class NewDlg : public wxDialog
 	// Buttons
 	wxButton *m_create;
 	wxButton *m_cancel;
+	wxButton *m_ctagsOptions;
+
 	int m_selection;
 	wxFlatNotebook *m_book;
+	CtagsOptions m_ctagsOptionsData;
 
 public:
 	virtual ~NewDlg( );
@@ -78,6 +82,7 @@ public:
  
 	const WorkspaceData& GetWorksapceData() const { return m_workspaceData; }
 	const ProjectData& GetProjectData() const { return m_projectData; }
+	const CtagsOptions& GetCtagsOptions() const { return m_ctagsOptionsData; }
 
 	// return the selected notebook tab
 	int GetSelection() const;

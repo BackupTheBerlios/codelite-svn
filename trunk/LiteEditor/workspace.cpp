@@ -433,17 +433,17 @@ void Workspace::SaveCtagsOptions(const CtagsOptions &options)
 
 		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Option"));
 		node->AddProperty(wxT("Name"), wxT("Macros"));
-		node->SetContent(options.GetIgnoreMacros());
+		XmlUtils::SetNodeContent(node, options.GetIgnoreMacros());
 		ctagsNode->AddChild(node);
 		
 		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Option"));
 		node->AddProperty(wxT("Name"), wxT("Language"));
-		node->SetContent(options.GetLanguage());
+		XmlUtils::SetNodeContent(node, options.GetLanguage());
 		ctagsNode->AddChild(node);
 
 		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Option"));
 		node->AddProperty(wxT("Name"), wxT("FileSpec"));
-		node->SetContent(options.GetFileSpec());
+		XmlUtils::SetNodeContent(node, options.GetFileSpec());
 		ctagsNode->AddChild(node);
 
 	} else {

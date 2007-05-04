@@ -636,7 +636,10 @@ void Frame::OnNewDlgCreate(wxCommandEvent &event)
 	if( dlg ){
 		if( dlg->GetSelection() == NEW_DLG_WORKSPACE ){
 			WorkspaceData data = dlg->GetWorksapceData();
-			ManagerST::Get()->CreateWorkspace(data.m_name, data.m_path);
+			CtagsOptions ctagsOptions = dlg->GetCtagsOptions();
+
+			ManagerST::Get()->CreateWorkspace(data.m_name, data.m_path, ctagsOptions);
+
 		} else if( dlg->GetSelection() == NEW_DLG_PROJECT ) {
 			ProjectData data = dlg->GetProjectData();
 			ManagerST::Get()->CreateProject(data.m_name, data.m_path, data.m_type);
@@ -649,8 +652,11 @@ void Frame::OnCtagsOptions(wxCommandEvent &event)
 	wxUnusedVar(event);
 	CtagsOptionsDlg *dlg = new CtagsOptionsDlg(this);
 
-	// all the logice resides inside the dialog
-	dlg->ShowModal();
+	if(dlg->ShowModal() == wxID_OK){
+		// update the ctags options
+		TagsManagerST::Get()->SetCtagsOptions(dlg->GetCtagsOptions());
+		ManagerST::Get()->SetWorkspaceCtagsOptions(dlg->GetCtagsOptions());
+	}
 	dlg->Destroy();
 }
 

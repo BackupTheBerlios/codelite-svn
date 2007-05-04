@@ -174,10 +174,10 @@ void Manager::UnInitialize()
 	wxArtManagerST::Free();
 }
 
-void Manager::CreateWorkspace(const wxString &name, const wxString &path)
+void Manager::CreateWorkspace(const wxString &name, const wxString &path, const CtagsOptions &options)
 {
 	wxString errMsg;
-	CtagsOptions options = TagsManagerST::Get()->GetCtagsOptions();
+	TagsManagerST::Get()->SetCtagsOptions(options);
 	bool res = WorkspaceST::Get()->CreateWorkspace(name, path, options, errMsg);
 	CHECK_MSGBOX(res);
 
