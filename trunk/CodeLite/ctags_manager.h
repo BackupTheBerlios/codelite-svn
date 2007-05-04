@@ -52,7 +52,7 @@ class CtagsOptions{
 public:
 	CtagsOptions() 
 		: forceLanguage(wxT("C++"))
-		, fileSpec(wxEmptyString)
+		, fileSpec(wxT("*.cpp;*.c;*.cxx;*.cc;*.h;*.hpp"))
 		, ignoreMacros(wxEmptyString)
 	{}
 
@@ -159,7 +159,11 @@ public:
 	 * Set Ctags Options
 	 * \param options options to use
 	 */
-	void SetCtagsOptions(CtagsOptions &options) { m_options = options; }
+	void SetCtagsOptions(CtagsOptions &options) { 
+		m_options = options; 
+		RestartCtagsProcess(TagsLocal);
+		RestartCtagsProcess(TagsGlobal);
+	}
 
 	/**
 	 * Locate symbol by name in database

@@ -11,6 +11,7 @@
 #include "readtags.h"
 #include "entry.h"
 #include "project.h"
+#include "ctags_manager.h"
 
 class wxFrame;
 
@@ -210,6 +211,18 @@ public:
 	 * Hide the output pane
 	 */
 	void HideWorkspacePane();
+
+	/**
+	 * Set ctags options for the current workspace
+	 * \param &options 
+	 */
+	void SetWorkspaceCtagsOptions(const CtagsOptions &options);
+
+	/**
+	 * get the ctags options associated with this workspace
+	 * \return 
+	 */
+	CtagsOptions GetWorkspaceCtagsOptions() const;
 
 protected:
 	Manager(void);

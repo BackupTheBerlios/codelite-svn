@@ -11,6 +11,7 @@
 
 #include "ctags_dialog.h"
 #include "ctags_manager.h"
+#include "manager.h"
 
 ///////////////////////////////////////////////////////////////////////////
 BEGIN_EVENT_TABLE( CtagsOptionsDlg, wxDialog )
@@ -23,13 +24,7 @@ CtagsOptionsDlg::CtagsOptionsDlg( wxWindow* parent, int id, wxString title, wxPo
 {
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
-	long bookStyle = wxFNB_NO_NAV_BUTTONS | wxFNB_NO_X_BUTTON | wxFNB_NODRAG | wxFNB_FF2 | wxFNB_BACKGROUND_GRADIENT;
-
-	m_book = new wxFlatNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, bookStyle );
-	m_book->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
-	m_book->AddPage(CreateGeneralPage(), wxT("General"), true);
-	
-	mainSizer->Add( m_book, 1, wxEXPAND | wxALL, 5 );
+	mainSizer->Add(CreateGeneralPage(), 1, wxEXPAND | wxALL, 5 );
 	
 	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	mainSizer->Add( m_staticline1, 0, wxALL|wxEXPAND, 5 );
@@ -48,7 +43,7 @@ CtagsOptionsDlg::CtagsOptionsDlg( wxWindow* parent, int id, wxString title, wxPo
 	SetSizer( mainSizer );
 
 	GetSizer()->Fit(this);
-	GetSizer()->SetMinSize(500, 300);
+	GetSizer()->SetMinSize(500, 270);
 	GetSizer()->SetSizeHints(this);
 }
 
@@ -56,7 +51,7 @@ wxPanel *CtagsOptionsDlg::CreateGeneralPage()
 {
 	CtagsOptions options = TagsManagerST::Get()->GetCtagsOptions();
 
-	wxPanel *page = new wxPanel(m_book);
+	wxPanel *page = new wxPanel(this);
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 	
@@ -129,6 +124,9 @@ void CtagsOptionsDlg::OnButtonOK(wxCommandEvent &event)
 	options.SetIgnoreMacros(m_macros->GetValue());
 	options.SetLanguage(m_languages->GetStringSelection());
 	TagsManagerST::Get()->SetCtagsOptions( options );
+
+	// save new settings to the workspace
+	ManagerST::Get()->SetWorkspaceCtagsOptions( options );
 	EndModal(wxID_OK);
 	wxUnusedVar(event);
 }

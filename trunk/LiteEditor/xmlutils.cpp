@@ -88,13 +88,12 @@ void XmlUtils::SetNodeContent(wxXmlNode *node, const wxString &text)
         n = n->GetNext();
     }
 
-	if(!contentNode) {
-		return;
+	if(contentNode) {
+		// remove old node
+		node->RemoveChild(contentNode);
+		delete contentNode;
 	}
 	
-	node->RemoveChild(contentNode);
-	delete contentNode;
-
 	contentNode = new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, text);
 	node->AddChild( contentNode );
 }

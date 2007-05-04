@@ -7,6 +7,7 @@
 #include "wx/filename.h"
 #include "project.h"
 #include <map>
+#include "ctags_manager.h"
 
 /*!
  * \brief
@@ -47,7 +48,7 @@ public:
 	 * \returns
 	 * true on success false otherwise
 	 */
-	bool CreateWorkspace(const wxString &name, const wxString &path, wxString &errMsg);
+	bool CreateWorkspace(const wxString &name, const wxString &path, const CtagsOptions &options, wxString &errMsg);
 
 	/**
 	 * \brief
@@ -164,6 +165,16 @@ public:
 	 * Save workspace & projects settings
 	 */
 	void Save();
+
+	/**
+	 * Load ctags options from the configuration
+	 */
+	CtagsOptions LoadCtagsOptions() const;
+
+	/**
+	 * Save ctags options to the configuration
+	 */
+	void SaveCtagsOptions(const CtagsOptions &options);
 
 private:
 

@@ -177,7 +177,8 @@ void Manager::UnInitialize()
 void Manager::CreateWorkspace(const wxString &name, const wxString &path)
 {
 	wxString errMsg;
-	bool res = WorkspaceST::Get()->CreateWorkspace(name, path, errMsg);
+	CtagsOptions options = TagsManagerST::Get()->GetCtagsOptions();
+	bool res = WorkspaceST::Get()->CreateWorkspace(name, path, options, errMsg);
 	CHECK_MSGBOX(res);
 
 	DoUpdateGUITrees();
@@ -205,6 +206,10 @@ void Manager::OpenWorkspace(const wxString &path)
 	wxString exDbfile = WorkspaceST::Get()->GetStringProperty(wxT("ExternalDatabase"), errMsg);
 	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("Workspace DB: '%s'"), dbfile.GetData()), 1);
 	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), exDbfile.GetData()), 2);
+
+	// load ctags options
+	CtagsOptions options = WorkspaceST::Get()->LoadCtagsOptions();
+	TagsManagerST::Get()->SetCtagsOptions( options );
 
 	DoUpdateGUITrees();
 }
@@ -483,3 +488,15 @@ void Manager::HideWorkspacePane()
 		Frame::Get()->GetDockingManager().Update();
 	}	
 }
+
+void Manager::SetWorkspaceCtagsOptions(const CtagsOptions &options)
+{
+	WorkspaceST::Get()->SaveCtagsOptions(options);
+}
+
+
+CtagsOptions Manager::GetWorkspaceCtagsOptions() const
+{
+	return WorkspaceST::Get()->LoadCtagsOptions();
+}
+

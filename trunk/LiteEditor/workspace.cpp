@@ -63,7 +63,7 @@ bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 	return true;
 }
 
-bool Workspace::CreateWorkspace(const wxString &name, const wxString &path, wxString &errMsg)
+bool Workspace::CreateWorkspace(const wxString &name, const wxString &path, const CtagsOptions &options, wxString &errMsg)
 {
 	// If we have an open workspace, close it
 	if( m_doc.IsOk() ){
@@ -94,6 +94,8 @@ bool Workspace::CreateWorkspace(const wxString &name, const wxString &path, wxSt
 	m_doc.GetRoot()->AddProperty(wxT("Database"), dbFileName.GetFullPath());
 	m_doc.GetRoot()->AddProperty(wxT("ExternalDatabase"), wxEmptyString);
 	m_doc.Save(m_fileName.GetFullPath());
+
+	SaveCtagsOptions( options );
 	return true;
 }
 
@@ -384,3 +386,83 @@ bool Workspace::RemoveFile(const wxString &vdFullPath, const wxString &fileName,
 
 	return proj->RemoveFile(fileName, fixedPath);
 }
+
+
+CtagsOptions Workspace::LoadCtagsOptions() const 
+{
+	CtagsOptions options;
+	if( m_doc.IsOk() == false )
+		return options;
+
+	wxXmlNode *ctagsNode = XmlUtils::FindFirstByTagName(m_doc.GetRoot(), wxT("Ctags"));
+	if( !ctagsNode ){
+		return options;
+	}
+	
+	wxXmlNode *node = NULL;
+	node = XmlUtils::FindNodeByName(ctagsNode, wxT("Option"), wxT("Macros"));
+	if( node ){
+		options.SetIgnoreMacros(node->GetNodeContent());
+	}
+
+	node = XmlUtils::FindNodeByName(ctagsNode, wxT("Option"), wxT("Language"));
+	if( node ){
+		options.SetLanguage(node->GetNodeContent());
+	}
+
+	node = XmlUtils::FindNodeByName(ctagsNode, wxT("Option"), wxT("FileSpec"));
+	if( node ){
+		options.SetFileSpec(node->GetNodeContent());
+	}
+
+	return options;
+}
+
+void Workspace::SaveCtagsOptions(const CtagsOptions &options)
+{
+	if( m_doc.IsOk() == false )
+		return;
+
+	wxXmlNode *node = NULL;
+	wxXmlNode *ctagsNode = XmlUtils::FindFirstByTagName(m_doc.GetRoot(), wxT("Ctags"));
+
+	if( !ctagsNode ){
+		// create new node
+		ctagsNode = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Ctags"));
+		m_doc.GetRoot()->AddChild( ctagsNode );
+
+		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Option"));
+		node->AddProperty(wxT("Name"), wxT("Macros"));
+		node->SetContent(options.GetIgnoreMacros());
+		ctagsNode->AddChild(node);
+		
+		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Option"));
+		node->AddProperty(wxT("Name"), wxT("Language"));
+		node->SetContent(options.GetLanguage());
+		ctagsNode->AddChild(node);
+
+		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Option"));
+		node->AddProperty(wxT("Name"), wxT("FileSpec"));
+		node->SetContent(options.GetFileSpec());
+		ctagsNode->AddChild(node);
+
+	} else {
+		node = XmlUtils::FindNodeByName(ctagsNode, wxT("Option"), wxT("Macros"));
+		if( node ){
+			XmlUtils::SetNodeContent(node, options.GetIgnoreMacros());
+		}
+
+		node = XmlUtils::FindNodeByName(ctagsNode, wxT("Option"), wxT("Language"));
+		if( node ){
+			XmlUtils::SetNodeContent(node, options.GetLanguage());
+		}
+
+		node = XmlUtils::FindNodeByName(ctagsNode, wxT("Option"), wxT("FileSpec"));
+		if( node ){
+			XmlUtils::SetNodeContent(node, options.GetFileSpec());
+		}
+	}
+
+	m_doc.Save(m_fileName.GetFullPath());
+}
+

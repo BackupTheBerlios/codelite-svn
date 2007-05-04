@@ -50,6 +50,9 @@ void SymbolTree::InitialiseSymbolMap()
 	m_imagesMap[_T("namespace")] = 1;
 	m_imagesMap[_T("globals")] = 2;
 	m_imagesMap[_T("class")] = 3;
+	m_imagesMap[_T("interface")] = 3;
+	m_imagesMap[_T("interface_private")] = 3;
+	m_imagesMap[_T("interface_protected")] = 3;
 	m_imagesMap[_T("class_private")] = 3;
 	m_imagesMap[_T("class_public")] = 3;
 	m_imagesMap[_T("class_protected")] = 3;
@@ -84,6 +87,11 @@ void SymbolTree::InitialiseSymbolMap()
 	m_imagesMap[_T("enum_private")] = 13;
 	m_imagesMap[_T("enum_public")] = 13;
 	m_imagesMap[_T("enum_protected")] = 13;
+
+	m_imagesMap[_T("method")] = 5;
+	m_imagesMap[_T("method_public")] = 5;
+	m_imagesMap[_T("method_protected")] = 6;
+	m_imagesMap[_T("method_private")] = 7;
 
 	//-----------------------------------------------------------
 	// Populate globals kind
@@ -227,20 +235,22 @@ void SymbolTree::AddItem(TagNode* node)
 	node->GetData().SetTreeItemId( hti );
 
 	// incase the added note was a container, add a prototype node under it as well
-	if(nodeData.IsContainer())
-	{
-		// add the prototype node under it
-		m_prototypesMap[nodeData.GetPath()] = AppendItem(node->GetData().GetTreeItemId(),
-			_T("Functions Prototypes"),
-			2, 2, new MyTreeItemData(_T("Functions Prototypes")));
-	}
+	if( TagsManagerST::Get()->GetCtagsOptions().GetLanguage() == wxT("C++")){
+		if(nodeData.IsContainer())
+		{
+			// add the prototype node under it
+			m_prototypesMap[nodeData.GetPath()] = AppendItem(node->GetData().GetTreeItemId(),
+				_T("Functions Prototypes"),
+				2, 2, new MyTreeItemData(_T("Functions Prototypes")));
+		}
 
-	// are we a project?
-	if(nodeData.GetKind() == _T("project"))
-	{
-		// First time, add a 'global' node under the root
-		m_globalsMap[nodeData.GetName()] = AppendItem(hti, _("Global Functions and Variables"), 2, 2, new MyTreeItemData(_("Global Functions and Variables")));
-		m_macrosMap[nodeData.GetName()] = AppendItem(hti, _("Macros"), 2, 2, new MyTreeItemData(_("Macros")));
+		// are we a project?
+		if(nodeData.GetKind() == _T("project"))
+		{
+			// First time, add a 'global' node under the root
+			m_globalsMap[nodeData.GetName()] = AppendItem(hti, _("Global Functions and Variables"), 2, 2, new MyTreeItemData(_("Global Functions and Variables")));
+			m_macrosMap[nodeData.GetName()] = AppendItem(hti, _("Macros"), 2, 2, new MyTreeItemData(_("Macros")));
+		}
 	}
 
 	m_sortItems[parentHti.m_pItem] = true;

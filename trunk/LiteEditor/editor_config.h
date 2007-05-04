@@ -5,7 +5,6 @@
 #include <wx/filename.h>
 #include <vector>
 #include "wx/xml/xml.h"
-#include "ctags_manager.h"
 
 class AttributeStyle
 {
@@ -111,17 +110,6 @@ public:
  	 * \return perspective
 	 */
 	wxString LoadPerspective(const wxString &name) const ;
-
-	/**
-	 * Load ctags options from the configuration
-	 */
-	CtagsOptions LoadCtagsOptions() const;
-
-	/**
-	 * Save ctags options to the configuration
-	 */
-	void SaveCtagsOptions(const CtagsOptions &options);
-
 private:
 	EditorConfig();
 	virtual ~EditorConfig();

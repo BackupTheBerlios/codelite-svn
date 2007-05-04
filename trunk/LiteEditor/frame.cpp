@@ -17,7 +17,7 @@
 #include "manager.h"
 #include "menumanager.h"
 #include <wx/aboutdlg.h>
-#include "findinfilesdlg.h"
+#include "findinfilesdlg.h" 
 #include "search_thread.h"
 #include "project.h"
 #include "newdlg.h"
@@ -214,11 +214,8 @@ void Frame::CreateGUIControls(void)
 	//--------------------------------------------------------------------------------------
 	
 	// We keep a pointer to wxProcess object returend from ctags starting process
-	CtagsOptions options = EditorConfigST::Get()->LoadCtagsOptions();
-	TagsManagerST::Get()->SetCtagsOptions( options );
 	TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
 	TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
-	
 
 	//--------------------------------------------------------------------------------------
 	// Start the parsing thread, the parsing thread and the SymbolTree (or its derived)
@@ -306,9 +303,7 @@ void Frame::OnClose(wxCloseEvent& event)
 {
 	// Stop the search thread
 	SearchThreadST::Get()->StopSearch();
-
 	EditorConfigST::Get()->SavePerspective(wxT("Default"), m_mgr.SavePerspective());
-	EditorConfigST::Get()->SaveCtagsOptions(TagsManagerST::Get()->GetCtagsOptions());
 	event.Skip();
 }
 
@@ -654,13 +649,8 @@ void Frame::OnCtagsOptions(wxCommandEvent &event)
 	wxUnusedVar(event);
 	CtagsOptionsDlg *dlg = new CtagsOptionsDlg(this);
 
-	if(dlg->ShowModal() == wxID_OK){
-
-		// Restart CTAGS processes 
-		TagsManagerST::Get()->RestartCtagsProcess(TagsLocal);
-		TagsManagerST::Get()->RestartCtagsProcess(TagsGlobal);
-	}
-
+	// all the logice resides inside the dialog
+	dlg->ShowModal();
 	dlg->Destroy();
 }
 
