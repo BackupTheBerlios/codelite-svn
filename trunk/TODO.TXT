@@ -20,12 +20,11 @@ If name contains __anony* try to replace it with the typedef name
 4. Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
 5. Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
 6. Replace the editor default menu 
-7. Add Tags options dialog that will allow user to do the following:
-	- Add external database to the current workspace
+7. ******** FIXED *********  
+   Add Tags options dialog that will allow user to do the following:
 	- Create database from source
 	- Select language for the parser (ctags)
 	- Allow user to set list of macros that will be ignored by ctags
-	- Add an option to recreate the tag file for the worksapce
 	
 8. Indentation bug: when pressing enter, the caret goes to the end of the line
 9. Add other lexers other than C++
@@ -47,3 +46,9 @@ If name contains __anony* try to replace it with the typedef name
 24. ******** FIXED ********* Double click on a 'Find In Files' line result, should open the matched file
 25. Change 'Find What' & 'Replace With' controls with comboboxs 
 26. Allow to rename a file from whithin the editor
+27. Add option to create an external database
+28. Add menu option to set external database to workspace
+29. ******** FIXED ********* Add option to set the workspace's ctags settings during workspace creation
+30. Support comment parsing (missing the in ctags options dialog as well as in the code)
+31. ******** FIXED ********* FileSpec is currently not used by CTAGS
+32. keyboard should open files when hitting no a tree control
