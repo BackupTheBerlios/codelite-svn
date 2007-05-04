@@ -15,8 +15,8 @@ StamStruct --> For the typedef
 
 If name contains __anony* try to replace it with the typedef name
 
-2.  ******** FIXED ********* Gather all macros under a single entry in the symbol tree
-3. Change the default icon from class to struct (the case for typedef struct {} Somthing is much more common than class)
+2. ******** FIXED ********* Gather all macros under a single entry in the symbol tree
+3. ******** FIXED ********* Change the default icon from class to struct (the case for typedef struct {} Somthing is much more common than class)
 4. Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
 5. Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
 6. Replace the editor default menu 
@@ -45,3 +45,5 @@ If name contains __anony* try to replace it with the typedef name
 22. Add option to open type in the workspace (eclips's Ctrl+Shift+T)
 23. Add option to open file from the command line 'LiteEditor <file_name> &'
 24. ******** FIXED ********* Double click on a 'Find In Files' line result, should open the matched file
+25. Change 'Find What' & 'Replace With' controls with comboboxs 
+26. Allow to rename a file from whithin the editor
