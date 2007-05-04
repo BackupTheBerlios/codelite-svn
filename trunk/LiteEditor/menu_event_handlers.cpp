@@ -286,3 +286,26 @@ void GotoDefinitionHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEven
 		event.Enable(editor != NULL);
 	}
 }
+
+//-------------------------------------------------
+// View As
+//-------------------------------------------------
+
+void ViewAsHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
+{
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
+
+	if (event.GetId() == XRCID("view_as_cpp")){
+	} else if(event.GetId() == XRCID("view_as_text")){
+	} else if(event.GetId() == XRCID("view_as_java")){
+	}
+}
+
+void ViewAsHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
+{
+	wxUnusedVar(owner);
+	wxUnusedVar(event);
+}

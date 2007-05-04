@@ -28,57 +28,8 @@ wxXmlNode* EditorConfig::GetLexerNode(const wxString& lexerName)
 	return NULL;
 }
 
-void EditorConfig::LoadWords(const wxString& lexer, wxString& words)
-{
-	if( !m_doc->IsOk() )
-		return ;
-		
-	wxXmlNode *lexerNode = GetLexerNode(lexer);
-	if( lexerNode )
-	{
-		wxXmlNode *node = XmlUtils::FindFirstByTagName(lexerNode, wxT("KeyWords"));
-		if( node ){
-			words = node->GetNodeContent();
-			return;
-		}
-	}
-}
-
-void EditorConfig::LoadStyle(const wxString& lexer, std::vector<AttributeStyle>& styles)
-{
-	if( !m_doc->IsOk() )
-		return ;
-
-	wxXmlNode *lexerNode = GetLexerNode(lexer);
-	if( lexerNode )
-	{
-		// Search for <properties>
-		wxXmlNode* node = lexerNode->GetChildren();
-		while( node )
-		{
-			if( node->GetName() == wxT("Properties") )
-			{
-				// We found the element, read the attributes
-				wxXmlNode* prop = node->GetChildren();
-				while( prop )
-				{
-					// Read the font attributes
-					wxString Name = XmlUtils::ReadString(prop, wxT("Name"), wxT("wxSCI_C_DEFAULT"));
-					wxString bold = XmlUtils::ReadString(prop, wxT("Bold"), wxT("no"));
-					wxString face = XmlUtils::ReadString(prop, wxT("Face"), wxT("Courier"));
-					wxString colour = XmlUtils::ReadString(prop, wxT("Colour"), wxT("black"));
-					long fontSize = XmlUtils::ReadLong(prop, wxT("Size"), 10);
-					
-					AttributeStyle style = AttributeStyle(colour, fontSize, Name, face, bold == wxT("Yes"));
-					styles.push_back( style );
-
-					// read next attibute
-					prop = prop->GetNext();
-				}
-			}
-			node = node->GetNext();
-		}
-	}
+LexerConfPtr EditorConfig::GetLexer(const wxString &lexerName) {
+	return new LexerConf(GetLexerNode(lexerName));
 }
 
 wxString EditorConfig::LoadPerspective(const wxString &Name) const

@@ -28,6 +28,8 @@ class ContextCpp : public ContextBase {
 public:
 	ContextCpp(LEditor *container);
 	virtual ~ContextCpp();
+	ContextCpp(){};
+	virtual ContextBase *NewInstance(LEditor *container);
 
 	virtual void CompleteWord();
 	virtual void CodeComplete();

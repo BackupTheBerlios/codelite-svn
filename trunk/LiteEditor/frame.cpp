@@ -103,15 +103,16 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("add_project"), Frame::OnWorkspaceOpen)
 	EVT_UPDATE_UI(XRCID("goto_definition"), Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(XRCID("goto_previous_definition"), Frame::DispatchUpdateUIEvent)
-	
+	EVT_UPDATE_UI(XRCID("view_as_menu"), Frame::OnFileExistUpdateUI)
 	EVT_MENU(XRCID("complete_word"), Frame::OnCompleteWord)
 	EVT_MENU(XRCID("tags_options"), Frame::OnCtagsOptions)
-
-
 	EVT_MENU(XRCID("workspace_pane"), Frame::OnViewWorkspacePane)
 	EVT_MENU(XRCID("output_pane"), Frame::OnViewOutputPane)
 	EVT_UPDATE_UI(XRCID("output_pane"), Frame::OnViewOutputPaneUI)
 	EVT_UPDATE_UI(XRCID("workspace_pane"), Frame::OnViewWorkspacePaneUI)
+	EVT_MENU(XRCID("view_as_cpp"), Frame::DispatchCommandEvent)
+	EVT_MENU(XRCID("view_as_text"), Frame::DispatchCommandEvent)
+	EVT_MENU(XRCID("view_as_java"), Frame::DispatchCommandEvent)
 
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)

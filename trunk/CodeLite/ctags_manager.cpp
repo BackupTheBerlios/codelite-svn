@@ -104,13 +104,6 @@ TagsManager::TagsManager() : wxEvtHandler()
 	// Initialise ctags command pattern
 	m_ctagsCmd[TagsGlobal] = _T("  --fields=aKmSsnit --c-kinds=+p --C++-kinds=+p --filter=yes --filter-terminator=\"<<EOF>>\" ");
 	m_ctagsCmd[TagsLocal] =  _T("  --fields=aKmSsnit --c-kinds=+l --C++-kinds=+l --filter=yes --filter-terminator=\"<<EOF>>\" ");
-	
-	m_validExtensions[wxT("cxx")] = true;
-	m_validExtensions[wxT("cpp")] = true;
-	m_validExtensions[wxT("h")]   = true;
-	m_validExtensions[wxT("hpp")] = true;
-	m_validExtensions[wxT("c++")] = true;
-	m_validExtensions[wxT("c")]   = true;
 }  
 
 TagsManager::~TagsManager()
@@ -1058,7 +1051,8 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 		return;
 
 	// Find all files under this directory
-	DirTraverser traverser(wxEmptyString);
+	DirTraverser traverser(m_options.GetFileSpec());
+	
 	wxString tags;
 	wxProgressDialog* prgDlg = NULL;
 
@@ -1081,15 +1075,9 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 		// Parse all source file, and concatenate them into one big string
 		wxString fileTags;
 		wxFileName curFile((traverser.GetFiles())[i]);
-		wxString ext = curFile.GetExt();
-
-		// we parse only valid C/C++ files
-		if(m_validExtensions.find(ext.MakeLower()) == m_validExtensions.end())
-			continue;		
-
+		
 		// update the progress bar
-		if( prgDlg )
-		{
+		if( prgDlg ){
 			wxString msg;
 			msg << wxT("File:\n") << curFile.GetFullPath();
 			prgDlg->Update(i, msg);

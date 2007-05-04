@@ -38,43 +38,47 @@ ContextCpp::ContextCpp(LEditor *container)
 
 	// Set the key words and the lexer
 	wxString keyWords;
-	std::vector<AttributeStyle> styles;
-
+	std::list<StyleProperty> styles;
+	LexerConfPtr lexPtr;
 	// Read the configuration file
-	if(EditorConfigST::Get()->IsOk())
-	{
-		EditorConfigST::Get()->LoadWords(wxT("Cpp"), keyWords);
-		EditorConfigST::Get()->LoadStyle(wxT("Cpp"), styles);
+	if(EditorConfigST::Get()->IsOk()){
+		lexPtr = EditorConfigST::Get()->GetLexer(wxT("Cpp"));
 	}
 
 	// Update the control
 	LEditor &rCtrl = GetCtrl();
 	rCtrl.SetLexer(wxSCI_LEX_CPP);
-	rCtrl.SetKeyWords(0, keyWords);
+	rCtrl.SetKeyWords(0, lexPtr->GetKeyWords());
 	rCtrl.StyleClearAll();
-
-	for(size_t i=0; i<styles.size(); i++)
+	
+	styles = lexPtr->GetProperties();
+	std::list<StyleProperty>::iterator iter = styles.begin();
+	for(; iter != styles.end(); iter++)
 	{
-		AttributeStyle st = styles[i];
-		std::map<wxString, int>::iterator iter = m_propertyInt.find(st.GetName());
-		if(iter == m_propertyInt.end())
+		StyleProperty st = (*iter);
+		std::map<wxString, int>::iterator mapiter = m_propertyInt.find(st.GetName());
+		if(mapiter == m_propertyInt.end())
 			continue;
 
-		int size = styles[i].GetFontSize();
-		wxString face = styles[i].GetFaceName();
-		bool bold = styles[i].IsBold();
+		int size = (*iter).GetFontSize();
+		wxString face = (*iter).GetFaceName();
+		bool bold = (*iter).IsBold();
 
 		wxFont font(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
 		font.SetFaceName(face);
 
-		rCtrl.StyleSetFont(iter->second, font);
-		rCtrl.StyleSetSize(iter->second, styles[i].GetFontSize());
-		rCtrl.StyleSetForeground(iter->second, styles[i].GetFgColour());
+		rCtrl.StyleSetFont(mapiter->second, font);
+		rCtrl.StyleSetSize(mapiter->second, (*iter).GetFontSize());
+		rCtrl.StyleSetForeground(mapiter->second, (*iter).GetFgColour());
 	}
 }
 
 ContextCpp::~ContextCpp()
 {
+}
+
+ContextBase *ContextCpp::NewInstance(LEditor *container){
+	return new ContextCpp(container);
 }
 
 void ContextCpp::CodeComplete()

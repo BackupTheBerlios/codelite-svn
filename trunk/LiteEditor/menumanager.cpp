@@ -21,6 +21,9 @@ MenuManager::MenuManager(void)
 	PushHandler(new BookmarkHandler(XRCID("removeall_bookmarks")));
 	PushHandler(new GotoDefinitionHandler(XRCID("goto_definition")));
 	PushHandler(new GotoDefinitionHandler(XRCID("goto_previous_definition")));
+	PushHandler(new ViewAsHandler(XRCID("view_as_cpp")));
+	PushHandler(new ViewAsHandler(XRCID("view_as_text")));
+	PushHandler(new ViewAsHandler(XRCID("view_as_java")));
 }
 
 MenuManager::~MenuManager(void)

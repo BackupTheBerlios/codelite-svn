@@ -20,12 +20,18 @@ class LEditor;
  *
  */
 class ContextBase {
+protected:
 	LEditor *m_container;
 
 public:
+	// ctor-dtor
 	ContextBase(LEditor *container);
+	ContextBase();
 	virtual ~ContextBase();
 	LEditor &GetCtrl() { return *m_container; }
+
+	// every Context derived class must implement the Clone method
+	virtual ContextBase *NewInstance(LEditor *container) = 0;
 
 	virtual void CompleteWord() = 0;
 	virtual void CodeComplete() = 0;

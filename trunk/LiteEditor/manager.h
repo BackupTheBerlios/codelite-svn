@@ -224,6 +224,13 @@ public:
 	 */
 	CtagsOptions GetWorkspaceCtagsOptions() const;
 
+	/**
+	 * Return the lexer name by file extension
+	 * \param extension file extension
+	 * \return lexer name, if no lexer is matched with the extension, "Default" is returned
+	 */
+	wxString GetLexerByExtension(const wxString &extension) const;
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

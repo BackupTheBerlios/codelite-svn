@@ -3,8 +3,8 @@
 #include "editor_config.h"
 #include "editor.h"
 
-ContextText::ContextText(LEditor *container)
-: m_container(container)
+ContextText::ContextText(LEditor *container) 
+: ContextBase(container)
 {
 	// Initialise default style settings
 
@@ -14,11 +14,11 @@ ContextText::ContextText(LEditor *container)
 
 	// Set the key words and the lexer
 	wxString keyWords;
-	std::vector<AttributeStyle> styles;
+	std::list<StyleProperty> styles;
 
 	// Read the configuration file
 	if(EditorConfigST::Get()->IsOk()){
-		EditorConfigST::Get()->LoadStyle(wxT("Default"), styles);
+		styles = EditorConfigST::Get()->GetLexer(wxT("Default"))->GetProperties();
 	}
 
 	// Update the control
@@ -26,22 +26,27 @@ ContextText::ContextText(LEditor *container)
 	rCtrl.SetLexer(wxSCI_LEX_NULL);
 	rCtrl.StyleClearAll();
 
-	if( styles.empty() == false ){ 
-		int size = styles[0].GetFontSize();
-		wxString face = styles[0].GetFaceName();
-		bool bold = styles[0].IsBold();
+	std::list<StyleProperty>::iterator iter = styles.begin();
+	if(iter != styles.end()){
+		int size = (*iter).GetFontSize();
+		wxString face = (*iter).GetFaceName();
+		bool bold = (*iter).IsBold();
 
 		wxFont font(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
 		font.SetFaceName(face);
 
 		rCtrl.StyleSetFont(0, font);
-		rCtrl.StyleSetSize(0, styles[0].GetFontSize());
-		rCtrl.StyleSetForeground(0, styles[0].GetFgColour());
+		rCtrl.StyleSetSize(0, (*iter).GetFontSize());
+		rCtrl.StyleSetForeground(0, (*iter).GetFgColour());
 	}
 }
 
 ContextText::~ContextText()
 {
+}
+
+ContextBase *ContextText::NewInstance(LEditor *container){
+	return new ContextText(container);
 }
 
 // Dont implement this function, maybe derived child will want 

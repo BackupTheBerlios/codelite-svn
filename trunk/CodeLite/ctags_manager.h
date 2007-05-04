@@ -144,7 +144,6 @@ class TagsManager : public wxEvtHandler
 	wxStopWatch m_watch;
 #endif
 	bool m_parseComments;
-	std::map<wxString, bool> m_validExtensions;
 	CtagsOptions m_options;
 	std::map<int, clProcess*> m_processes;
 

@@ -4,6 +4,7 @@
 #include "wx/string.h"
 #include "wx/wxscintilla.h"
 #include "smart_ptr.h"
+#include "context_base.h"
 
 class LEditor;
 
@@ -20,14 +21,20 @@ class LEditor;
  *
  *
  */
-class ContextText {
-	LEditor *m_container;
-
+class ContextText : public ContextBase {
 public:
+	//---------------------------------------
+	// ctors-dtor
+	//---------------------------------------
 	ContextText(LEditor *container);
+	ContextText(){};
 	virtual ~ContextText();
 	LEditor &GetCtrl() { return *m_container; }
+	virtual ContextBase *NewInstance(LEditor *container);
 
+	//---------------------------------------
+	// Operations
+	//---------------------------------------
 	virtual void CompleteWord();
 	virtual void CodeComplete();
 	virtual void GotoDefinition();

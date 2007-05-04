@@ -255,6 +255,12 @@
 				RelativePath=".\context_cpp.h">
 			</File>
 			<File
+				RelativePath=".\context_manager.cpp">
+			</File>
+			<File
+				RelativePath=".\context_manager.h">
+			</File>
+			<File
 				RelativePath=".\context_text.cpp">
 			</File>
 			<File
@@ -265,12 +271,6 @@
 			</File>
 			<File
 				RelativePath=".\editor.h">
-			</File>
-			<File
-				RelativePath=".\editor_config.cpp">
-			</File>
-			<File
-				RelativePath=".\editor_config.h">
 			</File>
 		</Filter>
 		<Filter
@@ -432,6 +432,24 @@
 			</File>
 			<File
 				RelativePath=".\xmlutils.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Configuration">
+			<File
+				RelativePath=".\attribute_style.h">
+			</File>
+			<File
+				RelativePath=".\editor_config.cpp">
+			</File>
+			<File
+				RelativePath=".\editor_config.h">
+			</File>
+			<File
+				RelativePath=".\lexer_configuration.cpp">
+			</File>
+			<File
+				RelativePath=".\lexer_configuration.h">
 			</File>
 		</Filter>
 	</Files>

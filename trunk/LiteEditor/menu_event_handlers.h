@@ -200,5 +200,19 @@ public:
 	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
 };
 
+//-------------------------------------------------
+// View As
+//-------------------------------------------------
+class ViewAsHandler : public MenuEventHandler 
+{
+public:
+	ViewAsHandler(int id) : MenuEventHandler(id){};
+	virtual ~ViewAsHandler(){};
+
+public:
+	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
+	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
+};
+
 #endif // MENU_EVENT_HANDLERS_H
 

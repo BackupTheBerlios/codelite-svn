@@ -18,6 +18,7 @@
 #include "art_manager.h"
 #include <wx/file.h>
 #include "wx/arrstr.h"
+#include "context_manager.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -153,6 +154,7 @@ void Manager::UnInitialize()
 	LanguageST::Free();
 	EditorConfigST::Free();
 	WorkspaceST::Free();
+	ContextManager::Free();
 
 	//-----------------------------------------------------
 	// Stop the parser thread and release its resources
@@ -500,3 +502,7 @@ CtagsOptions Manager::GetWorkspaceCtagsOptions() const
 	return WorkspaceST::Get()->LoadCtagsOptions();
 }
 
+wxString Manager::GetLexerByExtension(const wxString &extension) const
+{
+	return wxT("Default");
+}

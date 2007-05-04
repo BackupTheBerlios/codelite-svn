@@ -10,7 +10,7 @@
 #include <wx/fdrepdlg.h>
 #include "findreplacedlg.h"
 #include <wx/wxFlatNotebook/renderer.h>
-#include "context_cpp.h"
+#include "context_manager.h"
 
 // fix bug in wxscintilla.h
 #ifdef EVT_SCI_CALLTIP_CLICK
@@ -47,7 +47,9 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 , m_project(project)
 , m_lastMatchPos(0)
 {
-	m_context = ContextBasePtr( new ContextCpp(this) );
+	wxString lexerName = ManagerST::Get()->GetLexerByExtension(m_fileName.GetExt());
+	m_context = ContextManager::Get()->NewContext(this, lexerName);
+
 	SetProperties();
 
 	// If file name is provided, open it

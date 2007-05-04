@@ -111,8 +111,25 @@
             <object class="wxMenuItem" name="output_pane">
 				<label>&amp;Output Pane\tCtrl+Alt+O</label>
 				<checkable>1</checkable>
-			</object>
-	    </object>		  
+            </object>
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            <object class="wxMenu" name="view_as_menu">
+                <label>View As</label>
+                <style>wxMENU_TEAROFF</style>
+                <object class="wxMenuItem" name="view_as_cpp">
+                    <label>C++</label>
+                    <radio>1</radio>
+                </object>
+                <object class="wxMenuItem" name="view_as_java">
+                    <label>Java</label>
+                    <radio>1</radio>
+                </object>
+                <object class="wxMenuItem" name="view_as_text">
+                    <label>Text</label>
+                    <radio>1</radio>
+                </object>
+            </object>		  
+        </object>		  
 	    
         <object class="wxMenu" name="search_menu">
             <label>&amp;Search</label>

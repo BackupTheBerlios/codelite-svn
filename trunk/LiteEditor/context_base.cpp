@@ -8,6 +8,10 @@ ContextBase::ContextBase(LEditor *container)
 {
 }
 
+ContextBase::ContextBase()
+{
+}
+
 ContextBase::~ContextBase()
 {
 }
