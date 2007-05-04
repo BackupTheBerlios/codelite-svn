@@ -13,7 +13,7 @@
 #include "workspace_pane.h"
 #include "findinfilesdlg.h"
 #include "ctags_dialog.h"
-#include "process.h"
+#include "cl_process.h"
 
 // forward decls
 class TagEntry;
@@ -25,8 +25,8 @@ class TagEntry;
  */
 class Frame : public wxFrame
 {
-	clProcessPtr m_ctags;
-	clProcessPtr m_localCtags;
+//	clProcessPtr m_ctags;
+//	clProcessPtr m_localCtags;
 	bool m_restartCtags;
 	wxFlatNotebook *m_notebook;
 	static Frame* m_theFrame;
@@ -67,7 +67,6 @@ protected:
 	void OnClose(wxCloseEvent &event);
 	void OnAddSourceFile(wxCommandEvent& event);
 	void OnBuildFromDatabase(wxCommandEvent& event);
-	void OnCtagsEnd(wxProcessEvent& event);
 	void OnSave(wxCommandEvent& event);
 	void OnSaveAs(wxCommandEvent& event);
 	void OnCompleteWord(wxCommandEvent& event);

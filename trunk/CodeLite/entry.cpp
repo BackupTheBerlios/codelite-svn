@@ -89,6 +89,9 @@ void TagEntry::Create(const char *fileName, const char *name, int lineNumber, co
 	path = GetExtField(_T("class"));
 	UpdatePath( path ) ;
 
+	path = GetExtField(_T("interface"));
+	UpdatePath( path ) ;
+
 	path = GetExtField(_T("struct"));
 	UpdatePath( path ) ;
 

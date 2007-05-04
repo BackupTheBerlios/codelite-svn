@@ -18,7 +18,9 @@
 class clProcess : public wxProcess
 {
 	long m_pid;
-	int m_id;
+	int m_uid;
+	int m_type;
+
 public:
 	/**
 	 * Constructs a process object. id is only used in the case you want to use wxWidgets events. 
@@ -41,16 +43,16 @@ public:
 	 */
 	void SetPid(long pid);
 
-	int GetId() { return m_id; }
+	//int GetId() { return m_id; }
 
 	/**
 	 * Kill the process
 	 */
 	void Terminate();
 
-	void OnTerminate() {}
+	int GetUid() { return m_uid; }
+	void SetType(int type) { m_type = type; }
+	int GetType() const { return m_type; }
 };
-
-typedef SmartPtr<clProcess> clProcessPtr;
 
 #endif // CODELITE_TAGSPROCESS_H

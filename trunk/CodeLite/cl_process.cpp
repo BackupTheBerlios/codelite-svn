@@ -1,4 +1,4 @@
-#include "process.h"
+#include "cl_process.h"
 
 #ifdef __VISUALC__
 #ifdef _DEBUG
@@ -7,9 +7,9 @@
 #endif 
 
 clProcess::clProcess(wxEvtHandler* evtHandler, int id)
-: wxProcess(wxPROCESS_REDIRECT)
+: wxProcess(evtHandler, id)
 , m_pid(-1)
-, m_id(id)
+, m_uid(id)
 {
 }
 

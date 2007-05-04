@@ -3,7 +3,7 @@
 
 #include "wx/event.h"
 #include "wx/process.h"
-#include "process.h"
+#include "cl_process.h"
 #include "tree.h"
 #include "entry.h"
 #include "tags_database.h"
@@ -22,11 +22,8 @@ class clProcess;
 class DirTraverser;
 class Language;
 
-enum CtagsType
-{
-	TagsGlobal = 0,
-	TagsLocal
-};
+#define TagsGlobal 0
+#define TagsLocal  1
 
 enum SearchFlags
 {
@@ -106,19 +103,15 @@ public:
  * // Create ctags processes, one for local scope and one for global scope.
  * // 'this' is a pointer to the main frame or any other window that wishes to be notified 
  * // if ctags process died
- * clProcess* m_ctags = TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
- * clProcess* m_localCtags = TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
+ * TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
+ * TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
  * \endcode
  *
  * In the destructor of your main frame it is recommended to call Free() to avoid memory leaks:
  *
  * \code
- * // kill the TagsManager object first, so it will not restart
- * // terminating ctags processes
+ * // kill the TagsManager object first it will do the process termination and cleanup
  * TagsManager::Free();
- * m_localCtags->Terminate();
- * m_ctags->Terminate()
- *
  * \endcode
  *
  * \ingroup CodeLite
@@ -130,7 +123,7 @@ public:
  * \author Eran
  *
  */
-class TagsManager 
+class TagsManager : public wxEvtHandler 
 {
 	// Members
 	friend class Singleton<TagsManager>;
@@ -143,8 +136,8 @@ class TagsManager
 	wxCriticalSection m_cs;
 
 	wxFileName m_ctagsPath;
-	clProcessPtr m_ctags;
-	clProcessPtr m_localCtags;
+	clProcess* m_ctags;
+	clProcess* m_localCtags;
 	std::map<int, wxString> m_ctagsCmd;
 	
 #ifdef USE_TRACE
@@ -153,6 +146,7 @@ class TagsManager
 	bool m_parseComments;
 	std::map<wxString, bool> m_validExtensions;
 	CtagsOptions m_options;
+	std::map<int, clProcess*> m_processes;
 
 public:
 	/**
@@ -285,7 +279,14 @@ public:
 	 * 
 	 * It is possible to add a full path to ctags exectuable by calling the SetCtagsPath() function.
 	 */
-	clProcessPtr StartCtagsProcess(int kind = TagsGlobal);
+	clProcess *StartCtagsProcess(int kind);
+
+	/**
+	 * Restart ctags process.
+	 * \param kind 
+	 * \return 
+	 */
+	void RestartCtagsProcess(int kind);
 
 	/**
 	 * Set the event handler to handle notifications of tree changes. 
@@ -449,7 +450,7 @@ private:
 	 * \param ctags Ctags process to use for the parsing of the source file - ctags manager holds two 
 	 * ctags processes, one for parsing local variables and one for global scope
 	 */
-	void SourceToTags(const wxFileName& source, wxString& tags, clProcessPtr ctags);
+	void SourceToTags(const wxFileName& source, wxString& tags, clProcess *ctags);
 
 	/**
 	 * Parse tags from memory construct a TagTree. 

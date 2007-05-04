@@ -34,6 +34,13 @@ public:
 	 */
 	static wxXmlNode *FindFirstByTagName(const wxXmlNode *parent, const wxString &tagName);
 
+	
+	/**
+	 * Set the content of node. This function replaces any existing content of node
+	 * \param node 
+	 * \param text content
+	 */
+	static void SetNodeContent(wxXmlNode *node, const wxString &text);
 
 	/**
 	 * Read string property from the given node

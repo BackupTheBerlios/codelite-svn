@@ -74,3 +74,28 @@ long XmlUtils::ReadLong(wxXmlNode *node, const wxString &propName, long defaultV
 	val.ToLong(&retVal);
 	return retVal;
 }
+
+void XmlUtils::SetNodeContent(wxXmlNode *node, const wxString &text)
+{
+	wxXmlNode *n = node->GetChildren();
+	wxXmlNode *contentNode = NULL;
+    while (n)
+    {
+		if (n->GetType() == wxXML_TEXT_NODE || n->GetType() == wxXML_CDATA_SECTION_NODE){
+			contentNode = n;
+			break;
+		}
+        n = n->GetNext();
+    }
+
+	if(!contentNode) {
+		return;
+	}
+	
+	node->RemoveChild(contentNode);
+	delete contentNode;
+
+	contentNode = new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, text);
+	node->AddChild( contentNode );
+}
+

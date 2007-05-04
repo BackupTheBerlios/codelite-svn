@@ -13,7 +13,6 @@
 #include "parse_thread.h"
 #include "cpp_symbol_tree.h"
 #include "language.h"
-#include "process.h"
 #include "editor_config.h"
 #include "manager.h"
 #include "menumanager.h"
@@ -41,9 +40,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 
 	// New dialog handlers
 	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE, Frame::OnNewDlgCreate)
-
-	//EVT_END_PROCESS(ID_CTAGS_GLOBAL_ID, Frame::OnCtagsEnd)
-	//EVT_END_PROCESS(ID_CTAGS_LOCAL_ID, Frame::OnCtagsEnd)
 
 	// Handler menu events
 	EVT_MENU(wxID_EXIT, Frame::OnQuit)
@@ -206,6 +202,10 @@ void Frame::CreateGUIControls(void)
 	m_notebook->Connect(m_notebook->GetId(), wxEVT_COMMAND_FLATNOTEBOOK_PAGE_CHANGED, wxFlatNotebookEventHandler(Frame::OnPageChanged), NULL, this);
 	m_notebook->Connect(m_notebook->GetId(), wxEVT_COMMAND_FLATNOTEBOOK_PAGE_CLOSING, wxFlatNotebookEventHandler(Frame::OnFileClosing), NULL, this);
 
+	// Initialise editor configuration file
+	wxFileName configFile(wxT("liteeditor.xml"));
+	EditorConfigST::Get()->Load(configFile);
+
 	//--------------------------------------------------------------------------------------
 	// Start ctags process. 
 	// ctags process must be started somewhere in the main frames' (here is a good place ^^)
@@ -214,6 +214,8 @@ void Frame::CreateGUIControls(void)
 	//--------------------------------------------------------------------------------------
 	
 	// We keep a pointer to wxProcess object returend from ctags starting process
+	CtagsOptions options = EditorConfigST::Get()->LoadCtagsOptions();
+	TagsManagerST::Get()->SetCtagsOptions( options );
 	TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
 	TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
 	
@@ -228,10 +230,6 @@ void Frame::CreateGUIControls(void)
 	//--------------------------------------------------------------------------------------
 	ParseThreadST::Get()->Start();
 
-	// Initialise editor configuration file
-	wxFileName configFile(wxT("liteeditor.xml"));
-	EditorConfigST::Get()->Load(configFile);
-
 	// And finally create a status bar
 	wxStatusBar* statusBar = new wxStatusBar(this, wxID_ANY);
 	statusBar->SetFieldsCount(3);
@@ -240,7 +238,7 @@ void Frame::CreateGUIControls(void)
 	GetStatusBar()->SetStatusText(_("Ready"));
 
 	// "commit" all changes made to wxAuiManager
-	wxString pers = EditorConfigST::Get()->LoadPerspective(wxT("default"));
+	wxString pers = EditorConfigST::Get()->LoadPerspective(wxT("Default"));
 
 	// if we have a perspective, use it, else use the default persprective
 	if( pers.IsEmpty() == false ){
@@ -309,39 +307,10 @@ void Frame::OnClose(wxCloseEvent& event)
 	// Stop the search thread
 	SearchThreadST::Get()->StopSearch();
 
-	EditorConfigST::Get()->SavePerspective(wxT("default"), m_mgr.SavePerspective());
+	EditorConfigST::Get()->SavePerspective(wxT("Default"), m_mgr.SavePerspective());
+	EditorConfigST::Get()->SaveCtagsOptions(TagsManagerST::Get()->GetCtagsOptions());
 	event.Skip();
 }
-/*
-// Provide a callback function for the process termination
-void Frame::OnCtagsEnd(wxProcessEvent& event)
-{
-	//-----------------------------------------------------------
-	// This event handler is a must if you wish to delete 
-	// the process and prevent memory leaks
-	// In addition, I implemented here some kind of a watchdog
-	// mechanism: if ctags process terminated abnormally, it will
-	// be restarted automatically by this function (unless the 
-	// termination of it was from OnClose() function, then we 
-	// choose to ignore the restart)
-	//-----------------------------------------------------------
-
-	// Which ctags process died?
-	switch( event.GetId() )
-	{
-	case ID_CTAGS_GLOBAL_ID:
-		if(m_restartCtags)
-			m_ctags = TagsManagerST::Get()->StartCtagsProcess(this, ID_CTAGS_GLOBAL_ID, TagsGlobal);
-		break;
-	case ID_CTAGS_LOCAL_ID:
-		if(m_restartCtags)
-			m_localCtags = TagsManagerST::Get()->StartCtagsProcess(this, ID_CTAGS_LOCAL_ID, TagsLocal);
-		break;
-	default:
-		break;
-	}
-}
-*/
 
 wxString Frame::GetStringFromUser(const wxString& msg)
 {
@@ -687,12 +656,9 @@ void Frame::OnCtagsOptions(wxCommandEvent &event)
 
 	if(dlg->ShowModal() == wxID_OK){
 
-		// terminate ctags processes
-		//m_ctags->Terminate();
-		//m_localCtags->Terminate();
-		
-		//m_ctags = TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
-		//m_localCtags = TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
+		// Restart CTAGS processes 
+		TagsManagerST::Get()->RestartCtagsProcess(TagsLocal);
+		TagsManagerST::Get()->RestartCtagsProcess(TagsGlobal);
 	}
 
 	dlg->Destroy();

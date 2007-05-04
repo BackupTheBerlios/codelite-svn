@@ -192,6 +192,9 @@
 				RelativePath=".\calltip.cpp">
 			</File>
 			<File
+				RelativePath=".\cl_process.cpp">
+			</File>
+			<File
 				RelativePath=".\comment.cpp">
 			</File>
 			<File
@@ -214,9 +217,6 @@
 			</File>
 			<File
 				RelativePath=".\parse_thread.cpp">
-			</File>
-			<File
-				RelativePath=".\process.cpp">
 			</File>
 			<File
 				RelativePath=".\readtags.cpp">
@@ -243,6 +243,9 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath=".\calltip.h">
+			</File>
+			<File
+				RelativePath=".\cl_process.h">
 			</File>
 			<File
 				RelativePath=".\comment.h">
@@ -276,9 +279,6 @@
 			</File>
 			<File
 				RelativePath=".\precompiled_header.h">
-			</File>
-			<File
-				RelativePath=".\process.h">
 			</File>
 			<File
 				RelativePath=".\readtags.h">

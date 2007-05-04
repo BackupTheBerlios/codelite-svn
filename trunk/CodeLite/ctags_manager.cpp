@@ -4,7 +4,6 @@
 #include <wx/txtstrm.h>
 #include <wx/file.h>
 #include <algorithm>
-#include "process.h"
 #include "language.h"
 #include <wx/progdlg.h>
 #include "dirtraverser.h"
@@ -92,8 +91,9 @@ wxString CtagsOptions::ToString() const
 //------------------------------------------------------------------------------
 // CTAGS Manager
 //------------------------------------------------------------------------------
-TagsManager::TagsManager()
-: m_ctagsPath(_T("ctags"))
+
+TagsManager::TagsManager() : wxEvtHandler()
+, m_ctagsPath(_T("ctags"))
 , m_ctags(NULL)
 , m_localCtags(NULL)
 , m_parseComments(false)
@@ -119,8 +119,8 @@ TagsManager::~TagsManager()
 	delete m_pExternalDb;
 
 	bool debug;
-//	debug = m_ctags->Disconnect(m_ctags->GetId(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
-//	debug = m_localCtags->Disconnect(m_localCtags->GetId(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+	debug = m_ctags->Disconnect(m_ctags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+	debug = m_localCtags->Disconnect(m_localCtags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
 	wxUnusedVar(debug);
 
 	// terminate ctags processes
@@ -509,7 +509,7 @@ void TagsManager::Delete(const wxFileName& path, const wxString& project, const 
 // Process Handling of CTAGS
 //--------------------------------------------------------
 
-clProcessPtr TagsManager::StartCtagsProcess(int kind)
+clProcess *TagsManager::StartCtagsProcess(int kind)
 {
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
@@ -532,18 +532,39 @@ clProcessPtr TagsManager::StartCtagsProcess(int kind)
 
 	process = new clProcess(NULL, wxNewId());
 	process->Redirect();
+	process->SetType(kind);
 
 	// Launch it!
 	long pid = wxExecute(cmd, wxEXEC_ASYNC, process);
 	process->SetPid( pid );
+	m_processes[process->GetPid()] = process;
+
 	if( process->GetPid() <= 0 ){
 		return NULL;
 	}
 
 	// attach the termination event to the tags manager class
-	//process->Connect(process->GetId(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+	process->Connect(process->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
 	kind == TagsGlobal ? m_ctags = process : m_localCtags = process;
 	return process;
+}
+
+void TagsManager::RestartCtagsProcess(int kind)
+{
+	clProcess *oldProc(NULL);
+	if(kind == TagsLocal){
+		oldProc = m_localCtags;
+	} else if(kind == TagsGlobal){
+		oldProc = m_ctags;
+	}
+
+	if( !oldProc ){
+		return ;
+	}
+
+	// no need to call StartCtagsProcess(), since it will be called automatically
+	// by the termination handler OnCtagsEnd()
+	oldProc->Terminate();
 }
 
 void TagsManager::SetCtagsPath(const wxString& path)
@@ -567,19 +588,23 @@ void TagsManager::OnCtagsEnd(wxProcessEvent& event)
 	//-----------------------------------------------------------
 
 	// Which ctags process died?
-	if( event.GetId() == m_ctags->GetId()){
-//		m_ctags->Disconnect(m_ctags->GetId(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
-		m_ctags = StartCtagsProcess(TagsGlobal);
-	} else if( event.GetId() == m_localCtags->GetId()){
-//		m_localCtags->Disconnect(m_localCtags->GetId(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
-		m_localCtags = StartCtagsProcess(TagsLocal);
+	std::map<int, clProcess*>::iterator iter = m_processes.find(event.GetPid());
+	if( iter != m_processes.end()){
+		clProcess *proc = iter->second;
+		proc->Disconnect(proc->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+		// start new process
+		StartCtagsProcess((int)proc->GetType());
+		// delete the one that just terminated
+		delete proc;
+		// remove it from the map
+		m_processes.erase(iter);
 	}
 }
 
 //---------------------------------------------------------------------
 // Parsing
 //---------------------------------------------------------------------
-void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, clProcessPtr ctags)
+void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, clProcess *ctags)
 {
 	// Send the command to ctags
 	wxOutputStream *out = ctags->GetOutputStream();
