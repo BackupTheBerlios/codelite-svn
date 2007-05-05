@@ -132,7 +132,7 @@ public:
 	const wxString& GetPattern() const { return m_pattern; }
 	void SetPattern(const wxString& pattern) { m_pattern = pattern; }
 
-	const wxString& GetKind() const { return m_kind; }
+	wxString GetKind() const;
 	void SetKind(const wxString& kind) { m_kind = kind; }
 
 	const wxString& GetParent() const { return m_parent; }
@@ -183,6 +183,12 @@ public:
 	 * \return real name or wxEmptyString
 	 */
 	wxString NameFromTyperef() const;
+
+	/**
+	 * Return the actual type as described in the 'typeref' field
+	 * \return real name or wxEmptyString
+	 */
+	wxString TypeFromTyperef() const;
 	//------------------------------------------
 	// Extenstion fields
 	//------------------------------------------
@@ -239,6 +245,7 @@ public:
 	 * \return insert preapred statement
 	 */
 	virtual wxString GetInsertOneStatement();
+
 
 private:
 	/**

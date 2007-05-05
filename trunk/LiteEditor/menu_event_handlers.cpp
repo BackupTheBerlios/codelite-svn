@@ -7,14 +7,17 @@
 void CopyHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	LEditor *editor = static_cast<LEditor*>(owner);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
 	editor->Copy();
 }
 
 void CopyHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
-	LEditor *editor = static_cast<LEditor*>(owner);
-	event.Enable(( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 ));
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	event.Enable(editor && ( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 ));
 }
 
 //------------------------------------
@@ -23,14 +26,17 @@ void CopyHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 void CutHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	LEditor *editor = static_cast<LEditor*>(owner);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
 	editor->Cut();
 }
 
 void CutHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
-	LEditor *editor = static_cast<LEditor*>(owner);
-	event.Enable(( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 ));
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	event.Enable(editor && ( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 ));
 }
 
 //------------------------------------
@@ -39,14 +45,17 @@ void CutHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 void PasteHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	LEditor *editor = static_cast<LEditor*>(owner);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
 	editor->Paste();
 }
 
 void PasteHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
-	LEditor *editor = static_cast<LEditor*>(owner);
-	event.Enable(editor->CanPaste());
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	event.Enable(editor && editor->CanPaste());
 }
 
 //------------------------------------
@@ -55,14 +64,17 @@ void PasteHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 void UndoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	LEditor *editor = static_cast<LEditor*>(owner);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
 	editor->Undo();
 }
 
 void UndoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
-	LEditor *editor = static_cast<LEditor*>(owner);
-	event.Enable(editor->CanUndo());
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	event.Enable(editor && editor->CanUndo());
 }
 
 //------------------------------------
@@ -71,14 +83,17 @@ void UndoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 void RedoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	LEditor *editor = static_cast<LEditor*>(owner);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
 	editor->Redo();
 }
 
 void RedoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
-	LEditor *editor = static_cast<LEditor*>(owner);
-	event.Enable(editor->CanRedo());
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	event.Enable(editor && editor->CanRedo());
 }
 
 //------------------------------------
@@ -87,14 +102,17 @@ void RedoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 void SelectAllHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	LEditor *editor = static_cast<LEditor*>(owner);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
 	editor->SelectAll();
 }
 
 void SelectAllHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
-	LEditor *editor = static_cast<LEditor*>(owner);
-	event.Enable(editor->GetLength() > 0);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	event.Enable(editor && editor->GetLength() > 0);
 }
 
 //------------------------------------
@@ -103,7 +121,10 @@ void SelectAllHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &ev
 void DuplicateLineHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	LEditor *editor = static_cast<LEditor*>(owner);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
 	editor->LineDuplicate();
 }
 
@@ -118,7 +139,10 @@ void DuplicateLineHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent
 //------------------------------------
 void BraceMatchHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
-	LEditor *editor = static_cast<LEditor*>(owner);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
 
 	if(event.GetId() == XRCID("select_to_brace")){
 		editor->MatchBraceAndSelect(true);
@@ -129,8 +153,8 @@ void BraceMatchHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &eve
 
 void BraceMatchHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
-	LEditor *editor = static_cast<LEditor*>(owner);
-	event.Enable(editor->GetLength() > 0);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	event.Enable(editor &&editor->GetLength() > 0);
 }
 
 
@@ -140,7 +164,10 @@ void BraceMatchHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &e
 void FindReplaceHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	LEditor *editor = static_cast<LEditor*>(owner);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
 
 	if( event.GetId() == wxID_FIND ) 
 	{
@@ -179,7 +206,10 @@ void FindReplaceHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &
 void GotoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	LEditor *editor = static_cast<LEditor*>(owner);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
 
 	wxString msg;
 	msg.Printf(wxT("Go to line number (1 - %ld):"), editor->GetLineCount()); 
@@ -240,7 +270,10 @@ void GotoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 //------------------------------------
 void BookmarkHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
-	LEditor *editor = static_cast<LEditor*>(owner);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
 
 	if		 (event.GetId() == XRCID("toggle_bookmark")){
 		editor->ToggleMarker();

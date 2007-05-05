@@ -320,6 +320,16 @@ wxString TagEntry::GetScopeName() const
 	}
 	return scopeName;
 }
+wxString TagEntry::GetKind() const {
+	 // if the tree element is a typeref, use the actual type
+	// and not the kind that ctags thinks it is
+	wxString kind = TypeFromTyperef();
+	if( kind.IsEmpty() ){
+		kind = m_kind;
+	}
+	return kind;
+}
+
 
 const bool TagEntry::IsContainer() const
 {
@@ -341,6 +351,18 @@ void TagEntry::UpdatePath(wxString & path)
 	}
 	path.Empty();
 }
+
+wxString TagEntry::TypeFromTyperef() const
+{
+	wxString typeref = GetTyperef();
+	if( typeref.IsEmpty() == false )
+	{
+		wxString name = typeref.BeforeFirst(_T(':'));
+		return name;		
+	}
+	return wxEmptyString;
+}
+
 
 wxString TagEntry::NameFromTyperef() const
 {

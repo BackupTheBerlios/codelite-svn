@@ -100,7 +100,6 @@ void SymbolTree::InitialiseSymbolMap()
 	m_globalsKind[_T("<global>")] = true;
 	m_globalsKind[_T("function")] = true;
 	m_globalsKind[_T("prototype")] = true;
-	m_globalsKind[_T("macro")] = true;
 	m_globalsKind[_T("variable")] = true;
 }
 
@@ -168,6 +167,8 @@ void SymbolTree::AddItem(TagNode* node)
 {
 	// Get node icon index
 	TagEntry nodeData = node->GetData();
+	
+
 	int iconIndex = GetItemIconIndex(nodeData.GetKind(), nodeData.GetAccess());
 	wxString displayName(nodeData.GetDisplayName());
 	wxTreeItemId parentHti;
