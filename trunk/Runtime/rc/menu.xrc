@@ -120,10 +120,6 @@
                     <label>C++</label>
                     <radio>1</radio>
                 </object>
-                <object class="wxMenuItem" name="view_as_java">
-                    <label>Java</label>
-                    <radio>1</radio>
-                </object>
                 <object class="wxMenuItem" name="view_as_text">
                     <label>Text</label>
                     <radio>1</radio>
