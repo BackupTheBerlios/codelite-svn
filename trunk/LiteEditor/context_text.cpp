@@ -4,7 +4,7 @@
 #include "editor.h"
 
 ContextText::ContextText(LEditor *container) 
-: ContextBase(container)
+: ContextBase(container, wxT("Text"))
 {
 	// Initialise default style settings
 

@@ -47,9 +47,7 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 , m_project(project)
 , m_lastMatchPos(0)
 {
-	wxString lexerName = ManagerST::Get()->GetLexerByExtension(m_fileName.GetExt());
-	m_context = ContextManager::Get()->NewContext(this, lexerName);
-
+	m_context = ManagerST::Get()->NewContextByFileName(m_fileName, this);
 	SetProperties();
 
 	// If file name is provided, open it
@@ -339,7 +337,24 @@ bool LEditor::SaveToFile(const wxFileName &fileName)
 
 	// update the file name (remove the star from the file name)
 	ManagerST::Get()->SetPageTitle(this, fileName.GetFullName());
+
+	// Update context if needed
+	if(fileName.GetExt() != m_fileName.GetExt()){
+		// new context is required
+		ClearDocumentStyle();
+		m_context = ManagerST::Get()->NewContextByFileName(fileName, this);
+		Colourise(0, wxSCI_INVALID_POSITION);
+		SetProperties();
+	}
 	return true;
+}
+
+void LEditor::SetSyntaxHighlight(const wxString &lexerName) 
+{
+	ClearDocumentStyle();
+	m_context = ContextManager::Get()->NewContext(this, lexerName);
+	Colourise(0, wxSCI_INVALID_POSITION);
+	SetProperties();
 }
 
 void LEditor::OpenFile(const wxString &fileName, const wxString &project)

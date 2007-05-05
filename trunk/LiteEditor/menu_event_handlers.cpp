@@ -299,13 +299,24 @@ void ViewAsHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 	}
 
 	if (event.GetId() == XRCID("view_as_cpp")){
+		editor->SetSyntaxHighlight(wxT("Cpp"));
 	} else if(event.GetId() == XRCID("view_as_text")){
-	} else if(event.GetId() == XRCID("view_as_java")){
+		editor->SetSyntaxHighlight(wxT("Text"));
 	}
 }
 
 void ViewAsHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
-	wxUnusedVar(owner);
-	wxUnusedVar(event);
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
+
+	if(event.GetId() == XRCID("view_as_cpp")){
+		event.Check(editor->GetContext()->GetName() == wxT("Cpp"));
+	}
+	
+	if(event.GetId() == XRCID("view_as_text")){
+		event.Check(editor->GetContext()->GetName() == wxT("Text"));
+	}
 }

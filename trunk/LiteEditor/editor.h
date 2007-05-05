@@ -113,6 +113,17 @@ public:
 	// Perform FindNext operation based on the data stored in the FindReplaceData class
 	void FindNext(const FindReplaceData &data);
 
+	/**
+	 * Change the document's syntax highlight
+	 * \param lexerName the syntax highlight's lexer name (as appear in the liteeditor.xml file)
+	 */
+	void SetSyntaxHighlight(const wxString &lexerName);
+
+	/** 
+	 * Return the document context object
+	 */
+	ContextBasePtr GetContext() const { return m_context; }
+
 	// Bookmark API
 	//-----------------------------------------
 

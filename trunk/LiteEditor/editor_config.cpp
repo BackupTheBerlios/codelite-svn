@@ -127,3 +127,41 @@ void EditorConfig::SaveNotebookStyle(wxString &nbName, long style)
 	m_doc->Save(m_fileName.GetFullPath());
 }
 
+LexerConfPtr EditorConfig::GetFirstLexer(EditorConfigCookie &cookie)
+{
+	wxXmlNode *lexersNode = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("Lexers"));
+	if( lexersNode ){
+		cookie.parent = lexersNode;
+		cookie.child  = NULL;
+		return GetNextLexer(cookie);
+	}
+	return NULL;
+}
+
+LexerConfPtr EditorConfig::GetNextLexer(EditorConfigCookie &cookie)
+{
+	if( cookie.parent == NULL ){
+		return NULL;
+	}
+
+	if( cookie.child == NULL ){
+		cookie.child = cookie.parent->GetChildren();
+	}
+
+	while( cookie.child ){
+		if( cookie.child->GetName() == wxT("Lexer") ){
+			wxXmlNode *n = cookie.child;
+			// advance the child to the next child and bail out
+			cookie.child = cookie.child->GetNext();
+
+			// incase we dont have more childs to iterate
+			// reset the parent as well so the next call to GetNexeLexer() will fail
+			if( cookie.child == NULL ){
+				cookie.parent = NULL;
+			}
+			return new LexerConf(n);
+		}
+		cookie.child = cookie.child->GetNext();
+	}
+	return NULL;
+}

@@ -27,7 +27,7 @@ public:
 	// ctors-dtor
 	//---------------------------------------
 	ContextText(LEditor *container);
-	ContextText(){};
+	ContextText() : ContextBase(wxT("Text")) {};
 	virtual ~ContextText();
 	LEditor &GetCtrl() { return *m_container; }
 	virtual ContextBase *NewInstance(LEditor *container);

@@ -12,8 +12,10 @@
 #include "entry.h"
 #include "project.h"
 #include "ctags_manager.h"
+#include "context_base.h"
 
 class wxFrame;
+class LEditor;
 
 /*!
  * \brief
@@ -225,11 +227,12 @@ public:
 	CtagsOptions GetWorkspaceCtagsOptions() const;
 
 	/**
-	 * Return the lexer name by file extension
-	 * \param extension file extension
-	 * \return lexer name, if no lexer is matched with the extension, "Default" is returned
+	 * Return the context by file name
+	 * \param fileName
+	 * \param parent the lexer's parent
+	 * \return lexer , if no lexer is matched with the fileName, the "Default" context is returned
 	 */
-	wxString GetLexerByExtension(const wxString &extension) const;
+	ContextBasePtr NewContextByFileName(const wxFileName &fileName, LEditor *parent) const;
 
 protected:
 	Manager(void);

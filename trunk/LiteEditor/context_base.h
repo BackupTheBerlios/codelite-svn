@@ -22,27 +22,34 @@ class LEditor;
 class ContextBase {
 protected:
 	LEditor *m_container;
+	wxString m_name;
 
 public:
+
 	// ctor-dtor
-	ContextBase(LEditor *container);
-	ContextBase();
+	ContextBase(LEditor *container, const wxString &name);
+	ContextBase(const wxString &name);
 	virtual ~ContextBase();
+
+	/**
+	 * Return the context parent control
+	 */
 	LEditor &GetCtrl() { return *m_container; }
 
-	// every Context derived class must implement the Clone method
-	virtual ContextBase *NewInstance(LEditor *container) = 0;
+	/**
+	 * Return the context name
+	 */
+	const wxString &GetName() const { return m_name; }
 
+	// every Context derived class must implement the following methods
+	virtual ContextBase *NewInstance(LEditor *container) = 0;
 	virtual void CompleteWord() = 0;
 	virtual void CodeComplete() = 0;
 	virtual void GotoDefinition() = 0;
 	virtual void GotoPreviousDefintion() = 0;
 	virtual void AutoIndent(const wxChar&) = 0;
 	virtual void CallTipCancel() = 0;
-
 	virtual bool IsCommentOrString(long WXUNUSED(pos)) = 0;
-
-	// event handlers
 	virtual void OnDwellEnd(wxScintillaEvent & WXUNUSED(event)) = 0;
 	virtual void OnCallTipClick(wxScintillaEvent& WXUNUSED(event)) = 0;
 	virtual void OnDwellStart(wxScintillaEvent & WXUNUSED(event)) = 0;

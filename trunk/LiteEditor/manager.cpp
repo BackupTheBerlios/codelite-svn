@@ -19,6 +19,7 @@
 #include <wx/file.h>
 #include "wx/arrstr.h"
 #include "context_manager.h"
+#include "wx/tokenzr.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -502,7 +503,24 @@ CtagsOptions Manager::GetWorkspaceCtagsOptions() const
 	return WorkspaceST::Get()->LoadCtagsOptions();
 }
 
-wxString Manager::GetLexerByExtension(const wxString &extension) const
+ContextBasePtr Manager::NewContextByFileName(const wxFileName &fileName, LEditor *parent) const
 {
-	return wxT("Default");
+	EditorConfigCookie cookie;
+
+	LexerConfPtr lexer = EditorConfigST::Get()->GetFirstLexer(cookie);
+	while( lexer ) {
+		wxString lexExt = lexer->GetFileSpec();
+
+		wxStringTokenizer tkz(lexExt, wxT(";"));
+		while(tkz.HasMoreTokens()){
+			if(wxMatchWild(tkz.NextToken(), fileName.GetFullName())){
+				return ContextManager::Get()->NewContext(parent, lexer->GetName());
+			}
+		}
+		
+		lexer = EditorConfigST::Get()->GetNextLexer(cookie);
+	}
+
+	// return the default context
+	return ContextManager::Get()->NewContext(parent, wxT("Default"));
 }

@@ -6,7 +6,7 @@
 #include "editor_config.h"
 
 ContextCpp::ContextCpp(LEditor *container)
-: ContextBase(container)
+: ContextBase(container, wxT("Cpp"))
 , m_tipKind(TipNone)
 {
 	// Initialise the map between a macro of proerpty and its value

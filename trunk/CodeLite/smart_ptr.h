@@ -189,6 +189,15 @@ public:
 		return m_ref->GetData() == NULL;
 	}
 
+	/**
+	 * test for bool operation
+	 * \return true of the internal raw data exist and it is not null
+	 */
+	operator bool() const
+	{
+		return m_ref && m_ref->GetData();
+	}
+
 private:
 	void DeleteRefCount()
 	{

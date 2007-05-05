@@ -112,7 +112,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("workspace_pane"), Frame::OnViewWorkspacePaneUI)
 	EVT_MENU(XRCID("view_as_cpp"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("view_as_text"), Frame::DispatchCommandEvent)
-	EVT_MENU(XRCID("view_as_java"), Frame::DispatchCommandEvent)
+	EVT_UPDATE_UI(XRCID("view_as_cpp"), Frame::DispatchUpdateUIEvent)
+	EVT_UPDATE_UI(XRCID("view_as_text"), Frame::DispatchUpdateUIEvent)
 
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
