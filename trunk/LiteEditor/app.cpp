@@ -2,7 +2,7 @@
 #include <wx/image.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/sysopt.h>
-
+#include "manager.h"
 
 BEGIN_EVENT_TABLE(App, wxApp)
 END_EVENT_TABLE()
@@ -31,7 +31,7 @@ bool App::OnInit()
 	wxImage::AddHandler( new wxXPMHandler );
 
 	InitXmlResource();
-
+	
 	// Load all of the XRC files that will be used. You can put everything
     // into one giant XRC file if you wanted, but then they become more
     // diffcult to manage, and harder to reuse in later projects.
@@ -54,10 +54,14 @@ bool App::OnInit()
 
 	SetTopWindow(m_pMainFrame);
 
-	return TRUE;
-} 
+	for(int i=1; i<wxApp::argc; i++){
+		wxString argument = wxApp::argv[i];
+		ManagerST::Get()->OpenFile(argument, wxEmptyString);
+	}
 
-int App::OnExit()
-{
+	return TRUE;
+}
+
+int App::OnExit(){
 	return 0;
 }

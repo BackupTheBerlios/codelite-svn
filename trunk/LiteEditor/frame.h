@@ -25,8 +25,6 @@ class TagEntry;
  */
 class Frame : public wxFrame
 {
-//	clProcessPtr m_ctags;
-//	clProcessPtr m_localCtags;
 	bool m_restartCtags;
 	wxFlatNotebook *m_notebook;
 	static Frame* m_theFrame;
@@ -35,18 +33,36 @@ class Frame : public wxFrame
 	FindInFilesDialog *m_findInFilesDlg;
 	FindReplaceData m_data;
 	WorkspacePane *m_workspacePane;
+	wxArrayString m_files;
 
 public:
 	// the access method to the singleton frame is by using the Get method
 	static Frame* Get();
 	virtual ~Frame(void);
 
+	/**
+	 * Return the main editor notebook
+	 */
 	wxFlatNotebook *GetNotebook() { return m_notebook; }
+
+	/**
+	 * Close the current file
+	 */
 	void CloseActiveFile();
 	
-	// Getters
+	/**
+	 * \return the output pane (the bottom pane)
+	 */
 	OutputPane *GetOutputPane() { return m_outputPane; }
+
+	/**
+	 * \return the workspace pane (the one that contained the Symbol view & class view)
+	 */
 	WorkspacePane *GetWorkspacePane() { return m_workspacePane; }
+
+	/**
+	 * \return return AUI docking manager
+	 */
 	wxAuiManager& GetDockingManager() { return m_mgr; }
 
 private:
@@ -54,14 +70,25 @@ private:
 	Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style = wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX | wxCAPTION | wxSYSTEM_MENU | wxRESIZE_BORDER | wxCLIP_CHILDREN, const wxString& name = wxT("Main Frame"));
 
 private:
+	/**
+	 * Construct all the GUI controls of the main frame. this function is called
+	 * at construction time
+	 */
 	void CreateGUIControls(void);
+	/**
+	 * Helper function that prompt user with a simple wxTextEntry dialog
+	 * \param msg message to display to user
+	 * \return user's string or wxEmptyString if 'Cancel' pressed.
+	 */
 	wxString GetStringFromUser(const wxString& msg);
 	void ClosePage(LEditor *editor, int index, bool doDelete, bool &veto);
 	void DispatchCommandEvent(wxCommandEvent &event);
 	void DispatchUpdateUIEvent(wxUpdateUIEvent &event);
 
 protected:
+	//----------------------------------------------------
 	// event handlers
+	//----------------------------------------------------
 	void OnSearchThread(wxCommandEvent &event);
 	void OnQuit(wxCommandEvent& WXUNUSED(event));
 	void OnClose(wxCloseEvent &event);
