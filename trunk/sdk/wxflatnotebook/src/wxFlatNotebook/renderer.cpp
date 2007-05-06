@@ -372,10 +372,10 @@ void wxFNBRenderer::DrawTabX(wxWindow* pageContainer, wxDC& dc, const wxRect& re
 	switch(btnStatus)
 	{
 	case wxFNB_BTN_HOVER:
-		xBmp = wxBitmap(x_button_hilite_xpm);
+		xBmp = wxBitmap(x_button_xpm);
 		break;
 	case wxFNB_BTN_PRESSED:
-		xBmp = wxBitmap(x_button_pressed_xpm);
+		xBmp = wxBitmap(tab_x_button_pressed_xpm);
 		break;
 	case wxFNB_BTN_NONE:
 	default:

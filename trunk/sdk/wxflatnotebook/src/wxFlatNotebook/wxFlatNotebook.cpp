@@ -1413,7 +1413,6 @@ void wxPageContainer::OnMouseMove(wxMouseEvent& event)
 			}
 			if (bRedrawTabX)
 			{
-				FNB_LOG_MSG( wxT("Refreshing Tab 'X' button with status=") << m_nTabXButtonStatus << wxT(" and tabIdx=") << tabIdx );
 				render->DrawTabX(this, dc, pgInfo.GetXRect(), tabIdx, m_nTabXButtonStatus);
 			}
 			if (bRedrawDropArrow)
