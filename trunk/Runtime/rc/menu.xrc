@@ -109,7 +109,7 @@
 				<checkable>1</checkable>
             </object>
             <object class="wxMenuItem" name="output_pane">
-				<label>&amp;Output Pane\tCtrl+Alt+O</label>
+				<label>O&amp;utput Pane\tCtrl+Alt+O</label>
 				<checkable>1</checkable>
             </object>
             <object class="wxMenuItem" name="wxID_SEPARATOR"/>
@@ -124,7 +124,11 @@
                     <label>Text</label>
                     <radio>1</radio>
                 </object>
-            </object>		  
+            </object>
+				<object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            <object class="wxMenuItem" name="options">
+                <label>&amp;Options...</label>
+            </object>
         </object>		  
 	    
         <object class="wxMenu" name="search_menu">

@@ -10,26 +10,26 @@ ContextCpp::ContextCpp(LEditor *container)
 , m_tipKind(TipNone)
 {
 	// Initialise the map between a macro of proerpty and its value
-	m_propertyInt[_T("wxSCI_C_DEFAULT")] = 0;
-	m_propertyInt[_T("wxSCI_C_COMMENT")] = 1;
-	m_propertyInt[_T("wxSCI_C_COMMENTLINE")] = 2;
-	m_propertyInt[_T("wxSCI_C_COMMENTDOC")] = 3;
-	m_propertyInt[_T("wxSCI_C_NUMBER")] = 4;
-	m_propertyInt[_T("wxSCI_C_WORD")] = 5;
-	m_propertyInt[_T("wxSCI_C_STRING")] = 6;
-	m_propertyInt[_T("wxSCI_C_CHARACTER")] = 7;
-	m_propertyInt[_T("wxSCI_C_UUID")] = 8;
-	m_propertyInt[_T("wxSCI_C_PREPROCESSOR")] = 9;
-	m_propertyInt[_T("wxSCI_C_OPERATOR")] = 10;
-	m_propertyInt[_T("wxSCI_C_IDENTIFIER")] = 11;
-	m_propertyInt[_T("wxSCI_C_STRINGEOL")] = 12;
-	m_propertyInt[_T("wxSCI_C_VERBATIM")] = 13;
-	m_propertyInt[_T("wxSCI_C_REGEX")] = 14;
-	m_propertyInt[_T("wxSCI_C_COMMENTLINEDOC")] = 15;
-	m_propertyInt[_T("wxSCI_C_WORD2")] = 16;
-	m_propertyInt[_T("wxSCI_C_COMMENTDOCKEYWORD")] = 17;
-	m_propertyInt[_T("wxSCI_C_COMMENTDOCKEYWORDERROR")] = 18;
-	m_propertyInt[_T("wxSCI_C_GLOBALCLASS")] = 19;
+	m_propertyInt[_T("DEFAULT")] = 0;
+	m_propertyInt[_T("COMMENT")] = 1;
+	m_propertyInt[_T("COMMENTLINE")] = 2;
+	m_propertyInt[_T("COMMENTDOC")] = 3;
+	m_propertyInt[_T("NUMBER")] = 4;
+	m_propertyInt[_T("WORD")] = 5;
+	m_propertyInt[_T("STRING")] = 6;
+	m_propertyInt[_T("CHARACTER")] = 7;
+	m_propertyInt[_T("UUID")] = 8;
+	m_propertyInt[_T("PREPROCESSOR")] = 9;
+	m_propertyInt[_T("OPERATOR")] = 10;
+	m_propertyInt[_T("IDENTIFIER")] = 11;
+	m_propertyInt[_T("STRINGEOL")] = 12;
+	m_propertyInt[_T("VERBATIM")] = 13;
+	m_propertyInt[_T("REGEX")] = 14;
+	m_propertyInt[_T("COMMENTLINEDOC")] = 15;
+	m_propertyInt[_T("WORD2")] = 16;
+	m_propertyInt[_T("COMMENTDOCKEYWORD")] = 17;
+	m_propertyInt[_T("COMMENTDOCKEYWORDERROR")] = 18;
+	m_propertyInt[_T("GLOBALCLASS")] = 19;
 
 	// Initialise CPP style settings
 		//-----------------------------------------------

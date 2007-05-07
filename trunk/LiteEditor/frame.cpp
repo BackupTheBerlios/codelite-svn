@@ -23,9 +23,7 @@
 #include "newdlg.h"
 #include "fileview.h"
 #include "wx/aui/framemanager.h"
-
-#define ID_CTAGS_GLOBAL_ID		10500
-#define ID_CTAGS_LOCAL_ID		10501
+#include "options_dlg.h"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -114,7 +112,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("view_as_text"), Frame::DispatchCommandEvent)
 	EVT_UPDATE_UI(XRCID("view_as_cpp"), Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(XRCID("view_as_text"), Frame::DispatchUpdateUIEvent)
-
+	EVT_MENU(XRCID("options"), Frame::OnViewOptions)
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
 	EVT_MENU(ID_USE_EXTERNAL_DB, Frame::OnUseExternalDatabase)
@@ -702,3 +700,9 @@ void Frame::OnViewOutputPaneUI(wxUpdateUIEvent &event){
 	}
 }
 
+void Frame::OnViewOptions(wxCommandEvent &event)
+{
+	OptionsDlg *dlg = new OptionsDlg(this);
+	dlg->ShowModal();
+	dlg->Destroy();
+}

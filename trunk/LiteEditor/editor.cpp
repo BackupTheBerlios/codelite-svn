@@ -156,7 +156,7 @@ void LEditor::SetProperties()
 	DefineMarker(wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_TCORNER, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
 
 	// Bookmark
-	MarkerDefine(0x8, wxSCI_MARK_SHORTARROW);
+	MarkerDefine(0x8, wxSCI_MARK_ARROW);
 	MarkerSetBackground(0x8, wxColour(12, 133, 222));
 	MarkerSetForeground(0x8, wxColour(66, 169, 244));
 

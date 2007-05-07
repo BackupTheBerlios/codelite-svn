@@ -272,6 +272,24 @@
 			<File
 				RelativePath=".\editor.h">
 			</File>
+			<File
+				RelativePath=".\lexer_page.cpp">
+			</File>
+			<File
+				RelativePath=".\lexer_page.h">
+			</File>
+			<File
+				RelativePath=".\options_base_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\options_base_dlg.h">
+			</File>
+			<File
+				RelativePath=".\options_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\options_dlg.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Application"
