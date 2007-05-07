@@ -700,7 +700,7 @@ void Frame::OnViewOutputPaneUI(wxUpdateUIEvent &event){
 	}
 }
 
-void Frame::OnViewOptions(wxCommandEvent &event)
+void Frame::OnViewOptions(wxCommandEvent & WXUNUSED( event))
 {
 	OptionsDlg *dlg = new OptionsDlg(this);
 	dlg->ShowModal();

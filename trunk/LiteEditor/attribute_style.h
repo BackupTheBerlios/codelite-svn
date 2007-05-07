@@ -54,6 +54,11 @@ public:
 	const wxString& GetFaceName() const { return m_faceName; }
 	bool IsBold() const { return m_bold; }
 	const wxString& GetName() const { return m_name; }
+
+	void SetFgColour(const wxString& colour) { m_fgColour = colour; }
+	void SetFontSize(long size) { m_fontSize = size; }
+	void SetFaceName(const wxString& face){ m_faceName = face; }
+	void SetBold(bool bold) { m_bold = bold; }
 };
 
 #endif 

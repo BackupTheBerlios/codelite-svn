@@ -6,7 +6,7 @@
 #include "editor_config.h"
 
 ContextCpp::ContextCpp(LEditor *container)
-: ContextBase(container, wxT("Cpp"))
+: ContextBase(container, wxT("C++"))
 , m_tipKind(TipNone)
 {
 	// Initialise the map between a macro of proerpty and its value
@@ -42,7 +42,7 @@ ContextCpp::ContextCpp(LEditor *container)
 	LexerConfPtr lexPtr;
 	// Read the configuration file
 	if(EditorConfigST::Get()->IsOk()){
-		lexPtr = EditorConfigST::Get()->GetLexer(wxT("Cpp"));
+		lexPtr = EditorConfigST::Get()->GetLexer(wxT("C++"));
 	}
 
 	// Update the control

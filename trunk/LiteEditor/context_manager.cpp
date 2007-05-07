@@ -6,7 +6,7 @@
 ContextManager::ContextManager()
 {
 	// register available context
-	m_contextPool[wxT("Cpp")] = ContextBasePtr( new ContextCpp() );
+	m_contextPool[wxT("C++")] = ContextBasePtr( new ContextCpp() );
 	m_contextPool[wxT("Text")] = ContextBasePtr( new ContextText() );
 	m_contextPool[wxT("Default")] = ContextBasePtr( new ContextText() );
 }

@@ -16,15 +16,21 @@
 #endif //WX_PRECOMP
 
 #include "lexer_page.h"
+#include "lexer_configuration.h"
+#include "attribute_style.h"
+#include <wx/font.h>
 
 ///////////////////////////////////////////////////////////////////////////
 BEGIN_EVENT_TABLE( LexerPage, wxPanel )
-EVT_LISTBOX( wxID_ANY, LexerPage::_wxFB_OnItemSelected )
+EVT_LISTBOX( wxID_ANY, LexerPage::OnItemSelected )
+EVT_FONTPICKER_CHANGED(wxID_ANY, LexerPage::OnFontChanged)
+EVT_COLOURPICKER_CHANGED(wxID_ANY, LexerPage::OnColourChanged)
 END_EVENT_TABLE()
 
 LexerPage::LexerPage( wxWindow* parent, LexerConfPtr lexer, int id, wxPoint pos, wxSize size, int style ) 
 : wxPanel(parent, id, pos, size, style)
 , m_lexer(lexer)
+, m_selection(0)
 {
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
@@ -35,13 +41,37 @@ LexerPage::LexerPage( wxWindow* parent, LexerConfPtr lexer, int id, wxPoint pos,
 	m_properties = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	sbSizer5->Add( m_properties, 1, wxALL|wxEXPAND, 5 );
 
+	m_propertyList = m_lexer->GetProperties();
+	std::list<StyleProperty>::iterator it = m_propertyList.begin();
+
+	for(; it != m_propertyList.end(); it++){
+		m_properties->Append((*it).GetName());
+	}
+	m_properties->SetSelection(0);
+
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
+	
+	wxString initialColor = wxT("BLACK");
+	wxFont initialFont = wxNullFont;
 
-	m_fontPicker = new wxButton( this, wxID_ANY, wxT("Change Font..."), wxDefaultPosition, wxDefaultSize, 0 );
+	if(m_propertyList.empty() == false){
+		StyleProperty p;
+		p = (*m_propertyList.begin());
+		initialColor = p.GetFgColour();
+
+		int size = p.GetFontSize();
+		wxString face = p.GetFaceName();
+		bool bold = p.IsBold();
+
+		initialFont = wxFont(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
+		initialFont.SetFaceName(face);
+	}
+
+	m_fontPicker = new wxFontPickerCtrl(this, wxID_ANY, initialFont);
 	bSizer7->Add( m_fontPicker, 0, wxALL|wxEXPAND, 5 );
 
-	m_colourPicker = new wxButton( this, wxID_ANY, wxT("Change Colour..."), wxDefaultPosition, wxDefaultSize, 0 );
+	m_colourPicker = new wxColourPickerCtrl(this, wxID_ANY, wxColour(initialColor), wxDefaultPosition, wxDefaultSize, wxCLRP_SHOW_LABEL);
 	bSizer7->Add( m_colourPicker, 0, wxALL|wxEXPAND, 5 );
 
 	sbSizer5->Add( bSizer7, 1, wxEXPAND, 5 );
@@ -50,4 +80,53 @@ LexerPage::LexerPage( wxWindow* parent, LexerConfPtr lexer, int id, wxPoint pos,
 
 	this->SetSizer( bSizer6 );
 	this->Layout();
+}
+
+void LexerPage::OnItemSelected(wxCommandEvent & event)
+{
+	// update colour picker & font picers
+	wxString selectionString = event.GetString();
+	m_selection = event.GetSelection();
+
+	std::list<StyleProperty>::iterator iter = m_propertyList.begin();
+	for(; iter != m_propertyList.end(); iter++){
+		if(iter->GetName() == selectionString){
+			// update font & color
+			StyleProperty p = (*iter);
+			wxString colour = p.GetFgColour();
+			wxFont font = wxNullFont;
+
+			int size = p.GetFontSize();
+			wxString face = p.GetFaceName();
+			bool bold = p.IsBold();
+
+			font = wxFont(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
+			m_fontPicker->SetSelectedFont(font);
+			m_colourPicker->SetColour(colour);
+		}
+	}
+}
+
+void LexerPage::OnFontChanged(wxFontPickerEvent &event)
+{
+	// update font
+	wxFont font = event.GetFont();
+	std::list<StyleProperty>::iterator iter = m_propertyList.begin();
+	for(int i=0; i<m_selection; i++)
+		iter++;
+
+	iter->SetBold(font.GetWeight() == wxFONTWEIGHT_BOLD);
+	iter->SetFaceName(font.GetFaceName());
+	iter->SetFontSize(font.GetPointSize());
+}
+
+void LexerPage::OnColourChanged(wxColourPickerEvent &event)
+{
+	// update font
+	wxColour colour = event.GetColour();
+	std::list<StyleProperty>::iterator iter = m_propertyList.begin();
+	for(int i=0; i<m_selection; i++)
+		iter++;
+
+	iter->SetFgColour(colour.GetAsString(wxC2S_HTML_SYNTAX));
 }

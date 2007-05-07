@@ -28,7 +28,7 @@ class ContextCpp : public ContextBase {
 public:
 	ContextCpp(LEditor *container);
 	virtual ~ContextCpp();
-	ContextCpp() : ContextBase(wxT("Cpp")) {};
+	ContextCpp() : ContextBase(wxT("C++")) {};
 	virtual ContextBase *NewInstance(LEditor *container);
 
 	virtual void CompleteWord();

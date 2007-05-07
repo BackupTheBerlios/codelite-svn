@@ -332,7 +332,7 @@ void ViewAsHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 	}
 
 	if (event.GetId() == XRCID("view_as_cpp")){
-		editor->SetSyntaxHighlight(wxT("Cpp"));
+		editor->SetSyntaxHighlight(wxT("C++"));
 	} else if(event.GetId() == XRCID("view_as_text")){
 		editor->SetSyntaxHighlight(wxT("Text"));
 	}
@@ -346,7 +346,7 @@ void ViewAsHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event
 	}
 
 	if(event.GetId() == XRCID("view_as_cpp")){
-		event.Check(editor->GetContext()->GetName() == wxT("Cpp"));
+		event.Check(editor->GetContext()->GetName() == wxT("C++"));
 	}
 	
 	if(event.GetId() == XRCID("view_as_text")){

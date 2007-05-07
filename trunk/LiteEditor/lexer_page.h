@@ -21,6 +21,8 @@
 
 #include <wx/button.h>
 #include "lexer_configuration.h"
+#include <wx/clrpicker.h>
+#include <wx/fontpicker.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -31,20 +33,20 @@
 class LexerPage : public wxPanel 
 {
 	LexerConfPtr m_lexer;
+	std::list<StyleProperty> m_propertyList;
+	int m_selection;
+
 	DECLARE_EVENT_TABLE()
-private:
-	
-	// Private event handlers
-	void _wxFB_OnItemSelected( wxCommandEvent& event ){ OnItemSelected( event ); }
 
 protected:
 	wxListBox* m_properties;
-	wxButton* m_fontPicker;
-	wxButton* m_colourPicker;
+	wxFontPickerCtrl* m_fontPicker;
+	wxColourPickerCtrl* m_colourPicker;
 
 	// Virtual event handlers, overide them in your derived class
-	virtual void OnItemSelected( wxCommandEvent& event ){ event.Skip(); }
-
+	virtual void OnItemSelected( wxCommandEvent& event );
+	virtual void OnFontChanged(wxFontPickerEvent &event);
+	virtual void OnColourChanged(wxColourPickerEvent &event);
 
 public:
 	LexerPage( wxWindow* parent, LexerConfPtr lexer, int id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 285,300 ), int style = wxTAB_TRAVERSAL );
