@@ -55,6 +55,14 @@ public:
 	 * \param defaultValue default value to return if no property exist
 	 */
 	static long ReadLong(wxXmlNode *node, const wxString &propName, long defaultValue = -1);
+
+	/**
+	 * Read a boolean property from the given node
+	 * \param propName the property name
+	 * \param defaultValue default value to return if no property exist
+	 */
+	static long ReadBool(wxXmlNode *node, const wxString &propName, bool defaultValue = false);
+
 };
 
 #endif // XMLUTILS_H

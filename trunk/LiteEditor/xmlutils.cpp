@@ -75,6 +75,26 @@ long XmlUtils::ReadLong(wxXmlNode *node, const wxString &propName, long defaultV
 	return retVal;
 }
 
+long XmlUtils::ReadBool(wxXmlNode *node, const wxString &propName, bool defaultValue)
+{
+	wxString val = node->GetPropVal(propName, wxEmptyString);
+	if( val.IsEmpty() ){
+		return defaultValue;
+	}
+
+	if(val.IsEmpty()){
+		return defaultValue;
+	}
+
+	bool retVal = defaultValue;
+	if(val.CmpNoCase("yes") == 0){
+		retVal = true;
+	} else {
+		retVal = false;
+	}
+	return retVal;
+}
+
 void XmlUtils::SetNodeContent(wxXmlNode *node, const wxString &text)
 {
 	wxXmlNode *n = node->GetChildren();

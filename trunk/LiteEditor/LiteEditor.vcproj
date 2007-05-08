@@ -463,6 +463,12 @@
 			<File
 				RelativePath=".\lexer_configuration.h">
 			</File>
+			<File
+				RelativePath=".\optionsconfig.cpp">
+			</File>
+			<File
+				RelativePath=".\optionsconfig.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
