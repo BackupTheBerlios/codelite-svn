@@ -1,6 +1,5 @@
 #include "lexer_configuration.h"
 #include "xmlutils.h"
-#include <list>
 
 LexerConf::LexerConf(wxXmlNode *element)
 : m_element(element)
@@ -32,13 +31,13 @@ LexerConf::LexerConf(wxXmlNode *element)
 			{
 				if(prop->GetName() == wxT("Property")){
 					// Read the font attributes
-					wxString Name = XmlUtils::ReadString(prop, wxT("Name"), wxT("wxSCI_C_DEFAULT"));
+					wxString Name = XmlUtils::ReadString(prop, wxT("Name"), wxT("DEFAULT"));
 					wxString bold = XmlUtils::ReadString(prop, wxT("Bold"), wxT("no"));
 					wxString face = XmlUtils::ReadString(prop, wxT("Face"), wxT("Courier"));
 					wxString colour = XmlUtils::ReadString(prop, wxT("Colour"), wxT("black"));
 					long fontSize = XmlUtils::ReadLong(prop, wxT("Size"), 10);
 
-					StyleProperty property = StyleProperty(colour, fontSize, Name, face, bold == wxT("Yes"));
+					StyleProperty property = StyleProperty(colour, fontSize, Name, face, bold.CmpNoCase(wxT("Yes")) == 0);
 					m_properties.push_back( property );
 				}
 				prop = prop->GetNext();

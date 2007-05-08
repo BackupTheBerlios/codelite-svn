@@ -2,6 +2,7 @@
 #define ATTRIBUTE_STYLE_H
 
 #include "wx/string.h"
+#include "list"
 
 class StyleProperty
 {
@@ -61,4 +62,5 @@ public:
 	void SetBold(bool bold) { m_bold = bold; }
 };
 
+typedef std::list<StyleProperty> StylePropertyList;
 #endif 

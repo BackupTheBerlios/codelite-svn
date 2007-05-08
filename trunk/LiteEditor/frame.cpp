@@ -1,11 +1,5 @@
 #include "precompiled_header.h"
 
-#ifdef __VISUALC__
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-#endif 
-
 #include "frame.h"
 #include <wx/xrc/xmlres.h>
 #include "symbol_tree.h"

@@ -168,12 +168,17 @@ LexerConfPtr EditorConfig::GetNextLexer(EditorConfigCookie &cookie)
 
 void EditorConfig::SetLexer(LexerConfPtr lexer)
 {
+	wxXmlNode *lexersNode = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("Lexers"));
+	if( !lexersNode ){
+		return;
+	}
+
 	wxXmlNode *lexerNode = GetLexerNode(lexer->GetName());
 	if( lexerNode ){
-		m_doc->GetRoot()->RemoveChild( lexerNode );
+		lexersNode->RemoveChild( lexerNode );
 		delete lexerNode;
 	}
-	m_doc->GetRoot()->AddChild( lexer->ToXml() );
+	lexersNode->AddChild( lexer->ToXml() );
 	m_doc->Save(m_fileName.GetFullPath());
 }
 
