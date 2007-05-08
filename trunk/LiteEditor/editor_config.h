@@ -51,7 +51,6 @@ public:
 	 */
 	LexerConfPtr GetLexer(const wxString& lexer);
 
-
 	/**
 	 * Returns the first lexer found.
 	 * For this enumeration function you must pass in a 'cookie' parameter which is opaque for the application but is necessary for the library to make these functions reentrant 
@@ -65,6 +64,11 @@ public:
 	 * (i.e. allow more than one enumeration on one and the same object simultaneously).
 	 */
 	LexerConfPtr GetNextLexer(EditorConfigCookie &cookie);
+
+	/**
+	 * Set a lexer to the configuration file
+	 */
+	void SetLexer(LexerConfPtr lexer);
 
 	/**
 	 * Test if this configuration is loaded properly

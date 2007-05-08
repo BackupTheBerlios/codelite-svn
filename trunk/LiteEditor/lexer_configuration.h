@@ -16,6 +16,7 @@ class LexerConf {
 
 public:
 	LexerConf(wxXmlNode *element);
+	wxXmlNode *ToXml() const;
 	virtual ~LexerConf();
 
 	const wxString &GetName() const { return m_name; }

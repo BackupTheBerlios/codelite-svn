@@ -165,3 +165,15 @@ LexerConfPtr EditorConfig::GetNextLexer(EditorConfigCookie &cookie)
 	}
 	return NULL;
 }
+
+void EditorConfig::SetLexer(LexerConfPtr lexer)
+{
+	wxXmlNode *lexerNode = GetLexerNode(lexer->GetName());
+	if( lexerNode ){
+		m_doc->GetRoot()->RemoveChild( lexerNode );
+		delete lexerNode;
+	}
+	m_doc->GetRoot()->AddChild( lexer->ToXml() );
+	m_doc->Save(m_fileName.GetFullPath());
+}
+

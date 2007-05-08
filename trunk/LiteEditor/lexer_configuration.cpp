@@ -1,5 +1,6 @@
 #include "lexer_configuration.h"
 #include "xmlutils.h"
+#include <list>
 
 LexerConf::LexerConf(wxXmlNode *element)
 : m_element(element)
@@ -48,5 +49,42 @@ LexerConf::LexerConf(wxXmlNode *element)
 
 LexerConf::~LexerConf()
 {
+}
+
+wxXmlNode *LexerConf::ToXml() const
+{
+	//convert the lexer back xml node
+	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Lexer"));
+	//set the lexer name
+	node->AddProperty(wxT("Name"), GetName());
+	
+	//set the keywords node
+	wxXmlNode *keyWords = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("KeyWords"));
+	XmlUtils::SetNodeContent(keyWords, GetKeyWords());
+	node->AddChild(keyWords);
+
+	//set the extensions node
+	wxXmlNode *extesions = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Extensions"));
+	XmlUtils::SetNodeContent(extesions, GetFileSpec());
+	node->AddChild(extesions);
+	
+	//set the properties
+	wxXmlNode *properties = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Properties"));
+	std::list<StyleProperty>::const_iterator iter = m_properties.begin();
+	for(; iter != m_properties.end(); iter ++){
+		StyleProperty p = (*iter);
+		wxXmlNode *property = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Property"));
+		property->AddProperty(wxT("Name"), p.GetName());
+		property->AddProperty(wxT("Bold"), p.IsBold() ? wxT("yes") : wxT("no"));
+		property->AddProperty(wxT("Face"), p.GetFaceName());
+		property->AddProperty(wxT("Colour"), p.GetFgColour());
+
+		wxString strSize;
+		strSize << p.GetFontSize();
+		property->AddProperty(wxT("Size"), strSize);
+		properties->AddChild(property);
+	}
+	node->AddChild( properties );
+	return node;
 }
 
