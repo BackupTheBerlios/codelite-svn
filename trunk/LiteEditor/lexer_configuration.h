@@ -23,6 +23,7 @@ public:
 	const wxString &GetKeyWords() const { return m_keyWords; }
 	const wxString &GetFileSpec() const { return m_extension; }
 	const std::list<StyleProperty> &GetProperties() const { return m_properties; }
+	void SetProperties(std::list<StyleProperty> &properties) { m_properties = properties; }
 };
 
 typedef SmartPtr<LexerConf> LexerConfPtr;
