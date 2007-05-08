@@ -182,3 +182,23 @@ void EditorConfig::SetLexer(LexerConfPtr lexer)
 	m_doc->Save(m_fileName.GetFullPath());
 }
 
+OptionsConfigPtr EditorConfig::GetOptions() const
+{
+	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("Options"));
+	// node can be null ...
+	return new OptionsConfig(node);
+}
+
+void EditorConfig::SetOptions(OptionsConfigPtr opts)
+{
+	// locate the current node
+	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("Options"));
+	if( node ){
+		m_doc->GetRoot()->RemoveChild(node);
+		delete node;
+	}
+
+	m_doc->GetRoot()->AddChild(opts->ToXml());
+	m_doc->Save(m_fileName.GetFullPath());
+}
+

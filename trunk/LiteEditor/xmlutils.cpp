@@ -75,7 +75,7 @@ long XmlUtils::ReadLong(wxXmlNode *node, const wxString &propName, long defaultV
 	return retVal;
 }
 
-long XmlUtils::ReadBool(wxXmlNode *node, const wxString &propName, bool defaultValue)
+bool XmlUtils::ReadBool(wxXmlNode *node, const wxString &propName, bool defaultValue)
 {
 	wxString val = node->GetPropVal(propName, wxEmptyString);
 	if( val.IsEmpty() ){

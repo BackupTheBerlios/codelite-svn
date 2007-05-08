@@ -6,6 +6,7 @@
 #include <vector>
 #include "wx/xml/xml.h"
 #include "lexer_configuration.h"
+#include "optionsconfig.h"
 
 // Cookie class for the editor to provide reentrance operations
 // on various methods (such as iteration)
@@ -104,6 +105,16 @@ public:
 	 */
 	wxString LoadPerspective(const wxString &name) const ;
 
+	/**
+	 * Read the editor options from the configuration file
+	 * and return them as an object
+	 */
+	OptionsConfigPtr GetOptions() const;
+
+	/**
+	 * Set options to the configuration file, override them if they does not exist
+	 */
+	void SetOptions(OptionsConfigPtr opts);
 
 private:
 	EditorConfig();

@@ -61,7 +61,7 @@ public:
 	 * \param propName the property name
 	 * \param defaultValue default value to return if no property exist
 	 */
-	static long ReadBool(wxXmlNode *node, const wxString &propName, bool defaultValue = false);
+	static bool ReadBool(wxXmlNode *node, const wxString &propName, bool defaultValue = false);
 
 };
 

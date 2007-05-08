@@ -114,7 +114,8 @@ wxPanel *OptionsDlg::CreateGeneralPage()
 	int m_foldStyleChoiceNChoices = sizeof( m_foldStyleChoiceChoices ) / sizeof( wxString );
 	m_foldStyleChoice = new wxChoice( m_general, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_foldStyleChoiceNChoices, m_foldStyleChoiceChoices, 0 );
 	sbSizer1->Add( m_foldStyleChoice, 0, wxALL|wxEXPAND, 5 );
-	
+	m_foldStyleChoice->SetSelection(0);
+
 	vSz1->Add( sbSizer1, 0, wxEXPAND, 5 );
 	
 	wxStaticBoxSizer* sbSizer3;
@@ -131,7 +132,8 @@ wxPanel *OptionsDlg::CreateGeneralPage()
 	int m_bookmarkShapeNChoices = sizeof( m_bookmarkShapeChoices ) / sizeof( wxString );
 	m_bookmarkShape = new wxChoice( m_general, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_bookmarkShapeNChoices, m_bookmarkShapeChoices, 0 );
 	sbSizer3->Add( m_bookmarkShape, 0, wxALL|wxEXPAND, 5 );
-	
+	m_bookmarkShape->SetSelection(0);
+
 	wxGridSizer* gSizer1;
 	gSizer1 = new wxGridSizer( 2, 2, 0, 0 );
 	
@@ -216,4 +218,9 @@ void OptionsDlg::SaveChanges()
 			page->SaveSettings();
 		}
 	}
+
+	// construct an OptionsConfig object and update the configuration
+	OptionsConfigPtr options(new OptionsConfig(NULL));
+	//TODO::update the optiosn according to the GUI
+	EditorConfigST::Get()->SetOptions(options);
 }
