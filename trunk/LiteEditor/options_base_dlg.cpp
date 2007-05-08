@@ -18,7 +18,6 @@
 #include "options_base_dlg.h"
 #include "wx/wxFlatNotebook/wxFlatNotebook.h"
 #include "lexer_configuration.h"
-#include <wx/choicebk.h>
 #include "lexer_page.h"
 #include "editor_config.h"
 
@@ -74,15 +73,15 @@ wxPanel *OptionsBaseDlg::CreateSyntaxHighlightPage()
 	page->SetSizer(sz);
 
 	long style = wxFNB_FF2 | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_NO_X_BUTTON;
-	wxFlatNotebook *imgBook = new wxFlatNotebook(page, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
-	sz->Add(imgBook, 1, wxEXPAND | wxALL, 5);
-	imgBook->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
+	m_lexersBook = new wxFlatNotebook(page, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
+	sz->Add(m_lexersBook, 1, wxEXPAND | wxALL, 5);
+	m_lexersBook->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
 
 	bool selected = true;
 	EditorConfigCookie cookie;
 	LexerConfPtr lexer = EditorConfigST::Get()->GetFirstLexer(cookie);
 	while( lexer ){
-		imgBook->AddPage(CreateLexerPage(imgBook, lexer), lexer->GetName(), selected);
+		m_lexersBook->AddPage(CreateLexerPage(m_lexersBook, lexer), lexer->GetName(), selected);
 		selected = false;
 		lexer = EditorConfigST::Get()->GetNextLexer(cookie);
 	}
@@ -184,3 +183,16 @@ wxPanel *OptionsBaseDlg::CreateLexerPage(wxPanel *parent, LexerConfPtr lexer)
 	return new LexerPage(parent, lexer);
 }
 
+void OptionsBaseDlg::OnButtonOK(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	int max = m_lexersBook->GetPageCount();
+	for(int i=0; i<max; i++){
+		wxWindow *win = m_lexersBook->GetPage((size_t)i);
+		LexerPage *page = dynamic_cast<LexerPage*>( win );
+		if( page ){
+			page->SaveSettings();
+		}
+	}
+	EndModal(wxID_OK);
+}

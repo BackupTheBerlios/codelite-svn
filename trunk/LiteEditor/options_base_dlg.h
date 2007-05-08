@@ -45,6 +45,7 @@ private:
 
 protected:
 	wxFlatNotebook* m_book;
+	wxFlatNotebook *m_lexersBook;
 	wxPanel* m_general;
 	wxCheckBox* m_checkBoxDisplayFoldMargin;
 	wxCheckBox* m_checkBoxMarkFoldedLine;
@@ -67,7 +68,7 @@ protected:
 	wxButton* m_applyButton;
 
 	// Virtual event handlers, overide them in your derived class
-	virtual void OnButtonOK( wxCommandEvent& event ){ event.Skip(); }
+	virtual void OnButtonOK( wxCommandEvent& event );
 	virtual void OnButtonCancel( wxCommandEvent& event ){ event.Skip(); }
 	virtual void OnButtonApply( wxCommandEvent& event ){ event.Skip(); }
 

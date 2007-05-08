@@ -19,6 +19,7 @@
 #include "lexer_configuration.h"
 #include "attribute_style.h"
 #include <wx/font.h>
+#include "editor_config.h"
 
 ///////////////////////////////////////////////////////////////////////////
 BEGIN_EVENT_TABLE( LexerPage, wxPanel )
@@ -80,6 +81,11 @@ LexerPage::LexerPage( wxWindow* parent, LexerConfPtr lexer, int id, wxPoint pos,
 
 	this->SetSizer( bSizer6 );
 	this->Layout();
+
+	if(m_propertyList.empty()){
+		m_fontPicker->Enable(false);
+		m_colourPicker->Enable(false);
+	}
 }
 
 void LexerPage::OnItemSelected(wxCommandEvent & event)
@@ -129,4 +135,10 @@ void LexerPage::OnColourChanged(wxColourPickerEvent &event)
 		iter++;
 
 	iter->SetFgColour(colour.GetAsString(wxC2S_HTML_SYNTAX));
+}
+
+void LexerPage::SaveSettings()
+{
+	m_lexer->SetProperties( m_propertyList );
+	EditorConfigST::Get()->SetLexer( m_lexer );
 }
