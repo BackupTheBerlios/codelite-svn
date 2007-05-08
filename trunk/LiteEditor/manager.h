@@ -234,6 +234,11 @@ public:
 	 */
 	ContextBasePtr NewContextByFileName(const wxFileName &fileName, LEditor *parent) const;
 
+	/**
+	 * Reload configuration changes and apply them on open documents
+	 */ 
+	void ApplySettingsChanges();
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

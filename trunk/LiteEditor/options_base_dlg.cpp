@@ -20,15 +20,16 @@
 #include "lexer_configuration.h"
 #include "lexer_page.h"
 #include "editor_config.h"
+#include "manager.h"
 
 ///////////////////////////////////////////////////////////////////////////
-BEGIN_EVENT_TABLE( OptionsBaseDlg, wxDialog )
-	EVT_BUTTON( wxID_OK, OptionsBaseDlg::_wxFB_OnButtonOK )
-	EVT_BUTTON( wxID_CANCEL, OptionsBaseDlg::_wxFB_OnButtonCancel )
-	EVT_BUTTON( wxID_APPLY, OptionsBaseDlg::_wxFB_OnButtonApply )
+BEGIN_EVENT_TABLE( OptionsDlg, wxDialog )
+	EVT_BUTTON( wxID_OK, OptionsDlg::OnButtonOK )
+	EVT_BUTTON( wxID_CANCEL, OptionsDlg::OnButtonCancel )
+	EVT_BUTTON( wxID_APPLY, OptionsDlg::OnButtonApply )
 END_EVENT_TABLE()
 
-OptionsBaseDlg::OptionsBaseDlg( wxWindow* parent, int id, wxString title, wxPoint pos, wxSize size, int style ) : wxDialog( parent, id, title, pos, size, style )
+OptionsDlg::OptionsDlg( wxWindow* parent, int id, wxString title, wxPoint pos, wxSize size, int style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	this->Centre( wxBOTH );
@@ -66,7 +67,7 @@ OptionsBaseDlg::OptionsBaseDlg( wxWindow* parent, int id, wxString title, wxPoin
 	this->Layout();
 }
 
-wxPanel *OptionsBaseDlg::CreateSyntaxHighlightPage()
+wxPanel *OptionsDlg::CreateSyntaxHighlightPage()
 {
 	wxPanel *page = new wxPanel( m_book, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer *sz = new wxBoxSizer(wxVERTICAL);
@@ -89,7 +90,7 @@ wxPanel *OptionsBaseDlg::CreateSyntaxHighlightPage()
 	return page;
 }
 
-wxPanel *OptionsBaseDlg::CreateGeneralPage()
+wxPanel *OptionsDlg::CreateGeneralPage()
 {
 	m_general = new wxPanel( m_book, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* vSz1;
@@ -178,14 +179,35 @@ wxPanel *OptionsBaseDlg::CreateGeneralPage()
 	return m_general;
 }
 
-wxPanel *OptionsBaseDlg::CreateLexerPage(wxPanel *parent, LexerConfPtr lexer)
+wxPanel *OptionsDlg::CreateLexerPage(wxPanel *parent, LexerConfPtr lexer)
 {
 	return new LexerPage(parent, lexer);
 }
 
-void OptionsBaseDlg::OnButtonOK(wxCommandEvent &event)
+void OptionsDlg::OnButtonOK(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
+	SaveChanges();
+	ManagerST::Get()->ApplySettingsChanges();
+	// and close the dialog
+	EndModal(wxID_OK);
+}
+
+void OptionsDlg::OnButtonApply(wxCommandEvent &event)
+{
+	SaveChanges();
+	ManagerST::Get()->ApplySettingsChanges();
+	wxUnusedVar(event);
+}
+
+void OptionsDlg::OnButtonCancel(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	EndModal(wxID_CANCEL);
+}
+
+void OptionsDlg::SaveChanges()
+{
 	int max = m_lexersBook->GetPageCount();
 	for(int i=0; i<max; i++){
 		wxWindow *win = m_lexersBook->GetPage((size_t)i);
@@ -194,5 +216,4 @@ void OptionsBaseDlg::OnButtonOK(wxCommandEvent &event)
 			page->SaveSettings();
 		}
 	}
-	EndModal(wxID_OK);
 }

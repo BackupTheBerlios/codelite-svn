@@ -377,12 +377,6 @@
 				RelativePath=".\options_base_dlg.h">
 			</File>
 			<File
-				RelativePath=".\options_dlg.cpp">
-			</File>
-			<File
-				RelativePath=".\options_dlg.h">
-			</File>
-			<File
 				RelativePath=".\symbols_dialog.cpp">
 			</File>
 			<File

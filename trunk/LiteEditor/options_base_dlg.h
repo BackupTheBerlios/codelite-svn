@@ -30,18 +30,16 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class OptionsBaseDlg
+/// Class OptionsDlg
 ///////////////////////////////////////////////////////////////////////////////
-class OptionsBaseDlg : public wxDialog 
+class OptionsDlg : public wxDialog 
 {
 	DECLARE_EVENT_TABLE()
-private:
 
 	// Private event handlers
-	void _wxFB_OnButtonOK( wxCommandEvent& event ){ OnButtonOK( event ); }
-	void _wxFB_OnButtonCancel( wxCommandEvent& event ){ OnButtonCancel( event ); }
-	void _wxFB_OnButtonApply( wxCommandEvent& event ){ OnButtonApply( event ); }
-
+	void OnButtonOK( wxCommandEvent& event );
+	void OnButtonCancel( wxCommandEvent& event );
+	void OnButtonApply( wxCommandEvent& event );
 
 protected:
 	wxFlatNotebook* m_book;
@@ -67,18 +65,14 @@ protected:
 	wxButton* m_cancelButton;
 	wxButton* m_applyButton;
 
-	// Virtual event handlers, overide them in your derived class
-	virtual void OnButtonOK( wxCommandEvent& event );
-	virtual void OnButtonCancel( wxCommandEvent& event ){ event.Skip(); }
-	virtual void OnButtonApply( wxCommandEvent& event ){ event.Skip(); }
-
 private:
 	wxPanel *CreateSyntaxHighlightPage();
 	wxPanel *CreateGeneralPage();
 	wxPanel *CreateLexerPage(wxPanel *parent, LexerConfPtr lexer);
+	void SaveChanges();
 
 public:
-	OptionsBaseDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Options"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 465,489 ), int style = wxDEFAULT_DIALOG_STYLE );
+	OptionsDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Options"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 465,489 ), int style = wxDEFAULT_DIALOG_STYLE );
 
 };
 

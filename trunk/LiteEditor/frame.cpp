@@ -17,7 +17,7 @@
 #include "newdlg.h"
 #include "fileview.h"
 #include "wx/aui/framemanager.h"
-#include "options_dlg.h"
+#include "options_base_dlg.h"
 
 //----------------------------------------------------------------
 // Our main frame

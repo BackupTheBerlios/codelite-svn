@@ -524,3 +524,17 @@ ContextBasePtr Manager::NewContextByFileName(const wxFileName &fileName, LEditor
 	// return the default context
 	return ContextManager::Get()->NewContext(parent, wxT("Default"));
 }
+
+void Manager::ApplySettingsChanges()
+{
+	wxFlatNotebook *book = Frame::Get()->GetNotebook();
+	size_t count = (size_t)book->GetPageCount();
+	for(size_t i=0; i<count; i++){
+		LEditor *editor = dynamic_cast<LEditor*>(book->GetPage(i));
+		if(editor){
+			// the open page is of type LEditor
+			editor->SetSyntaxHighlight(editor->GetContext()->GetName());
+		}
+	}
+}
+
