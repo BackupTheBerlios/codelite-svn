@@ -11,6 +11,7 @@
 #include "findreplacedlg.h"
 #include <wx/wxFlatNotebook/renderer.h>
 #include "context_manager.h"
+#include "editor_config.h"
 
 // fix bug in wxscintilla.h
 #ifdef EVT_SCI_CALLTIP_CLICK
@@ -40,6 +41,7 @@ END_EVENT_TABLE()
 std::stack<TagEntry> LEditor::m_history;
 FindReplaceDialog* LEditor::m_findReplaceDlg = NULL;
 FindReplaceData LEditor::m_findReplaceData;
+std::map<wxString, int> LEditor::ms_bookmarkShapes;
 
 LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxString& fileName, const wxString& project)
 : wxScintilla(parent, id, wxDefaultPosition, size)
@@ -47,6 +49,11 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 , m_project(project)
 , m_lastMatchPos(0)
 {
+	ms_bookmarkShapes[wxT("Small Rectangle")] = wxSCI_MARK_SMALLRECT;
+	ms_bookmarkShapes[wxT("Rounded Rectangle")] = wxSCI_MARK_ROUNDRECT;
+	ms_bookmarkShapes[wxT("Small Arrow")] = wxSCI_MARK_ARROW;
+	ms_bookmarkShapes[wxT("Circle")] = wxSCI_MARK_CIRCLE;
+
 	m_context = ManagerST::Get()->NewContextByFileName(m_fileName, this);
 	SetProperties();
 
@@ -65,6 +72,8 @@ LEditor::~LEditor()
 /// Setup some scintilla properties
 void LEditor::SetProperties()
 {
+	OptionsConfigPtr options = EditorConfigST::Get()->GetOptions();
+
 	SetMouseDwellTime(200);
 	SetProperty(_("fold"), _("1"));
 	SetProperty(_("styling.within.preprocessor"), _("1"));
@@ -102,13 +111,14 @@ void LEditor::SetProperties()
 	SetSelAlpha(70);
 #endif
 	// Mark current line
-	SetCaretLineVisible(true);
+	SetCaretLineVisible(options->GetHighlightCaretLine());
 #ifdef __WXMSW__
 	SetCaretLineBackground(wxT("BLUE"));
 #else
 	SetCaretLineBackground(wxColour(255, 255, 220));
 #endif // __WXMSW__
-	SetFoldFlags(0);
+
+	SetFoldFlags(options->GetUnderlineFoldLine() ? 16 : 0);
 
 	//------------------------------------------
 	// Margin settings
@@ -128,16 +138,18 @@ void LEditor::SetProperties()
 	SetMarginMask(3, wxSCI_MASK_FOLDERS);
 
 	// Set margins' width
-	SetMarginWidth(0, 16);	// Symbol margin
+	SetMarginWidth(0, options->GetDisplayBookmarkMargin() ? 16 : 0);	// Symbol margin
 	// allow everything except for the folding symbols
 	SetMarginMask(0, ~(wxSCI_MASK_FOLDERS));
 
 	// Line number margin
 	int pixelWidth = 4 + 6*TextWidth(wxSCI_STYLE_LINENUMBER, wxT("9"));
-	SetMarginWidth(1, pixelWidth);
+	SetMarginWidth(1, options->GetDisplayLineNumbers() ? pixelWidth : 0);
 
 	SetMarginWidth(2, 1);	// Symbol margin which acts as separator
-	SetMarginWidth(3, 16);	// Fold margin
+
+	int ww = options->GetDisplayFoldMargin() ? 16 : 0;
+	SetMarginWidth(3, ww);	// Fold margin
 	StyleSetForeground(wxSCI_STYLE_DEFAULT, wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW));
 	
 	// Mark fold margin as sensetive
@@ -147,18 +159,58 @@ void LEditor::SetProperties()
 	// Fold settings
 	//---------------------------------------------------
 	// Define the folding style to be square
-	DefineMarker(wxSCI_MARKNUM_FOLDEROPEN, wxSCI_MARK_BOXMINUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
-	DefineMarker(wxSCI_MARKNUM_FOLDER, wxSCI_MARK_BOXPLUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
-	DefineMarker(wxSCI_MARKNUM_FOLDERSUB, wxSCI_MARK_VLINE, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
-	DefineMarker(wxSCI_MARKNUM_FOLDERTAIL, wxSCI_MARK_LCORNER, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
-	DefineMarker(wxSCI_MARKNUM_FOLDEREND, wxSCI_MARK_BOXPLUSCONNECTED, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
-	DefineMarker(wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_BOXMINUSCONNECTED, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
-	DefineMarker(wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_TCORNER, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+	if( options->GetFoldStyle() == wxT("Flatten Tree Square Headers") ){
+
+		DefineMarker(wxSCI_MARKNUM_FOLDEROPEN, wxSCI_MARK_BOXMINUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDER, wxSCI_MARK_BOXPLUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERSUB, wxSCI_MARK_VLINE, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERTAIL, wxSCI_MARK_LCORNER, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDEREND, wxSCI_MARK_BOXPLUSCONNECTED, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_BOXMINUSCONNECTED, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_TCORNER, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+
+	} else if( options->GetFoldStyle() == wxT("Flatten Tree Circular Headers") ){
+
+		DefineMarker(wxSCI_MARKNUM_FOLDEROPEN, wxSCI_MARK_CIRCLEMINUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDER, wxSCI_MARK_CIRCLEPLUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERSUB, wxSCI_MARK_VLINE, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERTAIL, wxSCI_MARK_LCORNERCURVE, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDEREND, wxSCI_MARK_CIRCLEPLUSCONNECTED, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_CIRCLEMINUSCONNECTED, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_TCORNER, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+
+	} else if( options->GetFoldStyle() == wxT("Simple") ){
+
+		DefineMarker(wxSCI_MARKNUM_FOLDEROPEN, wxSCI_MARK_MINUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDER, wxSCI_MARK_PLUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERSUB, wxSCI_MARK_BACKGROUND, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERTAIL, wxSCI_MARK_BACKGROUND, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDEREND, wxSCI_MARK_PLUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_MINUS, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_BACKGROUND, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+
+	} else if( options->GetFoldStyle() == wxT("Arrows") ){
+
+		DefineMarker(wxSCI_MARKNUM_FOLDEROPEN, wxSCI_MARK_ARROWDOWN, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDER, wxSCI_MARK_ARROW, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERSUB, wxSCI_MARK_BACKGROUND, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERTAIL, wxSCI_MARK_BACKGROUND, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDEREND, wxSCI_MARK_ARROW, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDEROPENMID, wxSCI_MARK_ARROWDOWN, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+		DefineMarker(wxSCI_MARKNUM_FOLDERMIDTAIL, wxSCI_MARK_BACKGROUND, wxColor(0xff, 0xff, 0xff), wxColor(0x80, 0x80, 0x80));
+
+	}
 
 	// Bookmark
-	MarkerDefine(0x8, wxSCI_MARK_ARROW);
-	MarkerSetBackground(0x8, wxColour(12, 133, 222));
-	MarkerSetForeground(0x8, wxColour(66, 169, 244));
+	int marker = wxSCI_MARK_ARROW;
+	std::map<wxString, int>::iterator iter = ms_bookmarkShapes.find(options->GetBookmarkShape());
+	if( iter != ms_bookmarkShapes.end() ){
+		marker = iter->second;
+	}
+
+	MarkerDefine(0x8, marker);
+	MarkerSetBackground(0x8, options->GetBookmarkBgColour());
+	MarkerSetForeground(0x8, options->GetBookmarkFgColour());
 
 	// Margin colours
 	SetFoldMarginColour(true, wxT("WHITE"));
@@ -182,6 +234,9 @@ void LEditor::SetProperties()
 	
 	StyleSetBackground(wxSCI_STYLE_LINENUMBER, wxT("WHITE"));
 	StyleSetForeground(wxSCI_STYLE_LINENUMBER, wxColour(0, 63, 125));
+
+	// Indentation guidelines
+	SetIndentationGuides(options->GetShowIndentationGuidelines());
 }
 
 void LEditor::SetDirty(bool dirty)

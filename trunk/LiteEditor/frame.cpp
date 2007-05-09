@@ -107,6 +107,9 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("view_as_cpp"), Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(XRCID("view_as_text"), Frame::DispatchUpdateUIEvent)
 	EVT_MENU(XRCID("options"), Frame::OnViewOptions)
+	EVT_UPDATE_UI(XRCID("word_wrap"), Frame::DispatchUpdateUIEvent)
+	EVT_MENU(XRCID("word_wrap"), Frame::DispatchCommandEvent)
+
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
 	EVT_MENU(ID_USE_EXTERNAL_DB, Frame::OnUseExternalDatabase)

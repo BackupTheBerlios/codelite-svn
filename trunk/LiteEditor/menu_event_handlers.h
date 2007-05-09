@@ -213,6 +213,18 @@ public:
 	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
 	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
 };
+//-------------------------------------------------
+// Word wrap
+//-------------------------------------------------
+class WordWrapHandler : public MenuEventHandler 
+{
+public:
+	WordWrapHandler(int id) : MenuEventHandler(id){};
+	virtual ~WordWrapHandler(){};
 
+public:
+	virtual void ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event);
+	virtual void ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event);
+};
 #endif // MENU_EVENT_HANDLERS_H
 

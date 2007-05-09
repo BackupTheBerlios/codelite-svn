@@ -87,7 +87,7 @@ bool XmlUtils::ReadBool(wxXmlNode *node, const wxString &propName, bool defaultV
 	}
 
 	bool retVal = defaultValue;
-	if(val.CmpNoCase("yes") == 0){
+	if(val.CmpNoCase(wxT("yes")) == 0){
 		retVal = true;
 	} else {
 		retVal = false;

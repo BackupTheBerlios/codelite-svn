@@ -92,6 +92,7 @@ wxPanel *OptionsDlg::CreateSyntaxHighlightPage()
 
 wxPanel *OptionsDlg::CreateGeneralPage()
 {
+	OptionsConfigPtr options = EditorConfigST::Get()->GetOptions();
 	m_general = new wxPanel( m_book, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* vSz1;
 	vSz1 = new wxBoxSizer( wxVERTICAL );
@@ -100,11 +101,13 @@ wxPanel *OptionsDlg::CreateGeneralPage()
 	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( m_general, -1, wxT("Folding:") ), wxVERTICAL );
 	
 	m_checkBoxDisplayFoldMargin = new wxCheckBox( m_general, wxID_ANY, wxT("Display Folding Margin"), wxDefaultPosition, wxDefaultSize, 0 );
-	
+	m_checkBoxDisplayFoldMargin->SetValue(options->GetDisplayFoldMargin());
+
 	sbSizer1->Add( m_checkBoxDisplayFoldMargin, 0, wxALL, 5 );
 	
 	m_checkBoxMarkFoldedLine = new wxCheckBox( m_general, wxID_ANY, wxT("Underline Folded Line"), wxDefaultPosition, wxDefaultSize, 0 );
-	
+	m_checkBoxMarkFoldedLine->SetValue(options->GetUnderlineFoldLine());
+
 	sbSizer1->Add( m_checkBoxMarkFoldedLine, 0, wxALL, 5 );
 	
 	m_staticText1 = new wxStaticText( m_general, wxID_ANY, wxT("Fold Style:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -114,25 +117,26 @@ wxPanel *OptionsDlg::CreateGeneralPage()
 	int m_foldStyleChoiceNChoices = sizeof( m_foldStyleChoiceChoices ) / sizeof( wxString );
 	m_foldStyleChoice = new wxChoice( m_general, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_foldStyleChoiceNChoices, m_foldStyleChoiceChoices, 0 );
 	sbSizer1->Add( m_foldStyleChoice, 0, wxALL|wxEXPAND, 5 );
-	m_foldStyleChoice->SetSelection(0);
-
+	m_foldStyleChoice->SetStringSelection( options->GetFoldStyle() );
+	
 	vSz1->Add( sbSizer1, 0, wxEXPAND, 5 );
 	
 	wxStaticBoxSizer* sbSizer3;
 	sbSizer3 = new wxStaticBoxSizer( new wxStaticBox( m_general, -1, wxT("Bookmarks:") ), wxVERTICAL );
 	
-	m_displayBookmarkMargin = new wxCheckBox( m_general, wxID_ANY, wxT("Display Selection / Bookmark Folding"), wxDefaultPosition, wxDefaultSize, 0 );
-	
+	m_displayBookmarkMargin = new wxCheckBox( m_general, wxID_ANY, wxT("Display Selection / Bookmark margin"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_displayBookmarkMargin->SetValue(options->GetDisplayBookmarkMargin());
+
 	sbSizer3->Add( m_displayBookmarkMargin, 0, wxALL, 5 );
 	
 	m_staticText6 = new wxStaticText( m_general, wxID_ANY, wxT("Bookmark Shape:"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer3->Add( m_staticText6, 0, wxALL, 5 );
 	
-	wxString m_bookmarkShapeChoices[] = { wxT("Samll Rectangle"), wxT("Rounded Rectangle"), wxT("Circle"), wxT("Small Arrow") };
+	wxString m_bookmarkShapeChoices[] = { wxT("Small Rectangle"), wxT("Rounded Rectangle"), wxT("Circle"), wxT("Small Arrow") };
 	int m_bookmarkShapeNChoices = sizeof( m_bookmarkShapeChoices ) / sizeof( wxString );
 	m_bookmarkShape = new wxChoice( m_general, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_bookmarkShapeNChoices, m_bookmarkShapeChoices, 0 );
 	sbSizer3->Add( m_bookmarkShape, 0, wxALL|wxEXPAND, 5 );
-	m_bookmarkShape->SetSelection(0);
+	m_bookmarkShape->SetStringSelection(options->GetBookmarkShape());
 
 	wxGridSizer* gSizer1;
 	gSizer1 = new wxGridSizer( 2, 2, 0, 0 );
@@ -140,13 +144,13 @@ wxPanel *OptionsDlg::CreateGeneralPage()
 	m_staticText4 = new wxStaticText( m_general, wxID_ANY, wxT("Select the bookmark background colour:"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer1->Add( m_staticText4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_bgColourPicker = new wxButton( m_general, wxID_ANY, wxT("Colour..."), wxDefaultPosition, wxDefaultSize, 0 );
+	m_bgColourPicker = new wxColourPickerCtrl(m_general, wxID_ANY, options->GetBookmarkBgColour(), wxDefaultPosition, wxDefaultSize, wxCLRP_SHOW_LABEL);
 	gSizer1->Add( m_bgColourPicker, 0, wxALIGN_RIGHT|wxALL, 5 );
 	
 	m_staticText5 = new wxStaticText( m_general, wxID_ANY, wxT("Select the bookmark forground colour:"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer1->Add( m_staticText5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_fgColourPicker = new wxButton( m_general, wxID_ANY, wxT("Colour..."), wxDefaultPosition, wxDefaultSize, 0 );
+	m_fgColourPicker = new wxColourPickerCtrl( m_general, wxID_ANY, options->GetBookmarkFgColour(), wxDefaultPosition, wxDefaultSize, wxCLRP_SHOW_LABEL);
 	gSizer1->Add( m_fgColourPicker, 0, wxALIGN_RIGHT|wxALL, 5 );
 	
 	sbSizer3->Add( gSizer1, 1, wxEXPAND, 5 );
@@ -160,15 +164,16 @@ wxPanel *OptionsDlg::CreateGeneralPage()
 	fgSizer = new wxFlexGridSizer( 3, 2, 0, 0 );
 	
 	m_highlighyCaretLine = new wxCheckBox( m_general, wxID_ANY, wxT("Highlight Caret Line"), wxDefaultPosition, wxDefaultSize, 0 );
-	
+	m_highlighyCaretLine->SetValue(options->GetHighlightCaretLine());
 	fgSizer->Add( m_highlighyCaretLine, 0, wxALL, 5 );
 	
 	m_displayLineNumbers = new wxCheckBox( m_general, wxID_ANY, wxT("Dsiplay Line Numbers"), wxDefaultPosition, wxDefaultSize, 0 );
-	
+	m_displayLineNumbers->SetValue(options->GetDisplayLineNumbers());
 	fgSizer->Add( m_displayLineNumbers, 0, wxALL, 5 );
 	
 	m_showIndentationGuideLines = new wxCheckBox( m_general, wxID_ANY, wxT("Show Indentation Guidelines"), wxDefaultPosition, wxDefaultSize, 0 );
-	
+	m_showIndentationGuideLines->SetValue(options->GetShowIndentationGuidelines());
+
 	fgSizer->Add( m_showIndentationGuideLines, 0, wxALL, 5 );
 	
 	sbSizer4->Add( fgSizer, 1, wxEXPAND, 5 );
@@ -221,6 +226,17 @@ void OptionsDlg::SaveChanges()
 
 	// construct an OptionsConfig object and update the configuration
 	OptionsConfigPtr options(new OptionsConfig(NULL));
-	//TODO::update the optiosn according to the GUI
+	options->SetDisplayFoldMargin( m_checkBoxDisplayFoldMargin->IsChecked() );
+	options->SetUnderlineFoldLine( m_checkBoxMarkFoldedLine->IsChecked() );
+	options->SetFoldStyle(m_foldStyleChoice->GetStringSelection());
+	options->SetDisplayBookmarkMargin(m_displayBookmarkMargin->IsChecked());
+	options->SetBookmarkShape( m_bookmarkShape->GetStringSelection());
+	options->SetBookmarkBgColour( m_bgColourPicker->GetColour() );
+	options->SetBookmarkFgColour( m_fgColourPicker->GetColour() );
+	options->SetHighlightCaretLine( m_highlighyCaretLine->IsChecked() );
+	options->SetDisplayLineNumbers( m_displayLineNumbers->IsChecked() );
+	options->SetShowIndentationGuidelines( m_showIndentationGuideLines->IsChecked() );
+	
 	EditorConfigST::Get()->SetOptions(options);
+	ManagerST::Get()->ApplySettingsChanges();
 }

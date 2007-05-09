@@ -23,7 +23,7 @@ MenuManager::MenuManager(void)
 	PushHandler(new GotoDefinitionHandler(XRCID("goto_previous_definition")));
 	PushHandler(new ViewAsHandler(XRCID("view_as_cpp")));
 	PushHandler(new ViewAsHandler(XRCID("view_as_text")));
-	
+	PushHandler(new WordWrapHandler(XRCID("word_wrap")));
 }
 
 MenuManager::~MenuManager(void)

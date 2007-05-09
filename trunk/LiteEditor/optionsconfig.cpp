@@ -39,7 +39,7 @@ wxXmlNode *OptionsConfig::ToXml() const
 	n->AddProperty(wxT("DisplayFoldMargin"), BoolToString(m_displayFoldMargin));
 	n->AddProperty(wxT("UnderlineFoldedLine"), BoolToString(m_underlineFoldLine));
 	n->AddProperty(wxT("FoldStyle"), m_foldStyle);
-	n->AddProperty(wxT("DisplayBookmarkMargin"), BoolToString(m_displayFoldMargin));
+	n->AddProperty(wxT("DisplayBookmarkMargin"), BoolToString(m_displayBookmarkMargin));
 	n->AddProperty(wxT("BookmarkShape"), m_bookmarkShape);
 	n->AddProperty(wxT("BookmarkBgColour"), m_bookmarkBgColour.GetAsString(wxC2S_HTML_SYNTAX));
 	n->AddProperty(wxT("BookmarkFgColour"), m_bookmarkFgColour.GetAsString(wxC2S_HTML_SYNTAX));

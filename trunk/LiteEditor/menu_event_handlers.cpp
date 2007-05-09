@@ -355,3 +355,29 @@ void ViewAsHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event
 		event.Check(editor->GetContext()->GetName() == wxT("Text"));
 	}
 }
+
+//----------------------------------------------------
+// Word wrap hanlder
+//----------------------------------------------------
+
+void WordWrapHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
+{
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		event.Enable(false);
+		return;
+	}
+	
+	event.Enable(true);
+	event.Check(editor->GetWrapMode() != wxSCI_WRAP_NONE);
+}
+
+void WordWrapHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
+{
+	LEditor *editor = dynamic_cast<LEditor*>(owner);
+	if( !editor ){
+		return;
+	}
+
+	editor->SetWrapMode(event.IsChecked() ? wxSCI_WRAP_WORD : wxSCI_WRAP_NONE);
+}

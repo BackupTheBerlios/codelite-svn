@@ -3,6 +3,7 @@
 
 #include <wx/wxscintilla.h>
 #include <stack>
+#include <map>
 #include "entry.h"
 #include "calltip.h"
 #include "wx/filename.h"
@@ -43,6 +44,7 @@ class LEditor : public wxScintilla
 	static FindReplaceDialog *m_findReplaceDlg;
 	static FindReplaceData m_findReplaceData;
 	int m_lastMatchPos;
+	static std::map<wxString, int> ms_bookmarkShapes;
 
 public:
 	/// Construct a LEditor object

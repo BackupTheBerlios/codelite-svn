@@ -25,6 +25,7 @@
 #include "wx/wxFlatNotebook/wxFlatNotebook.h"
 #include <wx/statline.h>
 #include "lexer_configuration.h"
+#include <wx/clrpicker.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -53,9 +54,9 @@ protected:
 	wxStaticText* m_staticText6;
 	wxChoice* m_bookmarkShape;
 	wxStaticText* m_staticText4;
-	wxButton* m_bgColourPicker;
+	wxColourPickerCtrl* m_bgColourPicker;
 	wxStaticText* m_staticText5;
-	wxButton* m_fgColourPicker;
+	wxColourPickerCtrl* m_fgColourPicker;
 	wxCheckBox* m_highlighyCaretLine;
 	wxCheckBox* m_displayLineNumbers;
 	wxCheckBox* m_showIndentationGuideLines;
