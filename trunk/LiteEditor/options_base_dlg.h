@@ -73,7 +73,7 @@ private:
 	void SaveChanges();
 
 public:
-	OptionsDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Options"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 465,489 ), int style = wxDEFAULT_DIALOG_STYLE );
+	OptionsDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Options"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 465,550 ), int style = wxDEFAULT_DIALOG_STYLE );
 
 };
 
