@@ -435,9 +435,13 @@ void Frame::OnFileNew(wxCommandEvent &event)
 void Frame::OnFileOpen(wxCommandEvent & WXUNUSED(event))
 {
 	const wxString ALL(	wxT("All Files (*.*)|*.*"));
-	wxFileDialog *dlg = new wxFileDialog(this, _("Open File"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST , wxDefaultPosition);
+	wxFileDialog *dlg = new wxFileDialog(this, _("Open File"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxFD_MULTIPLE, wxDefaultPosition);
 	if (dlg->ShowModal() == wxID_OK){
-		ManagerST::Get()->OpenFile(dlg->GetPath(), wxEmptyString);
+		wxArrayString paths;
+		dlg->GetPaths(paths);
+		for(size_t i=0; i<paths.GetCount(); i++){
+			ManagerST::Get()->OpenFile(paths.Item(i), wxEmptyString);
+		}
 	}
 	dlg->Destroy();	
 }

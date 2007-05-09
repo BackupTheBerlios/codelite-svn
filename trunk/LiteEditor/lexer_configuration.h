@@ -23,6 +23,7 @@ public:
 	const wxString &GetFileSpec() const { return m_extension; }
 	const StylePropertyList &GetProperties() const { return m_properties; }
 	void SetProperties(StylePropertyList &properties) { m_properties = properties; }
+	void SetFileSpec(const wxString &spec) { m_extension = spec; }
 };
 
 typedef SmartPtr<LexerConf> LexerConfPtr;

@@ -77,8 +77,12 @@ LexerPage::LexerPage( wxWindow* parent, LexerConfPtr lexer, int id, wxPoint pos,
 
 	sbSizer5->Add( bSizer7, 1, wxEXPAND, 5 );
 
-	bSizer6->Add( sbSizer5, 1, wxEXPAND, 5 );
+	wxStaticBoxSizer *hs = new wxStaticBoxSizer(wxHORIZONTAL, this, wxT("File Types:"));
+	m_fileSpec = new wxTextCtrl(this, wxID_ANY, m_lexer->GetFileSpec()); 
+	hs->Add(m_fileSpec, 1, wxALL | wxEXPAND, 5);
 
+	bSizer6->Add( sbSizer5, 1, wxEXPAND, 5 );
+	bSizer6->Add( hs, 0, wxEXPAND, 5 );
 	this->SetSizer( bSizer6 );
 	this->Layout();
 
@@ -90,7 +94,7 @@ LexerPage::LexerPage( wxWindow* parent, LexerConfPtr lexer, int id, wxPoint pos,
 
 void LexerPage::OnItemSelected(wxCommandEvent & event)
 {
-	// update colour picker & font picers
+	// update colour picker & font pickers
 	wxString selectionString = event.GetString();
 	m_selection = event.GetSelection();
 
@@ -140,5 +144,6 @@ void LexerPage::OnColourChanged(wxColourPickerEvent &event)
 void LexerPage::SaveSettings()
 {
 	m_lexer->SetProperties( m_propertyList );
+	m_lexer->SetFileSpec( m_fileSpec->GetValue() );
 	EditorConfigST::Get()->SetLexer( m_lexer );
 }

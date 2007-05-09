@@ -42,6 +42,7 @@ protected:
 	wxListBox* m_properties;
 	wxFontPickerCtrl* m_fontPicker;
 	wxColourPickerCtrl* m_colourPicker;
+	wxTextCtrl *m_fileSpec;
 
 	// Virtual event handlers, overide them in your derived class
 	virtual void OnItemSelected( wxCommandEvent& event );
