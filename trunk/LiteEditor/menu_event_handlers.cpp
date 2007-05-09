@@ -344,6 +344,8 @@ void ViewAsHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event
 	if( !editor ){
 		return;
 	}
+	
+	event.Enable(true);
 
 	if(event.GetId() == XRCID("view_as_cpp")){
 		event.Check(editor->GetContext()->GetName() == wxT("C++"));
