@@ -1,7 +1,7 @@
 TODO List:
 ==========================
-11. Move options from the xml file to the editor
-19. Add build options to project
+11. ******** FIXED ********* Move options from the xml file to the editor
+19. Add build options to project (including dialog)
 2. ******** FIXED ********* Gather all macros under a single entry in the symbol tree
 3. ******** FIXED ********* Change the default icon from class to struct (the case for typedef struct {} Somthing is much more common than class)
 4. Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
@@ -42,3 +42,5 @@ TODO List:
 36. When opening a file from the command line, make sure that the workspace pane and the output pane are hidden
 37. When opening a project, make sure that the workspace pane is visible
 38. When hitting 'RETURN' in the find dialog, start the search.
+39. Add option to reload file
+40. Add option to word wrap in editor
