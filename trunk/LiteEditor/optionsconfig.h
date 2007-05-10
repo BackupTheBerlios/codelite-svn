@@ -4,9 +4,9 @@
 #include "wx/string.h"
 #include "wx/xml/xml.h"
 #include "wx/colour.h"
-#include "smart_ptr.h"
+#include "configuration_object.h"
 
-class OptionsConfig
+class OptionsConfig : public ConfObject
 {
 	bool m_displayFoldMargin;
 	bool m_underlineFoldLine;

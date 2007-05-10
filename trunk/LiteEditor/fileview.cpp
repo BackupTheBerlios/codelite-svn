@@ -418,7 +418,8 @@ void FileViewTree::DoAddVirtualFolder(wxTreeItemId &parent)
 	wxString defaultName(wxT("NewDirectory"));
 	defaultName << count++;
 	
-	wxTextEntryDialog *dlg = new wxTextEntryDialog(this, wxT("Virtual Directory Name:"), wxT("New Virtual Directory"), defaultName);
+	wxTextEntryDialog *dlg = new wxTextEntryDialog(NULL, wxT("Virtual Directory Name:"), wxT("New Virtual Directory"), defaultName);
+	dlg->Centre();
 	if(dlg->ShowModal() == wxID_OK){
 		wxString path = GetItemPath(parent);
 		if(dlg->GetValue().Trim().IsEmpty())

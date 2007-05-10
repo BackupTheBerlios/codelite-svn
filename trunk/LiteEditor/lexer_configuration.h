@@ -2,11 +2,11 @@
 #define LEXER_CONFIGURATION_H
 
 #include "wx/string.h"
-#include "smart_ptr.h"
 #include "attribute_style.h"
 #include "wx/xml/xml.h"
+#include "configuration_object.h"
 
-class LexerConf {
+class LexerConf : public ConfObject {
 	StylePropertyList m_properties;
 	wxXmlNode *m_element;
 	wxString m_name;

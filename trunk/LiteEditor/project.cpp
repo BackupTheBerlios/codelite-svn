@@ -194,6 +194,10 @@ void Project::RecursiveAdd(wxXmlNode *xmlNode, ProjectTreePtr &ptp, ProjectTreeN
 	} else if( xmlNode->GetName() == wxT("File") ){
 		wxFileName filename(xmlNode->GetPropVal(wxT("Name"), wxEmptyString));
 		item = ProjectItem(key, filename.GetFullName(), filename.GetFullPath(), ProjectItem::TypeFile);
+	} else {
+		// un-recognised or not viewable item in the tree,
+		// skip it and its children
+		return;
 	}
 
 	ProjectTreeNode *newNode = ptp->AddChild(item.Key(), item, nodeParent);
