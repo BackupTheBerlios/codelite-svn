@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="Plugin"
+	Name="SDK"
 	ProjectGUID="{08C385A7-9128-4789-B6AE-93B8B1D3B05B}"
 	RootNamespace="Plugin"
 	Keyword="Win32Proj">
