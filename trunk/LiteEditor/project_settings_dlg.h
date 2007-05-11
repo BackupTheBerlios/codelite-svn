@@ -18,6 +18,13 @@ class ProjectSettingsDlg : public ProjectSettingsBaseDlg
 protected:
 	void ConnectEvents();
 	void InitDialog(const wxString &configName);
+	void PopupAddOptionDlg(wxTextCtrl *ctrl);
+
+	void OnEditCommand(wxCheckListBox* list);
+	void OnUpCommand(wxCheckListBox* list);
+	void OnDownCommand(wxCheckListBox* list);
+	void OnNewCommand(wxCheckListBox* list);
+	void OnDeleteCommand(wxCheckListBox* list);
 
 public:
 	/** Constructor */
@@ -27,6 +34,21 @@ public:
 	virtual void OnCheckLinkerNeeded(wxCommandEvent &event);
 	virtual void OnConfigurationTypeSelected(wxCommandEvent &event);
 	virtual void OnAddSearchPath(wxCommandEvent &event);
+	virtual void OnAddLibraryPath(wxCommandEvent &event);
+	virtual void OnAddLibrary(wxCommandEvent &event);
+
+	virtual void OnNewPreBuildCommand(wxCommandEvent & WXUNUSED(event)){ OnNewCommand(m_checkListPreBuildCommands); }
+	virtual void OnEditPreBuildCommand(wxCommandEvent &WXUNUSED(event)){ OnEditCommand(m_checkListPreBuildCommands); }
+	virtual void OnUpPreBuildCommand(wxCommandEvent &WXUNUSED(event)){ OnUpCommand(m_checkListPreBuildCommands); }
+	virtual void OnDownPreBuildCommand(wxCommandEvent &WXUNUSED(event)){ OnDownCommand(m_checkListPreBuildCommands); }
+	virtual void OnDeletePreBuildCommand(wxCommandEvent &WXUNUSED(event)){ OnDeleteCommand(m_checkListPreBuildCommands); }
+
+	virtual void OnNewPostBuildCommand(wxCommandEvent & WXUNUSED(event)){ OnNewCommand(m_checkListPostBuildCommands); }
+	virtual void OnEditPostBuildCommand(wxCommandEvent &WXUNUSED(event)){ OnEditCommand(m_checkListPostBuildCommands); }
+	virtual void OnUpPostBuildCommand(wxCommandEvent &WXUNUSED(event)){ OnUpCommand(m_checkListPostBuildCommands); }
+	virtual void OnDownPostBuildCommand(wxCommandEvent &WXUNUSED(event)){ OnDownCommand(m_checkListPostBuildCommands); }
+	virtual void OnDeletePostBuildCommand(wxCommandEvent &WXUNUSED(event)){ OnDeleteCommand(m_checkListPostBuildCommands); }
+
 };
 
 #endif // __project_settings_dlg__

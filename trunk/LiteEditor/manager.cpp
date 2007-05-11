@@ -179,6 +179,9 @@ void Manager::UnInitialize()
 
 void Manager::CreateWorkspace(const wxString &name, const wxString &path, const CtagsOptions &options)
 {
+	// make sure that the workspace pane is visible
+	ShowWorkspacePane(WorkspacePane::FILE_VIEW);
+
 	wxString errMsg;
 	TagsManagerST::Get()->SetCtagsOptions(options);
 	bool res = WorkspaceST::Get()->CreateWorkspace(name, path, options, errMsg);
@@ -200,6 +203,9 @@ void Manager::CreateProject(const wxString &name, const wxString &path, const wx
 
 void Manager::OpenWorkspace(const wxString &path)
 {
+	// make sure that the workspace pane is visible
+	ShowWorkspacePane(WorkspacePane::FILE_VIEW);
+
 	wxString errMsg;
 	bool res = WorkspaceST::Get()->OpenWorkspace(path, errMsg);
 	CHECK_MSGBOX(res);

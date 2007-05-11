@@ -40,7 +40,14 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	
 	mainSizer->Add( bSizer22, 0, wxEXPAND, 5 );
 	
-	m_notebook3 = new wxTreebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	long nbStyle =	wxFNB_FF2 | 
+					wxFNB_NODRAG | 
+					wxFNB_BACKGROUND_GRADIENT | 
+					wxFNB_NO_NAV_BUTTONS | 
+					wxFNB_NO_X_BUTTON | 
+					wxFNB_DROPDOWN_TABS_LIST;
+	m_notebook3 = new wxFlatNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, nbStyle );
+	m_notebook3->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
 	m_generalPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer19;
 	bSizer19 = new wxBoxSizer( wxVERTICAL );
@@ -132,32 +139,28 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_staticline6 = new wxStaticLine( m_compilerPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	compilerPageSizer->Add( m_staticline6, 0, wxEXPAND | wxALL, 5 );
 	
-	wxFlexGridSizer* fgSizer1;
-	fgSizer1 = new wxFlexGridSizer( 2, 3, 0, 0 );
-	fgSizer1->AddGrowableCol( 1 );
-	fgSizer1->AddGrowableRow( 1 );
-	fgSizer1->SetFlexibleDirection( wxBOTH );
-	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText4 = new wxStaticText( m_compilerPage, wxID_ANY, wxT("Additional Search Path:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_staticText4, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxLEFT, 5 );
-	
-	m_textAdditionalSearchPath = new wxTextCtrl( m_compilerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_textAdditionalSearchPath, 1, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
-	
-	m_buttonAddSearchPath = new wxButton( m_compilerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_buttonAddSearchPath, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	wxGridBagSizer* gbSizer1;
+	gbSizer1 = new wxGridBagSizer( 0, 0 );
+	gbSizer1->AddGrowableCol( 1 );
+	gbSizer1->SetFlexibleDirection( wxBOTH );
+	gbSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	m_staticText6 = new wxStaticText( m_compilerPage, wxID_ANY, wxT("Compiler Options:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_staticText6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	gbSizer1->Add( m_staticText6, wxGBPosition( 0, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_textCompilerOptions = new wxTextCtrl( m_compilerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_textCompilerOptions, 1, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	gbSizer1->Add( m_textCompilerOptions, wxGBPosition( 0, 1 ), wxGBSpan( 1, 2 ), wxALL|wxEXPAND, 5 );
 	
-	m_buttonCompilerOptions = new wxButton( m_compilerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer1->Add( m_buttonCompilerOptions, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	m_staticText4 = new wxStaticText( m_compilerPage, wxID_ANY, wxT("Additional Search Path:"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer1->Add( m_staticText4, wxGBPosition( 1, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	compilerPageSizer->Add( fgSizer1, 0, wxEXPAND, 5 );
+	m_textAdditionalSearchPath = new wxTextCtrl( m_compilerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer1->Add( m_textAdditionalSearchPath, wxGBPosition( 1, 1 ), wxGBSpan( 1, 1 ), wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	
+	m_buttonAddSearchPath = new wxButton( m_compilerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer1->Add( m_buttonAddSearchPath, wxGBPosition( 1, 2 ), wxGBSpan( 1, 1 ), wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	
+	compilerPageSizer->Add( gbSizer1, 1, wxEXPAND, 5 );
 	
 	m_compilerPage->SetSizer( compilerPageSizer );
 	m_compilerPage->Layout();
@@ -174,45 +177,42 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_staticline8 = new wxStaticLine( m_linkerPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	linkerPageSizer->Add( m_staticline8, 0, wxEXPAND | wxALL, 5 );
 	
-	wxFlexGridSizer* fgSizer2;
-	fgSizer2 = new wxFlexGridSizer( 3, 3, 0, 0 );
-	fgSizer2->AddGrowableCol( 1 );
-	fgSizer2->SetFlexibleDirection( wxBOTH );
-	fgSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText7 = new wxStaticText( m_linkerPage, wxID_ANY, wxT("Library Path:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_staticText7, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_textLibraryPath = new wxTextCtrl( m_linkerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_textLibraryPath, 1, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
-	
-	m_buttonLibraryPath = new wxButton( m_linkerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_buttonLibraryPath, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
-	m_staticText8 = new wxStaticText( m_linkerPage, wxID_ANY, wxT("Libraries:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_staticText8, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_textLibraries = new wxTextCtrl( m_linkerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_textLibraries, 1, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
-	
-	m_buttonLibraries = new wxButton( m_linkerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_buttonLibraries, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	wxGridBagSizer* gbSizer2;
+	gbSizer2 = new wxGridBagSizer( 0, 0 );
+	gbSizer2->AddGrowableCol( 1 );
+	gbSizer2->SetFlexibleDirection( wxBOTH );
+	gbSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	m_staticText10 = new wxStaticText( m_linkerPage, wxID_ANY, wxT("Options:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_staticText10, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	gbSizer2->Add( m_staticText10, wxGBPosition( 0, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_textLinkerOptions = new wxTextCtrl( m_linkerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_textLinkerOptions, 0, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	gbSizer2->Add( m_textLinkerOptions, wxGBPosition( 0, 1 ), wxGBSpan( 1, 2 ), wxALL|wxEXPAND, 5 );
 	
-	m_buttonLinkerOptions = new wxButton( m_linkerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_buttonLinkerOptions, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	m_staticText7 = new wxStaticText( m_linkerPage, wxID_ANY, wxT("Library Path:"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( m_staticText7, wxGBPosition( 1, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	linkerPageSizer->Add( fgSizer2, 1, wxEXPAND, 5 );
+	m_textLibraryPath = new wxTextCtrl( m_linkerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( m_textLibraryPath, wxGBPosition( 1, 1 ), wxGBSpan( 1, 1 ), wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	
+	m_buttonLibraries = new wxButton( m_linkerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( m_buttonLibraries, wxGBPosition( 2, 2 ), wxGBSpan( 1, 1 ), wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	
+	m_staticText8 = new wxStaticText( m_linkerPage, wxID_ANY, wxT("Libraries:"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( m_staticText8, wxGBPosition( 2, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_textLibraries = new wxTextCtrl( m_linkerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( m_textLibraries, wxGBPosition( 2, 1 ), wxGBSpan( 1, 1 ), wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	
+	m_buttonLibraryPath = new wxButton( m_linkerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( m_buttonLibraryPath, wxGBPosition( 1, 2 ), wxGBSpan( 1, 1 ), wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	
+	linkerPageSizer->Add( gbSizer2, 1, wxEXPAND, 5 );
 	
 	m_linkerPage->SetSizer( linkerPageSizer );
 	m_linkerPage->Layout();
 	linkerPageSizer->Fit( m_linkerPage );
-	m_notebook3->AddPage( m_linkerPage, wxT("Linker"), true );
+	m_notebook3->AddPage( m_linkerPage, wxT("Linker"), false );
 	m_preBuildPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxVERTICAL );
@@ -236,6 +236,9 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_buttonNewPreBuildCmd = new wxButton( m_preBuildPage, wxID_ANY, wxT("New..."), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer10->Add( m_buttonNewPreBuildCmd, 0, wxALL, 5 );
 	
+	m_buttonDeletePreBuildCmd = new wxButton( m_preBuildPage, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer10->Add( m_buttonDeletePreBuildCmd, 0, wxALL, 5 );
+	
 	m_buttonEditPreBuildCmd = new wxButton( m_preBuildPage, wxID_ANY, wxT("Edit..."), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer10->Add( m_buttonEditPreBuildCmd, 0, wxALL, 5 );
 	
@@ -252,7 +255,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_preBuildPage->SetSizer( bSizer8 );
 	m_preBuildPage->Layout();
 	bSizer8->Fit( m_preBuildPage );
-	m_notebook3->AddPage( m_preBuildPage, wxT("PreBuild"), false );
+	m_notebook3->AddPage( m_preBuildPage, wxT("PreBuild"), true );
 	m_postBuildPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer81;
 	bSizer81 = new wxBoxSizer( wxVERTICAL );
@@ -275,6 +278,9 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	
 	m_buttonNewPostBuildCmd = new wxButton( m_postBuildPage, wxID_ANY, wxT("New..."), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer101->Add( m_buttonNewPostBuildCmd, 0, wxALL, 5 );
+	
+	m_buttonDeletePostBuildCmd = new wxButton( m_postBuildPage, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer101->Add( m_buttonDeletePostBuildCmd, 0, wxALL, 5 );
 	
 	m_buttonEditPostBuildCmd = new wxButton( m_postBuildPage, wxID_ANY, wxT("Edit..."), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer101->Add( m_buttonEditPostBuildCmd, 0, wxALL, 5 );

@@ -359,6 +359,12 @@
 				RelativePath=".\findreplacedlg.h">
 			</File>
 			<File
+				RelativePath=".\free_text_dialog.cpp">
+			</File>
+			<File
+				RelativePath=".\free_text_dialog.h">
+			</File>
+			<File
 				RelativePath=".\lexer_page.cpp">
 			</File>
 			<File

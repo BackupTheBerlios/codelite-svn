@@ -1,5 +1,6 @@
 #include "project_settings_dlg.h"
 #include "add_option_dialog.h"
+#include "free_text_dialog.h"
 
 // help macros
 #define ConnectCheckBox(ctrl, fn)\
@@ -11,6 +12,11 @@
 #define ConnectButton(ctrl, fn)\
 	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(fn), NULL, this);
 
+#define Trim(str)\
+	{\
+		str = str.Trim();\
+		str = str.Trim(false);\
+	}
 
 ProjectSettingsDlg::ProjectSettingsDlg( wxWindow* parent, const wxString &configName, const wxString &projectName )
 : ProjectSettingsBaseDlg( parent )
@@ -34,6 +40,18 @@ void ProjectSettingsDlg::ConnectEvents()
 	ConnectCheckBox(m_checkCompilerNeeded, ProjectSettingsDlg::OnCheckCompilerNeeded);
 	ConnectCheckBox(m_checkLinkerNeeded, ProjectSettingsDlg::OnCheckLinkerNeeded);
 	ConnectButton(m_buttonAddSearchPath, ProjectSettingsDlg::OnAddSearchPath);
+	ConnectButton(m_buttonLibraries, ProjectSettingsDlg::OnAddLibrary);
+	ConnectButton(m_buttonLibraryPath, ProjectSettingsDlg::OnAddLibraryPath);
+	ConnectButton(m_buttonNewPreBuildCmd, ProjectSettingsDlg::OnNewPreBuildCommand);
+	ConnectButton(m_buttonEditPreBuildCmd, ProjectSettingsDlg::OnEditPreBuildCommand);
+	ConnectButton(m_buttonUpPreBuildCmd, ProjectSettingsDlg::OnUpPreBuildCommand);
+	ConnectButton(m_buttonDownPreBuildCmd, ProjectSettingsDlg::OnDownPreBuildCommand);
+	ConnectButton(m_buttonDeletePreBuildCmd, ProjectSettingsDlg::OnDeletePreBuildCommand);
+	ConnectButton(m_buttonNewPostBuildCmd, ProjectSettingsDlg::OnNewPostBuildCommand);
+	ConnectButton(m_buttonEditPostBuildCmd, ProjectSettingsDlg::OnEditPostBuildCommand);
+	ConnectButton(m_buttonUpPostBuildCmd, ProjectSettingsDlg::OnUpPostBuildCommand);
+	ConnectButton(m_buttonDownPostBuildCmd, ProjectSettingsDlg::OnDownPostBuildCommand);
+	ConnectButton(m_buttonDeletePostBuildCmd, ProjectSettingsDlg::OnDeletePostBuildCommand);
 }
 
 void ProjectSettingsDlg::OnConfigurationTypeSelected(wxCommandEvent &event)
@@ -74,14 +92,121 @@ void ProjectSettingsDlg::OnCheckLinkerNeeded(wxCommandEvent &event)
 	}
 }
 
-void ProjectSettingsDlg::OnAddSearchPath(wxCommandEvent &event)
+void ProjectSettingsDlg::PopupAddOptionDlg(wxTextCtrl *ctrl)
 {
-	wxUnusedVar(event);
-	AddOptionDlg *dlg = new AddOptionDlg(this, m_textAdditionalSearchPath->GetValue());
+	AddOptionDlg *dlg = new AddOptionDlg(this, ctrl->GetValue());
 	if(dlg->ShowModal() == wxID_OK){
 		wxString updatedValue = dlg->GetValue();
-		m_textAdditionalSearchPath->SetValue(updatedValue);
+		ctrl->SetValue(updatedValue);
 	}
 	dlg->Destroy();
 }
 
+void ProjectSettingsDlg::OnAddSearchPath(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	PopupAddOptionDlg(m_textAdditionalSearchPath);
+}
+
+void ProjectSettingsDlg::OnAddLibrary(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	PopupAddOptionDlg(m_textLibraries);
+}
+
+void ProjectSettingsDlg::OnAddLibraryPath(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	PopupAddOptionDlg(m_textLibraryPath);
+}
+
+void ProjectSettingsDlg::OnNewCommand(wxCheckListBox *list)
+{
+	FreeTextDialog *dlg = new FreeTextDialog(this);
+	if(dlg->ShowModal() == wxID_OK){
+		wxString value = dlg->GetValue();
+		Trim(value);
+		if(value.IsEmpty() == false){
+			list->Append(value);
+			list->Check(list->GetCount()-1);
+		}
+	}
+	dlg->Destroy();
+}
+
+void ProjectSettingsDlg::OnEditCommand(wxCheckListBox *list)
+{
+	wxString selectedString  = list->GetStringSelection();
+	int sel = list->GetSelection();
+	if(sel == wxNOT_FOUND){
+		return;
+	}
+
+	FreeTextDialog *dlg = new FreeTextDialog(this, selectedString);
+	if(dlg->ShowModal() == wxID_OK){
+		wxString value = dlg->GetValue();
+		Trim(value);
+		if(value.IsEmpty() == false){
+			list->SetString(sel, value);
+		}
+	}
+	dlg->Destroy();
+}
+
+void ProjectSettingsDlg::OnUpCommand(wxCheckListBox *list)
+{
+	wxString selectedString  = list->GetStringSelection();
+	
+	int sel = list->GetSelection();
+	if(sel == wxNOT_FOUND){
+		return;
+	}
+
+	bool isSelected = list->IsChecked(sel);
+	sel --;
+	if(sel < 0){
+		return;
+	}
+
+	// sel contains the new position we want to place the selection string
+	list->Delete(sel + 1);
+	list->Insert(selectedString, sel);
+	list->Select(sel);
+	list->Check(sel, isSelected);
+}
+
+void ProjectSettingsDlg::OnDownCommand(wxCheckListBox *list)
+{
+	int sel = list->GetSelection();
+	if(sel == wxNOT_FOUND){
+		return;
+	}
+
+	sel ++;
+	if(sel >= (int)list->GetCount()){
+		return;
+	}
+
+	// sel contains the new position we want to place the selection string
+	wxString oldStr = list->GetString(sel);
+	bool oldStringIsSelected = list->IsChecked(sel);
+
+	list->Delete(sel);
+	list->Insert(oldStr, sel - 1);
+	list->Select(sel);
+	list->Check(sel - 1, oldStringIsSelected);
+}
+
+void ProjectSettingsDlg::OnDeleteCommand(wxCheckListBox *list)
+{
+	int sel = list->GetSelection();
+	if(sel == wxNOT_FOUND){
+		return;
+	}
+	list->Delete(sel);
+	if(sel < (int)list->GetCount()){
+		list->Select(sel);
+	} else if(sel - 1 < (int)list->GetCount()){
+		list->Select(sel -1);
+	}
+}

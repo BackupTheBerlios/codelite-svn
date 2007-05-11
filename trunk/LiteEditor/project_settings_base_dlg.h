@@ -17,7 +17,7 @@
 #include <wx/button.h>
 #include <wx/gbsizer.h>
 #include <wx/checklst.h>
-#include <wx/notebook.h>
+#include <wx/wxFlatNotebook/wxFlatNotebook.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +32,7 @@ class ProjectSettingsBaseDlg : public wxDialog
 	protected:
 		wxStaticText* m_staticText21;
 		wxChoice* m_choiceConfigurationType;
-		wxNotebook* m_notebook3;
+		wxFlatNotebook* m_notebook3;
 		wxPanel* m_generalPage;
 		wxStaticText* m_staticText15;
 		wxFilePickerCtrl* m_outputFilePicker;
@@ -64,15 +64,16 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxTextCtrl* m_textLinkerOptions;
 		wxStaticText* m_staticText7;
 		wxTextCtrl* m_textLibraryPath;
-		wxButton* m_buttonLibraryPath;
+		wxButton* m_buttonLibraries;
 		wxStaticText* m_staticText8;
 		wxTextCtrl* m_textLibraries;
-		wxButton* m_buttonLibraries;
+		wxButton* m_buttonLibraryPath;
 		wxPanel* m_preBuildPage;
 		wxStaticText* m_staticText11;
 		wxStaticLine* m_staticline2;
 		wxCheckListBox* m_checkListPreBuildCommands;
 		wxButton* m_buttonNewPreBuildCmd;
+		wxButton* m_buttonDeletePreBuildCmd;
 		wxButton* m_buttonEditPreBuildCmd;
 		wxButton* m_buttonUpPreBuildCmd;
 		wxButton* m_buttonDownPreBuildCmd;
@@ -81,6 +82,7 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxStaticLine* m_staticline21;
 		wxCheckListBox* m_checkListPostBuildCommands;
 		wxButton* m_buttonNewPostBuildCmd;
+		wxButton* m_buttonDeletePostBuildCmd;
 		wxButton* m_buttonEditPostBuildCmd;
 		wxButton* m_buttonUpPostBuildCmd;
 		wxButton* m_buttonDownPostBuildCmd;
