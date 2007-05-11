@@ -6,6 +6,7 @@
 #include <wx/textdlg.h>
 #include <deque>
 #include "new_item_dlg.h"
+#include "project_settings_dlg.h"
 
 FileViewTree::FileViewTree()
 {
@@ -474,6 +475,9 @@ wxString FileViewTree::GetItemPath(wxTreeItemId &item)
 
 void FileViewTree::OnProjectProperties(wxCommandEvent & WXUNUSED(event))
 {
+	ProjectSettingsDlg *dlg = new ProjectSettingsDlg(this, wxEmptyString, ManagerST::Get()->GetActiveProjectName());
+	dlg->ShowModal();
+	dlg->Destroy();
 }
 
 void FileViewTree::DoRemoveProject(const wxString &name)
