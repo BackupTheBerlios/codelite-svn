@@ -1,5 +1,5 @@
 #include "menu_event_handlers.h"
-#include "editor.h"
+#include "editor.h" 
 
 //------------------------------------
 // Handle copy events
