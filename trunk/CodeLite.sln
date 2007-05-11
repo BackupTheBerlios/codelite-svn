@@ -7,6 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiteEditor", "LiteEditor\Li
 		{F9550C0D-30DA-45C5-A08F-C41B14495A08} = {F9550C0D-30DA-45C5-A08F-C41B14495A08}
 		{DC3A9951-C351-4C62-BF0C-37F7A2178999} = {DC3A9951-C351-4C62-BF0C-37F7A2178999}
 		{DC3A9951-C351-4C62-BF0C-37F7A2178999} = {DC3A9951-C351-4C62-BF0C-37F7A2178999}
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B} = {08C385A7-9128-4789-B6AE-93B8B1D3B05B}
 		{C441CED4-C175-4944-B4AC-775A0568ED2F} = {C441CED4-C175-4944-B4AC-775A0568ED2F}
 		{C441CED4-C175-4944-B4AC-775A0568ED2F} = {C441CED4-C175-4944-B4AC-775A0568ED2F}
 		{AED4ECE5-FB94-4ABF-AC23-610876F65B56} = {AED4ECE5-FB94-4ABF-AC23-610876F65B56}
@@ -30,6 +31,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxscintilla", "sdk\wxscinti
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxflatmenu", "sdk\wxflatmenu\wxflatmenu\wxflatmenu.vcproj", "{AED4ECE5-FB94-4ABF-AC23-610876F65B56}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Plugin", "Plugin\Plugin.vcproj", "{08C385A7-9128-4789-B6AE-93B8B1D3B05B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -89,6 +94,14 @@ Global
 		{AED4ECE5-FB94-4ABF-AC23-610876F65B56}.Release.Build.0 = Release|Win32
 		{AED4ECE5-FB94-4ABF-AC23-610876F65B56}.Release Unicode.ActiveCfg = Release Unicode|Win32
 		{AED4ECE5-FB94-4ABF-AC23-610876F65B56}.Release Unicode.Build.0 = Release Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug.ActiveCfg = Debug Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug.Build.0 = Debug Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug Unicode.ActiveCfg = Debug Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug Unicode.Build.0 = Debug Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release.ActiveCfg = Release Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release.Build.0 = Release Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release Unicode.ActiveCfg = Release Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release Unicode.Build.0 = Release Unicode|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
