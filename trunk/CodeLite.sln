@@ -94,12 +94,12 @@ Global
 		{AED4ECE5-FB94-4ABF-AC23-610876F65B56}.Release.Build.0 = Release|Win32
 		{AED4ECE5-FB94-4ABF-AC23-610876F65B56}.Release Unicode.ActiveCfg = Release Unicode|Win32
 		{AED4ECE5-FB94-4ABF-AC23-610876F65B56}.Release Unicode.Build.0 = Release Unicode|Win32
-		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug.ActiveCfg = Debug Unicode|Win32
-		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug.Build.0 = Debug Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug.ActiveCfg = Debug|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug.Build.0 = Debug|Win32
 		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug Unicode.ActiveCfg = Debug Unicode|Win32
 		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug Unicode.Build.0 = Debug Unicode|Win32
-		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release.ActiveCfg = Release Unicode|Win32
-		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release.Build.0 = Release Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release.ActiveCfg = Release|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release.Build.0 = Release|Win32
 		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release Unicode.ActiveCfg = Release Unicode|Win32
 		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release Unicode.Build.0 = Release Unicode|Win32
 	EndGlobalSection

@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\sdk\wxsqlite3\include;&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswud&quot;;..\sdk\wxscintilla\include"
+				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswud&quot;;..\CodeLite\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\sdk\wxsqlite3\include;&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswu&quot;;..\sdk\wxscintilla\include"
+				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswu&quot;;..\CodeLite"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -92,6 +92,87 @@
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="4"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/lib/vc_lib/msw/&quot;;&quot;$(WXSTABLE)/include&quot;;..\CodeLite"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="0"
+				WarningLevel="4"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\plugin.lib"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="4"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(WXSTABLE)\lib\vc_lib\mswd&quot;;&quot;$(WXSTABLE)\include&quot;;..\CodeLite"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				MinimalRebuild="TRUE"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
+				WarningLevel="4"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="4"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="..\lib\plugind.lib"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -99,6 +180,12 @@
 		<Filter
 			Name="Build"
 			Filter="">
+			<File
+				RelativePath=".\build_config.cpp">
+			</File>
+			<File
+				RelativePath=".\build_config.h">
+			</File>
 			<File
 				RelativePath=".\builder.cpp">
 			</File>
@@ -110,6 +197,25 @@
 			</File>
 			<File
 				RelativePath=".\buildmanager.h">
+			</File>
+			<File
+				RelativePath=".\configuration_object.h">
+			</File>
+			<File
+				RelativePath=".\project_settings.cpp">
+			</File>
+			<File
+				RelativePath=".\project_settings.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Common"
+			Filter="">
+			<File
+				RelativePath=".\xmlutils.cpp">
+			</File>
+			<File
+				RelativePath=".\xmlutils.h">
 			</File>
 		</Filter>
 	</Files>
