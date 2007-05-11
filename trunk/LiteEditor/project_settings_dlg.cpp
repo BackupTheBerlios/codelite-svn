@@ -1,4 +1,5 @@
 #include "project_settings_dlg.h"
+#include "add_option_dialog.h"
 
 // help macros
 #define ConnectCheckBox(ctrl, fn)\
@@ -32,6 +33,7 @@ void ProjectSettingsDlg::ConnectEvents()
 	ConnectChoice(m_choiceConfigurationType, ProjectSettingsDlg::OnConfigurationTypeSelected);
 	ConnectCheckBox(m_checkCompilerNeeded, ProjectSettingsDlg::OnCheckCompilerNeeded);
 	ConnectCheckBox(m_checkLinkerNeeded, ProjectSettingsDlg::OnCheckLinkerNeeded);
+	ConnectButton(m_buttonAddSearchPath, ProjectSettingsDlg::OnAddSearchPath);
 }
 
 void ProjectSettingsDlg::OnConfigurationTypeSelected(wxCommandEvent &event)
@@ -47,13 +49,11 @@ void ProjectSettingsDlg::OnCheckCompilerNeeded(wxCommandEvent &event)
 		m_textAdditionalSearchPath->Disable();
 		m_buttonAddSearchPath->Disable();
 		m_textCompilerOptions->Disable();
-		m_buttonCompilerOptions->Disable();
 	}else{
 		m_compilerNameChoice->Enable();
 		m_textAdditionalSearchPath->Enable();
 		m_buttonAddSearchPath->Enable();
 		m_textCompilerOptions->Enable();
-		m_buttonCompilerOptions->Enable();
 	}
 }
 
@@ -65,13 +65,23 @@ void ProjectSettingsDlg::OnCheckLinkerNeeded(wxCommandEvent &event)
 		m_textLinkerOptions->Disable();
 		m_buttonLibraries->Disable();
 		m_buttonLibraryPath->Disable();
-		m_buttonLinkerOptions->Disable();
 	}else{
 		m_textLibraryPath->Enable();
 		m_textLibraries->Enable();
 		m_textLinkerOptions->Enable();
 		m_buttonLibraries->Enable();
 		m_buttonLibraryPath->Enable();
-		m_buttonLinkerOptions->Enable();
 	}
 }
+
+void ProjectSettingsDlg::OnAddSearchPath(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	AddOptionDlg *dlg = new AddOptionDlg(this, m_textAdditionalSearchPath->GetValue());
+	if(dlg->ShowModal() == wxID_OK){
+		wxString updatedValue = dlg->GetValue();
+		m_textAdditionalSearchPath->SetValue(updatedValue);
+	}
+	dlg->Destroy();
+}
+

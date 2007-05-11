@@ -26,7 +26,7 @@ public:
 	virtual void OnCheckCompilerNeeded(wxCommandEvent &event);
 	virtual void OnCheckLinkerNeeded(wxCommandEvent &event);
 	virtual void OnConfigurationTypeSelected(wxCommandEvent &event);
-
+	virtual void OnAddSearchPath(wxCommandEvent &event);
 };
 
 #endif // __project_settings_dlg__

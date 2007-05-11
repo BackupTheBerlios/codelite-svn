@@ -15,8 +15,9 @@
 #include <wx/statline.h>
 #include <wx/panel.h>
 #include <wx/button.h>
+#include <wx/gbsizer.h>
 #include <wx/checklst.h>
-#include <wx/treebook.h>
+#include <wx/notebook.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +32,7 @@ class ProjectSettingsBaseDlg : public wxDialog
 	protected:
 		wxStaticText* m_staticText21;
 		wxChoice* m_choiceConfigurationType;
-		wxTreebook* m_notebook3;
+		wxNotebook* m_notebook3;
 		wxPanel* m_generalPage;
 		wxStaticText* m_staticText15;
 		wxFilePickerCtrl* m_outputFilePicker;
@@ -51,24 +52,22 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxStaticText* m_staticText3;
 		wxChoice* m_compilerNameChoice;
 		wxStaticLine* m_staticline6;
+		wxStaticText* m_staticText6;
+		wxTextCtrl* m_textCompilerOptions;
 		wxStaticText* m_staticText4;
 		wxTextCtrl* m_textAdditionalSearchPath;
 		wxButton* m_buttonAddSearchPath;
-		wxStaticText* m_staticText6;
-		wxTextCtrl* m_textCompilerOptions;
-		wxButton* m_buttonCompilerOptions;
 		wxPanel* m_linkerPage;
 		wxCheckBox* m_checkLinkerNeeded;
 		wxStaticLine* m_staticline8;
+		wxStaticText* m_staticText10;
+		wxTextCtrl* m_textLinkerOptions;
 		wxStaticText* m_staticText7;
 		wxTextCtrl* m_textLibraryPath;
 		wxButton* m_buttonLibraryPath;
 		wxStaticText* m_staticText8;
 		wxTextCtrl* m_textLibraries;
 		wxButton* m_buttonLibraries;
-		wxStaticText* m_staticText10;
-		wxTextCtrl* m_textLinkerOptions;
-		wxButton* m_buttonLinkerOptions;
 		wxPanel* m_preBuildPage;
 		wxStaticText* m_staticText11;
 		wxStaticLine* m_staticline2;

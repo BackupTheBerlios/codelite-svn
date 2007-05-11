@@ -335,6 +335,12 @@
 		<Filter
 			Name="Dialogs">
 			<File
+				RelativePath=".\add_option_dialog.cpp">
+			</File>
+			<File
+				RelativePath=".\add_option_dialog.h">
+			</File>
+			<File
 				RelativePath=".\ctags_dialog.cpp">
 			</File>
 			<File
