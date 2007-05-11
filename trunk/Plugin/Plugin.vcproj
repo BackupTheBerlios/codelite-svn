@@ -193,6 +193,9 @@
 				RelativePath=".\builder.h">
 			</File>
 			<File
+				RelativePath=".\builderwindow.h">
+			</File>
+			<File
 				RelativePath=".\buildmanager.cpp">
 			</File>
 			<File
