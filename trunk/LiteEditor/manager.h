@@ -239,6 +239,20 @@ public:
 	 */ 
 	void ApplySettingsChanges();
 
+	/**
+	 * Return project settings by name
+	 * \param projectName project name
+	 * \return project settings smart prt
+	 */
+	ProjectSettingsPtr GetProjectSettings(const wxString &projectName) const;
+
+	/**
+	 * Set project settings
+	 * \param projectName project name
+	 * \param settings settings to update
+	 */
+	void SetProjectSettings(const wxString &projectName, ProjectSettingsPtr settings);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

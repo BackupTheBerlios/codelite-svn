@@ -5,6 +5,11 @@
 #include "wx/string.h"
 #include <map>
 
+class ProjectSettingsCookie {
+public:
+	std::map<wxString, BuildConfigPtr>::const_iterator iter;
+};
+
 class ProjectSettings : public ConfObject {
 	wxString m_compilerName;
 	std::map<wxString, BuildConfigPtr> m_configs;
@@ -15,6 +20,10 @@ public:
 	wxXmlNode *ToXml() const;
 
 	BuildConfigPtr GetBuildConfiguration(const wxString &configName) const;
+	BuildConfigPtr GetFirstBuildConfiguration(ProjectSettingsCookie &cookie) const;
+	BuildConfigPtr GetNextBuildConfiguration(ProjectSettingsCookie &cookie) const;
+	void SetBuildConfiguration(const BuildConfigPtr bc) { m_configs[bc->GetName()] = bc; }
+
 };
 
 typedef SmartPtr<ProjectSettings> ProjectSettingsPtr;

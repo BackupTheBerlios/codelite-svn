@@ -14,6 +14,8 @@ class BuildConfig : public ConfObject {
 	wxArrayString m_libPath;
 	wxArrayString m_preBuildCommands;
 	wxArrayString m_postBuildCommands;
+	bool m_compilerRequired;
+	bool m_linkerRequired;
 
 public:
 	BuildConfig(wxXmlNode *node);
@@ -31,6 +33,8 @@ public:
 	void GetLibraries(wxArrayString &libs) { libs = m_libs; }
 	void GetLibPath(wxArrayString &libPaths) { libPaths = m_libPath; }
 	const wxString &GetName() const { return m_name; }
+	bool IsCompilerRequired() const { return m_compilerRequired; }
+	bool IsLinkerRequired() const { return m_linkerRequired; }
 
 	void SetIncludePath(const wxArrayString &paths) { m_includePath = paths; }
 	void SetCompileOptions(const wxArrayString &options) { m_compileOptions = options; }
@@ -40,6 +44,8 @@ public:
 	void SetLibraries(const wxArrayString &libs) { m_libs = libs; }
 	void SetLibPath(const wxArrayString &libPaths) { m_libPath = libPaths; }
 	void SetName(const wxString &name){ m_name = name; }
+	void SetCompilerRequired(bool required) { m_compilerRequired = required; }
+	void SetLinkerRequired(bool required) { m_linkerRequired = required; }
 };
 
 typedef SmartPtr<BuildConfig> BuildConfigPtr;

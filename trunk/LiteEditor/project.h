@@ -8,6 +8,7 @@
 #include <tree.h>
 #include "smart_ptr.h"
 #include <list>
+#include "project_settings.h"
 
 /**
  * \class ProjectItem
@@ -205,6 +206,16 @@ public:
 	 * \param files 
 	 */
 	void GetFiles(wxArrayString &files);
+
+	/**
+	 * Return the project build settings object by name
+	 */
+	ProjectSettingsPtr GetSettings() const;
+
+	/**
+	 * Add or update settings to the project
+	 */
+	void SetSettings(ProjectSettingsPtr settings);
 
 	//-----------------------------------
 	// visual operations

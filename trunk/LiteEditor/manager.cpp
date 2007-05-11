@@ -538,3 +538,26 @@ void Manager::ApplySettingsChanges()
 	}
 }
 
+ProjectSettingsPtr Manager::GetProjectSettings(const wxString &projectName) const
+{
+	wxString errMsg;
+	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(projectName, errMsg);
+	if( !proj ){
+		wxMessageBox(errMsg, wxT("Lite Editor"), wxOK | wxICON_HAND);
+		return NULL;
+	}
+	
+	return proj->GetSettings();
+}
+
+void Manager::SetProjectSettings(const wxString &projectName, ProjectSettingsPtr settings)
+{
+	wxString errMsg;
+	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(projectName, errMsg);
+	if( !proj ){
+		wxMessageBox(errMsg, wxT("Lite Editor"), wxOK | wxICON_HAND);
+		return;
+	}
+	
+	proj->SetSettings(settings);
+}

@@ -377,6 +377,12 @@
 				RelativePath=".\options_base_dlg.h">
 			</File>
 			<File
+				RelativePath=".\project_settings_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\project_settings_dlg.h">
+			</File>
+			<File
 				RelativePath=".\symbols_dialog.cpp">
 			</File>
 			<File
@@ -422,6 +428,15 @@
 		<Filter
 			Name="Workspace">
 			<File
+				RelativePath=".\build_config.cpp">
+			</File>
+			<File
+				RelativePath=".\build_config.h">
+			</File>
+			<File
+				RelativePath=".\configuration_object.h">
+			</File>
+			<File
 				RelativePath=".\manager.cpp">
 			</File>
 			<File
@@ -432,6 +447,12 @@
 			</File>
 			<File
 				RelativePath=".\project.h">
+			</File>
+			<File
+				RelativePath=".\project_settings.cpp">
+			</File>
+			<File
+				RelativePath=".\project_settings.h">
 			</File>
 			<File
 				RelativePath=".\workspace.cpp">

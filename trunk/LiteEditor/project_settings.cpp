@@ -49,3 +49,25 @@ BuildConfigPtr ProjectSettings::GetBuildConfiguration(const wxString &configName
 	return iter->second;
 }
 
+BuildConfigPtr ProjectSettings::GetFirstBuildConfiguration(ProjectSettingsCookie &cookie) const
+{
+	cookie.iter = m_configs.begin();
+	if(cookie.iter != m_configs.end()){
+		BuildConfigPtr conf = cookie.iter->second;
+		cookie.iter++;
+		return conf;
+	}
+	return NULL;
+}
+
+BuildConfigPtr ProjectSettings::GetNextBuildConfiguration(ProjectSettingsCookie &cookie) const
+{
+	if(cookie.iter != m_configs.end()){
+		BuildConfigPtr conf = cookie.iter->second;
+		cookie.iter++;
+		return conf;
+	}
+	return NULL;
+}
+
+

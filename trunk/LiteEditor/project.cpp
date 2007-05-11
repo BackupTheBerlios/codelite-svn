@@ -34,6 +34,11 @@ bool Project::Create(const wxString &name, const wxString &path, const wxString 
 	headNode->AddProperty(wxT("Name"), wxT("Header Files"));
 	m_doc.GetRoot()->AddChild(headNode);
 	
+	//create build settings
+	ProjectSettingsPtr settings(new ProjectSettings(NULL));
+	settings->SetBuildConfiguration(new BuildConfig(NULL));
+	root->AddChild(settings->ToXml());
+
 	m_doc.Save(m_fileName.GetFullPath());
 	return true;
 }
@@ -262,4 +267,21 @@ void Project::GetFiles(wxXmlNode *parent, std::vector<wxFileName> &files)
 		}
 		child = child->GetNext();
 	}
+}
+
+ProjectSettingsPtr Project::GetSettings() const
+{
+	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc.GetRoot(), wxT("Settings"));
+	return new ProjectSettings(node);
+}
+
+void Project::SetSettings(ProjectSettingsPtr settings)
+{
+	wxXmlNode *oldSettings = XmlUtils::FindFirstByTagName(m_doc.GetRoot(), wxT("Settings"));
+	if(oldSettings){
+		oldSettings->GetParent()->RemoveChild(oldSettings);
+		delete oldSettings;
+	}
+	m_doc.GetRoot()->AddChild(settings->ToXml());
+	m_doc.Save(m_fileName.GetFullPath());
 }
