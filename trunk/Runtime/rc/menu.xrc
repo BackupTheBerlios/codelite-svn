@@ -177,6 +177,11 @@
         <object class="wxMenu" name="project_menu">
             <label>&amp;Project</label>
             <style>wxMENU_TEAROFF</style>
+            <object class="wxMenuItem" name="new_class">
+                <label>Add &amp;Class...</label>
+            </object>
+
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
             <object class="wxMenuItem" name="new_workspace">
                 <label>&amp;Create New Workspace...</label>
                 <help>Create New workspace</help>
@@ -186,7 +191,7 @@
                 <help>Switch to an existing workspace</help>
             </object>
             <object class="wxMenuItem" name="wxID_SEPARATOR"/>
-            
+
             <object class="wxMenuItem" name="new_project">
                 <label>&amp;Create New &amp;Project\tCtrl+Shift+N</label>
                 <help>Create new Project and add it to the current workspace</help>
@@ -195,6 +200,28 @@
                 <label>&amp;Add an &amp;Existing Project\tCtrl+Shift+A</label>
                 <help>Add an existing project to the current workspace</help>
             </object>            
+        </object>
+        
+        <object class="wxMenu" name="build_menu">
+            <label>&amp;Build</label>
+            <style>wxMENU_TEAROFF</style>
+            <object class="wxMenuItem" name="build_manager">
+                <label>B&amp;uild Manager...</label>
+            </object>
+            <object class="wxMenuItem" name="configuration_manager">
+                <label>C&amp;onfiguration Manager...</label>
+            </object>
+
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            <object class="wxMenuItem" name="build_workspace">
+                <label>&amp;Build Workspace\tF7</label>
+            </object>
+            <object class="wxMenuItem" name="clean_workspace">
+                <label>&amp;Clean Workspace</label>
+            </object>
+            <object class="wxMenuItem" name="rebuild_workspace">
+                <label>&amp;Rebuild Workspace</label>
+            </object>
         </object>
         
         <object class="wxMenu" name="tags_menu">
