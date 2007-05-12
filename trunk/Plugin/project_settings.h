@@ -22,7 +22,7 @@ public:
 	BuildConfigPtr GetBuildConfiguration(const wxString &configName) const;
 	BuildConfigPtr GetFirstBuildConfiguration(ProjectSettingsCookie &cookie) const;
 	BuildConfigPtr GetNextBuildConfiguration(ProjectSettingsCookie &cookie) const;
-	void SetBuildConfiguration(const BuildConfigPtr bc) { m_configs[bc->GetName()] = bc; }
+	void SetBuildConfiguration(const BuildConfigPtr bc);
 
 };
 

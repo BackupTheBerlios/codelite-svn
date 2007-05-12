@@ -4,11 +4,6 @@
 ProjectSettings::ProjectSettings(wxXmlNode *node)
 {
 	if(node){
-		wxXmlNode *comp = XmlUtils::FindFirstByTagName(node, wxT("Compiler"));
-		if(comp){
-			m_compilerName = XmlUtils::ReadString(comp, wxT("Name"));
-		}
-
 		// load configurations
 		wxXmlNode *child = node->GetChildren();
 		while(child) {
@@ -18,6 +13,10 @@ ProjectSettings::ProjectSettings(wxXmlNode *node)
 			}
 			child = child->GetNext();
 		}
+	}else{
+		//create new settings with default values
+		m_compilerName = wxT("g++");
+		m_configs.insert(std::pair<wxString, BuildConfigPtr>(wxT("Debug"), new BuildConfig(NULL)));
 	}
 }
 
@@ -28,10 +27,6 @@ ProjectSettings::~ProjectSettings()
 wxXmlNode *ProjectSettings::ToXml() const
 {
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Settings"));
-	wxXmlNode *comp = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Compiler"));
-	node->AddChild(comp);
-	comp->AddProperty(wxT("Name"), m_compilerName);
-	
 	std::map<wxString, BuildConfigPtr>::const_iterator iter = m_configs.begin();
 	for(; iter != m_configs.end(); iter++){
 		node->AddChild(iter->second->ToXml());
@@ -42,7 +37,12 @@ wxXmlNode *ProjectSettings::ToXml() const
 
 BuildConfigPtr ProjectSettings::GetBuildConfiguration(const wxString &configName) const
 {
-	std::map<wxString, BuildConfigPtr>::const_iterator iter = m_configs.find(configName);
+	wxString confName = configName;
+	if(confName.IsEmpty()){
+		confName = wxT("Debug");
+	}
+
+	std::map<wxString, BuildConfigPtr>::const_iterator iter = m_configs.find(confName);
 	if(iter == m_configs.end()){
 		return NULL;
 	}
@@ -70,4 +70,7 @@ BuildConfigPtr ProjectSettings::GetNextBuildConfiguration(ProjectSettingsCookie 
 	return NULL;
 }
 
-
+void ProjectSettings::SetBuildConfiguration(const BuildConfigPtr bc)
+{
+	m_configs[bc->GetName()] = bc;
+}

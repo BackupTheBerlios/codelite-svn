@@ -50,7 +50,7 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxCheckBox* m_checkCompilerNeeded;
 		wxStaticLine* m_staticline7;
 		wxStaticText* m_staticText3;
-		wxChoice* m_compilerNameChoice;
+		wxTextCtrl* m_textCompilerName;
 		wxStaticLine* m_staticline6;
 		wxStaticText* m_staticText6;
 		wxTextCtrl* m_textCompilerOptions;

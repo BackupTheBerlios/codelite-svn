@@ -8,14 +8,21 @@
 class BuildConfig : public ConfObject {
 	wxString m_name;
 	wxArrayString m_includePath;
-	wxArrayString m_compileOptions;
-	wxArrayString m_linkOptions;
+	wxString m_compileOptions;
+	wxString m_linkOptions;
 	wxArrayString m_libs;
 	wxArrayString m_libPath;
 	wxArrayString m_preBuildCommands;
 	wxArrayString m_postBuildCommands;
 	bool m_compilerRequired;
 	bool m_linkerRequired;
+
+	wxString m_outputFile;
+	wxString m_intermediateDirectory;
+	wxString m_command;
+	wxString m_commandArguments;
+	wxString m_workingDirectory;
+	wxString m_compilerName;
 
 public:
 	BuildConfig(wxXmlNode *node);
@@ -26,8 +33,8 @@ public:
 	// Setters / Getters
 	//--------------------------------
 	void GetIncludePath(wxArrayString &paths) { paths = m_includePath; }
-	void GetCompileOptions(wxArrayString &options) { options = m_compileOptions; }
-	void GetLinkOptions(wxArrayString &options) { options = m_linkOptions; }
+	const wxString &GetCompileOptions() const { return m_compileOptions; }
+	const wxString &GetLinkOptions() const { return m_linkOptions; }
 	void GetPreBuildCommands(wxArrayString &cmds) { cmds = m_preBuildCommands; }
 	void GetPostBuildCommands(wxArrayString &cmds) { cmds = m_postBuildCommands; }
 	void GetLibraries(wxArrayString &libs) { libs = m_libs; }
@@ -35,10 +42,16 @@ public:
 	const wxString &GetName() const { return m_name; }
 	bool IsCompilerRequired() const { return m_compilerRequired; }
 	bool IsLinkerRequired() const { return m_linkerRequired; }
+	const wxString &GetOutputFileName() const { return m_outputFile; }
+	const wxString &GetIntermediateDirectory() const { return m_intermediateDirectory; }
+	const wxString &GetCommand() const { return m_command; }
+	const wxString &GetCommandArguments() const { return m_commandArguments;}
+	const wxString &GetWorkingDirectory() const { return m_workingDirectory;}
+	const wxString &GetCompilerName() const { return m_compilerName;}
 
 	void SetIncludePath(const wxArrayString &paths) { m_includePath = paths; }
-	void SetCompileOptions(const wxArrayString &options) { m_compileOptions = options; }
-	void SetLinkOptions(const wxArrayString &options) { m_linkOptions = options; }
+	void SetCompileOptions(const wxString &options) { m_compileOptions = options; }
+	void SetLinkOptions(const wxString &options) { m_linkOptions = options; }
 	void SetPreBuildCommands(const wxArrayString &cmds) { m_preBuildCommands = cmds; }
 	void SetPostBuildCommands(const wxArrayString &cmds) { m_postBuildCommands = cmds; }
 	void SetLibraries(const wxArrayString &libs) { m_libs = libs; }
@@ -46,6 +59,12 @@ public:
 	void SetName(const wxString &name){ m_name = name; }
 	void SetCompilerRequired(bool required) { m_compilerRequired = required; }
 	void SetLinkerRequired(bool required) { m_linkerRequired = required; }
+	void SetOutputFileName(const wxString &name){ m_outputFile = name; }
+	void SetIntermediateDirectory(const wxString &dir){ m_intermediateDirectory = dir; }
+	void SetCommand(const wxString &cmd){ m_command = cmd; }
+	void SetCommandArguments(const wxString &cmdArgs){ m_commandArguments = cmdArgs;}
+	void SetWorkingDirectory(const wxString &dir){ m_workingDirectory = dir;}
+	void SetCompilerName(const wxString &cmpName){ m_compilerName = cmpName;}
 };
 
 typedef SmartPtr<BuildConfig> BuildConfigPtr;

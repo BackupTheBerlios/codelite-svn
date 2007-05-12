@@ -130,9 +130,8 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_staticText3 = new wxStaticText( m_compilerPage, wxID_ANY, wxT("Compiler Name:"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer6->Add( m_staticText3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	wxArrayString m_compilerNameChoiceChoices;
-	m_compilerNameChoice = new wxChoice( m_compilerPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_compilerNameChoiceChoices, 0 );
-	bSizer6->Add( m_compilerNameChoice, 1, wxALL, 5 );
+	m_textCompilerName = new wxTextCtrl( m_compilerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer6->Add( m_textCompilerName, 1, wxALL|wxEXPAND, 5 );
 	
 	compilerPageSizer->Add( bSizer6, 0, wxEXPAND, 5 );
 	
@@ -165,7 +164,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_compilerPage->SetSizer( compilerPageSizer );
 	m_compilerPage->Layout();
 	compilerPageSizer->Fit( m_compilerPage );
-	m_notebook3->AddPage( m_compilerPage, wxT("Compiler"), false );
+	m_notebook3->AddPage( m_compilerPage, wxT("Compiler"), true );
 	m_linkerPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* linkerPageSizer;
 	linkerPageSizer = new wxBoxSizer( wxVERTICAL );
@@ -255,7 +254,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_preBuildPage->SetSizer( bSizer8 );
 	m_preBuildPage->Layout();
 	bSizer8->Fit( m_preBuildPage );
-	m_notebook3->AddPage( m_preBuildPage, wxT("PreBuild"), true );
+	m_notebook3->AddPage( m_preBuildPage, wxT("PreBuild"), false );
 	m_postBuildPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer81;
 	bSizer81 = new wxBoxSizer( wxVERTICAL );

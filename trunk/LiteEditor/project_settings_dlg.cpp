@@ -1,6 +1,7 @@
 #include "project_settings_dlg.h"
 #include "add_option_dialog.h"
 #include "free_text_dialog.h"
+#include "manager.h"
 
 // help macros
 #define ConnectCheckBox(ctrl, fn)\
@@ -18,10 +19,21 @@
 		str = str.Trim(false);\
 	}
 
+// Utils function
+static wxString ArrayToSmiColonString(wxArrayString &array){
+	wxString result;
+	for(size_t i=0; i<array.GetCount(); i++){
+		result += array.Item(i);
+		result += wxT(";");
+	}
+	return result;
+}
+
 ProjectSettingsDlg::ProjectSettingsDlg( wxWindow* parent, const wxString &configName, const wxString &projectName )
 : ProjectSettingsBaseDlg( parent )
 , m_projectName(projectName)
 , m_configName(configName)
+, m_projSettingsPtr(NULL)
 {
 	ConnectEvents();
 	m_notebook3->SetSelection(0);
@@ -32,6 +44,58 @@ ProjectSettingsDlg::ProjectSettingsDlg( wxWindow* parent, const wxString &config
 void ProjectSettingsDlg::InitDialog(const wxString &configName)
 {
 	wxUnusedVar(configName);
+	m_projSettingsPtr = ManagerST::Get()->GetProjectSettings(m_projectName);
+	ManagerST::Get()->SetProjectSettings(m_projectName, m_projSettingsPtr);
+
+	ProjectSettingsCookie cookie;
+	BuildConfigPtr conf = m_projSettingsPtr->GetFirstBuildConfiguration(cookie);
+	while(conf){
+		m_choiceConfigurationType->Append(conf->GetName());
+		conf = m_projSettingsPtr->GetNextBuildConfiguration(cookie);
+	}
+
+	if(configName.IsEmpty() || m_choiceConfigurationType->FindString(configName) == wxNOT_FOUND){
+		m_choiceConfigurationType->SetSelection(0);
+	}else{
+		m_choiceConfigurationType->SetStringSelection(configName);
+	}
+	
+	if(configName.IsEmpty() == false){
+		// save old values before replacing them
+		SaveValues(m_choiceConfigurationType->GetStringSelection());
+	}
+	CopyValues(m_choiceConfigurationType->GetStringSelection());
+}
+
+void ProjectSettingsDlg::CopyValues(const wxString &confName)
+{
+	BuildConfigPtr buildConf;
+	buildConf =	m_projSettingsPtr->GetBuildConfiguration(confName);
+	if(!buildConf){
+		return;
+	}
+	m_outputFilePicker->SetPath(buildConf->GetOutputFileName());
+	m_intermediateDirPicker->SetPath(buildConf->GetIntermediateDirectory());
+	m_textCommand->SetValue(buildConf->GetCommand());
+	m_textCommandArguments->SetValue(buildConf->GetCommandArguments());
+	m_textCommandArguments->SetValue(buildConf->GetCommandArguments());
+	m_workingDirPicker->SetPath(buildConf->GetWorkingDirectory());
+	m_checkCompilerNeeded->SetValue(!buildConf->IsCompilerRequired());
+	m_textCompilerName->SetValue(buildConf->GetCompilerName());
+	m_textCompilerOptions->SetValue(buildConf->GetCompileOptions());
+
+	wxArrayString searchArr;
+	buildConf->GetIncludePath(searchArr);
+	DisableCompilerPage(m_checkCompilerNeeded->IsChecked());
+	m_textAdditionalSearchPath->SetValue(ArrayToSmiColonString(searchArr));
+	m_checkLinkerNeeded->SetValue(!buildConf->IsLinkerRequired());
+	DisableLinkerPage(m_checkLinkerNeeded->IsChecked());
+	m_textLinkerOptions->SetValue(buildConf->GetLinkOptions());
+}
+
+void ProjectSettingsDlg::SaveValues(const wxString &confName)
+{
+	wxUnusedVar(confName);
 }
 
 void ProjectSettingsDlg::ConnectEvents()
@@ -60,36 +124,31 @@ void ProjectSettingsDlg::OnConfigurationTypeSelected(wxCommandEvent &event)
 	InitDialog(selection);
 }
 
+void ProjectSettingsDlg::DisableCompilerPage(bool disable)
+{
+	m_textCompilerName->Enable(!disable);
+	m_textAdditionalSearchPath->Enable(!disable);
+	m_buttonAddSearchPath->Enable(!disable);
+	m_textCompilerOptions->Enable(!disable);
+}
+
+void ProjectSettingsDlg::DisableLinkerPage(bool disable)
+{
+	m_textLibraryPath->Enable(!disable);
+	m_textLibraries->Enable(!disable);
+	m_textLinkerOptions->Enable(!disable);
+	m_buttonLibraries->Enable(!disable);
+	m_buttonLibraryPath->Enable(!disable);
+}
+
 void ProjectSettingsDlg::OnCheckCompilerNeeded(wxCommandEvent &event)
 {
-	if(event.IsChecked()){
-		m_compilerNameChoice->Disable();
-		m_textAdditionalSearchPath->Disable();
-		m_buttonAddSearchPath->Disable();
-		m_textCompilerOptions->Disable();
-	}else{
-		m_compilerNameChoice->Enable();
-		m_textAdditionalSearchPath->Enable();
-		m_buttonAddSearchPath->Enable();
-		m_textCompilerOptions->Enable();
-	}
+	DisableCompilerPage(event.IsChecked());
 }
 
 void ProjectSettingsDlg::OnCheckLinkerNeeded(wxCommandEvent &event)
 {
-	if(event.IsChecked()){
-		m_textLibraryPath->Disable();
-		m_textLibraries->Disable();
-		m_textLinkerOptions->Disable();
-		m_buttonLibraries->Disable();
-		m_buttonLibraryPath->Disable();
-	}else{
-		m_textLibraryPath->Enable();
-		m_textLibraries->Enable();
-		m_textLinkerOptions->Enable();
-		m_buttonLibraries->Enable();
-		m_buttonLibraryPath->Enable();
-	}
+	DisableLinkerPage(event.IsChecked());
 }
 
 void ProjectSettingsDlg::PopupAddOptionDlg(wxTextCtrl *ctrl)
