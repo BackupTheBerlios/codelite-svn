@@ -4,6 +4,28 @@
 #include "configuration_object.h"
 #include <wx/arrstr.h>
 #include "wx/string.h"
+#include <list>
+
+class BuildCommand {
+	wxString m_command;
+	bool m_enabled;
+
+public:
+	BuildCommand(const wxString &command, bool enabled)
+		: m_command(command)
+		, m_enabled(enabled)
+	{}
+
+	~BuildCommand()
+	{}
+
+	const wxString &GetCommand() const {return m_command;}
+	bool GetEnabled() const { return m_enabled;}
+	void SetCommand(const wxString &command) {m_command = command;}
+	void SetEnabled(bool enabled) {m_enabled = enabled;}
+};
+
+typedef std::list<BuildCommand> BuildCommandList;
 
 class BuildConfig : public ConfObject {
 	wxString m_name;
@@ -12,8 +34,8 @@ class BuildConfig : public ConfObject {
 	wxString m_linkOptions;
 	wxArrayString m_libs;
 	wxArrayString m_libPath;
-	wxArrayString m_preBuildCommands;
-	wxArrayString m_postBuildCommands;
+	BuildCommandList m_preBuildCommands;
+	BuildCommandList m_postBuildCommands;
 	bool m_compilerRequired;
 	bool m_linkerRequired;
 
@@ -35,8 +57,8 @@ public:
 	void GetIncludePath(wxArrayString &paths) { paths = m_includePath; }
 	const wxString &GetCompileOptions() const { return m_compileOptions; }
 	const wxString &GetLinkOptions() const { return m_linkOptions; }
-	void GetPreBuildCommands(wxArrayString &cmds) { cmds = m_preBuildCommands; }
-	void GetPostBuildCommands(wxArrayString &cmds) { cmds = m_postBuildCommands; }
+	void GetPreBuildCommands(BuildCommandList &cmds) { cmds = m_preBuildCommands; }
+	void GetPostBuildCommands(BuildCommandList &cmds) { cmds = m_postBuildCommands; }
 	void GetLibraries(wxArrayString &libs) { libs = m_libs; }
 	void GetLibPath(wxArrayString &libPaths) { libPaths = m_libPath; }
 	const wxString &GetName() const { return m_name; }
@@ -52,8 +74,8 @@ public:
 	void SetIncludePath(const wxArrayString &paths) { m_includePath = paths; }
 	void SetCompileOptions(const wxString &options) { m_compileOptions = options; }
 	void SetLinkOptions(const wxString &options) { m_linkOptions = options; }
-	void SetPreBuildCommands(const wxArrayString &cmds) { m_preBuildCommands = cmds; }
-	void SetPostBuildCommands(const wxArrayString &cmds) { m_postBuildCommands = cmds; }
+	void SetPreBuildCommands(const BuildCommandList &cmds) { m_preBuildCommands = cmds; }
+	void SetPostBuildCommands(const BuildCommandList &cmds) { m_postBuildCommands = cmds; }
 	void SetLibraries(const wxArrayString &libs) { m_libs = libs; }
 	void SetLibPath(const wxArrayString &libPaths) { m_libPath = libPaths; }
 	void SetName(const wxString &name){ m_name = name; }

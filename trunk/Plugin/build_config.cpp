@@ -43,7 +43,10 @@ BuildConfig::BuildConfig(wxXmlNode *node)
 			wxXmlNode *child = preBuild->GetChildren();
 			while(child) {
 				if(child->GetName() == wxT("Command")){
-					m_preBuildCommands.Add(child->GetNodeContent());
+					bool enabled = XmlUtils::ReadBool(child, wxT("Enabled"));
+					
+					BuildCommand cmd(child->GetNodeContent(), enabled);
+					m_preBuildCommands.push_back(cmd);
 				}
 				child = child->GetNext();
 			}
@@ -54,7 +57,9 @@ BuildConfig::BuildConfig(wxXmlNode *node)
 			wxXmlNode *child = postBuild->GetChildren();
 			while(child) {
 				if(child->GetName() == wxT("Command")){
-					m_postBuildCommands.Add(child->GetNodeContent());
+					bool enabled = XmlUtils::ReadBool(child, wxT("Enabled"));
+					BuildCommand cmd(child->GetNodeContent(), enabled);
+					m_postBuildCommands.push_back(cmd);
 				}
 				child = child->GetNext();
 			}
@@ -135,18 +140,23 @@ wxXmlNode *BuildConfig::ToXml() const
 	//add prebuild commands
 	wxXmlNode *preBuild = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("PreBuild"));
 	node->AddChild(preBuild);
-	for(i=0; i<m_preBuildCommands.GetCount(); i++){
+
+	BuildCommandList::const_iterator iter = m_preBuildCommands.begin();
+	for(; iter != m_preBuildCommands.end(); iter++){
 		wxXmlNode *command = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Command"));
-		XmlUtils::SetNodeContent(command, m_preBuildCommands.Item(i));
+		command->AddProperty(wxT("Enabled"), iter->GetEnabled() ? wxT("yes") : wxT("no"));
+		XmlUtils::SetNodeContent(command, iter->GetCommand());
 		preBuild->AddChild(command);
 	}
 
 	//add postbuild commands
 	wxXmlNode *postBuild = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("PostBuild"));
 	node->AddChild(postBuild);
-	for(i=0; i<m_postBuildCommands.GetCount(); i++){
+	iter = m_postBuildCommands.begin();
+	for(; iter != m_postBuildCommands.end(); iter++){
 		wxXmlNode *command = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Command"));
-		XmlUtils::SetNodeContent(command, m_postBuildCommands.Item(i));
+		command->AddProperty(wxT("Enabled"), iter->GetEnabled() ? wxT("yes") : wxT("no"));
+		XmlUtils::SetNodeContent(command, iter->GetCommand());
 		postBuild->AddChild(command);
 	}
 	return node;

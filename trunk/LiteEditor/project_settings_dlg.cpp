@@ -74,6 +74,10 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 	if(!buildConf){
 		return;
 	}
+
+	wxArrayString searchArr, libPath, libs;
+	BuildCommandList preBuildCmds, postBuildCmds;
+
 	m_outputFilePicker->SetPath(buildConf->GetOutputFileName());
 	m_intermediateDirPicker->SetPath(buildConf->GetIntermediateDirectory());
 	m_textCommand->SetValue(buildConf->GetCommand());
@@ -84,13 +88,32 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 	m_textCompilerName->SetValue(buildConf->GetCompilerName());
 	m_textCompilerOptions->SetValue(buildConf->GetCompileOptions());
 
-	wxArrayString searchArr;
+	
 	buildConf->GetIncludePath(searchArr);
+	buildConf->GetLibPath(libPath);
+	buildConf->GetLibraries(libs);
+	buildConf->GetPreBuildCommands(preBuildCmds);
+	buildConf->GetPostBuildCommands(postBuildCmds);
+
 	DisableCompilerPage(m_checkCompilerNeeded->IsChecked());
 	m_textAdditionalSearchPath->SetValue(ArrayToSmiColonString(searchArr));
 	m_checkLinkerNeeded->SetValue(!buildConf->IsLinkerRequired());
 	DisableLinkerPage(m_checkLinkerNeeded->IsChecked());
 	m_textLinkerOptions->SetValue(buildConf->GetLinkOptions());
+	m_textLibraries->SetValue(ArrayToSmiColonString(libs));
+	m_textLibraryPath->SetValue(ArrayToSmiColonString(libPath));
+
+	BuildCommandList::iterator iter = preBuildCmds.begin();
+	for(; iter != preBuildCmds.end(); iter ++){
+		int index = m_checkListPreBuildCommands->Append(iter->GetCommand());
+		m_checkListPreBuildCommands->Check(index, iter->GetEnabled());
+	}
+
+	iter = postBuildCmds.begin();
+	for(; iter != postBuildCmds.end(); iter ++){
+		int index = m_checkListPostBuildCommands->Append(iter->GetCommand());
+		m_checkListPostBuildCommands->Check(index, iter->GetEnabled());
+	}
 }
 
 void ProjectSettingsDlg::SaveValues(const wxString &confName)
