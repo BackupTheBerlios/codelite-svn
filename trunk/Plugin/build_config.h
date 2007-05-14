@@ -11,6 +11,12 @@ class BuildCommand {
 	bool m_enabled;
 
 public:
+	BuildCommand()
+		: m_command(wxEmptyString)
+		, m_enabled(false)
+	{
+	}
+
 	BuildCommand(const wxString &command, bool enabled)
 		: m_command(command)
 		, m_enabled(enabled)
@@ -45,6 +51,9 @@ class BuildConfig : public ConfObject {
 	wxString m_commandArguments;
 	wxString m_workingDirectory;
 	wxString m_compilerName;
+private:
+	void FillFromSmiColonString(wxArrayString &arr, const wxString &str);
+	wxString ArrayToSmiColonString(const wxArrayString &array) const;
 
 public:
 	BuildConfig(wxXmlNode *node);
@@ -54,13 +63,14 @@ public:
 	//--------------------------------
 	// Setters / Getters
 	//--------------------------------
-	void GetIncludePath(wxArrayString &paths) { paths = m_includePath; }
+	wxString GetIncludePath() const;
 	const wxString &GetCompileOptions() const { return m_compileOptions; }
 	const wxString &GetLinkOptions() const { return m_linkOptions; }
+	wxString GetLibraries() const;
+	wxString GetLibPath() const;
+
 	void GetPreBuildCommands(BuildCommandList &cmds) { cmds = m_preBuildCommands; }
 	void GetPostBuildCommands(BuildCommandList &cmds) { cmds = m_postBuildCommands; }
-	void GetLibraries(wxArrayString &libs) { libs = m_libs; }
-	void GetLibPath(wxArrayString &libPaths) { libPaths = m_libPath; }
 	const wxString &GetName() const { return m_name; }
 	bool IsCompilerRequired() const { return m_compilerRequired; }
 	bool IsLinkerRequired() const { return m_linkerRequired; }
@@ -72,6 +82,11 @@ public:
 	const wxString &GetCompilerName() const { return m_compilerName;}
 
 	void SetIncludePath(const wxArrayString &paths) { m_includePath = paths; }
+	// set the include path from a semi-colon string
+	void SetIncludePath(const wxString &path);
+	void SetLibraries(const wxString &libs);
+	void SetLibPath(const wxString &path);
+
 	void SetCompileOptions(const wxString &options) { m_compileOptions = options; }
 	void SetLinkOptions(const wxString &options) { m_linkOptions = options; }
 	void SetPreBuildCommands(const BuildCommandList &cmds) { m_preBuildCommands = cmds; }

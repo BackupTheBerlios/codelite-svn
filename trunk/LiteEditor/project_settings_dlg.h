@@ -70,6 +70,8 @@ public:
 	virtual void OnDownPostBuildCommand(wxCommandEvent &WXUNUSED(event)){ OnDownCommand(m_checkListPostBuildCommands); }
 	virtual void OnDeletePostBuildCommand(wxCommandEvent &WXUNUSED(event)){ OnDeleteCommand(m_checkListPostBuildCommands); }
 	virtual void OnButtonOK(wxCommandEvent &event);
+	virtual void OnButtonApply(wxCommandEvent &event);
 };
 
 #endif // __project_settings_dlg__
+

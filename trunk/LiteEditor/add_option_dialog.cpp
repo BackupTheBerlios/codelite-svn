@@ -72,5 +72,5 @@ wxString AddOptionDlg::GetValue() const
 		value += text.ReadLine();
 		value += wxT(";");
 	}
-	return value;
+	return value.BeforeLast(wxT(';'));
 }

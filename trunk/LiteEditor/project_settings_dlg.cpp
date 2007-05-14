@@ -19,16 +19,6 @@
 		str = str.Trim(false);\
 	}
 
-// Utils function
-static wxString ArrayToSmiColonString(wxArrayString &array){
-	wxString result;
-	for(size_t i=0; i<array.GetCount(); i++){
-		result += array.Item(i);
-		result += wxT(";");
-	}
-	return result;
-}
-
 ProjectSettingsDlg::ProjectSettingsDlg( wxWindow* parent, const wxString &configName, const wxString &projectName )
 : ProjectSettingsBaseDlg( parent )
 , m_projectName(projectName)
@@ -82,27 +72,20 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 	m_intermediateDirPicker->SetPath(buildConf->GetIntermediateDirectory());
 	m_textCommand->SetValue(buildConf->GetCommand());
 	m_textCommandArguments->SetValue(buildConf->GetCommandArguments());
-	m_textCommandArguments->SetValue(buildConf->GetCommandArguments());
 	m_workingDirPicker->SetPath(buildConf->GetWorkingDirectory());
 	m_checkCompilerNeeded->SetValue(!buildConf->IsCompilerRequired());
 	m_textCompilerName->SetValue(buildConf->GetCompilerName());
 	m_textCompilerOptions->SetValue(buildConf->GetCompileOptions());
-
-	
-	buildConf->GetIncludePath(searchArr);
-	buildConf->GetLibPath(libPath);
-	buildConf->GetLibraries(libs);
-	buildConf->GetPreBuildCommands(preBuildCmds);
-	buildConf->GetPostBuildCommands(postBuildCmds);
-
 	DisableCompilerPage(m_checkCompilerNeeded->IsChecked());
-	m_textAdditionalSearchPath->SetValue(ArrayToSmiColonString(searchArr));
+	m_textAdditionalSearchPath->SetValue(buildConf->GetIncludePath());
 	m_checkLinkerNeeded->SetValue(!buildConf->IsLinkerRequired());
 	DisableLinkerPage(m_checkLinkerNeeded->IsChecked());
 	m_textLinkerOptions->SetValue(buildConf->GetLinkOptions());
-	m_textLibraries->SetValue(ArrayToSmiColonString(libs));
-	m_textLibraryPath->SetValue(ArrayToSmiColonString(libPath));
+	m_textLibraries->SetValue(buildConf->GetLibraries());
+	m_textLibraryPath->SetValue(buildConf->GetLibPath());
 
+	buildConf->GetPreBuildCommands(preBuildCmds);
+	buildConf->GetPostBuildCommands(postBuildCmds);
 	BuildCommandList::iterator iter = preBuildCmds.begin();
 	for(; iter != preBuildCmds.end(); iter ++){
 		int index = m_checkListPreBuildCommands->Append(iter->GetCommand());
@@ -128,6 +111,36 @@ void ProjectSettingsDlg::SaveValues(const wxString &confName)
 
 	buildConf->SetOutputFileName(m_outputFilePicker->GetPath());
 	buildConf->SetIntermediateDirectory(m_intermediateDirPicker->GetPath());
+	buildConf->SetCommand(m_textCommand->GetValue());
+	buildConf->SetCommandArguments(m_textCommandArguments->GetValue());
+	buildConf->SetWorkingDirectory(m_workingDirPicker->GetPath());
+	buildConf->SetCompilerRequired(!m_checkCompilerNeeded->IsChecked());
+	buildConf->SetCompilerName(m_textCompilerName->GetValue());
+	buildConf->SetCompileOptions(m_textCompilerOptions->GetValue());
+	buildConf->SetIncludePath(m_textAdditionalSearchPath->GetValue());
+	buildConf->SetLibPath(m_textLibraryPath->GetValue());
+	buildConf->SetLibraries(m_textLibraries->GetValue());
+	buildConf->SetLinkerRequired(!m_checkLinkerNeeded->IsChecked());
+	buildConf->SetLinkOptions(m_textLinkerOptions->GetValue());
+	
+	BuildCommandList cmds;
+	cmds.clear();
+	for(size_t i=0; i<m_checkListPreBuildCommands->GetCount(); i++){
+		wxString cmdLine = m_checkListPreBuildCommands->GetString((unsigned int)i);
+		bool enabled = m_checkListPreBuildCommands->IsChecked((unsigned int)i);
+		BuildCommand cmd(cmdLine, enabled);
+		cmds.push_back(cmd);
+	}
+	buildConf->SetPreBuildCommands(cmds);
+
+	cmds.clear();
+	for(size_t i=0; i<m_checkListPostBuildCommands->GetCount(); i++){
+		wxString cmdLine = m_checkListPostBuildCommands->GetString((unsigned int)i);
+		bool enabled = m_checkListPostBuildCommands->IsChecked((unsigned int)i);
+		BuildCommand cmd(cmdLine, enabled);
+		cmds.push_back(cmd);
+	}
+	buildConf->SetPostBuildCommands(cmds);
 
 	//save settings
 	ManagerST::Get()->SetProjectSettings(m_projectName, m_projSettingsPtr);
@@ -152,6 +165,7 @@ void ProjectSettingsDlg::ConnectEvents()
 	ConnectButton(m_buttonDownPostBuildCmd, ProjectSettingsDlg::OnDownPostBuildCommand);
 	ConnectButton(m_buttonDeletePostBuildCmd, ProjectSettingsDlg::OnDeletePostBuildCommand);
 	ConnectButton(m_buttonOK, ProjectSettingsDlg::OnButtonOK);
+	ConnectButton(m_buttonApply, ProjectSettingsDlg::OnButtonApply);
 }
 
 void ProjectSettingsDlg::OnButtonOK(wxCommandEvent &event)
@@ -159,6 +173,12 @@ void ProjectSettingsDlg::OnButtonOK(wxCommandEvent &event)
 	wxUnusedVar(event);
 	SaveValues(m_choiceConfigurationType->GetStringSelection());
 	EndModal(wxID_OK);
+}
+
+void ProjectSettingsDlg::OnButtonApply(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	SaveValues(m_choiceConfigurationType->GetStringSelection());
 }
 
 void ProjectSettingsDlg::OnConfigurationTypeSelected(wxCommandEvent &event)

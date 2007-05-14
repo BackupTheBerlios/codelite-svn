@@ -1,5 +1,6 @@
 #include "build_config.h"
 #include "xmlutils.h"
+#include "wx/tokenzr.h"
 
 BuildConfig::BuildConfig(wxXmlNode *node)
 {
@@ -161,3 +162,53 @@ wxXmlNode *BuildConfig::ToXml() const
 	}
 	return node;
 }
+
+void BuildConfig::SetIncludePath(const wxString &path)
+{
+	FillFromSmiColonString(m_includePath, path);
+}
+
+void BuildConfig::SetLibraries(const wxString &libs)
+{
+	FillFromSmiColonString(m_libs, libs);
+}
+
+void BuildConfig::SetLibPath(const wxString &paths)
+{
+	FillFromSmiColonString(m_libPath, paths);
+}
+
+void BuildConfig::FillFromSmiColonString(wxArrayString &arr, const wxString &str)
+{
+	arr.clear();
+	wxStringTokenizer tkz(str, wxT(";"));
+	while(tkz.HasMoreTokens()){
+		wxString token = tkz.NextToken();
+		arr.Add(token.Trim());
+	}
+}
+// Utils function
+wxString BuildConfig::ArrayToSmiColonString(const wxArrayString &array) const{
+	wxString result;
+	for(size_t i=0; i<array.GetCount(); i++){
+		result += array.Item(i);
+		result += wxT(";");
+	}
+	return result.BeforeLast(wxT(';'));
+}
+
+wxString BuildConfig::GetLibPath() const 
+{
+	return ArrayToSmiColonString(m_libPath);
+}
+
+wxString BuildConfig::GetLibraries() const 
+{
+	return ArrayToSmiColonString(m_libs);
+}
+
+wxString BuildConfig::GetIncludePath() const 
+{
+	return ArrayToSmiColonString(m_includePath);
+}
+
