@@ -118,7 +118,19 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 
 void ProjectSettingsDlg::SaveValues(const wxString &confName)
 {
-	wxUnusedVar(confName);
+	BuildConfigPtr buildConf;
+	buildConf =	m_projSettingsPtr->GetBuildConfiguration(confName);
+	if(!buildConf){
+		return;
+	}
+	wxArrayString searchArr, libPath, libs;
+	BuildCommandList preBuildCmds, postBuildCmds;
+
+	buildConf->SetOutputFileName(m_outputFilePicker->GetPath());
+	buildConf->SetIntermediateDirectory(m_intermediateDirPicker->GetPath());
+
+	//save settings
+	ManagerST::Get()->SetProjectSettings(m_projectName, m_projSettingsPtr);
 }
 
 void ProjectSettingsDlg::ConnectEvents()
@@ -139,6 +151,14 @@ void ProjectSettingsDlg::ConnectEvents()
 	ConnectButton(m_buttonUpPostBuildCmd, ProjectSettingsDlg::OnUpPostBuildCommand);
 	ConnectButton(m_buttonDownPostBuildCmd, ProjectSettingsDlg::OnDownPostBuildCommand);
 	ConnectButton(m_buttonDeletePostBuildCmd, ProjectSettingsDlg::OnDeletePostBuildCommand);
+	ConnectButton(m_buttonOK, ProjectSettingsDlg::OnButtonOK);
+}
+
+void ProjectSettingsDlg::OnButtonOK(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	SaveValues(m_choiceConfigurationType->GetStringSelection());
+	EndModal(wxID_OK);
 }
 
 void ProjectSettingsDlg::OnConfigurationTypeSelected(wxCommandEvent &event)
