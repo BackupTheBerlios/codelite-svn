@@ -66,7 +66,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_staticText16 = new wxStaticText( m_generalPage, wxID_ANY, wxT("Intermediate Directory:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_staticText16, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_intermediateDirPicker = new wxDirPickerCtrl( m_generalPage, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE|wxDIRP_USE_TEXTCTRL );
+	m_intermediateDirPicker = new wxDirPickerCtrl( m_generalPage, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_USE_TEXTCTRL );
 	fgSizer3->Add( m_intermediateDirPicker, 0, wxALL|wxEXPAND, 5 );
 	
 	bSizer19->Add( fgSizer3, 0, wxEXPAND, 5 );
@@ -103,7 +103,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_staticText20 = new wxStaticText( m_generalPage, wxID_ANY, wxT("Working Directory:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer6->Add( m_staticText20, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_workingDirPicker = new wxDirPickerCtrl( m_generalPage, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE );
+	m_workingDirPicker = new wxDirPickerCtrl( m_generalPage, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_USE_TEXTCTRL );
 	fgSizer6->Add( m_workingDirPicker, 1, wxALL|wxEXPAND, 5 );
 	
 	bSizer19->Add( fgSizer6, 1, wxEXPAND, 5 );
@@ -111,7 +111,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_generalPage->SetSizer( bSizer19 );
 	m_generalPage->Layout();
 	bSizer19->Fit( m_generalPage );
-	m_notebook3->AddPage( m_generalPage, wxT("General"), false );
+	m_notebook3->AddPage( m_generalPage, wxT("General"), true );
 	m_compilerPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* compilerPageSizer;
 	compilerPageSizer = new wxBoxSizer( wxVERTICAL );
@@ -253,7 +253,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_preBuildPage->SetSizer( bSizer8 );
 	m_preBuildPage->Layout();
 	bSizer8->Fit( m_preBuildPage );
-	m_notebook3->AddPage( m_preBuildPage, wxT("PreBuild"), true );
+	m_notebook3->AddPage( m_preBuildPage, wxT("PreBuild"), false );
 	m_postBuildPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer81;
 	bSizer81 = new wxBoxSizer( wxVERTICAL );

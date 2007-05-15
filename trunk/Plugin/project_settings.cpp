@@ -26,7 +26,10 @@ ProjectSettings::~ProjectSettings()
 
 ProjectSettings *ProjectSettings::Clone() const
 {
-	return new ProjectSettings(ToXml());
+	wxXmlNode *node = ToXml();
+	ProjectSettings *cloned = new ProjectSettings(node);
+	delete node;
+	return cloned;
 }
 
 wxXmlNode *ProjectSettings::ToXml() const

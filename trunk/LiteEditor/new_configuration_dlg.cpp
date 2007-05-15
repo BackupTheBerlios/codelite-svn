@@ -55,7 +55,7 @@ NewConfigurationDlg::NewConfigurationDlg( wxWindow* parent, const wxString &proj
 	m_choiceCopyConfigurations = new wxChoice( m_panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceCopyConfigurationsChoices, 0 );
 
 	// Get all configuration of the project
-	m_choiceCopyConfigurations->Append(wxT("- None -"));
+	m_choiceCopyConfigurations->Append(wxT("-- None --"));
 	ProjectSettingsPtr settings = ManagerST::Get()->GetProjectSettings(m_projectName);
 	if(settings){
 		ProjectSettingsCookie cookie;
@@ -110,7 +110,7 @@ void NewConfigurationDlg::OnButtonOK(wxCommandEvent &event)
 	wxString copyFrom = m_choiceCopyConfigurations->GetStringSelection();
 	BuildConfigPtr newBuildConf;
 
-	if(copyFrom == wxT("- None -")){
+	if(copyFrom == wxT("-- None --")){
 		newBuildConf = new BuildConfig(NULL);
 	}else{
 		BuildConfigPtr origBuildConf = settings->GetBuildConfiguration(copyFrom);

@@ -95,7 +95,10 @@ BuildConfig::~BuildConfig()
 
 BuildConfig *BuildConfig::Clone() const
 {
-	return new BuildConfig(ToXml());
+	wxXmlNode *node = ToXml();
+	BuildConfig *cloned = new BuildConfig(node);
+	delete node;
+	return cloned;
 }
 
 wxXmlNode *BuildConfig::ToXml() const

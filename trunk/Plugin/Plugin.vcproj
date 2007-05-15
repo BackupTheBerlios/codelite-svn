@@ -55,8 +55,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release Unicode|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="Release Unicode"
+			IntermediateDirectory="Release Unicode"
 			ConfigurationType="4"
 			CharacterSet="2">
 			<Tool

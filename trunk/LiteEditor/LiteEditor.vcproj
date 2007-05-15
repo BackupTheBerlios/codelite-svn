@@ -359,6 +359,12 @@
 				RelativePath=".\ctags_dialog.h">
 			</File>
 			<File
+				RelativePath=".\edit_configuration.cpp">
+			</File>
+			<File
+				RelativePath=".\edit_configuration.h">
+			</File>
+			<File
 				RelativePath=".\findinfilesdlg.cpp">
 			</File>
 			<File

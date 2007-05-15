@@ -35,6 +35,11 @@ protected:
 	 */
 	void SaveValues(const wxString &confName);
 
+	/**
+	 * Clear the GUI controls values
+	 */
+	void ClearValues();
+
 	void DisableCompilerPage(bool disable);
 	void DisableLinkerPage(bool disable);
 
@@ -45,8 +50,8 @@ protected:
 	void OnDownCommand(wxCheckListBox* list);
 	void OnNewCommand(wxCheckListBox* list);
 	void OnDeleteCommand(wxCheckListBox* list);
-
-
+	void UpdateConfigurationTypeChoice(const wxString &itemToSelect);
+	
 public:
 	/** Constructor */
 	ProjectSettingsDlg( wxWindow* parent, const wxString &configName, const wxString &projectName );

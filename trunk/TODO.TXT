@@ -1,7 +1,7 @@
 TODO List:
 ==========================
 11. ******** FIXED ********* Move options from the xml file to the editor
-19. Add build options to project (including dialog)
+19. ******** FIXED ********* Add build options to project (including dialog)
 2. ******** FIXED ********* Gather all macros under a single entry in the symbol tree
 3. ******** FIXED ********* Change the default icon from class to struct (the case for typedef struct {} Somthing is much more common than class)
 4. Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
@@ -40,7 +40,12 @@ TODO List:
 34. Add XML lexer
 35. typedefs are not handled properly
 36. When opening a file from the command line, make sure that the workspace pane and the output pane are hidden
-37. When opening a project, make sure that the workspace pane is visible
+37. ******** FIXED ********* When opening a project, make sure that the workspace pane is visible
 38. When hitting 'RETURN' in the find dialog, start the search.
 39. Add option to reload file
 40. Add option to word wrap in editor
+41. Under GTK: Create a pool of LEdtiro objects at startup, so the creation of new tab will be faster
+42. When pressing 'ESC' in the find dialog, hide it
+43. Add configuration mapping (for the workspace)
+44. Add environment variables to the workspace
+45. Right click on tree: file view and selecting 'Properties' should open the correct project settings and not the active project

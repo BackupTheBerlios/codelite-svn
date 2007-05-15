@@ -33,11 +33,9 @@ ProjectSettingsDlg::ProjectSettingsDlg( wxWindow* parent, const wxString &config
 	m_oldConfigurationName = m_choiceConfigurationType->GetStringSelection();
 }
 
-void ProjectSettingsDlg::InitDialog(const wxString &configName, const wxString &oldConfig)
+void ProjectSettingsDlg::UpdateConfigurationTypeChoice(const wxString &itemToSelect)
 {
-	wxUnusedVar(configName);
 	ProjectSettingsPtr projSettingsPtr = ManagerST::Get()->GetProjectSettings(m_projectName);
-	
 	ProjectSettingsCookie cookie;
 	m_choiceConfigurationType->Clear();
 	BuildConfigPtr conf = projSettingsPtr->GetFirstBuildConfiguration(cookie);
@@ -46,17 +44,48 @@ void ProjectSettingsDlg::InitDialog(const wxString &configName, const wxString &
 		conf = projSettingsPtr->GetNextBuildConfiguration(cookie);
 	}
 
-	if(configName.IsEmpty() || m_choiceConfigurationType->FindString(configName) == wxNOT_FOUND){
-		m_choiceConfigurationType->SetSelection(0);
+	if(itemToSelect.IsEmpty() || m_choiceConfigurationType->FindString(itemToSelect) == wxNOT_FOUND){
+		if(m_choiceConfigurationType->GetCount() > 0)
+			m_choiceConfigurationType->SetSelection(0);
 	}else{
-		m_choiceConfigurationType->SetStringSelection(configName);
+		m_choiceConfigurationType->SetStringSelection(itemToSelect);
 	}
+}
+
+void ProjectSettingsDlg::InitDialog(const wxString &configName, const wxString &oldConfig)
+{
+	wxUnusedVar(configName);
+	ProjectSettingsPtr projSettingsPtr = ManagerST::Get()->GetProjectSettings(m_projectName);
 	
+	UpdateConfigurationTypeChoice(configName);
 	if(oldConfig.IsEmpty() == false){
 		// save old values before replacing them
 		SaveValues(oldConfig);
 	}
-	CopyValues(configName);
+	CopyValues(m_choiceConfigurationType->GetStringSelection());
+}
+
+void ProjectSettingsDlg::ClearValues()
+{
+	BuildCommandList preBuildCmds, postBuildCmds;
+
+	m_outputFilePicker->SetPath(wxEmptyString);
+	m_intermediateDirPicker->SetPath(wxEmptyString);
+	m_textCommand->SetValue(wxEmptyString);
+	m_textCommandArguments->SetValue(wxEmptyString);
+	m_workingDirPicker->SetPath(wxEmptyString);
+	m_checkCompilerNeeded->SetValue(false);
+	m_textCompilerName->SetValue(wxEmptyString);
+	m_textCompilerOptions->SetValue(wxEmptyString);
+	DisableCompilerPage(false);
+	m_textAdditionalSearchPath->SetValue(wxEmptyString);
+	m_checkLinkerNeeded->SetValue(false);
+	DisableLinkerPage(m_checkLinkerNeeded->IsChecked());
+	m_textLinkerOptions->SetValue(wxEmptyString);
+	m_textLibraries->SetValue(wxEmptyString);
+	m_textLibraryPath->SetValue(wxEmptyString);
+	m_checkListPreBuildCommands->Clear();
+	m_checkListPostBuildCommands->Clear();
 }
 
 void ProjectSettingsDlg::CopyValues(const wxString &confName)
@@ -65,6 +94,7 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 	ProjectSettingsPtr projSettingsPtr = ManagerST::Get()->GetProjectSettings(m_projectName);
 	buildConf =	projSettingsPtr->GetBuildConfiguration(confName);
 	if(!buildConf){
+		ClearValues();
 		return;
 	}
 
@@ -117,7 +147,7 @@ void ProjectSettingsDlg::SaveValues(const wxString &confName)
 	BuildCommandList preBuildCmds, postBuildCmds;
 
 	buildConf->SetOutputFileName(m_outputFilePicker->GetPath());
-	buildConf->SetIntermediateDirectory(m_intermediateDirPicker->GetTextCtrl()->GetValue());
+	buildConf->SetIntermediateDirectory(m_intermediateDirPicker->GetPath());
 	buildConf->SetCommand(m_textCommand->GetValue());
 	buildConf->SetCommandArguments(m_textCommandArguments->GetValue());
 	
@@ -196,6 +226,11 @@ void ProjectSettingsDlg::OnButtonConfigurationManager(wxCommandEvent &event)
 	ConfigurationManagerDlg *dlg = new ConfigurationManagerDlg(this);
 	dlg->ShowModal();
 	dlg->Destroy();
+
+	//update the configuration type choice control
+	UpdateConfigurationTypeChoice(m_choiceConfigurationType->GetStringSelection());
+	//Load values according to the new selection
+	CopyValues(m_choiceConfigurationType->GetStringSelection());
 }
 
 void ProjectSettingsDlg::OnConfigurationTypeSelected(wxCommandEvent &event)

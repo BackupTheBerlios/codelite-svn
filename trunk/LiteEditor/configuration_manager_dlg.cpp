@@ -1,7 +1,7 @@
 #include "configuration_manager_dlg.h"
 #include "manager.h"
 #include "new_configuration_dlg.h"
-
+#include "edit_configuration.h"
 
 #define ConnectChoice(ctrl, fn)\
 	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(fn), NULL, this);
@@ -62,6 +62,20 @@ void ConfigurationManagerDlg::AddEntry(const wxString &projectName, const wxStri
 
 void ConfigurationManagerDlg::PopulateConfigurations()
 {
+	wxFlexGridSizer *mainSizer = dynamic_cast<wxFlexGridSizer*>(m_scrolledWindow->GetSizer());
+	if(!mainSizer) return;
+
+	Freeze();
+	// remove old entries from the configuration table
+	wxSizerItemList list = mainSizer->GetChildren();
+	for ( wxSizerItemList::Node *node = list.GetFirst(); node; node = node->GetNext() ){
+        wxSizerItem *current = node->GetData();
+		current->GetWindow()->Destroy();
+    }
+
+	//TODO:: populate the configuration choice
+	m_choiceConfigurations->Clear();
+
 	wxArrayString projects;
 	ManagerST::Get()->GetProjectList(projects);
 
@@ -69,9 +83,9 @@ void ConfigurationManagerDlg::PopulateConfigurations()
 		AddEntry(projects.Item(i), wxT("Debug"));
 	}
 
-	wxFlexGridSizer *mainSizer = dynamic_cast<wxFlexGridSizer*>(m_scrolledWindow->GetSizer());
-	if(!mainSizer) return;
 	mainSizer->Fit(m_scrolledWindow);
+	Layout();
+	Thaw();
 }
 
 void ConfigurationManagerDlg::InitDialog()
@@ -93,8 +107,15 @@ void ConfigurationManagerDlg::OnConfigSelected(wxCommandEvent &event)
 		NewConfigurationDlg *dlg = new NewConfigurationDlg(this, iter->second.project);
 		dlg->ShowModal();
 		dlg->Destroy();
+		
+		// repopulate the configurations
+		PopulateConfigurations();
 	}else if(selection == wxT("<Edit...>")){
-		// popup the 'New Configuration' dialog
+		EditConfigurationDialog *dlg = new EditConfigurationDialog(this, iter->second.project);
+		dlg->ShowModal();
+		dlg->Destroy();
+		// repopulate the configurations
+		PopulateConfigurations();
 	}else{
 		// do nothing
 	}
