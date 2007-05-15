@@ -11,13 +11,13 @@
 #include <wx/wx.h>
 
 #include <wx/choice.h>
-#include <wx/filepicker.h>
-#include <wx/statline.h>
-#include <wx/panel.h>
 #include <wx/button.h>
+#include <wx/statline.h>
+#include <wx/filepicker.h>
+#include <wx/panel.h>
 #include <wx/gbsizer.h>
 #include <wx/checklst.h>
-#include <wx/wxFlatNotebook/wxFlatNotebook.h>
+#include <wx/treebook.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +32,9 @@ class ProjectSettingsBaseDlg : public wxDialog
 	protected:
 		wxStaticText* m_staticText21;
 		wxChoice* m_choiceConfigurationType;
-		wxFlatNotebook* m_notebook3;
+		wxButton* m_buttonConfigManager;
+		wxStaticLine* m_staticline81;
+		wxTreebook* m_notebook3;
 		wxPanel* m_generalPage;
 		wxStaticText* m_staticText15;
 		wxFilePickerCtrl* m_outputFilePicker;

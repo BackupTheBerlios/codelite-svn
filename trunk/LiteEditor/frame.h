@@ -128,9 +128,11 @@ protected:
 	void OnSwitchWorkspace(wxCommandEvent &event);
 	void OnProjectAddProject(wxCommandEvent &event);
 	void OnWorkspaceOpen(wxUpdateUIEvent &event);
+	void OnConfigurationManager(wxCommandEvent &event);
 
 	// tags menu
 	void OnCtagsOptions(wxCommandEvent &event);
+
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

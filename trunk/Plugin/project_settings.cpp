@@ -24,6 +24,11 @@ ProjectSettings::~ProjectSettings()
 {
 }
 
+ProjectSettings *ProjectSettings::Clone() const
+{
+	return new ProjectSettings(ToXml());
+}
+
 wxXmlNode *ProjectSettings::ToXml() const
 {
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Settings"));
@@ -73,4 +78,12 @@ BuildConfigPtr ProjectSettings::GetNextBuildConfiguration(ProjectSettingsCookie 
 void ProjectSettings::SetBuildConfiguration(const BuildConfigPtr bc)
 {
 	m_configs[bc->GetName()] = bc;
+}
+
+void ProjectSettings::RemoveConfiguration(const wxString  &configName)
+{
+	std::map<wxString, BuildConfigPtr>::iterator iter = m_configs.find(configName);
+	if(iter != m_configs.end()){
+		m_configs.erase(iter);
+	}
 }

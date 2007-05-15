@@ -341,6 +341,18 @@
 				RelativePath=".\add_option_dialog.h">
 			</File>
 			<File
+				RelativePath=".\configuration_manager_base_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\configuration_manager_base_dlg.h">
+			</File>
+			<File
+				RelativePath=".\configuration_manager_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\configuration_manager_dlg.h">
+			</File>
+			<File
 				RelativePath=".\ctags_dialog.cpp">
 			</File>
 			<File

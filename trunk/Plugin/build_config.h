@@ -59,6 +59,7 @@ public:
 	BuildConfig(wxXmlNode *node);
 	virtual ~BuildConfig();
 	wxXmlNode *ToXml() const;
+	BuildConfig *Clone() const;
 
 	//--------------------------------
 	// Setters / Getters

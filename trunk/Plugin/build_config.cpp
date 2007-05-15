@@ -93,6 +93,11 @@ BuildConfig::~BuildConfig()
 {
 }
 
+BuildConfig *BuildConfig::Clone() const
+{
+	return new BuildConfig(ToXml());
+}
+
 wxXmlNode *BuildConfig::ToXml() const
 {
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Configuration"));

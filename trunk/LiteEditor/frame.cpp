@@ -18,6 +18,7 @@
 #include "fileview.h"
 #include "wx/aui/framemanager.h"
 #include "options_base_dlg.h"
+#include "configuration_manager_dlg.h"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -109,7 +110,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("options"), Frame::OnViewOptions)
 	EVT_UPDATE_UI(XRCID("word_wrap"), Frame::DispatchUpdateUIEvent)
 	EVT_MENU(XRCID("word_wrap"), Frame::DispatchCommandEvent)
-
+	EVT_MENU(XRCID("configuration_manager"), Frame::OnConfigurationManager)
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
 	EVT_MENU(ID_USE_EXTERNAL_DB, Frame::OnUseExternalDatabase)
@@ -189,9 +190,12 @@ void Frame::CreateGUIControls(void)
 		wxFNB_NO_NAV_BUTTONS |
 		wxFNB_DROPDOWN_TABS_LIST |
 		wxFNB_SMART_TABS |
-		wxFNB_X_ON_TAB;
+		wxFNB_X_ON_TAB |
+		wxFNB_CUSTOM_DLG;
 
 	m_notebook = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
+	m_notebook->SetCustomizeOptions(wxFNB_CUSTOM_LOCAL_DRAG | wxFNB_CUSTOM_ORIENTATION | wxFNB_CUSTOM_TAB_LOOK);
+	
 	m_mgr.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("Editor")).
                   CenterPane().PaneBorder(false));
 
@@ -704,6 +708,14 @@ void Frame::OnViewOutputPaneUI(wxUpdateUIEvent &event){
 void Frame::OnViewOptions(wxCommandEvent & WXUNUSED( event))
 {
 	OptionsDlg *dlg = new OptionsDlg(this);
+	dlg->ShowModal();
+	dlg->Destroy();
+}
+
+void Frame::OnConfigurationManager(wxCommandEvent &event)
+{	
+	wxUnusedVar(event);
+	ConfigurationManagerDlg *dlg = new ConfigurationManagerDlg(this);
 	dlg->ShowModal();
 	dlg->Destroy();
 }

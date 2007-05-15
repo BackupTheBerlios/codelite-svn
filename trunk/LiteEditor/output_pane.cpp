@@ -52,6 +52,7 @@ void OutputPane::CreateGUIControls()
 
 	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_BOTTOM | wxFNB_FF2 | wxFNB_CUSTOM_DLG; 
 	m_book = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
+	m_book->SetCustomizeOptions(wxFNB_CUSTOM_LOCAL_DRAG | wxFNB_CUSTOM_ORIENTATION | wxFNB_CUSTOM_TAB_LOOK | wxFNB_CUSTOM_FOREIGN_DRAG);
 	mainSizer->Add(m_book, 1, wxEXPAND | wxALL | wxGROW, 1);
 
 	// Create the 'Find In Files Window'

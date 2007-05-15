@@ -38,16 +38,15 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_choiceConfigurationType = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceConfigurationTypeChoices, 0 );
 	bSizer22->Add( m_choiceConfigurationType, 1, wxALL|wxEXPAND, 5 );
 	
+	m_buttonConfigManager = new wxButton( this, wxID_ANY, wxT("Configuration Manager..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer22->Add( m_buttonConfigManager, 0, wxALL, 5 );
+	
 	mainSizer->Add( bSizer22, 0, wxEXPAND, 5 );
 	
-	long nbStyle =	wxFNB_FF2 | 
-					wxFNB_NODRAG | 
-					wxFNB_BACKGROUND_GRADIENT | 
-					wxFNB_NO_NAV_BUTTONS | 
-					wxFNB_NO_X_BUTTON | 
-					wxFNB_DROPDOWN_TABS_LIST;
-	m_notebook3 = new wxFlatNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, nbStyle );
-	m_notebook3->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
+	m_staticline81 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	mainSizer->Add( m_staticline81, 0, wxEXPAND | wxALL, 5 );
+	
+	m_notebook3 = new wxTreebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	m_generalPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer19;
 	bSizer19 = new wxBoxSizer( wxVERTICAL );
@@ -164,7 +163,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_compilerPage->SetSizer( compilerPageSizer );
 	m_compilerPage->Layout();
 	compilerPageSizer->Fit( m_compilerPage );
-	m_notebook3->AddPage( m_compilerPage, wxT("Compiler"), true );
+	m_notebook3->AddPage( m_compilerPage, wxT("Compiler"), false );
 	m_linkerPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* linkerPageSizer;
 	linkerPageSizer = new wxBoxSizer( wxVERTICAL );
@@ -254,7 +253,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_preBuildPage->SetSizer( bSizer8 );
 	m_preBuildPage->Layout();
 	bSizer8->Fit( m_preBuildPage );
-	m_notebook3->AddPage( m_preBuildPage, wxT("PreBuild"), false );
+	m_notebook3->AddPage( m_preBuildPage, wxT("PreBuild"), true );
 	m_postBuildPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer81;
 	bSizer81 = new wxBoxSizer( wxVERTICAL );
