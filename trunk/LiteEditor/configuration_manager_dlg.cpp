@@ -62,16 +62,13 @@ void ConfigurationManagerDlg::AddEntry(const wxString &projectName, const wxStri
 
 void ConfigurationManagerDlg::PopulateConfigurations()
 {
-	AddEntry(wxT("Commons"), wxT("Debug"));
-	AddEntry(wxT("Commons"), wxT("Debug"));
-	AddEntry(wxT("Commons"), wxT("Debug"));
-	AddEntry(wxT("Commons"), wxT("Debug"));
-	AddEntry(wxT("Commons"), wxT("Debug"));
-	AddEntry(wxT("Commons"), wxT("Debug"));
-	AddEntry(wxT("Commons"), wxT("Debug"));
-	AddEntry(wxT("Commons"), wxT("Debug"));
-	AddEntry(wxT("Commons"), wxT("Debug"));
-	AddEntry(wxT("Commons"), wxT("Debug"));
+	wxArrayString projects;
+	ManagerST::Get()->GetProjectList(projects);
+
+	for(size_t i=0; i<projects.GetCount(); i++){
+		AddEntry(projects.Item(i), wxT("Debug"));
+	}
+
 	wxFlexGridSizer *mainSizer = dynamic_cast<wxFlexGridSizer*>(m_scrolledWindow->GetSizer());
 	if(!mainSizer) return;
 	mainSizer->Fit(m_scrolledWindow);

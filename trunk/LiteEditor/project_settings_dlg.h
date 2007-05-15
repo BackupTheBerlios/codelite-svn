@@ -15,11 +15,11 @@ class ProjectSettingsDlg : public ProjectSettingsBaseDlg
 {
 	wxString m_projectName;
 	wxString m_configName;
-	ProjectSettingsPtr m_projSettingsPtr;
-
+	wxString m_oldConfigurationName;
+	
 protected:
 	void ConnectEvents();
-	void InitDialog(const wxString &configName);
+	void InitDialog(const wxString &configName, const wxString &oldConfig);
 
 	/**
 	 * Copy values from the project settings configuration file to the 
@@ -71,6 +71,8 @@ public:
 	virtual void OnDeletePostBuildCommand(wxCommandEvent &WXUNUSED(event)){ OnDeleteCommand(m_checkListPostBuildCommands); }
 	virtual void OnButtonOK(wxCommandEvent &event);
 	virtual void OnButtonApply(wxCommandEvent &event);
+	virtual void OnButtonConfigurationManager(wxCommandEvent &event);
+
 };
 
 #endif // __project_settings_dlg__

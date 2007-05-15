@@ -2,6 +2,7 @@
 #include "add_option_dialog.h"
 #include "free_text_dialog.h"
 #include "manager.h"
+#include "configuration_manager_dlg.h"
 
 // help macros
 #define ConnectCheckBox(ctrl, fn)\
@@ -23,25 +24,26 @@ ProjectSettingsDlg::ProjectSettingsDlg( wxWindow* parent, const wxString &config
 : ProjectSettingsBaseDlg( parent )
 , m_projectName(projectName)
 , m_configName(configName)
-, m_projSettingsPtr(NULL)
+, m_oldConfigurationName(wxEmptyString)
 {
 	ConnectEvents();
 	m_notebook3->SetSelection(0);
 	//fill the dialog with values
-	InitDialog(m_configName);
+	InitDialog(m_configName, wxEmptyString);
+	m_oldConfigurationName = m_choiceConfigurationType->GetStringSelection();
 }
 
-void ProjectSettingsDlg::InitDialog(const wxString &configName)
+void ProjectSettingsDlg::InitDialog(const wxString &configName, const wxString &oldConfig)
 {
 	wxUnusedVar(configName);
-	m_projSettingsPtr = ManagerST::Get()->GetProjectSettings(m_projectName);
-	ManagerST::Get()->SetProjectSettings(m_projectName, m_projSettingsPtr);
-
+	ProjectSettingsPtr projSettingsPtr = ManagerST::Get()->GetProjectSettings(m_projectName);
+	
 	ProjectSettingsCookie cookie;
-	BuildConfigPtr conf = m_projSettingsPtr->GetFirstBuildConfiguration(cookie);
+	m_choiceConfigurationType->Clear();
+	BuildConfigPtr conf = projSettingsPtr->GetFirstBuildConfiguration(cookie);
 	while(conf){
 		m_choiceConfigurationType->Append(conf->GetName());
-		conf = m_projSettingsPtr->GetNextBuildConfiguration(cookie);
+		conf = projSettingsPtr->GetNextBuildConfiguration(cookie);
 	}
 
 	if(configName.IsEmpty() || m_choiceConfigurationType->FindString(configName) == wxNOT_FOUND){
@@ -50,17 +52,18 @@ void ProjectSettingsDlg::InitDialog(const wxString &configName)
 		m_choiceConfigurationType->SetStringSelection(configName);
 	}
 	
-	if(configName.IsEmpty() == false){
+	if(oldConfig.IsEmpty() == false){
 		// save old values before replacing them
-		SaveValues(m_choiceConfigurationType->GetStringSelection());
+		SaveValues(oldConfig);
 	}
-	CopyValues(m_choiceConfigurationType->GetStringSelection());
+	CopyValues(configName);
 }
 
 void ProjectSettingsDlg::CopyValues(const wxString &confName)
 {
 	BuildConfigPtr buildConf;
-	buildConf =	m_projSettingsPtr->GetBuildConfiguration(confName);
+	ProjectSettingsPtr projSettingsPtr = ManagerST::Get()->GetProjectSettings(m_projectName);
+	buildConf =	projSettingsPtr->GetBuildConfiguration(confName);
 	if(!buildConf){
 		return;
 	}
@@ -87,12 +90,15 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 	buildConf->GetPreBuildCommands(preBuildCmds);
 	buildConf->GetPostBuildCommands(postBuildCmds);
 	BuildCommandList::iterator iter = preBuildCmds.begin();
+
+	m_checkListPreBuildCommands->Clear();
 	for(; iter != preBuildCmds.end(); iter ++){
 		int index = m_checkListPreBuildCommands->Append(iter->GetCommand());
 		m_checkListPreBuildCommands->Check(index, iter->GetEnabled());
 	}
 
 	iter = postBuildCmds.begin();
+	m_checkListPostBuildCommands->Clear();
 	for(; iter != postBuildCmds.end(); iter ++){
 		int index = m_checkListPostBuildCommands->Append(iter->GetCommand());
 		m_checkListPostBuildCommands->Check(index, iter->GetEnabled());
@@ -102,7 +108,8 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 void ProjectSettingsDlg::SaveValues(const wxString &confName)
 {
 	BuildConfigPtr buildConf;
-	buildConf =	m_projSettingsPtr->GetBuildConfiguration(confName);
+	ProjectSettingsPtr projSettingsPtr = ManagerST::Get()->GetProjectSettings(m_projectName);
+	buildConf =	projSettingsPtr->GetBuildConfiguration(confName);
 	if(!buildConf){
 		return;
 	}
@@ -143,7 +150,7 @@ void ProjectSettingsDlg::SaveValues(const wxString &confName)
 	buildConf->SetPostBuildCommands(cmds);
 
 	//save settings
-	ManagerST::Get()->SetProjectSettings(m_projectName, m_projSettingsPtr);
+	ManagerST::Get()->SetProjectSettings(m_projectName, projSettingsPtr);
 }
 
 void ProjectSettingsDlg::ConnectEvents()
@@ -166,6 +173,7 @@ void ProjectSettingsDlg::ConnectEvents()
 	ConnectButton(m_buttonDeletePostBuildCmd, ProjectSettingsDlg::OnDeletePostBuildCommand);
 	ConnectButton(m_buttonOK, ProjectSettingsDlg::OnButtonOK);
 	ConnectButton(m_buttonApply, ProjectSettingsDlg::OnButtonApply);
+	ConnectButton(m_buttonConfigManager, ProjectSettingsDlg::OnButtonConfigurationManager)
 }
 
 void ProjectSettingsDlg::OnButtonOK(wxCommandEvent &event)
@@ -181,10 +189,19 @@ void ProjectSettingsDlg::OnButtonApply(wxCommandEvent &event)
 	SaveValues(m_choiceConfigurationType->GetStringSelection());
 }
 
+void ProjectSettingsDlg::OnButtonConfigurationManager(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	ConfigurationManagerDlg *dlg = new ConfigurationManagerDlg(this);
+	dlg->ShowModal();
+	dlg->Destroy();
+}
+
 void ProjectSettingsDlg::OnConfigurationTypeSelected(wxCommandEvent &event)
 {
 	wxString selection = event.GetString();
-	InitDialog(selection);
+	InitDialog(selection, m_oldConfigurationName);
+	m_oldConfigurationName = selection;
 }
 
 void ProjectSettingsDlg::DisableCompilerPage(bool disable)
