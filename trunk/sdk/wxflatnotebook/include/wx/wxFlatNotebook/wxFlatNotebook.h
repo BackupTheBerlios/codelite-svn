@@ -90,15 +90,25 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxWindow*, wxWindowPtrArray, WXDLLIMPEXP_FNB);
 #define VC8_SHAPE_LEN					16
 #define MASK_COLOR wxColor(0, 128, 128)
 
+enum wxCustomizeDlgOptions {
+	wxFNB_CUSTOM_TAB_LOOK		= 0x00000001,	///< Allow customizing the tab appearance
+	wxFNB_CUSTOM_ORIENTATION	= 0x00000002,	///< Allow customizing the tab orientation (upper | bottom)
+	wxFNB_CUSTOM_FOREIGN_DRAG	= 0x00000004,	///< Allow accept foreign tabs 
+	wxFNB_CUSTOM_LOCAL_DRAG		= 0x00000008,	///< Allow local drag and drop
+	wxFNB_CUSTOM_CLOSE_BUTTON	= 0x00000010,	///< Allow customizing close button
+	wxFNB_CUSTOM_ALL			= wxFNB_CUSTOM_TAB_LOOK | 
+								  wxFNB_CUSTOM_ORIENTATION |
+								  wxFNB_CUSTOM_FOREIGN_DRAG |
+								  wxFNB_CUSTOM_LOCAL_DRAG |
+								  wxFNB_CUSTOM_CLOSE_BUTTON 
+};
+
 /**
 * \brief Nice cross-platform flat notebook with X-button, navigation arrows and much more
 */
 
 class WXDLLIMPEXP_FNB wxFlatNotebook : public wxPanel
 {
-private:
-//	friend class wxPageContainer;
-
 public:
 
 	///Default constructor
@@ -370,6 +380,17 @@ public:
 	*/
 	int GetPadding() { return m_nPadding; }
 
+	/**
+	 * Set the customization options available for this notebook, can be one of the wxFNB_CUSTOM_* values
+	 * this values is by default set to wxFNB_CUSTOM_ALL
+	 */
+	void SetCustomizeOptions(long options);
+	
+	/**
+	 * Get the customization options available for this notebook
+	 */
+	long GetCustomizeOptions() const;
+	
 	// Setters / Getters
 	void SetForceSelection(bool force) { m_bForceSelection = force; }
 	bool GetForceSelection() { return m_bForceSelection; }
@@ -535,6 +556,7 @@ public:
 	* \param color Tab face color
 	*/
 	void SetColor(wxColor& color) { m_color = color; }
+
 };
 
 WX_DECLARE_USER_EXPORTED_OBJARRAY(wxPageInfo, wxPageInfoArray, WXDLLIMPEXP_FNB);
@@ -719,6 +741,17 @@ public:
 	 * Draw a tab preview 
 	 */
 	void DrawDragHint();
+	
+	/**
+	 * Set the customization options available for this notebook, can be one of the wxFNB_CUSTOM_* values
+	 * this values is by default set to wxFNB_CUSTOM_ALL
+	 */
+	void SetCustomizeOptions(long options);
+	
+	/**
+	 * Get the customization options available for this notebook
+	 */
+	long GetCustomizeOptions() const;
 
 	DECLARE_EVENT_TABLE()
 	// Event handlers
@@ -847,6 +880,7 @@ private:
 
 	/// Customize menu
 	wxMenu *m_customMenu;
+	long m_customizeOptions;
 };
 
 /**

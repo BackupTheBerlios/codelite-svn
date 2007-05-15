@@ -17,7 +17,8 @@ class wxFNBCustomizeDialog : public wxDialog
 protected:
 	wxStaticLine* m_staticline2;
 	wxButton* m_close;
-	
+	long m_options;
+
 	// Option's page members
 	wxRadioBox* m_styles;
 	wxRadioBox* m_tabVPosition;
@@ -32,8 +33,9 @@ protected:
 	wxCheckBox* m_foreignDnD;
 	wxCheckBox* m_gradient;
 	wxCheckBox* m_colorfulTab;
+
 public:
-	wxFNBCustomizeDialog( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Customize"), wxPoint pos = wxDefaultPosition, wxSize size = wxDefaultSize, int style = wxDEFAULT_DIALOG_STYLE );
+	wxFNBCustomizeDialog( wxWindow* parent, long options, int id = wxID_ANY, wxString title = wxT("Customize"), wxPoint pos = wxDefaultPosition, wxSize size = wxDefaultSize, int style = wxDEFAULT_DIALOG_STYLE );
 
 protected:
 	void OnClose(wxCommandEvent &event);

@@ -96,7 +96,6 @@ void wxFlatNotebook::Init()
 	m_nPadding = 6;
 	m_nFrom = 0;
 	m_pages = NULL;
-
 	m_mainSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(m_mainSizer);
 }
@@ -113,7 +112,7 @@ bool wxFlatNotebook::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
 	m_mainSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(m_mainSizer);
 
-	SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_APPWORKSPACE));
+	SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
 
 	// Set default page height
 	wxMemoryDC memDc;
@@ -675,6 +674,14 @@ const wxColour& wxFlatNotebook::GetActiveTabColour()
 	return m_pages->m_activeTabColor;
 }
 
+long wxFlatNotebook::GetCustomizeOptions() const {
+	return m_pages->GetCustomizeOptions();
+}
+
+void wxFlatNotebook::SetCustomizeOptions(long options) {
+	m_pages->SetCustomizeOptions(options);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	wxPageContainer
@@ -682,17 +689,17 @@ const wxColour& wxFlatNotebook::GetActiveTabColour()
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(wxPageContainer, wxPanel)
-EVT_PAINT(wxPageContainer::OnPaint)
-EVT_SIZE(wxPageContainer::OnSize)
-EVT_LEFT_DOWN(wxPageContainer::OnLeftDown)
-EVT_LEFT_UP(wxPageContainer::OnLeftUp)
-EVT_RIGHT_DOWN(wxPageContainer::OnRightDown)
-EVT_MIDDLE_DOWN(wxPageContainer::OnMiddleDown)
-EVT_MOTION(wxPageContainer::OnMouseMove)
-EVT_ERASE_BACKGROUND(wxPageContainer::OnEraseBackground)
-EVT_LEAVE_WINDOW(wxPageContainer::OnMouseLeave)
-EVT_ENTER_WINDOW(wxPageContainer::OnMouseEnterWindow)
-EVT_LEFT_DCLICK(wxPageContainer::OnLeftDClick)
+	EVT_PAINT(wxPageContainer::OnPaint)
+	EVT_SIZE(wxPageContainer::OnSize)
+	EVT_LEFT_DOWN(wxPageContainer::OnLeftDown)
+	EVT_LEFT_UP(wxPageContainer::OnLeftUp)
+	EVT_RIGHT_DOWN(wxPageContainer::OnRightDown)
+	EVT_MIDDLE_DOWN(wxPageContainer::OnMiddleDown)
+	EVT_MOTION(wxPageContainer::OnMouseMove)
+	EVT_ERASE_BACKGROUND(wxPageContainer::OnEraseBackground)
+	EVT_LEAVE_WINDOW(wxPageContainer::OnMouseLeave)
+	EVT_ENTER_WINDOW(wxPageContainer::OnMouseEnterWindow)
+	EVT_LEFT_DCLICK(wxPageContainer::OnLeftDClick)
 END_EVENT_TABLE()
 
 wxPageContainer::wxPageContainer(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -701,6 +708,7 @@ wxPageContainer::wxPageContainer(wxWindow* parent, wxWindowID id, const wxPoint&
 , m_pDropTarget(NULL)
 , m_nLeftClickZone(wxFNB_NOWHERE)
 , m_iPreviousActivePage(-1)
+, m_customizeOptions(wxFNB_CUSTOM_ALL)
 {
 	m_pRightClickMenu = NULL;
 	m_nXButtonStatus = wxFNB_BTN_NONE;
@@ -841,7 +849,7 @@ void wxPageContainer::OnMiddleDown(wxMouseEvent& event)
 void wxPageContainer::OnShowCustomizeDialog(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	wxFNBCustomizeDialog *dlg = new wxFNBCustomizeDialog(this);
+	wxFNBCustomizeDialog *dlg = new wxFNBCustomizeDialog(this, m_customizeOptions);
 	dlg->ShowModal();
 	dlg->Destroy();
 }
@@ -1788,4 +1796,14 @@ void wxPageContainer::DrawDragHint()
     wxPoint client_pt = ScreenToClient(pt);
 	HitTest(client_pt, info, tabIdx);
 	wxFNBRendererMgrST::Get()->GetRenderer( GetParent()->GetWindowStyleFlag() )->DrawDragHint(this, tabIdx);
+}
+
+void wxPageContainer::SetCustomizeOptions(long options)
+{
+	m_customizeOptions = options;
+}
+
+long wxPageContainer::GetCustomizeOptions() const
+{
+	return m_customizeOptions;
 }

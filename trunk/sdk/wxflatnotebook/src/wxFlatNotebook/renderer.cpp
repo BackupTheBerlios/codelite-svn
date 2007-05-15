@@ -970,7 +970,12 @@ void wxFNBRendererDefault::DrawTab(wxWindow* pageContainer, wxDC &dc, const int 
 	int padding = static_cast<wxFlatNotebook*>( pc->GetParent() )->GetPadding();
 	int shapePoints = (int)(tabHeight * tan((double)pc->GetPageInfoVector()[tabIdx].GetTabAngle()/180.0*M_PI));
 	bool hasImage = pc->GetPageInfoVector()[tabIdx].GetImageIndex() != -1;
+
+#ifdef __WXMSW__
 	int imageYCoord = pc->HasFlag(wxFNB_BOTTOM) ? 6 : 8;
+#else 
+	int imageYCoord = pc->HasFlag(wxFNB_BOTTOM) ? 6 : 10;
+#endif
 
 	hasImage ? textOffset = padding * 2 + 16 + shapePoints / 2 : textOffset = padding + shapePoints / 2 ;
 	textOffset += 2;
@@ -1066,7 +1071,12 @@ void wxFNBRendererFirefox2::DrawTab(wxWindow* pageContainer, wxDC &dc, const int
 	int padding = static_cast<wxFlatNotebook*>( pc->GetParent() )->GetPadding();
 	int shapePoints = (int)(tabHeight * tan((double)pc->GetPageInfoVector()[tabIdx].GetTabAngle()/180.0*M_PI));
 	bool hasImage = pc->GetPageInfoVector()[tabIdx].GetImageIndex() != -1;
-	int imageYCoord = pc->HasFlag(wxFNB_BOTTOM) ? 4 : 8;
+
+#ifdef __WXMSW__
+	int imageYCoord = pc->HasFlag(wxFNB_BOTTOM) ? 6 : 8;
+#else 
+	int imageYCoord = pc->HasFlag(wxFNB_BOTTOM) ? 6 : 10;
+#endif
 
 	hasImage ? textOffset = padding * 2 + 16 + shapePoints / 2 : textOffset = padding + shapePoints / 2 ;
 	textOffset += 2;
@@ -1259,7 +1269,11 @@ void wxFNBRendererFancy::DrawTab(wxWindow* pageContainer, wxDC &dc, const int &p
 	// The width of the images are 16 pixels
 	int padding = static_cast<wxFlatNotebook*>( pc->GetParent() )->GetPadding();
 	bool hasImage = pc->GetPageInfoVector()[tabIdx].GetImageIndex() != -1;
+#ifdef __WXMSW__
 	int imageYCoord = pc->HasFlag(wxFNB_BOTTOM) ? 6 : 8;
+#else 
+	int imageYCoord = pc->HasFlag(wxFNB_BOTTOM) ? 6 : 10;
+#endif
 
 	hasImage ? textOffset = padding * 2 + 16 : textOffset = padding ;
 
@@ -1595,7 +1609,11 @@ void wxFNBRendererVC8::DrawTab(wxWindow* pageContainer, wxDC &dc, const int &pos
 		textOffset = ((wxFlatNotebook *)pc->m_pParent)->GetPadding() + vc8ShapeLen;
 
 	// Draw the image for the tab if any
+#ifdef __WXMSW__
 	int imageYCoord = pc->HasFlag(wxFNB_BOTTOM) ? 6 : 8;
+#else 
+	int imageYCoord = pc->HasFlag(wxFNB_BOTTOM) ? 6 : 10;
+#endif
 
 	if( pc->TabHasImage( tabIdx ) )
 	{
