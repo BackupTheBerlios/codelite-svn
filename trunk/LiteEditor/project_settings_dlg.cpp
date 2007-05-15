@@ -117,9 +117,10 @@ void ProjectSettingsDlg::SaveValues(const wxString &confName)
 	BuildCommandList preBuildCmds, postBuildCmds;
 
 	buildConf->SetOutputFileName(m_outputFilePicker->GetPath());
-	buildConf->SetIntermediateDirectory(m_intermediateDirPicker->GetPath());
+	buildConf->SetIntermediateDirectory(m_intermediateDirPicker->GetTextCtrl()->GetValue());
 	buildConf->SetCommand(m_textCommand->GetValue());
 	buildConf->SetCommandArguments(m_textCommandArguments->GetValue());
+	
 	buildConf->SetWorkingDirectory(m_workingDirPicker->GetPath());
 	buildConf->SetCompilerRequired(!m_checkCompilerNeeded->IsChecked());
 	buildConf->SetCompilerName(m_textCompilerName->GetValue());
