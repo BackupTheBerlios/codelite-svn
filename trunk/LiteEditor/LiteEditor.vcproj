@@ -383,6 +383,12 @@
 				RelativePath=".\lexer_page.h">
 			</File>
 			<File
+				RelativePath=".\new_configuration_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\new_configuration_dlg.h">
+			</File>
+			<File
 				RelativePath=".\new_item_dlg.cpp">
 			</File>
 			<File

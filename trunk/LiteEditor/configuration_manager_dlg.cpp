@@ -1,5 +1,7 @@
 #include "configuration_manager_dlg.h"
 #include "manager.h"
+#include "new_configuration_dlg.h"
+
 
 #define ConnectChoice(ctrl, fn)\
 	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(fn), NULL, this);
@@ -52,7 +54,10 @@ void ConfigurationManagerDlg::AddEntry(const wxString &projectName, const wxStri
 	mainSizer->Add(text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 	mainSizer->Add(choiceConfig, 1, wxEXPAND | wxALL | wxALIGN_CENTER_VERTICAL, 5);
 	
-	m_projSettingsMap[choiceConfig->GetId()] = settings;
+	ConfigEntry entry;
+	entry.project = projectName;
+	entry.projectSettings = settings;
+	m_projSettingsMap[choiceConfig->GetId()] = entry;
 }
 
 void ConfigurationManagerDlg::PopulateConfigurations()
@@ -81,17 +86,18 @@ void ConfigurationManagerDlg::InitDialog()
 
 void ConfigurationManagerDlg::OnConfigSelected(wxCommandEvent &event)
 {
-	std::map<int, ProjectSettingsPtr>::iterator iter = m_projSettingsMap.find(event.GetId());
+	std::map<int, ConfigEntry>::iterator iter = m_projSettingsMap.find(event.GetId());
 	if(iter == m_projSettingsMap.end())
 		return;
 
 	wxString selection = event.GetString();
 	if(selection == wxT("<New...>")){
 		// popup the 'New Configuration' dialog
-		BuildConfigPtr confPtr = iter->second->GetBuildConfiguration(event.GetString());
+		NewConfigurationDlg *dlg = new NewConfigurationDlg(this, iter->second.project);
+		dlg->ShowModal();
+		dlg->Destroy();
 	}else if(selection == wxT("<Edit...>")){
 		// popup the 'New Configuration' dialog
-		BuildConfigPtr confPtr = iter->second->GetBuildConfiguration(event.GetString());
 	}else{
 		// do nothing
 	}
