@@ -12,6 +12,7 @@
 #include "ctags_dialog.h"
 #include "ctags_manager.h"
 #include "manager.h"
+#include "macros.h"
 
 ///////////////////////////////////////////////////////////////////////////
 BEGIN_EVENT_TABLE( CtagsOptionsDlg, wxDialog )

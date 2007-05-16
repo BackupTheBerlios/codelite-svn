@@ -2,12 +2,7 @@
 #include "manager.h"
 #include "new_configuration_dlg.h"
 #include "edit_configuration.h"
-
-#define ConnectChoice(ctrl, fn)\
-	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(fn), NULL, this);
-
-#define ConnectButton(ctrl, fn)\
-	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(fn), NULL, this);
+#include "macros.h"
 
 //----------------------------------------------------------------------------
 // Configuration Manager

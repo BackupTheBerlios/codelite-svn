@@ -3,22 +3,7 @@
 #include "free_text_dialog.h"
 #include "manager.h"
 #include "configuration_manager_dlg.h"
-
-// help macros
-#define ConnectCheckBox(ctrl, fn)\
-	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(fn), NULL, this);
-
-#define ConnectChoice(ctrl, fn)\
-	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(fn), NULL, this);
-
-#define ConnectButton(ctrl, fn)\
-	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(fn), NULL, this);
-
-#define Trim(str)\
-	{\
-		str = str.Trim();\
-		str = str.Trim(false);\
-	}
+#include "macros.h"
 
 ProjectSettingsDlg::ProjectSettingsDlg( wxWindow* parent, const wxString &configName, const wxString &projectName )
 : ProjectSettingsBaseDlg( parent )
@@ -300,7 +285,7 @@ void ProjectSettingsDlg::OnNewCommand(wxCheckListBox *list)
 	FreeTextDialog *dlg = new FreeTextDialog(this);
 	if(dlg->ShowModal() == wxID_OK){
 		wxString value = dlg->GetValue();
-		Trim(value);
+		TrimString(value);
 		if(value.IsEmpty() == false){
 			list->Append(value);
 			list->Check(list->GetCount()-1);
@@ -320,7 +305,7 @@ void ProjectSettingsDlg::OnEditCommand(wxCheckListBox *list)
 	FreeTextDialog *dlg = new FreeTextDialog(this, selectedString);
 	if(dlg->ShowModal() == wxID_OK){
 		wxString value = dlg->GetValue();
-		Trim(value);
+		TrimString(value);
 		if(value.IsEmpty() == false){
 			list->SetString(sel, value);
 		}

@@ -111,6 +111,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("word_wrap"), Frame::DispatchUpdateUIEvent)
 	EVT_MENU(XRCID("word_wrap"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("configuration_manager"), Frame::OnConfigurationManager)
+	EVT_UPDATE_UI(XRCID("configuration_manager"), Frame::OnWorkspaceOpen)
+
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
 	EVT_MENU(ID_USE_EXTERNAL_DB, Frame::OnUseExternalDatabase)

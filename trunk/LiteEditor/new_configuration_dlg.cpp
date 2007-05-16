@@ -20,12 +20,7 @@
 #include "new_configuration_dlg.h"
 #include "manager.h"
 #include "project_settings.h"
-
-#define ConnectChoice(ctrl, fn)\
-	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(fn), NULL, this);
-
-#define ConnectButton(ctrl, fn)\
-	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(fn), NULL, this);
+#include "macros.h"
 
 ///////////////////////////////////////////////////////////////////////////
 

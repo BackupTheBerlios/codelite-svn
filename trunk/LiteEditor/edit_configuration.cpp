@@ -20,13 +20,7 @@
 #include "edit_configuration.h"
 #include "manager.h"
 #include "project_settings.h"
-
-#define ConnectListBoxDClick(ctrl, fn)\
-	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler(fn), NULL, this);
-
-#define ConnectButton(ctrl, fn)\
-	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(fn), NULL, this);
-
+#include "macros.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
