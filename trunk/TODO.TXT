@@ -49,3 +49,4 @@ TODO List:
 43. Add configuration mapping (for the workspace)
 44. Add environment variables to the workspace
 45. Right click on tree: file view and selecting 'Properties' should open the correct project settings and not the active project
+46. Add posibility to copy project settings when creating new project
