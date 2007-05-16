@@ -34,9 +34,10 @@ class ConfigManagerBaseDlg : public wxDialog
 		wxStaticLine* m_staticline1;
 		wxButton* m_buttonOK;
 		wxButton* m_buttonCancel;
+		wxButton* m_buttonApply;
 	
 	public:
-		ConfigManagerBaseDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Configuration Manager"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 499,276 ), int style = wxDEFAULT_DIALOG_STYLE );
+		ConfigManagerBaseDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Configuration Manager"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 499,276 ), int style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 	
 };
 

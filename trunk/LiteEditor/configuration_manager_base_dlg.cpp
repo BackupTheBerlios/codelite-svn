@@ -79,6 +79,9 @@ ConfigManagerBaseDlg::ConfigManagerBaseDlg( wxWindow* parent, int id, wxString t
 	m_buttonCancel = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer4->Add( m_buttonCancel, 0, wxALL, 5 );
 	
+	m_buttonApply = new wxButton( this, wxID_ANY, wxT("Apply"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer4->Add( m_buttonApply, 0, wxALL, 5 );
+	
 	bSizer1->Add( bSizer4, 0, wxALIGN_RIGHT, 5 );
 	
 	this->SetSizer( bSizer1 );
