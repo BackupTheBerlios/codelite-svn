@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswud&quot;;..\CodeLite\"
+				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswud&quot;;..\CodeLite\;..\sdk\wxsqlite3\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswu&quot;;..\CodeLite"
+				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswu&quot;;..\CodeLite;..\sdk\wxsqlite3\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -100,7 +100,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/lib/vc_lib/msw/&quot;;&quot;$(WXSTABLE)/include&quot;;..\CodeLite"
+				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/lib/vc_lib/msw/&quot;;&quot;$(WXSTABLE)/include&quot;;..\CodeLite;..\sdk\wxsqlite3\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -140,7 +140,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(WXSTABLE)\lib\vc_lib\mswd&quot;;&quot;$(WXSTABLE)\include&quot;;..\CodeLite"
+				AdditionalIncludeDirectories="&quot;$(WXSTABLE)\lib\vc_lib\mswd&quot;;&quot;$(WXSTABLE)\include&quot;;..\CodeLite;..\sdk\wxsqlite3\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -202,13 +202,31 @@
 				RelativePath=".\buildmanager.h">
 			</File>
 			<File
+				RelativePath=".\configuration_mapping.cpp">
+			</File>
+			<File
+				RelativePath=".\configuration_mapping.h">
+			</File>
+			<File
 				RelativePath=".\configuration_object.h">
+			</File>
+			<File
+				RelativePath=".\project.cpp">
+			</File>
+			<File
+				RelativePath=".\project.h">
 			</File>
 			<File
 				RelativePath=".\project_settings.cpp">
 			</File>
 			<File
 				RelativePath=".\project_settings.h">
+			</File>
+			<File
+				RelativePath=".\workspace.cpp">
+			</File>
+			<File
+				RelativePath=".\workspace.h">
 			</File>
 		</Filter>
 		<Filter

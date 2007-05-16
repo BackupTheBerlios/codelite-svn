@@ -11,8 +11,8 @@
 #include "readtags.h"
 #include "entry.h"
 #include "project.h"
-#include "ctags_manager.h"
 #include "context_base.h"
+#include "ctags_manager.h"
 
 class wxFrame;
 class LEditor;

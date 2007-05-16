@@ -475,18 +475,6 @@
 			<File
 				RelativePath=".\manager.h">
 			</File>
-			<File
-				RelativePath=".\project.cpp">
-			</File>
-			<File
-				RelativePath=".\project.h">
-			</File>
-			<File
-				RelativePath=".\workspace.cpp">
-			</File>
-			<File
-				RelativePath=".\workspace.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="Configuration">
