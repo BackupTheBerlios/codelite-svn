@@ -48,12 +48,14 @@ class CtagsOptions{
 	wxString forceLanguage;
 	wxString fileSpec;
 	wxString ignoreMacros;
+	bool parseComments;
 
 public:
 	CtagsOptions() 
 		: forceLanguage(wxT("C++"))
 		, fileSpec(wxT("*.cpp;*.c;*.cxx;*.cc;*.h;*.hpp"))
 		, ignoreMacros(wxEmptyString)
+		, parseComments(false)
 	{}
 
 	~CtagsOptions(){}
@@ -85,9 +87,14 @@ public:
 		ignoreMacros = ignoreMacros.Trim(false);
 	}
 
+	void SetParseComments(bool parse){
+		parseComments = parse;
+	}
+
 	wxString GetLanguage() const { return forceLanguage; }
 	wxString GetFileSpec() const { return fileSpec; }
 	wxString GetIgnoreMacros() const { return ignoreMacros; }
+	bool GetParseComments() const { return parseComments; }
 };
 
 /**

@@ -49,6 +49,7 @@ protected:
 	virtual void OnButtonOK( wxCommandEvent& event );
 	virtual void OnButtonClose( wxCommandEvent& event );
 	virtual void OnClose(wxCloseEvent &event);
+
 public:
 	CtagsOptionsDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("CTags Options"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize(513, 300), int style = wxDEFAULT_DIALOG_STYLE );
 	const CtagsOptions &GetCtagsOptions() const { return m_options; }

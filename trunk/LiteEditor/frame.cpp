@@ -663,6 +663,7 @@ void Frame::OnCtagsOptions(wxCommandEvent &event)
 		// update the ctags options
 		TagsManagerST::Get()->SetCtagsOptions(dlg->GetCtagsOptions());
 		ManagerST::Get()->SetWorkspaceCtagsOptions(dlg->GetCtagsOptions());
+		TagsManagerST::Get()->ParseComments(dlg->GetCtagsOptions().GetParseComments());
 	}
 	dlg->Destroy();
 }

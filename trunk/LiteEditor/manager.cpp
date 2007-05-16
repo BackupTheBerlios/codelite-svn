@@ -219,6 +219,7 @@ void Manager::OpenWorkspace(const wxString &path)
 	// load ctags options
 	CtagsOptions options = WorkspaceST::Get()->LoadCtagsOptions();
 	TagsManagerST::Get()->SetCtagsOptions( options );
+	TagsManagerST::Get()->ParseComments(options.GetParseComments());
 
 	DoUpdateGUITrees();
 }

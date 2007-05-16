@@ -99,7 +99,7 @@ wxPanel *CtagsOptionsDlg::CreateGeneralPage()
 	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_parseComments = new wxCheckBox( page, wxID_ANY, wxT("Parse Comments"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_parseComments->SetValue(true);
+	m_parseComments->SetValue(options.GetParseComments());
 	
 	bSizer9->Add( m_parseComments, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
@@ -109,6 +109,7 @@ wxPanel *CtagsOptionsDlg::CreateGeneralPage()
 	
 	page->SetSizer( bSizer5 );
 	page->Layout();
+
 	return page;
 }
 
@@ -123,6 +124,7 @@ void CtagsOptionsDlg::OnButtonOK(wxCommandEvent &event)
 	m_options.SetFileSpec(m_fileTypes->GetValue());
 	m_options.SetIgnoreMacros(m_macros->GetValue());
 	m_options.SetLanguage(m_languages->GetStringSelection());
+	m_options.SetParseComments(m_parseComments->IsChecked());
 
 	EndModal(wxID_OK);
 	wxUnusedVar(event);
@@ -133,4 +135,3 @@ void CtagsOptionsDlg::OnClose(wxCloseEvent &event)
 	wxUnusedVar(event);
 	EndModal(wxID_CANCEL);
 }
-

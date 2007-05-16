@@ -415,6 +415,10 @@ CtagsOptions Workspace::LoadCtagsOptions() const
 		options.SetFileSpec(node->GetNodeContent());
 	}
 
+	node = XmlUtils::FindNodeByName(ctagsNode, wxT("Option"), wxT("ParseComments"));
+	if( node ){
+		options.SetParseComments(node->GetNodeContent() == wxT("yes"));
+	}
 	return options;
 }
 
@@ -446,6 +450,11 @@ void Workspace::SaveCtagsOptions(const CtagsOptions &options)
 		XmlUtils::SetNodeContent(node, options.GetFileSpec());
 		ctagsNode->AddChild(node);
 
+		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Option"));
+		node->AddProperty(wxT("Name"), wxT("ParseComments"));
+		XmlUtils::SetNodeContent(node, options.GetParseComments() ? wxT("yes") : wxT("no"));
+		ctagsNode->AddChild(node);
+
 	} else {
 		node = XmlUtils::FindNodeByName(ctagsNode, wxT("Option"), wxT("Macros"));
 		if( node ){
@@ -460,6 +469,11 @@ void Workspace::SaveCtagsOptions(const CtagsOptions &options)
 		node = XmlUtils::FindNodeByName(ctagsNode, wxT("Option"), wxT("FileSpec"));
 		if( node ){
 			XmlUtils::SetNodeContent(node, options.GetFileSpec());
+		}
+
+		node = XmlUtils::FindNodeByName(ctagsNode, wxT("Option"), wxT("ParseComments"));
+		if( node ){
+			XmlUtils::SetNodeContent(node, options.GetParseComments() ? wxT("yes") : wxT("no"));
 		}
 	}
 
