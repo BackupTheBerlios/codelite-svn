@@ -1,7 +1,7 @@
 #include "configuration_mapping.h"
 #include "xmlutils.h"
 
-ConfigurationMapping::ConfigurationMapping(wxXmlNode *node){
+BuildMatrix::BuildMatrix(wxXmlNode *node){
 	if(node){
 		wxXmlNode *config = node->GetChildren();
 		while(config){
@@ -15,11 +15,11 @@ ConfigurationMapping::ConfigurationMapping(wxXmlNode *node){
 	}
 }
 
-ConfigurationMapping::~ConfigurationMapping(){
+BuildMatrix::~BuildMatrix(){
 }
 
-wxXmlNode *ConfigurationMapping::ToXml() const {
-	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("ConfigurationMapping"));
+wxXmlNode *BuildMatrix::ToXml() const {
+	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("BuildMatrix"));
 	std::list<ConfigurationPtr>::const_iterator iter = m_configurationList.begin();
 	for(; iter != m_configurationList.end(); iter++){
 		node->AddChild((*iter)->ToXml());
@@ -27,7 +27,7 @@ wxXmlNode *ConfigurationMapping::ToXml() const {
 	return node;
 }
 
-void ConfigurationMapping::RemoveConfiguration(const wxString &configName){
+void BuildMatrix::RemoveConfiguration(const wxString &configName){
 	std::list<ConfigurationPtr>::iterator iter = m_configurationList.begin();
 	for(; iter != m_configurationList.end(); iter++){
 		if((*iter)->GetName() == configName){
@@ -36,9 +36,39 @@ void ConfigurationMapping::RemoveConfiguration(const wxString &configName){
 		}
 	}
 }
-void ConfigurationMapping::SetConfiguration(ConfigurationPtr conf){
+void BuildMatrix::SetConfiguration(ConfigurationPtr conf){
 	RemoveConfiguration(conf->GetName());
 	m_configurationList.push_back(conf);
+}
+
+wxString BuildMatrix::GetProjectSelectedConf(const wxString &configName, const wxString &project) const
+{
+	std::list<ConfigurationPtr>::const_iterator iter = m_configurationList.begin();
+	for(; iter != m_configurationList.end(); iter++){
+		if((*iter)->GetName() == configName){
+			Configuration::ConfigMappingList list = (*iter)->GetMapping();
+			Configuration::ConfigMappingList::const_iterator it = list.begin();
+			for(; it != list.end(); it++){
+				if((*it).m_project == project){
+					return (*it).m_name;
+				}
+			}
+			break;
+		}
+	}
+	return wxEmptyString;
+}
+
+
+wxString BuildMatrix::GetSelectedConfigurationName() const 
+{
+	std::list<ConfigurationPtr>::const_iterator iter = m_configurationList.begin();
+	for(; iter != m_configurationList.end(); iter++){
+		if((*iter)->IsSelected()){
+			return (*iter)->GetName();
+		}
+	}
+	return wxEmptyString;
 }
 
 //------------------------------------------------
@@ -46,18 +76,20 @@ void ConfigurationMapping::SetConfiguration(ConfigurationPtr conf){
 //------------------------------------------------
 Configuration::Configuration()
 : m_name(wxEmptyString)
+, m_isSelected(false)
 {
 }
 
 Configuration::Configuration(wxXmlNode *node){
 	if(node){
 		m_name = XmlUtils::ReadString(node, wxT("Name"));
+		m_isSelected = XmlUtils::ReadBool(node, wxT("Selected"));
 		wxXmlNode *child = node->GetChildren();
 		while(child){
 			if(child->GetName() == wxT("Project")){
 				wxString projName = XmlUtils::ReadString(child, wxT("Name"));
 				wxString conf = XmlUtils::ReadString(child, wxT("ConfigName"));
-				m_mappingList.push_back(std::pair<wxString, wxString>(projName, conf));
+				m_mappingList.push_back(ConfigMappingEntry(projName, conf));
 			}
 			child = child->GetNext();
 		}
@@ -70,14 +102,14 @@ Configuration::~Configuration(){
 wxXmlNode *Configuration::ToXml() const{
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Configuration"));
 	node->AddProperty(wxT("Name"), m_name);
+	node->AddProperty(wxT("Selected"), m_isSelected ? wxT("yes") : wxT("no"));
+
 	Configuration::ConfigMappingList::const_iterator iter = m_mappingList.begin();
 	for(; iter  != m_mappingList.end(); iter++){
 		wxXmlNode *projNode = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Project"));
-		projNode->AddProperty(wxT("Name"), iter->first);
-		projNode->AddProperty(wxT("ConfigName"), iter->second);
+		projNode->AddProperty(wxT("Name"), iter->m_project);
+		projNode->AddProperty(wxT("ConfigName"), iter->m_name);
 		node->AddChild(projNode);
 	}
 	return node;
 }
-
- 

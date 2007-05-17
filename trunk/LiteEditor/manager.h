@@ -13,6 +13,7 @@
 #include "project.h"
 #include "context_base.h"
 #include "ctags_manager.h"
+#include "workspace.h"
 
 class wxFrame;
 class LEditor;

@@ -57,6 +57,12 @@ void ConfigurationManagerDlg::AddEntry(const wxString &projectName, const wxStri
 
 void ConfigurationManagerDlg::PopulateConfigurations()
 {
+	//popuplate the configurations
+	BuildMatrixPtr matrix = ManagerST::Get()->GetWorkspaceBuildMatrix();
+	if(!matrix){
+		return;
+	}
+
 	wxFlexGridSizer *mainSizer = dynamic_cast<wxFlexGridSizer*>(m_scrolledWindow->GetSizer());
 	if(!mainSizer) return;
 
@@ -64,18 +70,31 @@ void ConfigurationManagerDlg::PopulateConfigurations()
 	// remove old entries from the configuration table
 	wxSizerItemList list = mainSizer->GetChildren();
 	for ( wxSizerItemList::Node *node = list.GetFirst(); node; node = node->GetNext() ){
-        wxSizerItem *current = node->GetData();
+		wxSizerItem *current = node->GetData();
 		current->GetWindow()->Destroy();
-    }
-
-	//TODO:: populate the configuration choice
+	}
+	
+	std::list<ConfigurationPtr> configs = matrix->GetConfigurations();
+	std::list<ConfigurationPtr>::iterator iter = configs.begin();
+	
 	m_choiceConfigurations->Clear();
+	for(; iter != configs.end(); iter++){
+		m_choiceConfigurations->Append((*iter)->GetName());
+	}
+
+	int sel = m_choiceConfigurations->FindString(matrix->GetSelectedConfigurationName());
+	if(sel != wxNOT_FOUND){
+		m_choiceConfigurations->SetSelection(sel);
+	}else if(m_choiceConfigurations->GetCount() > 0){
+		m_choiceConfigurations->SetSelection(0);
+	}
 
 	wxArrayString projects;
 	ManagerST::Get()->GetProjectList(projects);
-
+	
 	for(size_t i=0; i<projects.GetCount(); i++){
-		AddEntry(projects.Item(i), wxT("Debug"));
+		wxString selConf = matrix->GetProjectSelectedConf(matrix->GetSelectedConfigurationName(),  projects.Item(i));
+		AddEntry(projects.Item(i), selConf);
 	}
 
 	mainSizer->Fit(m_scrolledWindow);

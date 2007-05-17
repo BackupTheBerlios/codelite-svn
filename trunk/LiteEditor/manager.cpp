@@ -568,3 +568,14 @@ void Manager::SetProjectSettings(const wxString &projectName, ProjectSettingsPtr
 	
 	proj->SetSettings(settings);
 }
+
+BuildMatrixPtr Manager::GetWorkspaceBuildMatrix() const
+{
+	return WorkspaceST::Get()->GetBuildMatrix();
+}
+
+void Manager::SetWorkspaceBuildMatrix(BuildMatrixPtr matrix)
+{
+	WorkspaceST::Get()->SetBuildMatrix(matrix);
+}
+
