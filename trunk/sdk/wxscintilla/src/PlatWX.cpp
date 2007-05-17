@@ -810,9 +810,9 @@ private:
     void*               doubleClickActionData;
 public:
     wxSCIListBoxWin(wxWindow* parent, wxWindowID id, Point WXUNUSED(location)) :
-        wxPopupWindow(parent, wxBORDER_NONE)
+        wxPopupWindow(parent, wxRAISED_BORDER)
     {
-        SetBackgroundColour(*wxBLACK);  // for our simple border
+		SetBackgroundColour(*wxWHITE);  
 
         lv = new wxSCIListBox(parent, id, wxDefaultPosition, wxDefaultSize,
                               wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER | wxBORDER_NONE);
@@ -934,7 +934,7 @@ private:
     void*               doubleClickActionData;
 public:
     wxSCIListBoxWin(wxWindow* parent, wxWindowID id, Point location) :
-        wxWindow(parent, id, wxPoint(location.x, location.y), wxSize(0,0), wxSIMPLE_BORDER) {
+        wxWindow(parent, id, wxPoint(location.x, location.y), wxSize(0,0), wxNO_BORDER) {
 
         lv = new wxSCIListBox(this, id, wxDefaultPosition, wxDefaultSize,
                               wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER | wxNO_BORDER);
@@ -1111,7 +1111,7 @@ void ListBoxImpl::Create (Window &parent, int ctrlID, Point location_,
 
 
 void ListBoxImpl::SetAverageCharWidth(int width) {
-    aveCharWidth = width;
+	width > 8 ? aveCharWidth = width : aveCharWidth = 8;
 }
 
 

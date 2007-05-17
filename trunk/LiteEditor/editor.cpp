@@ -227,7 +227,8 @@ void LEditor::SetProperties()
 	AutoCompSetSeparator(static_cast<int>('@'));	// set the separator to be non valid language wxChar
 	AutoCompSetChooseSingle(true);					// If only one match, insert it automatically
 	AutoCompSetIgnoreCase(true);
-	AutoCompSetMaxWidth(80);
+	AutoCompSetMaxWidth(500);
+	int maxSize = AutoCompGetMaxWidth();
 
 	SetIndent(8);
 	StyleSetBold(wxSCI_STYLE_BRACELIGHT, true);
