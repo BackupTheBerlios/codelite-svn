@@ -18,4 +18,13 @@
 		str = str.Trim(false);\
 	}
 
+#define BoolToString(b) b ? wxT("yes") : wxT("no")
+
+//-----------------------------------------------------
+// Constants
+//-----------------------------------------------------
+
+const wxString clCMD_NEW = wxT("<New...>");
+const wxString clCMD_EDIT = wxT("<Edit...>");
+
 #endif // MACROS_H
