@@ -579,3 +579,32 @@ void Manager::SetWorkspaceBuildMatrix(BuildMatrixPtr matrix)
 	WorkspaceST::Get()->SetBuildMatrix(matrix);
 }
 
+void Manager::TogglePanes()
+{
+	static bool workspaceShown = false;
+	static bool outputShown = false;
+	static bool toggled = false;
+
+	if(!toggled){
+		wxAuiPaneInfo info;
+		info = Frame::Get()->GetDockingManager().GetPane(wxT("Output"));
+		if( info.IsOk() ){
+			outputShown = info.IsShown();
+		}
+		info = Frame::Get()->GetDockingManager().GetPane(wxT("Workspace"));
+		if( info.IsOk() ){
+			workspaceShown = info.IsShown();
+		}
+		HideOutputPane();
+		HideWorkspacePane();
+		toggled = true;
+	}else{
+		if(outputShown){
+			ShowOutputPane();
+		}
+		if(workspaceShown){
+			ShowWorkspacePane();
+		}
+		toggled = false;
+	}
+}

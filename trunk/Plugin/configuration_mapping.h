@@ -61,6 +61,7 @@ public:
 	void SetConfiguration(ConfigurationPtr conf);
 	wxString GetProjectSelectedConf(const wxString &configName, const wxString &project) const;
 	wxString GetSelectedConfigurationName() const;
+	ConfigurationPtr GetConfigurationByName(const wxString &name) const;
 };
 
 typedef SmartPtr<BuildMatrix> BuildMatrixPtr;

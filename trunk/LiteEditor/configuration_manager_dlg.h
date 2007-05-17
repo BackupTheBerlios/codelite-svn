@@ -27,18 +27,26 @@ class ConfigurationManagerDlg : public ConfigManagerBaseDlg
 
 protected:
 	void InitDialog();
+
+	//----------------------------------
+	// Events
+	//----------------------------------
 	void OnButtonNew(wxCommandEvent &event);
 	void OnButtonOK(wxCommandEvent &event);
 	void OnConfigSelected(wxCommandEvent &event);
-
+	void OnWorkspaceConfigSelected(wxCommandEvent &event);
+	void OnButtonApply(wxCommandEvent &event);
+	void LoadWorkspaceConfiguration(const wxString &confName);
+	void LoadProjectConfiguration(const wxString &projectName);
+	
 	void PopulateConfigurations();
 	void AddEntry(const wxString &projectName, const wxString &selectedConf);
 	Configuration::ConfigMappingList GetCurrentSettings();
+	void SaveCurrentSettings();
 
 public:
 	/** Constructor */
 	ConfigurationManagerDlg( wxWindow* parent );
 };
-
 
 #endif // __configuration_manager_dlg__

@@ -264,6 +264,13 @@ public:
 	 */
 	void SetWorkspaceBuildMatrix(BuildMatrixPtr matrix);
 
+
+	/**
+	 * Hide/Show all panes. This function saves the current prespective and 
+	 * then hides all panes, when called again, all panes are restored
+	 */
+	void TogglePanes();
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

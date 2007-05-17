@@ -112,11 +112,11 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("word_wrap"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("configuration_manager"), Frame::OnConfigurationManager)
 	EVT_UPDATE_UI(XRCID("configuration_manager"), Frame::OnWorkspaceOpen)
+	EVT_MENU(XRCID("toggle_panes"), Frame::OnTogglePanes)
 
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
 	EVT_MENU(ID_USE_EXTERNAL_DB, Frame::OnUseExternalDatabase)
-	EVT_MENU(ID_PARSE_COMMENTS, Frame::OnParseComments)
 	*/
 
 	EVT_CLOSE(Frame::OnClose)
@@ -722,3 +722,10 @@ void Frame::OnConfigurationManager(wxCommandEvent &event)
 	dlg->ShowModal();
 	dlg->Destroy();
 }
+
+void Frame::OnTogglePanes(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	ManagerST::Get()->TogglePanes();
+}
+

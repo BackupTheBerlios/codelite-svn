@@ -129,7 +129,12 @@
                     <radio>1</radio>
                 </object>
             </object>
-				<object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            <object class="wxMenuItem" name="toggle_panes">
+                <label>&amp;Maximize Editing Area...\tCtrl+M</label>
+                <help>Hide all panes and maximize the editing area</help>
+            </object>
+			<object class="wxMenuItem" name="wxID_SEPARATOR"/>
             <object class="wxMenuItem" name="options">
                 <label>&amp;Options...\tAlt+O</label>
             </object>

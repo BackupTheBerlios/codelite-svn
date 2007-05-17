@@ -117,6 +117,7 @@ protected:
 	void OnViewWorkspacePaneUI(wxUpdateUIEvent &event);
 	void OnViewOutputPaneUI(wxUpdateUIEvent &event);
 	void OnViewOptions(wxCommandEvent &event);
+	void OnTogglePanes(wxCommandEvent &event);
 
 	// New Dialog 'Create' button pressed
 	void OnNewDlgCreate(wxCommandEvent &event);

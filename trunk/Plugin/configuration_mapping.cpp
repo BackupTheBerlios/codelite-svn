@@ -72,6 +72,17 @@ wxString BuildMatrix::GetSelectedConfigurationName() const
 	return wxEmptyString;
 }
 
+ConfigurationPtr BuildMatrix::GetConfigurationByName(const wxString &name) const
+{
+	std::list<ConfigurationPtr>::const_iterator iter = m_configurationList.begin();
+	for(; iter != m_configurationList.end(); iter++){
+		if((*iter)->GetName() == name){
+			return (*iter);
+		}
+	}
+	return NULL;
+}
+
 //------------------------------------------------
 // Configuration object
 //------------------------------------------------
@@ -94,6 +105,9 @@ Configuration::Configuration(wxXmlNode *node){
 			}
 			child = child->GetNext();
 		}
+	}else{
+		m_isSelected = false;
+		m_name = wxEmptyString;
 	}
 }
 

@@ -54,7 +54,7 @@ protected:
 	
 public:
 	/** Constructor */
-	ProjectSettingsDlg( wxWindow* parent, const wxString &configName, const wxString &projectName );
+	ProjectSettingsDlg( wxWindow* parent, const wxString &configName, const wxString &projectName, const wxString &title );
 
 	virtual void OnCheckCompilerNeeded(wxCommandEvent &event);
 	virtual void OnCheckLinkerNeeded(wxCommandEvent &event);

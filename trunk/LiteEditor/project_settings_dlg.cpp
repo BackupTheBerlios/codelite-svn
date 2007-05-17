@@ -5,8 +5,8 @@
 #include "configuration_manager_dlg.h"
 #include "macros.h"
 
-ProjectSettingsDlg::ProjectSettingsDlg( wxWindow* parent, const wxString &configName, const wxString &projectName )
-: ProjectSettingsBaseDlg( parent )
+ProjectSettingsDlg::ProjectSettingsDlg( wxWindow* parent, const wxString &configName, const wxString &projectName, const wxString &title )
+: ProjectSettingsBaseDlg( parent, wxID_ANY, title )
 , m_projectName(projectName)
 , m_configName(configName)
 , m_oldConfigurationName(wxEmptyString)

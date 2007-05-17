@@ -475,7 +475,11 @@ wxString FileViewTree::GetItemPath(wxTreeItemId &item)
 
 void FileViewTree::OnProjectProperties(wxCommandEvent & WXUNUSED(event))
 {
-	ProjectSettingsDlg *dlg = new ProjectSettingsDlg(this, wxEmptyString, ManagerST::Get()->GetActiveProjectName());
+	wxTreeItemId item = GetSelection();
+
+	wxString title(GetItemText(item));
+	title << wxT(" Project Settings");
+	ProjectSettingsDlg *dlg = new ProjectSettingsDlg(this, wxEmptyString, GetItemText(item), title);
 	dlg->ShowModal();
 	dlg->Destroy();
 }
