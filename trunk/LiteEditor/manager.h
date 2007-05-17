@@ -253,6 +253,16 @@ public:
 	 */
 	void SetProjectSettings(const wxString &projectName, ProjectSettingsPtr settings);
 
+	/** 
+	 * Return the workspace build matrix
+	 */
+	BuildMatrixPtr GetWorkspaceBuildMatrix() const;
+
+	/**
+	 * Set or update the workspace build matrix
+	 */
+	void SetWorkspaceBuildMatrix(BuildMatrixPtr matrix);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);
