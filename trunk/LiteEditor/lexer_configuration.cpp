@@ -1,5 +1,6 @@
 #include "lexer_configuration.h"
 #include "xmlutils.h"
+#include "macros.h"
 
 LexerConf::LexerConf(wxXmlNode *element)
 : m_element(element)
@@ -74,7 +75,7 @@ wxXmlNode *LexerConf::ToXml() const
 		StyleProperty p = (*iter);
 		wxXmlNode *property = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Property"));
 		property->AddProperty(wxT("Name"), p.GetName());
-		property->AddProperty(wxT("Bold"), p.IsBold() ? wxT("yes") : wxT("no"));
+		property->AddProperty(wxT("Bold"), BoolToString(p.IsBold()));
 		property->AddProperty(wxT("Face"), p.GetFaceName());
 		property->AddProperty(wxT("Colour"), p.GetFgColour());
 

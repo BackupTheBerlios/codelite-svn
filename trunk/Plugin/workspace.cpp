@@ -3,6 +3,7 @@
 #include "project.h"
 #include "xmlutils.h"
 #include <wx/tokenzr.h>
+#include "macros.h"
 
 Workspace::Workspace()
 {
@@ -467,7 +468,7 @@ void Workspace::SaveCtagsOptions(const CtagsOptions &options)
 
 		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Option"));
 		node->AddProperty(wxT("Name"), wxT("ParseComments"));
-		XmlUtils::SetNodeContent(node, options.GetParseComments() ? wxT("yes") : wxT("no"));
+		XmlUtils::SetNodeContent(node, BoolToString(options.GetParseComments()));
 		ctagsNode->AddChild(node);
 
 	} else {
@@ -488,7 +489,7 @@ void Workspace::SaveCtagsOptions(const CtagsOptions &options)
 
 		node = XmlUtils::FindNodeByName(ctagsNode, wxT("Option"), wxT("ParseComments"));
 		if( node ){
-			XmlUtils::SetNodeContent(node, options.GetParseComments() ? wxT("yes") : wxT("no"));
+			XmlUtils::SetNodeContent(node, BoolToString(options.GetParseComments()));
 		}
 	}
 

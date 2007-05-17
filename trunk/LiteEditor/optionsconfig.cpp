@@ -1,7 +1,7 @@
 #include "optionsconfig.h"
 #include "xmlutils.h"
+#include "macros.h"
 
-#define BoolToString(b) b ? wxT("yes") : wxT("no")
 
 OptionsConfig::OptionsConfig(wxXmlNode *node)
 : m_displayFoldMargin(true)

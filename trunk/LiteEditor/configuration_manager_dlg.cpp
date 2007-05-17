@@ -36,8 +36,8 @@ void ConfigurationManagerDlg::AddEntry(const wxString &projectName, const wxStri
 			bldConf = settings->GetNextBuildConfiguration(cookie);
 		}
 	}
-	choiceConfig->Append(wxT("<New...>"));
-	choiceConfig->Append(wxT("<Edit...>"));
+	choiceConfig->Append(clCMD_NEW);
+	choiceConfig->Append(clCMD_EDIT);
 	ConnectChoice(choiceConfig, ConfigurationManagerDlg::OnConfigSelected);
 	wxStaticText *text = new wxStaticText( m_scrolledWindow, wxID_ANY, projectName, wxDefaultPosition, wxDefaultSize, 0 );
 
@@ -52,6 +52,8 @@ void ConfigurationManagerDlg::AddEntry(const wxString &projectName, const wxStri
 	ConfigEntry entry;
 	entry.project = projectName;
 	entry.projectSettings = settings;
+	entry.choiceControl = choiceConfig;
+
 	m_projSettingsMap[choiceConfig->GetId()] = entry;
 }
 
@@ -94,7 +96,7 @@ void ConfigurationManagerDlg::PopulateConfigurations()
 	
 	for(size_t i=0; i<projects.GetCount(); i++){
 		wxString selConf = matrix->GetProjectSelectedConf(matrix->GetSelectedConfigurationName(),  projects.Item(i));
-		AddEntry(projects.Item(i), selConf);
+		AddEntry(projects.Item(i), m_choiceConfigurations->GetStringSelection());
 	}
 
 	mainSizer->Fit(m_scrolledWindow);
@@ -138,6 +140,42 @@ void ConfigurationManagerDlg::OnConfigSelected(wxCommandEvent &event)
 void ConfigurationManagerDlg::OnButtonNew(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
+	wxTextEntryDialog *dlg = new wxTextEntryDialog(this, wxT("Enter New Configuration Name:"), wxT("New Configuration"));
+	if(dlg->ShowModal() == wxID_OK){
+		wxString value = dlg->GetValue();
+		TrimString(value);
+		if(value.IsEmpty() == false){
+			BuildMatrixPtr matrix = ManagerST::Get()->GetWorkspaceBuildMatrix();
+			if(!matrix){
+				return;
+			}
+
+			ConfigurationPtr conf(new Configuration(NULL));
+			conf->SetName(value);
+			conf->SetConfigMappingList(GetCurrentSettings());
+			matrix->SetConfiguration(conf);
+			//save changes
+			ManagerST::Get()->SetWorkspaceBuildMatrix(matrix);
+		}
+	}
+	dlg->Destroy();
+}
+
+Configuration::ConfigMappingList ConfigurationManagerDlg::GetCurrentSettings()
+{
+	//return the current settings as described by the dialog
+	Configuration::ConfigMappingList list;
+	
+	std::map<int, ConfigEntry>::iterator iter = m_projSettingsMap.begin();
+	for(; iter != m_projSettingsMap.end(); iter++){
+
+		wxString value = iter->second.choiceControl->GetStringSelection();
+		if(value != clCMD_NEW && value != clCMD_EDIT){
+			ConfigMappingEntry entry(iter->second.project, value);
+			list.push_back(entry);
+		}
+	}
+	return list;
 }
 
 void ConfigurationManagerDlg::OnButtonOK(wxCommandEvent &event)

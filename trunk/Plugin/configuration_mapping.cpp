@@ -1,5 +1,6 @@
 #include "configuration_mapping.h"
 #include "xmlutils.h"
+#include "macros.h"
 
 BuildMatrix::BuildMatrix(wxXmlNode *node){
 	if(node){
@@ -102,7 +103,7 @@ Configuration::~Configuration(){
 wxXmlNode *Configuration::ToXml() const{
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Configuration"));
 	node->AddProperty(wxT("Name"), m_name);
-	node->AddProperty(wxT("Selected"), m_isSelected ? wxT("yes") : wxT("no"));
+	node->AddProperty(wxT("Selected"), BoolToString(m_isSelected));
 
 	Configuration::ConfigMappingList::const_iterator iter = m_mappingList.begin();
 	for(; iter  != m_mappingList.end(); iter++){

@@ -233,6 +233,9 @@
 			Name="Common"
 			Filter="">
 			<File
+				RelativePath=".\macros.h">
+			</File>
+			<File
 				RelativePath=".\xmlutils.cpp">
 			</File>
 			<File

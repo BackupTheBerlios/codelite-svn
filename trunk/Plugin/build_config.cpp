@@ -1,6 +1,7 @@
 #include "build_config.h"
 #include "xmlutils.h"
 #include "wx/tokenzr.h"
+#include "macros.h"
 
 BuildConfig::BuildConfig(wxXmlNode *node)
 {
@@ -116,7 +117,7 @@ wxXmlNode *BuildConfig::ToXml() const
 
 	//create the compile node
 	wxXmlNode *compile = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Compiler"));
-	compile->AddProperty(wxT("Required"), m_compilerRequired ? wxT("yes") : wxT("no"));
+	compile->AddProperty(wxT("Required"), BoolToString(m_compilerRequired));
 	compile->AddProperty(wxT("Name"), m_compilerName);
 	compile->AddProperty(wxT("Options"), m_compileOptions);
 	node->AddChild(compile);
@@ -130,7 +131,7 @@ wxXmlNode *BuildConfig::ToXml() const
 
 	//add the link node
 	wxXmlNode *link = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Linker"));
-	link->AddProperty(wxT("Required"), m_linkerRequired ? wxT("yes") : wxT("no"));
+	link->AddProperty(wxT("Required"), BoolToString(m_linkerRequired));
 	link->AddProperty(wxT("Options"), m_linkOptions);
 	node->AddChild(link);
 
@@ -153,7 +154,7 @@ wxXmlNode *BuildConfig::ToXml() const
 	BuildCommandList::const_iterator iter = m_preBuildCommands.begin();
 	for(; iter != m_preBuildCommands.end(); iter++){
 		wxXmlNode *command = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Command"));
-		command->AddProperty(wxT("Enabled"), iter->GetEnabled() ? wxT("yes") : wxT("no"));
+		command->AddProperty(wxT("Enabled"), BoolToString(iter->GetEnabled()));
 		XmlUtils::SetNodeContent(command, iter->GetCommand());
 		preBuild->AddChild(command);
 	}
@@ -164,7 +165,7 @@ wxXmlNode *BuildConfig::ToXml() const
 	iter = m_postBuildCommands.begin();
 	for(; iter != m_postBuildCommands.end(); iter++){
 		wxXmlNode *command = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Command"));
-		command->AddProperty(wxT("Enabled"), iter->GetEnabled() ? wxT("yes") : wxT("no"));
+		command->AddProperty(wxT("Enabled"), BoolToString(iter->GetEnabled()));
 		XmlUtils::SetNodeContent(command, iter->GetCommand());
 		postBuild->AddChild(command);
 	}
