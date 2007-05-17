@@ -183,13 +183,13 @@ public:
 	 * configurations and which project specific configuration should be built in that
 	 * configuration
 	 */
-	ConfigurationMappingPtr GetConfigurationMapping() const;
+	BuildMatrixPtr GetBuildMatrix() const;
 
 	/**
 	 * Store configuration mapping for the workspace, overriding the current one
 	 * \param mapping new mapping to store
 	 */
-	void SetConfigurationMapping(ConfigurationMappingPtr mapping);
+	void SetBuildMatrix(BuildMatrixPtr mapping);
 
 private:
 	/**

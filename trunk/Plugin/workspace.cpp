@@ -63,13 +63,13 @@ bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 	return true;
 }
 
-ConfigurationMappingPtr Workspace::GetConfigurationMapping() const {
-	return new ConfigurationMapping( XmlUtils::FindFirstByTagName(m_doc.GetRoot(), wxT("ConfigurationMapping")) );
+BuildMatrixPtr Workspace::GetBuildMatrix() const {
+	return new BuildMatrix( XmlUtils::FindFirstByTagName(m_doc.GetRoot(), wxT("BuildMatrix")) );
 }
 
-void Workspace::SetConfigurationMapping(ConfigurationMappingPtr mapping){
+void Workspace::SetBuildMatrix(BuildMatrixPtr mapping){
 	wxXmlNode *parent = m_doc.GetRoot();
-	wxXmlNode *oldMapping = XmlUtils::FindFirstByTagName(parent, wxT("ConfigurationMapping"));
+	wxXmlNode *oldMapping = XmlUtils::FindFirstByTagName(parent, wxT("BuildMatrix"));
 	if(oldMapping){
 		parent->RemoveChild(oldMapping);
 		delete oldMapping;
