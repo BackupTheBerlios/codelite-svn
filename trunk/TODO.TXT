@@ -1,55 +1,28 @@
 TODO List:
 ==========================
-11. ******** FIXED ********* Move options from the xml file to the editor
-19. ******** FIXED ********* Add build options to project (including dialog)
-2. ******** FIXED ********* Gather all macros under a single entry in the symbol tree
-3. ******** FIXED ********* Change the default icon from class to struct (the case for typedef struct {} Somthing is much more common than class)
 4. Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
 5. Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
 6. Replace the editor default menu 
-7. ******** FIXED *********  
-   Add Tags options dialog that will allow user to do the following:
-	- Create database from source
-	- Select language for the parser (ctags)
-	- Allow user to set list of macros that will be ignored by ctags
-	
-8. ******** FIXED ********* Indentation bug: when pressing enter, the caret goes to the end of the line
-10. ******** FIXED ********* Save layout
 12. When using editor, write in status bar the current line and column.
 13. Add toolbar
-14. ******** FIXED ********* Fix a focus problem when using the 'Smart Tabbing' dialog, focus remains on the old editor page
-15. ******** FIXED ********* Add filter to 'Add Item...' dialog (for headers, sources and *.*)
-16. ******** FIXED ********* Add a 'View' Menu that allows showing/hiding windows
-17. ******** FIXED ********* When using the 'Find In Files' dialog, make sure that the Output pane is visible
 18. Add dependencies dialog for build order
 20. Add right click menu to tab
 21. When using 'Ctrl+F' (find dialog) or 'Ctrl+Shift+F' (find in files), open the dialog with selected text set in the 
 	'Find What:' field
 22. Add option to open type in the workspace (eclips's Ctrl+Shift+T)
-23. ******** FIXED ********* Add option to open file from the command line 'LiteEditor <file_name> &'
-24. ******** FIXED ********* Double click on a 'Find In Files' line result, should open the matched file
 25. Change 'Find What' & 'Replace With' controls to comboboxs 
 26. Allow to rename a file from whithin the editor
 27. Add option to create an external database
 28. Add menu option to set external database to workspace
-29. ******** FIXED ********* Add option to set the workspace's ctags settings during workspace creation
 30. Support comment parsing (missing the in ctags options dialog as well as in the code)
-31. ******** FIXED ********* FileSpec is currently not used by CTAGS
 32. keyboard should open files when hitting on a tree control
 33. Add Java lexer
 34. Add XML lexer
 35. typedefs are not handled properly
 36. When opening a file from the command line, make sure that the workspace pane and the output pane are hidden
-37. ******** FIXED ********* When opening a project, make sure that the workspace pane is visible
 38. When hitting 'RETURN' in the find dialog, start the search.
 39. Add option to reload file
-40. ******** FIXED ********* Add option to word wrap in editor
-41. Under GTK: Create a pool of LEditor objects at startup, so the creation of new tab will be faster
 42. When pressing 'ESC' in the find dialog, hide it
-43. ******** FIXED *********Add configuration mapping (for the workspace)
-44. Add environment variables to the workspace
-45. ******** FIXED ********* Right click on tree: file view and selecting 'Properties' should open the correct project settings and not the active project
 46. Add posibility to copy project settings when creating new project
-47. ******** FIXED ********* Add optin to toggle all panes and to maximize the workarea (Ctrl+M)
 48. When closing the application, prompt if there are unsaved changes
 49. Detect file changes while it was open in the editor
