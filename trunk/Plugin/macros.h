@@ -1,6 +1,10 @@
 #ifndef MACROS_H
 #define MACROS_H
 
+//-------------------------------------------------------
+// wxWidgets Connect macros
+//-------------------------------------------------------
+
 #define ConnectChoice(ctrl, fn)\
 	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler(fn), NULL, this);
 
@@ -12,6 +16,12 @@
 
 #define ConnectCheckBox(ctrl, fn)\
 	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(fn), NULL, this);
+
+#define ConnectListCtrlItemSelected(ctrl, fn)\
+	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler(fn), NULL, this);
+
+#define ConnectListCtrlItemActivated(ctrl, fn)\
+	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler(fn), NULL, this);
 
 #define TrimString(str){\
 		str = str.Trim();\

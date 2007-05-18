@@ -1,11 +1,11 @@
 #ifndef ENVVAR_H
 #define ENVVAR_H
 
-#include "smart_ptr.h"
-#include <map>
-#include "wx/string.h"
-
 class wxXmlNode;
+
+#include "smart_ptr.h"
+#include "wx/string.h"
+#include <map>
 
 /**
  * \ingroup SDK
@@ -20,6 +20,7 @@ class wxXmlNode;
  *
  */
 class EnvironmentVariebles {
+
 	std::map<wxString, wxString> m_variables;
 
 public:
@@ -56,6 +57,11 @@ public:
 	 * \return const iterator to the start of the internal container of type std::map<wxString, wxString>
 	 */
 	ConstIterator Begin() const;
+
+	/** 
+	 * delete environemt variable
+	 */
+	void DeleteEnv(const wxString &name);
 
 	/**
 	 * Enumerating function

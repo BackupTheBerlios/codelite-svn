@@ -14,6 +14,7 @@
 #include "findinfilesdlg.h"
 #include "ctags_dialog.h"
 #include "cl_process.h"
+#include "envvar_table.h"
 
 // forward decls
 class TagEntry;
@@ -130,6 +131,7 @@ protected:
 	void OnProjectAddProject(wxCommandEvent &event);
 	void OnWorkspaceOpen(wxUpdateUIEvent &event);
 	void OnConfigurationManager(wxCommandEvent &event);
+	void OnAddEnvironmentVariable(wxCommandEvent &event);
 
 	// tags menu
 	void OnCtagsOptions(wxCommandEvent &event);

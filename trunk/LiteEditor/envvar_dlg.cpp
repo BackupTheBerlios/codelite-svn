@@ -21,7 +21,7 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-EnvVarDlg::EnvVarDlg( wxWindow* parent, int id, wxString title, wxPoint pos, wxSize size, int style ) : wxDialog( parent, id, title, pos, size, style )
+EnvVarDlg::EnvVarDlg( wxWindow* parent, wxString name, wxString value, int id, wxString title, wxPoint pos, wxSize size, int style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
@@ -35,18 +35,20 @@ EnvVarDlg::EnvVarDlg( wxWindow* parent, int id, wxString title, wxPoint pos, wxS
 	fgSizer2->SetFlexibleDirection( wxBOTH );
 	fgSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText3 = new wxStaticText( m_panel1, wxID_ANY, wxT("Variable Value:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_staticText3, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_textValue = new wxTextCtrl( m_panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer2->Add( m_textValue, 1, wxALL|wxEXPAND, 5 );
-	
 	m_staticText4 = new wxStaticText( m_panel1, wxID_ANY, wxT("Variable Name:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer2->Add( m_staticText4, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_textName = new wxTextCtrl( m_panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer2->Add( m_textName, 1, wxALL|wxEXPAND, 5 );
+	m_textName->SetValue(name);
+
+	m_staticText3 = new wxStaticText( m_panel1, wxID_ANY, wxT("Variable Value:"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer2->Add( m_staticText3, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	m_textValue = new wxTextCtrl( m_panel1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer2->Add( m_textValue, 1, wxALL|wxEXPAND, 5 );
+	m_textValue->SetValue(value);
+
 	m_panel1->SetSizer( fgSizer2 );
 	m_panel1->Layout();
 	fgSizer2->Fit( m_panel1 );

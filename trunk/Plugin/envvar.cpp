@@ -44,6 +44,14 @@ wxString EnvironmentVariebles::GetEnv(const wxString &name) const
 	}
 }
 
+void EnvironmentVariebles::DeleteEnv(const wxString &name)
+{
+	std::map<wxString, wxString>::iterator iter = m_variables.find(name);
+	if(iter != End()){
+		m_variables.erase(iter);
+	}
+}
+
 wxXmlNode *EnvironmentVariebles::ToXml() const
 {
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Environment"));
