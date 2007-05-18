@@ -365,6 +365,12 @@
 				RelativePath=".\edit_configuration.h">
 			</File>
 			<File
+				RelativePath=".\envvar_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\envvar_dlg.h">
+			</File>
+			<File
 				RelativePath=".\findinfilesdlg.cpp">
 			</File>
 			<File
@@ -468,7 +474,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Workspace">
+			Name="Manager">
 			<File
 				RelativePath=".\manager.cpp">
 			</File>

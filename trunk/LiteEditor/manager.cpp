@@ -177,6 +177,16 @@ void Manager::UnInitialize()
 	wxArtManagerST::Free();
 }
 
+void Manager::CreateEnvironmentVars(const wxString &path)
+{
+	//initialize some environment variable to be available for this workspace
+	EnvironmentVarieblesPtr env = GetEnvironmentVariables();
+	wxFileName filepath(path);
+	env->SetEnv(wxT("WorkspaceName"), WorkspaceST::Get()->GetName());
+	env->SetEnv(wxT("WorkspacePath"), filepath.GetPath());
+	SetEnvironmentVariables(env);
+}
+
 void Manager::CreateWorkspace(const wxString &name, const wxString &path, const CtagsOptions &options)
 {
 	// make sure that the workspace pane is visible
@@ -186,6 +196,9 @@ void Manager::CreateWorkspace(const wxString &name, const wxString &path, const 
 	TagsManagerST::Get()->SetCtagsOptions(options);
 	bool res = WorkspaceST::Get()->CreateWorkspace(name, path, options, errMsg);
 	CHECK_MSGBOX(res);
+
+	//initialize some environment variable to be available for this workspace
+	CreateEnvironmentVars(path);
 
 	DoUpdateGUITrees();
 }
@@ -220,6 +233,9 @@ void Manager::OpenWorkspace(const wxString &path)
 	CtagsOptions options = WorkspaceST::Get()->LoadCtagsOptions();
 	TagsManagerST::Get()->SetCtagsOptions( options );
 	TagsManagerST::Get()->ParseComments(options.GetParseComments());
+	
+	//initialize some environment variable to be available for this workspace
+	CreateEnvironmentVars(path);
 
 	DoUpdateGUITrees();
 }
@@ -607,4 +623,14 @@ void Manager::TogglePanes()
 		}
 		toggled = false;
 	}
+}
+
+void Manager::SetEnvironmentVariables(EnvironmentVarieblesPtr env)
+{
+	WorkspaceST::Get()->SetEnvironmentVariables(env);
+}
+
+EnvironmentVarieblesPtr Manager::GetEnvironmentVariables() const
+{
+	return WorkspaceST::Get()->GetEnvironmentVariables();
 }

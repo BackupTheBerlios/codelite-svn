@@ -16,6 +16,14 @@ Workspace::~Workspace()
 	}
 }
 
+wxString Workspace::GetName() const
+{
+	if(m_doc.IsOk()){
+		return XmlUtils::ReadString(m_doc.GetRoot(), wxT("Name"));
+	}
+	return wxEmptyString;
+}
+
 bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 {
 	m_fileName = wxFileName(fileName);
@@ -493,6 +501,23 @@ void Workspace::SaveCtagsOptions(const CtagsOptions &options)
 		}
 	}
 
+	m_doc.Save(m_fileName.GetFullPath());
+}
+
+EnvironmentVarieblesPtr Workspace::GetEnvironmentVariables() const
+{
+	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc.GetRoot(), wxT("Environment"));
+	return new EnvironmentVariebles(node);
+}
+
+void Workspace::SetEnvironmentVariables(EnvironmentVarieblesPtr env)
+{
+	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc.GetRoot(), wxT("Environment"));
+	if(node){
+		m_doc.GetRoot()->RemoveChild(node);
+		delete node;
+	}
+	m_doc.GetRoot()->AddChild(env->ToXml());
 	m_doc.Save(m_fileName.GetFullPath());
 }
 

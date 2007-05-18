@@ -113,6 +113,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("configuration_manager"), Frame::OnConfigurationManager)
 	EVT_UPDATE_UI(XRCID("configuration_manager"), Frame::OnWorkspaceOpen)
 	EVT_MENU(XRCID("toggle_panes"), Frame::OnTogglePanes)
+	EVT_UPDATE_UI(XRCID("add_envvar"), Frame::OnWorkspaceOpen)
 
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)

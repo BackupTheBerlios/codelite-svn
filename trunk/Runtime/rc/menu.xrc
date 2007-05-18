@@ -180,13 +180,8 @@
         
         <!-- Project Menu -->
         <object class="wxMenu" name="project_menu">
-            <label>&amp;Project</label>
+            <label>&amp;Workspace</label>
             <style>wxMENU_TEAROFF</style>
-            <object class="wxMenuItem" name="new_class">
-                <label>Add &amp;Class...</label>
-            </object>
-
-            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
             <object class="wxMenuItem" name="new_workspace">
                 <label>&amp;Create New Workspace...</label>
                 <help>Create New workspace</help>
@@ -205,6 +200,11 @@
                 <label>&amp;Add an &amp;Existing Project\tCtrl+Shift+A</label>
                 <help>Add an existing project to the current workspace</help>
             </object>            
+            
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            <object class="wxMenuItem" name="add_envvar">
+                <label>En&amp;vironment Variables...\tCtrl+Shift+V</label>
+            </object>
         </object>
         
         <object class="wxMenu" name="build_menu">

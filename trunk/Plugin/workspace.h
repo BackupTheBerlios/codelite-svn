@@ -9,6 +9,7 @@
 #include <map>
 #include "ctags_manager.h"
 #include "configuration_mapping.h"
+#include "envvar.h"
 
 /*!
  * \brief
@@ -190,6 +191,31 @@ public:
 	 * \param mapping new mapping to store
 	 */
 	void SetBuildMatrix(BuildMatrixPtr mapping);
+
+	/**
+	 * Set environment variables for the workspace. The new environment will override
+	 * the current. To perform update, do the following:
+	 * \code
+	 * EnvironmentVarieblesPtr env = WorkspaceST::Get()->GetEnvironmentVariables();
+	 * //update the environment
+	 * env->SetEnv(wxT("HOME"), wxT("/home/user/eran"));
+	 * //update 
+	 * WorkspaceST::Get()->SetEnvironmentVariables(env);
+	 * \endcode
+	 * \param env 
+	 */
+	void SetEnvironmentVariables(EnvironmentVarieblesPtr env);
+
+	/**
+	 * get the environment of the workspace
+	 * \return 
+	 */
+	EnvironmentVarieblesPtr GetEnvironmentVariables() const;
+	
+	/**
+	 * Return the workspace name
+	 */
+	wxString GetName() const;
 
 private:
 	/**

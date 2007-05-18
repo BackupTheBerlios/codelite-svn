@@ -264,12 +264,31 @@ public:
 	 */
 	void SetWorkspaceBuildMatrix(BuildMatrixPtr matrix);
 
-
 	/**
 	 * Hide/Show all panes. This function saves the current prespective and 
 	 * then hides all panes, when called again, all panes are restored
 	 */
 	void TogglePanes();
+
+	/**
+	 * Set environment variables for the workspace. The new environment will override
+	 * the current. To perform update, do the following:
+	 * \code
+	 * EnvironmentVarieblesPtr env = ManagerST::Get()->GetEnvironmentVariables();
+	 * //update the environment
+	 * env->SetEnv(wxT("HOME"), wxT("/home/user/eran"));
+	 * //update 
+	 * ManagerST::Get()->SetEnvironmentVariables(env);
+	 * \endcode
+	 * \param env 
+	 */
+	void SetEnvironmentVariables(EnvironmentVarieblesPtr env);
+
+	/**
+	 * get the environment of the workspace
+	 * \return 
+	 */
+	EnvironmentVarieblesPtr GetEnvironmentVariables() const;
 
 protected:
 	Manager(void);
@@ -280,6 +299,9 @@ private:
 	 * Update the symbol & file tress
 	 */
 	void DoUpdateGUITrees();
+
+	// Create environment variables for the workspace
+	void CreateEnvironmentVars(const wxString &wpsPath);
 };
 
 typedef Singleton<Manager> ManagerST;

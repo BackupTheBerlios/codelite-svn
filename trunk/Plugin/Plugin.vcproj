@@ -211,22 +211,10 @@
 				RelativePath=".\configuration_object.h">
 			</File>
 			<File
-				RelativePath=".\project.cpp">
-			</File>
-			<File
-				RelativePath=".\project.h">
-			</File>
-			<File
 				RelativePath=".\project_settings.cpp">
 			</File>
 			<File
 				RelativePath=".\project_settings.h">
-			</File>
-			<File
-				RelativePath=".\workspace.cpp">
-			</File>
-			<File
-				RelativePath=".\workspace.h">
 			</File>
 		</Filter>
 		<Filter
@@ -240,6 +228,28 @@
 			</File>
 			<File
 				RelativePath=".\xmlutils.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Workspace"
+			Filter="">
+			<File
+				RelativePath=".\envvar.cpp">
+			</File>
+			<File
+				RelativePath=".\envvar.h">
+			</File>
+			<File
+				RelativePath=".\project.cpp">
+			</File>
+			<File
+				RelativePath=".\project.h">
+			</File>
+			<File
+				RelativePath=".\workspace.cpp">
+			</File>
+			<File
+				RelativePath=".\workspace.h">
 			</File>
 		</Filter>
 	</Files>
