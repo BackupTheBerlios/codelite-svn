@@ -371,6 +371,12 @@
 				RelativePath=".\envvar_dlg.h">
 			</File>
 			<File
+				RelativePath=".\envvar_table.cpp">
+			</File>
+			<File
+				RelativePath=".\envvar_table.h">
+			</File>
+			<File
 				RelativePath=".\findinfilesdlg.cpp">
 			</File>
 			<File
