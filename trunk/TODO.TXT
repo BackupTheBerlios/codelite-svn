@@ -13,7 +13,7 @@ TODO List:
 	- Select language for the parser (ctags)
 	- Allow user to set list of macros that will be ignored by ctags
 	
-8. Indentation bug: when pressing enter, the caret goes to the end of the line
+8. ******** FIXED ********* Indentation bug: when pressing enter, the caret goes to the end of the line
 10. ******** FIXED ********* Save layout
 12. When using editor, write in status bar the current line and column.
 13. Add toolbar
@@ -51,3 +51,4 @@ TODO List:
 45. ******** FIXED ********* Right click on tree: file view and selecting 'Properties' should open the correct project settings and not the active project
 46. Add posibility to copy project settings when creating new project
 47. ******** FIXED ********* Add optin to toggle all panes and to maximize the workarea (Ctrl+M)
+48. When closing the application, prompt if there are unsaved changes
