@@ -17,3 +17,23 @@ ContextBase::ContextBase(const wxString &name)
 ContextBase::~ContextBase()
 {
 }
+
+//provide basic indentation
+void ContextBase::AutoIndent(const wxChar &ch){
+	if(ch == wxT('\n')){
+		//just copy the previous line indentation
+		LEditor &rCtrl = GetCtrl();
+		int indentSize = rCtrl.GetIndent();
+		int line = rCtrl.LineFromPosition(rCtrl.GetCurrentPos());
+		int prevLine = line - 1;
+		//take the previous line indentation size
+		int prevLineIndet = rCtrl.GetLineIndentation(prevLine);
+		rCtrl.SetLineIndentation(line, prevLineIndet);
+		//place the caret at the end of the line
+		int dummy = rCtrl.GetLineIndentation(line);
+		if(rCtrl.GetTabIndents()){
+			dummy = dummy / indentSize;
+		}
+		rCtrl.SetCaretAt(rCtrl.GetCurrentPos() + dummy);
+	}
+}

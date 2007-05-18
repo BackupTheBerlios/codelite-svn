@@ -230,7 +230,9 @@ void LEditor::SetProperties()
 	AutoCompSetMaxWidth(0);
 	AutoCompSetFillUps(wxT(":.(- "));
 
+	SetTabWidth(8);
 	SetIndent(8);
+
 	StyleSetBold(wxSCI_STYLE_BRACELIGHT, true);
 	
 	StyleSetBackground(wxSCI_STYLE_LINENUMBER, wxT("WHITE"));
@@ -567,8 +569,9 @@ wxChar LEditor::PreviousChar(const int& pos, int &foundPos)
 		ch = GetCharAt( curpos );
 		if(ch == _T('\t') || ch == _T(' ') || ch == _T('\r') || ch == _T('\v') || ch == _T('\n'))
 		{
+			long tmpPos = curpos;
 			curpos = PositionBefore( curpos );
-			if(curpos == 0)
+			if(curpos == 0 && tmpPos == curpos)
 				break;
 		}
 		else

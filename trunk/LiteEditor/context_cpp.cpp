@@ -184,101 +184,69 @@ void ContextCpp::CodeComplete()
 void ContextCpp::AutoIndent(const wxChar &nChar)
 {
 	LEditor &rCtrl = GetCtrl();
-	int nPos = rCtrl.PositionBefore(rCtrl.GetCurrentPos());
-	int nLine = rCtrl.LineFromPosition(nPos);
-	int lineIndent = rCtrl.GetLineIndentation(nLine);	// Default line indentation
-	int savedLineIndent = lineIndent;
 	int indentSize = rCtrl.GetIndent();
-	int newPos;
+	int pos = wxNOT_FOUND;
+	long matchPos = wxNOT_FOUND;
 
-	// Find the previous types char, if it is '{' 
-	// then increase the indentation level
-	// if not, the indentation level is the same as 
-	// previous line
-	int prevPos = nPos;
-	long nMatchPos;
-	bool bFirstCharOfDoc = true;
-	wxChar ch;
-	switch(nChar)
-	{
-	case '\n':
-		if(prevPos == 0) 
-			// Probably we are at the firs line of the document
-			bFirstCharOfDoc = true;
+	if(IsCommentOrString(rCtrl.GetCurrentPos())){
+		ContextBase::AutoIndent(nChar);
+		return;
+	}
 
-		while(rCtrl.PositionBefore(prevPos) || bFirstCharOfDoc)
-		{
-			prevPos = rCtrl.PositionBefore(prevPos);
-			bFirstCharOfDoc = false;
-			if((rCtrl.GetCharAt(prevPos) != '\r') &&
-				(rCtrl.GetCharAt(prevPos) != '\t') &&
-				(rCtrl.GetCharAt(prevPos) != '\v') &&
-				(rCtrl.GetCharAt(prevPos) != ' ') )
-			{
-				ch = rCtrl.GetCharAt(prevPos);
-				if(ch == '{')
-				{
-					// Make sure that this char is not in a comment
-					// Check the style at the char position
-					if(IsCommentOrString(prevPos))
-						continue;
-					lineIndent = rCtrl.GetLineIndentation(rCtrl.LineFromPosition(prevPos)) + indentSize;
-					break;
-				}
-				else if(ch == ':')
-				{
-					if(IsCommentOrString(prevPos))
-						continue;
-					lineIndent = rCtrl.GetLineIndentation(rCtrl.LineFromPosition(prevPos)) - indentSize;
-
-					// Keep indentation positive
-					lineIndent = (lineIndent > 0) ? lineIndent : 0;
-
-					// Reduce the line indentation for this line
-					rCtrl.SetLineIndentation(rCtrl.LineFromPosition(prevPos), lineIndent);
-
-					// Restore the line number
-					if(lineIndent == 0)
-						lineIndent = indentSize;
-					else
-						lineIndent = savedLineIndent;
-					break;
-				}
-				else
-					break;
+	// enter was pressed
+	int line = rCtrl.LineFromPosition(rCtrl.GetCurrentPos());
+	if(nChar == wxT('\n')){
+		wxChar ch = rCtrl.PreviousChar(rCtrl.GetCurrentPos(), pos);
+		if(pos != wxNOT_FOUND && ch == wxT('{')){
+			if(IsCommentOrString(pos)){
+				return;
 			}
+
+			//open brace?
+			//increase indent size
+			int prevLine = rCtrl.LineFromPosition(pos);
+			
+			int prevLineIndet = rCtrl.GetLineIndentation(prevLine);
+			rCtrl.SetLineIndentation(line, indentSize + prevLineIndet);
+		}else{
+			//just copy the previous line indentation
+			ContextBase::AutoIndent(nChar);
+			return;
 		}
 
-		// Set the new indentation and postion the cursor
-		rCtrl.SetLineIndentation(nLine + 1, lineIndent);
-		newPos = rCtrl.GetLineEndPosition(nLine + 1);
-		rCtrl.SetCurrentPos(newPos);
-		rCtrl.SetSelectionStart(newPos);
-		rCtrl.SetSelectionEnd(newPos);
-		break;
-	case '}':
-		if(IsCommentOrString(prevPos))
-			break;
-
-		// Find the matching OPENING brace
-		if(!rCtrl.MatchBraceBack('}', prevPos, nMatchPos))
+		int dummy = rCtrl.GetLineIndentation(line);
+		if(rCtrl.GetTabIndents()){
+			dummy = dummy / indentSize;
+		}
+		rCtrl.SetCaretAt(rCtrl.GetCurrentPos() + dummy);
+	} else if(nChar == wxT(':')){
+		
+		int curlineIndent = rCtrl.GetLineIndentation(line);
+		int newIndent = 0;
+		int p;
+		if(rCtrl.PreviousChar(rCtrl.PositionBefore(rCtrl.GetCurrentPos()), p) == wxT(':')){
+			//increase indentation
+			newIndent = curlineIndent + indentSize;
+			rCtrl.SetLineIndentation(line, newIndent);
+			int dummy = rCtrl.GetLineIndentation(line);
+			if(rCtrl.GetTabIndents()){
+				dummy = dummy / indentSize;
+			}
+			rCtrl.SetCaretAt(rCtrl.GetCurrentPos() + dummy);
+		}else{
+			//reduce indentation
+			if(curlineIndent - indentSize > 0){
+				newIndent = curlineIndent - indentSize;
+			}
+			rCtrl.SetLineIndentation(line, newIndent);
+		}
+	} else if(nChar == wxT('}') && rCtrl.MatchBraceBack(wxT('}'), rCtrl.GetCurrentPos()-1, matchPos)) {
+		int secondLine = rCtrl.LineFromPosition(matchPos);
+		if(secondLine == line){
 			return;
-
-		lineIndent = rCtrl.GetLineIndentation(rCtrl.LineFromPosition(nMatchPos));
-		//lineIndent -= indentSize;
-		if(lineIndent<0)
-			lineIndent=0;
-
-		// Set the new indentation and postion the cursor
-		rCtrl.SetLineIndentation(nLine, lineIndent);
-		newPos = rCtrl.GetLineEndPosition(nLine);
-		rCtrl.SetCurrentPos(newPos);
-		rCtrl.SetSelectionStart(newPos);
-		rCtrl.SetSelectionEnd(newPos);
-		break;
-	default:
-		// Do nothing
-		break;
+		}
+		int secondLineIndent = rCtrl.GetLineIndentation(secondLine);
+		rCtrl.SetLineIndentation(line, secondLineIndent);
 	}
 }
 

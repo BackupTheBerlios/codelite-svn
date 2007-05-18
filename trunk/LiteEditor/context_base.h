@@ -47,7 +47,7 @@ public:
 	virtual void CodeComplete() = 0;
 	virtual void GotoDefinition() = 0;
 	virtual void GotoPreviousDefintion() = 0;
-	virtual void AutoIndent(const wxChar&) = 0;
+	virtual void AutoIndent(const wxChar&);
 	virtual void CallTipCancel() = 0;
 	virtual bool IsCommentOrString(long WXUNUSED(pos)) = 0;
 	virtual void OnDwellEnd(wxScintillaEvent & WXUNUSED(event)) = 0;
