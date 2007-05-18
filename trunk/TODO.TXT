@@ -43,12 +43,13 @@ TODO List:
 37. ******** FIXED ********* When opening a project, make sure that the workspace pane is visible
 38. When hitting 'RETURN' in the find dialog, start the search.
 39. Add option to reload file
-40. Add option to word wrap in editor
+40. ******** FIXED ********* Add option to word wrap in editor
 41. Under GTK: Create a pool of LEditor objects at startup, so the creation of new tab will be faster
 42. When pressing 'ESC' in the find dialog, hide it
-43. Add configuration mapping (for the workspace)
+43. ******** FIXED *********Add configuration mapping (for the workspace)
 44. Add environment variables to the workspace
 45. ******** FIXED ********* Right click on tree: file view and selecting 'Properties' should open the correct project settings and not the active project
 46. Add posibility to copy project settings when creating new project
 47. ******** FIXED ********* Add optin to toggle all panes and to maximize the workarea (Ctrl+M)
 48. When closing the application, prompt if there are unsaved changes
+49. Detect file changes while it was open in the editor
