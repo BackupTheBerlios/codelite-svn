@@ -178,28 +178,13 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Build"
+			Name="BuildConfiguration"
 			Filter="">
 			<File
 				RelativePath=".\build_config.cpp">
 			</File>
 			<File
 				RelativePath=".\build_config.h">
-			</File>
-			<File
-				RelativePath=".\builder.cpp">
-			</File>
-			<File
-				RelativePath=".\builder.h">
-			</File>
-			<File
-				RelativePath=".\builderwindow.h">
-			</File>
-			<File
-				RelativePath=".\buildmanager.cpp">
-			</File>
-			<File
-				RelativePath=".\buildmanager.h">
 			</File>
 			<File
 				RelativePath=".\configuration_mapping.cpp">
@@ -251,6 +236,29 @@
 			<File
 				RelativePath=".\workspace.h">
 			</File>
+		</Filter>
+		<Filter
+			Name="Builders"
+			Filter="">
+			<File
+				RelativePath=".\builder.h">
+			</File>
+			<File
+				RelativePath=".\buildmanager.cpp">
+			</File>
+			<File
+				RelativePath=".\buildmanager.h">
+			</File>
+			<Filter
+				Name="Implementations"
+				Filter="">
+				<File
+					RelativePath=".\builder_gnumake.cpp">
+				</File>
+				<File
+					RelativePath=".\builder_gnumake.h">
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
