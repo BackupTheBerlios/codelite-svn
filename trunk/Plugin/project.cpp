@@ -2,6 +2,7 @@
 #include "xmlutils.h"
 #include <wx/tokenzr.h>
 #include "wx/arrstr.h"
+#include "dirsaver.h"
 
 const wxString Project::STATIC_LIBRARY = wxT("Static Library");
 const wxString Project::DYMANIC_LIBRARY = wxT("Dynamic Library");
@@ -18,6 +19,8 @@ Project::~Project()
 bool Project::Create(const wxString &name, const wxString &path, const wxString &projType)
 {
 	m_fileName = path + wxT("/") + name + wxT(".project");
+	m_fileName.MakeAbsolute();
+
 	wxXmlNode *root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("CodeLite_Project"));   
 	m_doc.SetRoot(root);
 	m_doc.GetRoot()->AddProperty(wxT("Name"), name);
@@ -50,6 +53,7 @@ bool Project::Load(const wxString &path)
 	}
 
 	m_fileName = path;
+	m_fileName.MakeAbsolute();
 	return true;
 }
 
@@ -103,6 +107,9 @@ bool Project::AddFile(const wxString &fileName, const wxString &virtualDirPath)
 
 	// Convert the file path to be relative to 
 	// the project path
+	DirSaver ds;
+
+	::wxSetWorkingDirectory(m_fileName.GetPath());
 	wxFileName tmp(fileName);
 	tmp.MakeRelativeTo(m_fileName.GetPath());
 	
@@ -139,7 +146,15 @@ bool Project::RemoveFile(const wxString &fileName, const wxString &virtualDir)
 		return false;
 	}
 
-	wxXmlNode *node = XmlUtils::FindNodeByName(vd, wxT("File"), fileName);
+	// Convert the file path to be relative to 
+	// the project path
+	DirSaver ds;
+
+	::wxSetWorkingDirectory(m_fileName.GetPath());
+	wxFileName tmp(fileName);
+	tmp.MakeRelativeTo(m_fileName.GetPath());
+
+	wxXmlNode *node = XmlUtils::FindNodeByName(vd, wxT("File"), tmp.GetFullPath());
 	if( node ){
 		node->GetParent()->RemoveChild( node );
 		delete node;
