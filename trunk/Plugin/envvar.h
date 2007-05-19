@@ -3,8 +3,8 @@
 
 class wxXmlNode;
 
-#include "smart_ptr.h"
 #include "wx/string.h"
+#include "smart_ptr.h"
 #include <map>
 
 /**

@@ -37,7 +37,7 @@ DEBUG= -g
 endif
 
 WXVER=26
-OUTPUT_DIR=lib
+OUTPUT_DIR=../lib
 
 #PROFILER= -pg 
 ##
@@ -53,8 +53,8 @@ INCLUDES = -I. $(SQLITE_INCLUDE) -I../CodeLite -ILiteEditor
 ##
 ## Define the object files
 ##
-lib_cpp_objects := $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(basename $(notdir $(wildcard Plugin/*.cpp)))))
-lib_c_objects := $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(basename $(notdir $(wildcard Plugin/*.c)))))
+lib_cpp_objects := $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(basename $(notdir $(wildcard *.cpp)))))
+lib_c_objects := $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(basename $(notdir $(wildcard *.c)))))
 
 ## our main build target
 build : pre_build Plugin
@@ -63,10 +63,10 @@ Plugin: $(lib_cpp_objects) $(lib_c_objects)
 	ar rcu $(OUTPUT_DIR)/libplugin$(EXT).a $(lib_cpp_objects)  $(lib_c_objects) 
 	ranlib $(OUTPUT_DIR)/libplugin$(EXT).a
 
-$(OBJ_DIR)/%.o: Plugin/%.cpp 
+$(OBJ_DIR)/%.o: %.cpp 
 	$(CMP) $(CCFLAGS) $(INCLUDES) -c $< -o $(OBJ_DIR)/$(@F)
 
-$(OBJ_DIR)/%.o: Plugin/%.c
+$(OBJ_DIR)/%.o: %.c
 	$(CMP) $(CCFLAGS) $(INCLUDES) -c $< -o $(OBJ_DIR)/$(@F)
 
 pre_build:

@@ -21,3 +21,4 @@ public:
 };
 
 #endif // BUILDMANAGER_H
+

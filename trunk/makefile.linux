@@ -99,7 +99,7 @@ FLATMENU_OBJ_DIR=$(OBJ_DIR)_flatmenu
 flatmenu_objects := $(addprefix $(FLATMENU_OBJ_DIR)/, $(addsuffix .o, $(basename $(notdir $(wildcard sdk/wxflatmenu/wxflatmenu/*.cpp)))))
 
 ## our main build target
-build : pre_build pre_comp CodeLite Scintilla SQLite wxFlatNotebook wxFlatMenu LiteEditor
+build : pre_build pre_comp CodeLite Scintilla SQLite wxFlatNotebook wxFlatMenu SDK LiteEditor
 
 CodeLite: code_lite_msg $(lib_cpp_objects) $(lib_c_objects)
 	ar rcu $(OUTPUT_DIR)/libcodelite$(EXT).a $(lib_cpp_objects)  $(lib_c_objects) 
@@ -117,7 +117,7 @@ wxFlatNotebook: wxFlatNotebook_msg
 	cd sdk/wxflatnotebook/build/wxFlatNotebook && $(MAKE)
 
 SDK: sdk_msg
-	cd plugin/ && $(MAKE)
+	cd Plugin/ && $(MAKE)
 
 wxFlatMenu: wxFlatMenu_msg
 	cd sdk/wxflatmenu/ && $(MAKE) -f makefile.linux
