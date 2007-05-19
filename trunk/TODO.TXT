@@ -1,5 +1,9 @@
 TODO List:
 ==========================
+50. Add build system to the editor
+27. Add option to create an external database
+51. Add option to re-create the symbols database
+28. Add menu option to set external database to workspace
 4. Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
 5. Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
 6. Replace the editor default menu 
@@ -12,8 +16,6 @@ TODO List:
 22. Add option to open type in the workspace (eclips's Ctrl+Shift+T)
 25. Change 'Find What' & 'Replace With' controls to comboboxs 
 26. Allow to rename a file from whithin the editor
-27. Add option to create an external database
-28. Add menu option to set external database to workspace
 30. Support comment parsing (missing the in ctags options dialog as well as in the code)
 32. keyboard should open files when hitting on a tree control
 33. Add Java lexer
