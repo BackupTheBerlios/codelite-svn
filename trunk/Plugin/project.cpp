@@ -139,17 +139,11 @@ bool Project::RemoveFile(const wxString &fileName, const wxString &virtualDir)
 		return false;
 	}
 
-		// Convert the file path to be relative to 
-	// the project path
-	wxFileName tmp(fileName);
-	tmp.MakeRelativeTo(m_fileName.GetPath());
-
-	wxXmlNode *node = XmlUtils::FindNodeByName(vd, wxT("File"), tmp.GetFullPath());
+	wxXmlNode *node = XmlUtils::FindNodeByName(vd, wxT("File"), fileName);
 	if( node ){
 		node->GetParent()->RemoveChild( node );
 		delete node;
 	}
-
 	return m_doc.Save(m_fileName.GetFullPath());;
 }
 

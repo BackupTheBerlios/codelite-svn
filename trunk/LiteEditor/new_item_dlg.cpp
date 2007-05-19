@@ -18,6 +18,7 @@
 #include "new_item_dlg.h"
 #include "wx/xrc/xmlres.h"
 #include "wx/textctrl.h"
+#include "dirsaver.h"
 
 static const wxString FileTypeCpp = wxT("C++ Source File (.cpp)");
 static const wxString FileTypeC = wxT("C Source File (.c)");
@@ -134,6 +135,7 @@ void NewItemDlg::OnClick(wxCommandEvent &event)
 	} else if( id == m_cancel->GetId() ){
 		EndModal(wxID_CANCEL);
 	} else if( id == m_browseBtn->GetId() ){
+		DirSaver ds;
 		wxDirDialog *dlg = new wxDirDialog(this, wxT("Location:"),  m_cwd);
 		if(dlg->ShowModal() == wxID_OK)
 		{

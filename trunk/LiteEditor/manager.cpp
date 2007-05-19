@@ -430,7 +430,8 @@ bool Manager::RemoveFile(const wxString &fileName, const wxString &vdFullPath)
 	for(int i=0; i<count; i++){
 		LEditor *editor = dynamic_cast<LEditor*>(nb->GetPage(static_cast<size_t>(i)));
 		if( editor ){
-			if( editor->GetFileName().GetFullPath() == fileName && editor->GetProject() == project){
+			wxString fn = editor->GetFileName().GetFullName();
+			if(fn == fileName && editor->GetProject() == project){
 				nb->DeletePage(static_cast<size_t>(i));
 				break;
 			}
