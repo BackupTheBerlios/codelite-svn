@@ -61,12 +61,11 @@ WXLIBS= $(shell wx-config --libs std $(WXCFG)) -L/usr/X11R6/lib -lpangoxft-1.0 -
 TRACE_FLAG=## Comment this if you dont want messages in log window
 CCFLAGS= -D__WX__ -Wall $(TRACE_FLAG) -I. -DWXUSINGDLL -DWX_PRECOMP -DNO_GCC_PRAGMA -DXTHREADS -D_REENTRANT -DXUSE_MTSAFE_API -pthread $(shell wx-config --cxxflags $(WXCFG)) $(PROFILER) -fno-strict-aliasing -pthread 
 
-
-LINK_FLAGS =  $(WXLIBS) -L$(OUTPUT_DIR) -Lsdk/wxflatnotebook/lib -Lsdk/wxflatmenu/lib -lwxflatmenu$(EXT) -lwxflatnotebook$(EXT) -lcodelite$(EXT) -lwxsqlite3$(EXT) -lwxscintilla$(EXT) -Lsdk/sqlite3/lib -lsqlite3 $(PROFILER) -pthread  -lz -ldl -lm  -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lfontconfig -lXext -lXrender -lXinerama -lXi -lXrandr -lXcursor -lXfixes -lX11 -lgobject-2.0 -lgmodule-2.0 -ldl -lgthread-2.0 -lglib-2.0 -lXinerama -lpng -lz
+LINK_FLAGS =  $(WXLIBS) -L$(OUTPUT_DIR) -Lsdk/wxflatnotebook/lib -Lsdk/wxflatmenu/lib -lwxflatmenu$(EXT) -lwxflatnotebook$(EXT) -lcodelite$(EXT) -lplugin$(EXT) -lwxsqlite3$(EXT) -lwxscintilla$(EXT) -Lsdk/sqlite3/lib -lsqlite3 $(PROFILER) -pthread  -lz -ldl -lm  -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lfontconfig -lXext -lXrender -lXinerama -lXi -lXrandr -lXcursor -lXfixes -lX11 -lgobject-2.0 -lgmodule-2.0 -ldl -lgthread-2.0 -lglib-2.0 -lXinerama -lpng -lz
 
 SCI_INCLUDE= -Isdk/wxscintilla/include -Isdk/wxscintilla/src/scintilla/include	 -Isdk/wxscintilla/src/scintilla/src
 SQLITE_INCLUDE= -Isdk/wxsqlite3/include -Isdk/wxsqlite3/sqlite3/include
-INCLUDES = -I. $(SQLITE_INCLUDE) $(SCI_INCLUDE) -ICodeLite -ILiteEditor -ILiteEditor/include/ -Isdk/wxflatnotebook/include -Isdk/wxflatmenu/wxflatmenu/
+INCLUDES = -I. $(SQLITE_INCLUDE) $(SCI_INCLUDE) -IPlugin -ICodeLite -ILiteEditor -ILiteEditor/include/ -Isdk/wxflatnotebook/include -Isdk/wxflatmenu/wxflatmenu/
 
 ##
 ## Define the object files
@@ -117,6 +116,9 @@ SQLite: sqlite_msg $(sqlite_objects)
 wxFlatNotebook: wxFlatNotebook_msg
 	cd sdk/wxflatnotebook/build/wxFlatNotebook && $(MAKE)
 
+SDK: sdk_msg
+	cd plugin/ && $(MAKE)
+
 wxFlatMenu: wxFlatMenu_msg
 	cd sdk/wxflatmenu/ && $(MAKE) -f makefile.linux
 
@@ -160,7 +162,12 @@ code_lite_msg:
 	@echo ----------------------------------------------------------
 	@echo Building CodeLite library
 	@echo ---------------------------------------------------------- 
-	
+
+sdk_msg:
+	@echo ----------------------------------------------------------
+	@echo Building SDK library
+	@echo ---------------------------------------------------------- 
+
 sqlite_msg:
 	@echo ----------------------------------------------------------
 	@echo Building SQLite library
@@ -194,3 +201,4 @@ clean:
 	$(RM) precompiled_header.h.gch
 	cd sdk/wxflatmenu/ && $(MAKE) -f makefile.linux clean
 	cd sdk/wxflatnotebook/build/wxFlatNotebook/ && $(MAKE) clean
+	cd plugin/ && $(MAKE) clean
