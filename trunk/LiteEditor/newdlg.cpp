@@ -7,7 +7,7 @@
 #include <wx/statline.h>
 #include <wx/msgdlg.h>
 #include <wx/wxFlatNotebook/wxFlatNotebook.h>
-#include <wx/listctrl.h>
+#include <wx/listbox.h>
 #include "project.h"
 #include <map>
 #include "manager.h"
@@ -148,18 +148,12 @@ wxWindow *NewDlg::CreateProjectPage()
 
 	wxStaticText* itemStaticText;
 
-	m_projTypes = new wxListCtrl(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_SMALL_ICON | wxLC_SINGLE_SEL); 
-	wxListItem item;
+	m_projTypes = new wxListBox(panel, wxID_ANY);
+	m_projTypes->Append(Project::STATIC_LIBRARY);
+	m_projTypes->Append(Project::DYMANIC_LIBRARY);
+	m_projTypes->Append(Project::EXECUTABLE);
+	m_projTypes->SetStringSelection(Project::EXECUTABLE);
 
-	item.SetText(Project::STATIC_LIBRARY);
-	m_projTypes->InsertItem(item);
-
-	item.SetText(Project::DYMANIC_LIBRARY);
-	m_projTypes->InsertItem(item);
-
-	item.SetText(Project::EXECUTABLE);
-	item.SetState(wxLIST_STATE_SELECTED);
-	m_projTypes->InsertItem(item);
 	m_projectData.m_type = Project::EXECUTABLE;
 	
 	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("Project Name:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );

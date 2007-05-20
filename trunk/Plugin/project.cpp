@@ -37,12 +37,9 @@ bool Project::Create(const wxString &name, const wxString &path, const wxString 
 	headNode->AddProperty(wxT("Name"), wxT("Header Files"));
 	m_doc.GetRoot()->AddChild(headNode);
 	
-	//create build settings
-	ProjectSettingsPtr settings(new ProjectSettings(NULL));
-	settings->SetBuildConfiguration(new BuildConfig(NULL));
-	root->AddChild(settings->ToXml());
-
 	m_doc.Save(m_fileName.GetFullPath());
+	//create build settings
+	SetSettings(new ProjectSettings(NULL));
 	return true;
 }
 

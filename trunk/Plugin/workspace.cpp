@@ -117,8 +117,10 @@ bool Workspace::CreateWorkspace(const wxString &name, const wxString &path, cons
 	m_doc.GetRoot()->AddProperty(wxT("Name"), name);
 	m_doc.GetRoot()->AddProperty(wxT("Database"), dbFileName.GetFullPath());
 	m_doc.GetRoot()->AddProperty(wxT("ExternalDatabase"), wxEmptyString);
-	m_doc.Save(m_fileName.GetFullPath());
 
+	m_doc.Save(m_fileName.GetFullPath());
+	//create an empty build matrix
+	SetBuildMatrix(new BuildMatrix(NULL));
 	SaveCtagsOptions( options );
 	return true;
 }
@@ -139,6 +141,51 @@ wxString Workspace::GetStringProperty(const wxString &propName, wxString &errMsg
 	return rootNode->GetPropVal(propName, wxEmptyString);
 }
 
+void Workspace::AddProjectToBuildMatrix(ProjectPtr prj)
+{
+	BuildMatrixPtr matrix = GetBuildMatrix();
+	std::list<WorkspaceConfigurationPtr> wspList = matrix->GetConfigurations();
+	std::list<WorkspaceConfigurationPtr>::iterator iter = wspList.begin();
+	for(; iter !=  wspList.end(); iter++){
+		WorkspaceConfiguration::ConfigMappingList prjList = (*iter)->GetMapping();
+
+		ProjectSettingsCookie cookie;
+		BuildConfigPtr prjBldConf = prj->GetSettings()->GetFirstBuildConfiguration(cookie);
+		if( !prjBldConf ){
+			// the project does not have any settings, create new one and add it
+			prj->SetSettings(new ProjectSettings(NULL));
+			prjBldConf = prj->GetSettings()->GetFirstBuildConfiguration(cookie);
+		}
+		ConfigMappingEntry entry(prj->GetName(), prjBldConf->GetName());
+		prjList.push_back(entry);
+		(*iter)->SetConfigMappingList(prjList);
+		matrix->SetConfiguration((*iter));
+	}
+	SetBuildMatrix(matrix);
+}
+
+void Workspace::RemoveProjectFromBuildMatrix(ProjectPtr prj)
+{
+	BuildMatrixPtr matrix = GetBuildMatrix();
+	std::list<WorkspaceConfigurationPtr> wspList = matrix->GetConfigurations();
+	std::list<WorkspaceConfigurationPtr>::iterator iter = wspList.begin();
+	for(; iter !=  wspList.end(); iter++){
+		WorkspaceConfiguration::ConfigMappingList prjList = (*iter)->GetMapping();
+
+		WorkspaceConfiguration::ConfigMappingList::iterator it = prjList.begin();
+		for(; it != prjList.end(); it++){
+			if((*it).m_project == prj->GetName()){
+				prjList.erase(it);
+				break;
+			}
+		}
+
+		(*iter)->SetConfigMappingList(prjList);
+		matrix->SetConfiguration((*iter));
+	}
+	SetBuildMatrix(matrix);
+}
+
 bool Workspace::CreateProject(const wxString &name, const wxString &path, const wxString &type, wxString &errMsg)
 {
 	if( !m_doc.IsOk() ){
@@ -149,7 +196,7 @@ bool Workspace::CreateProject(const wxString &name, const wxString &path, const 
 	ProjectPtr proj(new Project());
 	proj->Create(name, path, type);
 	m_projects[name] = proj;
-
+	
 	// make the project path to be relative to the workspace
 	wxFileName tmp(path + wxT("/") + name + wxT(".project"));
 	tmp.MakeRelativeTo(m_fileName.GetPath());
@@ -158,7 +205,7 @@ bool Workspace::CreateProject(const wxString &name, const wxString &path, const 
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Project"));
 	node->AddProperty(wxT("Name"), name);
 	node->AddProperty(wxT("Path"), tmp.GetFullPath());
-
+	
 	m_doc.GetRoot()->AddChild(node);
 
 	if( m_projects.size() == 1 ){
@@ -166,6 +213,7 @@ bool Workspace::CreateProject(const wxString &name, const wxString &path, const 
 	}
 
 	m_doc.Save(m_fileName.GetFullPath());
+	AddProjectToBuildMatrix(proj);
 	return true;
 }
 
@@ -223,7 +271,10 @@ bool Workspace::AddProject(const wxString & path, wxString &errMsg)
 		node->AddProperty(wxT("Path"), fn.GetFullPath());
 		node->AddProperty(wxT("Active"), m_projects.size() == 1 ? wxT("Yes") : wxT("No"));
 		m_doc.GetRoot()->AddChild(node);
-		return m_doc.Save(m_fileName.GetFullPath());
+		m_doc.Save(m_fileName.GetFullPath());
+
+		AddProjectToBuildMatrix(FindProjectByName(fn.GetName(), errMsg));
+		return true;
 	}
 
 	errMsg = wxT("A project with this name already exist in the workspace");
@@ -251,6 +302,10 @@ bool Workspace::RemoveProject(const wxString &name, wxString &errMsg)
 	if( !proj ){
 		return false;
 	}
+
+	//remove the associated build configuration with this
+	//project
+	RemoveProjectFromBuildMatrix(proj);
 
 	// remove the project from the internal map
 	std::map<wxString, ProjectPtr>::iterator iter = m_projects.find(proj->GetName());

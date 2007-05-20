@@ -41,7 +41,7 @@ protected:
 	
 	void PopulateConfigurations();
 	void AddEntry(const wxString &projectName, const wxString &selectedConf);
-	Configuration::ConfigMappingList GetCurrentSettings();
+	WorkspaceConfiguration::ConfigMappingList GetCurrentSettings();
 	void SaveCurrentSettings();
 
 public:

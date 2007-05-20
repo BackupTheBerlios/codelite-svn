@@ -4,6 +4,7 @@
 #include <wx/checkbox.h>
 #include <wx/button.h>
 #include <wx/stattext.h>
+#include "macros.h"
 
 DEFINE_EVENT_TYPE(wxEVT_FRD_FIND_NEXT)
 DEFINE_EVENT_TYPE(wxEVT_FRD_CLOSE)
@@ -29,7 +30,7 @@ FindReplaceDialog::FindReplaceDialog(wxWindow* parent,
 									 const wxSize& size, 
 									 long style)
 {
-	Create(parent, data, id, caption, pos, size, style);
+	Create(parent, data, id, caption, pos, size, style | wxWANTS_CHARS);
 }
 
 bool FindReplaceDialog::Create(wxWindow* parent, 
@@ -72,13 +73,13 @@ void FindReplaceDialog::CreateGUIControls()
 	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Find What:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	gbSizer->Add(itemStaticText, wxGBPosition(0, 0), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
-	m_findString = new wxTextCtrl( this, wxID_ANY, m_data.GetFindString(), wxDefaultPosition, wxSize(200, -1));
+	m_findString = new wxTextCtrl( this, wxID_ANY, m_data.GetFindString(), wxDefaultPosition, wxSize(200, -1), wxTE_PROCESS_ENTER);
 	gbSizer->Add(m_findString, wxGBPosition(0, 1), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
 	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Replace With:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	gbSizer->Add(itemStaticText, wxGBPosition(1, 0), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
-	m_replaceString = new wxTextCtrl(this, wxID_ANY, m_data.GetReplaceString(), wxDefaultPosition, wxSize(200, -1));
+	m_replaceString = new wxTextCtrl(this, wxID_ANY, m_data.GetReplaceString(), wxDefaultPosition, wxSize(200, -1), wxTE_PROCESS_ENTER);
 	gbSizer->Add(m_replaceString, wxGBPosition(1, 1), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
 	wxStaticBoxSizer *sz = new wxStaticBoxSizer(wxVERTICAL, this, wxT("Options"));
@@ -190,10 +191,33 @@ void FindReplaceDialog::OnClose(wxCloseEvent &event)
 	SendEvent(wxEVT_FRD_CLOSE);
 	Hide();
 }
+void FindReplaceDialog::OnKeyDown(wxKeyEvent &event)
+{
+	if(event.GetKeyCode() == WXK_RETURN){
+		// start the search
+		size_t flags = m_data.GetFlags();
+		m_data.SetFindString( m_findString->GetValue() );
+		m_data.SetReplaceString( m_replaceString->GetValue() );
+		SendEvent(wxEVT_FRD_FIND_NEXT);
+		// Set the updated flags
+		m_data.SetFlags(flags);
+		event.Skip(false);
+	}else if(event.GetKeyCode() == WXK_ESCAPE){
+		//hide the dialog
+		Hide();
+		event.Skip(false);
+	}else{ 
+		//skip event
+		event.Skip();
+	}
+}
 
 void FindReplaceDialog::ConnectEvents()
 {
 	// Connect buttons
+	ConnectKeyDown(m_findString, FindReplaceDialog::OnKeyDown);
+	ConnectKeyDown(m_replaceString, FindReplaceDialog::OnKeyDown);
+
 	m_find->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(FindReplaceDialog::OnClick), NULL, this);
 	m_replace->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(FindReplaceDialog::OnClick), NULL, this);
 	m_replaceAll->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(FindReplaceDialog::OnClick), NULL, this);

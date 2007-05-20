@@ -23,6 +23,16 @@
 #define ConnectListCtrlItemActivated(ctrl, fn)\
 	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler(fn), NULL, this);
 
+#define ConnectKeyDown(ctrl, fn)\
+	ctrl->Connect(ctrl->GetId(), wxEVT_KEY_DOWN, wxKeyEventHandler(fn), NULL, this);
+
+#define ConnectCharEvent(ctrl, fn)\
+	ctrl->Connect(ctrl->GetId(), wxEVT_CHAR, wxKeyEventHandler(fn), NULL, this);
+
+#define ConnectCmd(ctrl, fn)\
+	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(fn), NULL, this);
+
+
 #define TrimString(str){\
 		str = str.Trim();\
 		str = str.Trim(false);\

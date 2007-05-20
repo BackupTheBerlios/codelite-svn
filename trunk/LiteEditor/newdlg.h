@@ -18,7 +18,7 @@ class wxDirPickerCtrl;
 class wxComboBox;
 class wxFilePickerCtrl;
 class wxFlatNotebook;
-class wxListCtrl;
+class wxListBox;
 
 // Workspace information
 class WorkspaceData {
@@ -48,7 +48,7 @@ class NewDlg : public wxDialog
 
 	wxTextCtrl *m_projName;
 	wxDirPickerCtrl *m_projPathPicker;
-	wxListCtrl *m_projTypes;
+	wxListBox *m_projTypes;
 
 	// Buttons
 	wxButton *m_create;

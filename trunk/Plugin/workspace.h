@@ -224,6 +224,9 @@ private:
 	 * \param errMsg [output] incase an error, report the error to the caller
 	 */
 	bool DoAddProject(const wxString &path, wxString &errMsg);
+
+	void AddProjectToBuildMatrix(ProjectPtr prj);
+	void RemoveProjectFromBuildMatrix(ProjectPtr prj);
 };
 
 typedef Singleton<Workspace> WorkspaceST;

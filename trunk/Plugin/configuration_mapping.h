@@ -24,7 +24,7 @@ public:
 	{}
 };
 
-class Configuration {
+class WorkspaceConfiguration {
 public:
 	typedef std::list<ConfigMappingEntry> ConfigMappingList;
 
@@ -34,9 +34,10 @@ private:
 	bool m_isSelected;
 
 public:
-	Configuration();
-	Configuration(wxXmlNode *node);
-	virtual ~Configuration();
+	WorkspaceConfiguration();
+	WorkspaceConfiguration(wxXmlNode *node);
+	WorkspaceConfiguration(const wxString &name, bool selected);
+	virtual ~WorkspaceConfiguration();
 	wxXmlNode *ToXml() const;
 	
 	void SetSelected(bool selected) { m_isSelected = selected; }
@@ -47,21 +48,21 @@ public:
 	void SetName(const wxString &name){ m_name = name; }
 };
 
-typedef SmartPtr<Configuration> ConfigurationPtr;
+typedef SmartPtr<WorkspaceConfiguration> WorkspaceConfigurationPtr;
 
 class BuildMatrix {
-	std::list<ConfigurationPtr> m_configurationList;
+	std::list<WorkspaceConfigurationPtr> m_configurationList;
 
 public:
 	BuildMatrix(wxXmlNode *node);
 	virtual ~BuildMatrix();
 	wxXmlNode *ToXml() const;
-	const std::list<ConfigurationPtr>& GetConfigurations() const { return m_configurationList; };
+	const std::list<WorkspaceConfigurationPtr>& GetConfigurations() const { return m_configurationList; };
 	void RemoveConfiguration(const wxString &configName);
-	void SetConfiguration(ConfigurationPtr conf);
+	void SetConfiguration(WorkspaceConfigurationPtr conf);
 	wxString GetProjectSelectedConf(const wxString &configName, const wxString &project) const;
 	wxString GetSelectedConfigurationName() const;
-	ConfigurationPtr GetConfigurationByName(const wxString &name) const;
+	WorkspaceConfigurationPtr GetConfigurationByName(const wxString &name) const;
 };
 
 typedef SmartPtr<BuildMatrix> BuildMatrixPtr;
