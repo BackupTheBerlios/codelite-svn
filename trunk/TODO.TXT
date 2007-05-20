@@ -4,6 +4,9 @@ TODO List:
 27. Add option to create an external database
 51. Add option to re-create the symbols database
 28. Add menu option to set external database to workspace
+33. Add Java lexer
+34. Add XML lexer
+48. When closing the application, prompt if there are unsaved changes
 4. Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
 5. Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
 6. Replace the editor default menu 
@@ -18,13 +21,7 @@ TODO List:
 26. Allow to rename a file from whithin the editor
 30. Support comment parsing (missing the in ctags options dialog as well as in the code)
 32. keyboard should open files when hitting on a tree control
-33. Add Java lexer
-34. Add XML lexer
 35. typedefs are not handled properly
 36. When opening a file from the command line, make sure that the workspace pane and the output pane are hidden
-38. When hitting 'RETURN' in the find dialog, start the search.
-39. Add option to reload file
-42. When pressing 'ESC' in the find dialog, hide it
 46. Add posibility to copy project settings when creating new project
-48. When closing the application, prompt if there are unsaved changes
 49. Detect file changes while it was open in the editor
