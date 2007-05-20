@@ -219,11 +219,11 @@ void ContextCpp::AutoIndent(const wxChar &nChar)
 			dummy = dummy / indentSize;
 		}
 		rCtrl.SetCaretAt(rCtrl.GetCurrentPos() + dummy);
-	} else if(nChar == wxT(':')){
+	/*} else if(nChar == wxT(':')){
 		
 		int curlineIndent = rCtrl.GetLineIndentation(line);
 		int newIndent = 0;
-		int p;
+		/*int p;
 		if(rCtrl.PreviousChar(rCtrl.PositionBefore(rCtrl.GetCurrentPos()), p) == wxT(':')){
 			//increase indentation
 			newIndent = curlineIndent + indentSize;
@@ -237,9 +237,9 @@ void ContextCpp::AutoIndent(const wxChar &nChar)
 			//reduce indentation
 			if(curlineIndent - indentSize > 0){
 				newIndent = curlineIndent - indentSize;
-			}
 			rCtrl.SetLineIndentation(line, newIndent);
-		}
+			//}
+		}*/
 	} else if(nChar == wxT('}') && rCtrl.MatchBraceBack(wxT('}'), rCtrl.GetCurrentPos()-1, matchPos)) {
 		int secondLine = rCtrl.LineFromPosition(matchPos);
 		if(secondLine == line){

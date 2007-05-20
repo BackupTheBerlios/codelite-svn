@@ -810,7 +810,11 @@ private:
     void*               doubleClickActionData;
 public:
     wxSCIListBoxWin(wxWindow* parent, wxWindowID id, Point WXUNUSED(location)) :
+#ifdef __WXMSW__
         wxPopupWindow(parent, wxRAISED_BORDER)
+#else
+		wxPopupWindow(parent, wxSIMPLE_BORDER)
+#endif
     {
 		SetBackgroundColour(*wxWHITE);  
 

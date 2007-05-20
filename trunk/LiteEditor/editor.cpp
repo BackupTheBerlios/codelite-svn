@@ -228,7 +228,7 @@ void LEditor::SetProperties()
 	AutoCompSetChooseSingle(true);					// If only one match, insert it automatically
 	AutoCompSetIgnoreCase(true);
 	AutoCompSetMaxWidth(0);
-	AutoCompSetFillUps(wxT(":.(- "));
+	//AutoCompSetFillUps(wxT(":.(- "));
 
 	SetTabWidth(8);
 	SetIndent(8);

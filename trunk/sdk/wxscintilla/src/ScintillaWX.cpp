@@ -547,10 +547,25 @@ void ScintillaWX::Paste() {
 
 void ScintillaWX::CopyToClipboard (const SelectionText& st) {
 #if wxUSE_CLIPBOARD
-  if (wxTheClipboard->Open()) {
-        wxTheClipboard->UsePrimarySelection(false);
-        wxString text = wxTextBuffer::Translate(sci2wx(st.s, st.len-1));
-        wxTheClipboard->SetData(new wxTextDataObject(text));
+    if (wxTheClipboard->Open()) {
+        wxTheClipboard->UsePrimarySelection (false);
+        wxString text = wxTextBuffer::Translate (sci2wx(st.s, st.len-1));
+
+        // composite object will hold "plain text" for pasting in other programs and a custom
+        // object for local use that remembers what kind of selection was made (stream or
+        // rectangular).
+        wxDataObjectComposite* obj = new wxDataObjectComposite();
+        wxCustomDataObject* rectData = new wxCustomDataObject (wxDF_PRIVATE);
+
+        char* buffer = new char[st.len+1];
+        buffer[0] = (st.rectangular)? (char)1 : (char)0;
+        memcpy (buffer+1, st.s, st.len);
+        rectData->SetData (st.len+1, buffer);
+        delete buffer;
+
+        obj->Add (rectData, true);
+        obj->Add (new wxTextDataObject (text));
+        wxTheClipboard->SetData (obj);
         wxTheClipboard->Close();
     }
 #else
