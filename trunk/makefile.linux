@@ -201,4 +201,4 @@ clean:
 	$(RM) precompiled_header.h.gch
 	cd sdk/wxflatmenu/ && $(MAKE) -f makefile.linux clean
 	cd sdk/wxflatnotebook/build/wxFlatNotebook/ && $(MAKE) clean
-	cd plugin/ && $(MAKE) clean
+	cd Plugin/ && $(MAKE) clean

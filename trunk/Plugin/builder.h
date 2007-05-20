@@ -21,8 +21,8 @@ protected:
 	wxString m_name;
 
 public:
-	Builder(const wxString &name) : m_name(name) {};
-	virtual ~Builder(){};
+	Builder(const wxString &name) ;
+	virtual ~Builder();
 
 	/**
 	 * \return the builder name 
