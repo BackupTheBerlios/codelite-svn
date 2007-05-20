@@ -1,14 +1,15 @@
 #include "menumanager.h"
+#include "menu_event_handlers.h"
 
 MenuManager::MenuManager(void)
 {
-	PushHandler(new CopyHandler(wxID_COPY));
-	PushHandler(new CutHandler(wxID_CUT));
-	PushHandler(new PasteHandler(wxID_PASTE));
-	PushHandler(new UndoHandler(wxID_UNDO));
-	PushHandler(new RedoHandler(wxID_REDO));
-	PushHandler(new SelectAllHandler(wxID_SELECTALL));
-	PushHandler(new DuplicateLineHandler(wxID_DUPLICATE));
+	PushHandler(new EditHandler(wxID_COPY));
+	PushHandler(new EditHandler(wxID_CUT));
+	PushHandler(new EditHandler(wxID_PASTE));
+	PushHandler(new EditHandler(wxID_UNDO));
+	PushHandler(new EditHandler(wxID_REDO));
+	PushHandler(new EditHandler(wxID_SELECTALL));
+	PushHandler(new EditHandler(wxID_DUPLICATE));
 	PushHandler(new BraceMatchHandler(XRCID("select_to_brace")));
 	PushHandler(new BraceMatchHandler(XRCID("match_brace")));
 	PushHandler(new FindReplaceHandler(wxID_FIND));

@@ -4,134 +4,52 @@
 //------------------------------------
 // Handle copy events
 //------------------------------------
-void CopyHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
+void EditHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	if( !editor ){
 		return;
 	}
-	editor->Copy();
-}
 
-void CopyHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
-{
-	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	event.Enable(editor && ( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 ));
-}
-
-//------------------------------------
-// Handle cut events
-//------------------------------------
-void CutHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
-{
-	wxUnusedVar(event);
-	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	if( !editor ){
-		return;
+	if(event.GetId() == wxID_COPY){
+		editor->Copy();
+	}else if(event.GetId() == wxID_CUT){
+		editor->Cut();
+	}else if(event.GetId() == wxID_PASTE){
+		editor->Paste();
+	}else if(event.GetId() == wxID_UNDO){
+		editor->Undo();
+	}else if(event.GetId() == wxID_REDO){
+		editor->Redo();
+	}else if(event.GetId() == wxID_SELECTALL){
+		editor->SelectAll();
+	}else if(event.GetId() == wxID_DUPLICATE){
+		editor->LineDuplicate();
 	}
-	editor->Cut();
 }
 
-void CutHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
+void EditHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	event.Enable(editor && ( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 ));
-}
 
-//------------------------------------
-// Handle paste events
-//------------------------------------
-void PasteHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
-{
-	wxUnusedVar(event);
-	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	if( !editor ){
-		return;
+	if(event.GetId() == wxID_COPY){
+		event.Enable(editor && ( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 ));
+	}else if(event.GetId() == wxID_CUT){
+		event.Enable(editor && ( editor->GetSelectionStart() - editor->GetSelectionEnd() != 0 ));
+	}else if(event.GetId() == wxID_PASTE){
+		event.Enable(editor && editor->CanPaste());
+	}else if(event.GetId() == wxID_UNDO){
+		event.Enable(editor && editor->CanUndo());
+	}else if(event.GetId() == wxID_REDO){
+		event.Enable(editor && editor->CanRedo());
+	}else if(event.GetId() == wxID_SELECTALL){
+		event.Enable(editor && editor->GetLength() > 0);
+	}else if(event.GetId() == wxID_DUPLICATE){
+		event.Enable(true);
+	}else{
+		event.Enable(false);
 	}
-	editor->Paste();
-}
-
-void PasteHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
-{
-	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	event.Enable(editor && editor->CanPaste());
-}
-
-//------------------------------------
-// Undo
-//------------------------------------
-void UndoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
-{
-	wxUnusedVar(event);
-	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	if( !editor ){
-		return;
-	}
-	editor->Undo();
-}
-
-void UndoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
-{
-	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	event.Enable(editor && editor->CanUndo());
-}
-
-//------------------------------------
-// Redo
-//------------------------------------
-void RedoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
-{
-	wxUnusedVar(event);
-	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	if( !editor ){
-		return;
-	}
-	editor->Redo();
-}
-
-void RedoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
-{
-	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	event.Enable(editor && editor->CanRedo());
-}
-
-//------------------------------------
-// SelectAll
-//------------------------------------
-void SelectAllHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
-{
-	wxUnusedVar(event);
-	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	if( !editor ){
-		return;
-	}
-	editor->SelectAll();
-}
-
-void SelectAllHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
-{
-	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	event.Enable(editor && editor->GetLength() > 0);
-}
-
-//------------------------------------
-// duplicate line
-//------------------------------------
-void DuplicateLineHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
-{
-	wxUnusedVar(event);
-	LEditor *editor = dynamic_cast<LEditor*>(owner);
-	if( !editor ){
-		return;
-	}
-	editor->LineDuplicate();
-}
-
-void DuplicateLineHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
-{
-	wxUnusedVar(owner);
-	event.Enable(true);
 }
 
 //------------------------------------

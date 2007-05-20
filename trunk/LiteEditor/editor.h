@@ -182,6 +182,11 @@ public:
 	bool MatchBraceBack(const wxChar& chCloseBrace, const long &pos, long &matchedPos);
 
 	/**
+	 * Reload the file that is currently opened in the editor
+	 */
+	void ReloadFile();
+
+	/**
 	 * Return the current LEditor history stack
 	 */
 	static std::stack<TagEntry> &GetHistory() { return m_history; }
@@ -207,9 +212,6 @@ private:
 	void OnModified(wxScintillaEvent& event);
 	void OnSciUpdateUI(wxScintillaEvent &event);
 	void OnFindDialog(wxCommandEvent &event);
-	
-	
 };
 
 #endif // LITEEDITOR_EDITOR_H
-

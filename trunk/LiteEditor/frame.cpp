@@ -51,6 +51,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(wxID_REDO, Frame::DispatchCommandEvent)
 	EVT_MENU(wxID_SELECTALL, Frame::DispatchCommandEvent)
 	EVT_MENU(wxID_DUPLICATE, Frame::DispatchCommandEvent)
+	EVT_MENU(wxID_REFRESH, Frame::OnFileReload)
 	EVT_MENU(XRCID("select_to_brace"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("match_brace"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("find_next"), Frame::DispatchCommandEvent)
@@ -73,6 +74,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CLOSE, Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(wxID_REFRESH, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(XRCID("save_all"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CUT, Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(wxID_COPY, Frame::DispatchUpdateUIEvent)
@@ -286,7 +288,7 @@ void Frame::DispatchUpdateUIEvent(wxUpdateUIEvent &event)
 
 void Frame::OnFileExistUpdateUI(wxUpdateUIEvent &event)
 {
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
+	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetPage(m_notebook->GetSelection()));
 	if( !editor ){ 
 		event.Enable(false);
 	} else {
@@ -326,7 +328,7 @@ wxString Frame::GetStringFromUser(const wxString& msg)
 
 void Frame::OnSave(wxCommandEvent& WXUNUSED(event))
 {
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetCurrentPage());
+	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetCurrentPage());
 	if( !editor )
 		return;
 
@@ -336,12 +338,23 @@ void Frame::OnSave(wxCommandEvent& WXUNUSED(event))
 
 void Frame::OnSaveAs(wxCommandEvent& WXUNUSED(event))
 {
-	LEditor* editor = static_cast<LEditor*>(m_notebook->GetCurrentPage());
+	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetCurrentPage());
 	if( !editor )
 		return;
 
 	editor->SaveFileAs();
 }
+
+void Frame::OnFileReload(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetCurrentPage());
+	if( !editor )
+		return;
+
+	editor->ReloadFile();
+}
+
 
 void Frame::OnSwitchWorkspace(wxCommandEvent &event)
 {

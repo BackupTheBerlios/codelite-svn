@@ -20,7 +20,11 @@
                 <help>Open an existing file</help>
             </object>
 
-            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+			<object class="wxMenuItem" name="wxID_REFRESH">
+				<label>&amp;Reload File\tCtrl+R</label>
+			</object>
+
+			<object class="wxMenuItem" name="wxID_SEPARATOR"/>
             
             <object class="wxMenuItem" name="wxID_SAVE">
                 <label>&amp;Save File\tCtrl+S</label>

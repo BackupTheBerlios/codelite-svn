@@ -59,7 +59,7 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 
 	// If file name is provided, open it
 	if(	false == m_fileName.GetFullPath().IsEmpty() &&					// valid file name was passed
-		m_fileName.GetFullPath().Find(wxT("Untitled")) == wxNOT_FOUND)	// file name does not contain 'Untitiled'
+		!m_fileName.GetFullPath().StartsWith(wxT("Untitled")))	// file name does not contain 'Untitiled'
 	{
 		OpenFile(m_fileName.GetFullPath(), m_project);
 	}
@@ -1049,4 +1049,27 @@ void LEditor::SetCaretAt(const long pos)
 	SetCurrentPos(pos);
 	SetSelectionStart(pos);
 	SetSelectionEnd(pos);
+}
+
+void LEditor::ReloadFile()
+{
+	if(m_fileName.GetFullPath().IsEmpty() == true || m_fileName.GetFullPath().StartsWith(wxT("Untitled")))
+		return;
+
+	wxFFile file(m_fileName.GetFullPath().GetData(), _T("r"));
+	if(file.IsOpened() == false)
+	{
+		// Nothing to be done
+		wxString msg = wxString::Format(_("Failed to open file %s"), m_fileName.GetFullPath().GetData());
+		wxMessageBox( msg );
+		return;
+	}
+
+	// Read the entire file content
+	wxString text;
+	file.ReadAll(&text);
+	file.Close();
+
+	SetText( text );
+	SetDirty(false);
 }

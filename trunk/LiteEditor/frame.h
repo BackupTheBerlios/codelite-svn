@@ -97,6 +97,7 @@ protected:
 	void OnBuildFromDatabase(wxCommandEvent& event);
 	void OnSave(wxCommandEvent& event);
 	void OnSaveAs(wxCommandEvent& event);
+	void OnFileReload(wxCommandEvent& event);
 	void OnCompleteWord(wxCommandEvent& event);
 	void OnDeleteProject(wxCommandEvent& event);
 	void OnBuildExternalDatabase(wxCommandEvent& event);
