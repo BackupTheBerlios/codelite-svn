@@ -111,9 +111,11 @@ void BuilderGnuMake::GenerateProjectConfiguration(BuildConfigPtr bldConf, wxText
 	text << wxT("OutputFile") << wxT("=\"") << bldConf->GetOutputFileName() << wxT("\"\n");
 	text << wxT("IntermediateDirectory") << wxT("=\"") << bldConf->GetIntermediateDirectory() << wxT("\"\n");
 	text << wxT("CmpOptions") << wxT("=\"") << bldConf->GetCompileOptions() << wxT("\"\n");
+	text << wxT("LinkOptions") << wxT("=\"") << bldConf->GetLinkOptions() << wxT("\"\n");
 	text << wxT("IncludePath=") << ParseIncludePath(bldConf->GetIncludePath()) << wxT("\n");
 	text << wxT("Libs=") << ParseLibs(bldConf->GetLibraries()) << wxT("\n");
 	text << wxT("LibPath=") << ParseLibPath(bldConf->GetLibPath()) << wxT("\n");
+	text << wxT("PostBuild=") << wxT("PostBuild_") << name << wxT("\n");
 	text << wxT("endif\n\n");
 }
 
