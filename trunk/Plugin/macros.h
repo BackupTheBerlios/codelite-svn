@@ -38,6 +38,9 @@
 		str = str.Trim(false);\
 	}
 
+#define IsSourceFile(ext)\
+	(ext == wxT("cpp") || ext == wxT("cxx") || ext == wxT("c") || ext == wxT("c++") || ext == wxT("cc"))
+
 #define BoolToString(b) b ? wxT("yes") : wxT("no")
 
 //-----------------------------------------------------

@@ -25,8 +25,11 @@ public:
 	virtual bool Export(const wxString &project = wxEmptyString);
 
 private:
-	void GenerateMakefile(ProjectSettingsPtr settings, const wxString &path);
-	void GenerateProjectConfiguration(BuildConfigPtr bldConf, wxTextOutputStream &text);
+	void GenerateMakefile(ProjectPtr proj);
+	void CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutputStream &text);
+	void CreateTargets(ProjectPtr proj, wxTextOutputStream &text);
+	void CreateBuildEventRules(BuildConfigPtr bldConf, wxTextOutputStream &text);
+
 	wxString ParseIncludePath(const wxString &paths);
 	wxString ParseLibPath(const wxString &paths);
 	wxString ParseLibs(const wxString &libs);

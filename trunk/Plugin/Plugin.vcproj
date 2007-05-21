@@ -241,6 +241,9 @@
 			Name="Builders"
 			Filter="">
 			<File
+				RelativePath=".\builder.cpp">
+			</File>
+			<File
 				RelativePath=".\builder.h">
 			</File>
 			<File

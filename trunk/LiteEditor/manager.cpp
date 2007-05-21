@@ -20,6 +20,7 @@
 #include "wx/arrstr.h"
 #include "context_manager.h"
 #include "wx/tokenzr.h"
+#include "buildmanager.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -156,6 +157,7 @@ void Manager::UnInitialize()
 	EditorConfigST::Free();
 	WorkspaceST::Free();
 	ContextManager::Free();
+	BuildManagerST::Free();
 
 	//-----------------------------------------------------
 	// Stop the parser thread and release its resources

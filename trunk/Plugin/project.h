@@ -202,12 +202,6 @@ public:
 	void GetFiles(std::vector<wxFileName> &files);
 
 	/**
-	 * Return list of files in this project
-	 * \param files 
-	 */
-	void GetFiles(wxArrayString &files);
-
-	/**
 	 * Return the project build settings object by name
 	 */
 	ProjectSettingsPtr GetSettings() const;
