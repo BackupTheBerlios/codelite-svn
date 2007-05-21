@@ -2,6 +2,7 @@
 #include "builder.h"
 #include "builder_gnumake.h"
 
+
 BuildManager::BuildManager()
 {
 	// register all builders here
@@ -42,3 +43,17 @@ void BuildManager::GetBuilders(std::list<wxString> &list)
 		list.push_back(iter->second->GetName());
 	}
 }
+
+BuilderPtr BuildManager::GetBuilder(const wxString &name)
+{
+	wxCriticalSectionLocker locker(m_cs);
+
+	std::map<wxString, BuilderPtr>::iterator iter = m_builders.begin();
+	for(; iter != m_builders.end(); iter++){
+		if(iter->first == name){
+			return iter->second;
+		}
+	}
+	return NULL;
+}
+

@@ -25,6 +25,12 @@ public:
 	virtual ~Builder();
 
 	/**
+	 * Normalize the configuration name, this is done by removing any trailing and leading 
+	 * spaces from the string, and replacing any space character with underscore.
+	 */
+	wxString NormalizeConfigName(const wxString &confgName) const;
+
+	/**
 	 * \return the builder name 
 	 */
 	const wxString &GetName() const { return m_name; }

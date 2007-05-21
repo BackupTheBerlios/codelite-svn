@@ -298,18 +298,24 @@
     <object class="wxMenu" name="file_tree_project">
         <label>&amp;Project</label>
         <style>wxMENU_TEAROFF</style>
-        <object class="wxMenuItem" name="new_virtual_folder">
-            <label>New &amp;Virtual Folder</label>
-        </object>
-         <object class="wxMenuItem" name="wxID_SEPARATOR"/>
-         <object class="wxMenuItem" name="sort_item">
-            <label>&amp;Sort Item</label>
-        </object>
-        <object class="wxMenuItem" name="wxID_SEPARATOR"/>
-        <object class="wxMenuItem" name="set_as_active">
-            <label>Set As &amp;Active</label>
-        </object>
-        <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+		<object class="wxMenuItem" name="export_makefile">
+			<label>Export &amp;Makefile</label>
+		</object>
+		
+		<object class="wxMenuItem" name="wxID_SEPARATOR"/>
+		<object class="wxMenuItem" name="set_as_active">
+			<label>Set As &amp;Active</label>
+		</object>
+		
+		<object class="wxMenuItem" name="wxID_SEPARATOR"/>
+		<object class="wxMenuItem" name="sort_item">
+			<label>&amp;Sort Item</label>
+		</object>
+		<object class="wxMenuItem" name="new_virtual_folder">
+			<label>New &amp;Virtual Folder</label>
+		</object>
+		
+		<object class="wxMenuItem" name="wxID_SEPARATOR"/>
         <object class="wxMenuItem" name="remove_project">
             <label>&amp;Remove Project</label>
         </object>

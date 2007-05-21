@@ -7,6 +7,7 @@
 #include <deque>
 #include "new_item_dlg.h"
 #include "project_settings_dlg.h"
+#include "buildmanager.h"
 
 FileViewTree::FileViewTree()
 {
@@ -23,6 +24,7 @@ void FileViewTree::ConnectEvents()
 	Connect(XRCID("project_properties"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnProjectProperties), NULL, this);
 	Connect(XRCID("sort_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnSortItem), NULL, this);
 	Connect(XRCID("remove_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnRemoveItem), NULL, this);
+	Connect(XRCID("export_makefile"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnExportMakefile), NULL, this);
 }
 
 FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -226,6 +228,17 @@ void FileViewTree::OnMouseDblClick(wxMouseEvent &event)
 		fn.MakeAbsolute(ManagerST::Get()->GetProjectCwd(project));
 		ManagerST::Get()->OpenFile(fn.GetFullPath(), project, -1);
 		return;
+	}
+}
+
+void FileViewTree::OnExportMakefile(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	wxTreeItemId item = GetSelection();
+	if(item.IsOk()){
+		wxString projectName = GetItemText(item);
+		BuilderPtr builder = BuildManagerST::Get()->GetBuilder(wxT("GNU makefile for g++/gcc"));
+		builder->Export(projectName);
 	}
 }
 
