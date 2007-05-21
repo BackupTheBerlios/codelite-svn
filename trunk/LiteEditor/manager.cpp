@@ -428,13 +428,15 @@ bool Manager::RemoveFile(const wxString &fileName, const wxString &vdFullPath)
 	}
 
 	wxString project = vdFullPath.BeforeFirst(wxT(':'));
+	wxFileName absPath(fileName);
+	absPath.MakeAbsolute(GetProjectCwd(project));
+
 	int count = nb->GetPageCount();
 	for(int i=0; i<count; i++){
 		LEditor *editor = dynamic_cast<LEditor*>(nb->GetPage(static_cast<size_t>(i)));
 		if( editor ){
 			wxString fn = editor->GetFileName().GetFullPath();
-			wxFileName absPath(fileName);
-			absPath.MakeAbsolute(GetProjectCwd(project));
+			
 			if(fn == absPath.GetFullPath() && editor->GetProject() == project){
 				nb->DeletePage(static_cast<size_t>(i));
 				break;
@@ -448,7 +450,7 @@ bool Manager::RemoveFile(const wxString &fileName, const wxString &vdFullPath)
 
 	if( project.IsEmpty() == false ){
 		// Remove the file from the tags database as well
-		TagsManagerST::Get()->Delete(TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName(), project, fileName);
+		TagsManagerST::Get()->Delete(TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName(), project, absPath.GetFullPath());
 		
 		// Update 
 		TagTreePtr dummy;
