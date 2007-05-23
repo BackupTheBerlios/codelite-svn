@@ -1,17 +1,17 @@
 TODO List:
 ==========================
-. Add build system to the editor
-. Add to the project properties dialog the following:
-	- Project type (remove it from Project level to Project settings)
-	- New Tools entry, that will include the following:
-		- Add Linker tool name
-		- Add Archive tool name
-		
+. Add posibility to copy project settings when creating new project
+. Change the way project type acts:
+	- Create a template based projects, which includes the 3 default projects: Dynamic Library, Static Library & Executable
+	- Add option to file view to save the project as template
+	- Change combo box values to be: Static Library / Application or Dynamic Libary
+. Add option to create a recursive makefile for the workspace
 . Add option to create an external database
 . Add option to re-create the symbols database
 . Add menu option to set external database to workspace
 . Add Java lexer
 . Add XML lexer
+. Add Preprocessor entry to the project settings dialog
 . When closing the application, prompt if there are unsaved changes
 	 Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
 	 Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
@@ -29,5 +29,4 @@ TODO List:
 . keyboard should open files when hitting on a tree control
 . typedefs are not handled properly
 . When opening a file from the command line, make sure that the workspace pane and the output pane are hidden
-. Add posibility to copy project settings when creating new project
 . Detect file changes while it was open in the editor
