@@ -134,11 +134,6 @@ public:
 	 */
 	wxString GetName() const;
 
-	/**
-	 * \return project type
-	 */
-	wxString GetType() const;
-
 	//-----------------------------------
 	// Project operations
 	//-----------------------------------

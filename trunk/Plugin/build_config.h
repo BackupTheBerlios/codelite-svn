@@ -51,6 +51,11 @@ class BuildConfig : public ConfObject {
 	wxString m_commandArguments;
 	wxString m_workingDirectory;
 	wxString m_compilerName;
+	wxString m_linkerName;
+	wxString m_projectType;
+	wxString m_archiveToolName;
+	wxString m_cleanCommand;
+
 private:
 	void FillFromSmiColonString(wxArrayString &arr, const wxString &str);
 	wxString ArrayToSmiColonString(const wxArrayString &array) const;
@@ -69,6 +74,15 @@ public:
 	const wxString &GetLinkOptions() const { return m_linkOptions; }
 	wxString GetLibraries() const;
 	wxString GetLibPath() const;
+	
+	wxString GetLinkerName() const { return m_linkerName;}
+	wxString GetProjectType() const {return m_projectType;}
+	wxString GetCleanCommand() const {return m_cleanCommand;}
+	wxString GetArchiveToolName() const {return m_archiveToolName;}
+	void SetLinkerName(const wxString &name) { m_linkerName = name; }
+	void SetProjectType(const wxString &type) { m_projectType = type; }
+	void SetCleanCommand(const wxString &cmd) { m_cleanCommand = cmd; }
+	void SetArchiveToolName(const wxString &name) { m_archiveToolName = name; }
 
 	void GetPreBuildCommands(BuildCommandList &cmds) { cmds = m_preBuildCommands; }
 	void GetPostBuildCommands(BuildCommandList &cmds) { cmds = m_postBuildCommands; }

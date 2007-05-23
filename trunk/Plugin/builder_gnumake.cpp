@@ -103,11 +103,23 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 		bldConf = settings->GetNextBuildConfiguration(cookie);
 	}
 	
+	// create a list of objects
+	CreateObjectList(proj, text);
+
 	//-----------------------------------------------------------
-	// Create a list of object that should be built according to 
-	// projects' file list and create their targets as well
+	// create the build targets
 	//-----------------------------------------------------------
-	CreateTargets(proj, text);
+	bldConf = settings->GetFirstBuildConfiguration(cookie);
+	while(bldConf){
+		CreateTargets(bldConf, text);
+		bldConf = settings->GetNextBuildConfiguration(cookie);
+	}
+	
+	//-----------------------------------------------------------
+	// Create a list of targets that should be built according to 
+	// projects' file list 
+	//-----------------------------------------------------------
+	CreateFileTargets(proj, text);
 
 	//-----------------------------------------------------------
 	// Create build events per configuration type
@@ -118,8 +130,7 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 		bldConf = settings->GetNextBuildConfiguration(cookie);
 	}
 }
-
-void BuilderGnuMake::CreateTargets(ProjectPtr proj, wxTextOutputStream &text)
+void BuilderGnuMake::CreateObjectList(ProjectPtr proj, wxTextOutputStream &text)
 {
 	std::vector<wxFileName> files;
 	proj->GetFiles(files);
@@ -138,23 +149,12 @@ void BuilderGnuMake::CreateTargets(ProjectPtr proj, wxTextOutputStream &text)
 		counter++;
 	}
 	text << wxT("\n\n");
+}
 
-	//create the main target
-	text << wxT("##\n");
-	text << wxT("## Main Build Traget \n");
-	text << wxT("##\n");
-	text << wxT("Main: StartMsg $(PreBuild) $(Objects) $(PostBuild)\n");
-	if(proj->GetType() == Project::STATIC_LIBRARY){
-		//create a static library
-		text << wxT("\t") << wxT("ar rcu $(OutputFile) $(Objects)\n");
-	}else if(proj->GetType() == Project::DYNAMIC_LIBRARY){
-		//create a shared library
-		text << wxT("\t") << wxT("$(CompilerName) $(LinkOptions) -o $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
-	}else if(proj->GetType() == Project::EXECUTABLE){
-		//create an executable
-		text << wxT("\t") << wxT("$(CompilerName) $(LinkOptions) -o $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
-	}
-	text << wxT("\n\n");
+void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text)
+{
+	std::vector<wxFileName> files;
+	proj->GetFiles(files);
 
 	//create a nice start message to user
 	text << wxT("##\n");
@@ -184,13 +184,38 @@ void BuilderGnuMake::CreateTargets(ProjectPtr proj, wxTextOutputStream &text)
 	text << wxT("## Clean\n");
 	text << wxT("##\n");
 	text << wxT("clean:\n");
-	text << wxT("\t$(RM) $(Objects)\n");
+	text << wxT("\t$(CleanCommand) $(Objects)\n");
 	text << wxT("\n");
+}
+
+void BuilderGnuMake::CreateTargets(BuildConfigPtr bldConf, wxTextOutputStream &text)
+{
+	//create the main target
+	wxString name = bldConf->GetName();
+	name = NormalizeConfigName(name);
+
+	text << wxT("##\n");
+	text << wxT("## Main Build Tragets \n");
+	text << wxT("##\n");
+	text << name << wxT(": StartMsg PreBuild_") << name << wxT(" ") << wxT("$(Objects) ") << name << wxT("_link ") << wxT("PostBuild_") << name << wxT("\n\n");
+	text << name << wxT("_link:\n");
+	if(bldConf->GetProjectType() == Project::STATIC_LIBRARY){
+		//create a static library
+		text << wxT("\t") << wxT("$(ArchiveTool) $(OutputFile) $(Objects)\n");
+	}else if(bldConf->GetProjectType() == Project::DYNAMIC_LIBRARY){
+		//create a shared library
+		text << wxT("\t") << wxT("$(LinkerName) $(LinkOptions) -o $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
+	}else if(bldConf->GetProjectType() == Project::EXECUTABLE){
+		//create an executable
+		text << wxT("\t") << wxT("$(LinkerName) $(LinkOptions) -o $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
+	}
+	text << wxT("\n\n");
 }
 
 void BuilderGnuMake::CreateBuildEventRules(BuildConfigPtr bldConf, wxTextOutputStream &text)
 {
 	BuildCommandList cmds;
+	BuildCommandList::iterator iter;
 	wxString name = bldConf->GetName();
 	name = NormalizeConfigName(name);
 
@@ -201,29 +226,36 @@ void BuilderGnuMake::CreateBuildEventRules(BuildConfigPtr bldConf, wxTextOutputS
 
 	cmds.clear();
 	text << wxT("PreBuild_") << name << wxT(":\n");
-	text << wxT("\t@echo Executing Pre Build commands ...\n");
-	bldConf->GetPreBuildCommands(cmds);
-	BuildCommandList::iterator iter = cmds.begin();
-	for(; iter != cmds.end(); iter++){
-		if(iter->GetEnabled()){
-			text << wxT("\t@") << iter->GetCommand() << wxT("\n");
+	if(!cmds.empty()){
+		text << wxT("\t@echo Executing Pre Build commands ...\n");
+		bldConf->GetPreBuildCommands(cmds);
+		iter = cmds.begin();
+		for(; iter != cmds.end(); iter++){
+			if(iter->GetEnabled()){
+				text << wxT("\t@") << iter->GetCommand() << wxT("\n");
+			}
 		}
+		text << wxT("\t@echo Done\n");
 	}
-	text << wxT("\t@echo Done\n\n");
+	text << wxT("\n");
 
 	//generate postbuild commands
 	cmds.clear();
-	text << wxT("PostBuild_") << name << wxT(":\n");
-	text << wxT("\t@echo Executing Post Build commands ...\n");
 	bldConf->GetPostBuildCommands(cmds);
-	iter = cmds.begin();
-	for(; iter != cmds.end(); iter++){
-		if(iter->GetEnabled()){
-			text << wxT("\t@") << iter->GetCommand() << wxT("\n");
+	
+	text << wxT("PostBuild_") << name << wxT(":\n");
+	if(!cmds.empty()){
+		text << wxT("\t@echo Executing Post Build commands ...\n");
+		iter = cmds.begin();
+		for(; iter != cmds.end(); iter++){
+			if(iter->GetEnabled()){
+				text << wxT("\t") << iter->GetCommand() << wxT("\n");
+			}
 		}
+		text << wxT("\t@echo Done\n");
 	}
-	text << wxT("\t@echo Done\n\n");
-}
+	text << wxT("\n");
+}	
 
 void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutputStream &text)
 {
@@ -240,8 +272,9 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 	text << wxT("IncludePath=") << ParseIncludePath(bldConf->GetIncludePath()) << wxT("\n");
 	text << wxT("Libs=") << ParseLibs(bldConf->GetLibraries()) << wxT("\n");
 	text << wxT("LibPath=") << ParseLibPath(bldConf->GetLibPath()) << wxT("\n");
-	text << wxT("PostBuild=") << wxT("PostBuild_") << name << wxT("\n");
-	text << wxT("PreBuild=") << wxT("PreBuild_") << name << wxT("\n");
+	text << wxT("CleanCommand=") << bldConf->GetCleanCommand() << wxT("\n");
+	text << wxT("LinkerName=") << bldConf->GetLinkerName() << wxT("\n");
+	text << wxT("ArchiveTool=") << bldConf->GetArchiveToolName() << wxT("\n");
 	text << wxT("endif\n\n");
 
 	//create the intermediate directories

@@ -24,8 +24,7 @@ bool Project::Create(const wxString &name, const wxString &path, const wxString 
 	wxXmlNode *root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("CodeLite_Project"));   
 	m_doc.SetRoot(root);
 	m_doc.GetRoot()->AddProperty(wxT("Name"), name);
-	m_doc.GetRoot()->AddProperty(wxT("Type"), projType);
-
+	
 	// Create the default virtual directories
 	wxXmlNode *srcNode = NULL, *headNode = NULL;
 
@@ -40,6 +39,8 @@ bool Project::Create(const wxString &name, const wxString &path, const wxString 
 	m_doc.Save(m_fileName.GetFullPath());
 	//create build settings
 	SetSettings(new ProjectSettings(NULL));
+	GetSettings()->GetBuildConfiguration(wxT("Debug"))->SetProjectType(projType);
+	SetSettings(GetSettings());
 	return true;
 }
 
@@ -162,11 +163,6 @@ bool Project::RemoveFile(const wxString &fileName, const wxString &virtualDir)
 wxString Project::GetName() const
 {
 	return m_doc.GetRoot()->GetPropVal(wxT("Name"), wxEmptyString);
-}
-
-wxString Project::GetType() const
-{
-	return m_doc.GetRoot()->GetPropVal(wxT("Type"), wxEmptyString);
 }
 
 ProjectTreePtr Project::AsTree()

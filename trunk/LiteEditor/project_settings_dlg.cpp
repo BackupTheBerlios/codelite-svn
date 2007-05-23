@@ -71,6 +71,9 @@ void ProjectSettingsDlg::ClearValues()
 	m_textLibraryPath->SetValue(wxEmptyString);
 	m_checkListPreBuildCommands->Clear();
 	m_checkListPostBuildCommands->Clear();
+	m_textArchiveTool->SetValue(wxEmptyString);
+	m_textCleanTool->SetValue(wxEmptyString);
+	m_textLinkerName->SetValue(wxEmptyString);
 }
 
 void ProjectSettingsDlg::CopyValues(const wxString &confName)
@@ -101,7 +104,10 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 	m_textLinkerOptions->SetValue(buildConf->GetLinkOptions());
 	m_textLibraries->SetValue(buildConf->GetLibraries());
 	m_textLibraryPath->SetValue(buildConf->GetLibPath());
-
+	m_textLinkerName->SetValue(buildConf->GetLinkerName());
+	m_textCleanTool->SetValue(buildConf->GetCleanCommand());
+	m_textArchiveTool->SetValue(buildConf->GetArchiveToolName());
+	
 	buildConf->GetPreBuildCommands(preBuildCmds);
 	buildConf->GetPostBuildCommands(postBuildCmds);
 	BuildCommandList::iterator iter = preBuildCmds.begin();
@@ -118,6 +124,14 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 		int index = m_checkListPostBuildCommands->Append(iter->GetCommand());
 		m_checkListPostBuildCommands->Check(index, iter->GetEnabled());
 	}
+
+	//set the project type
+	wxString projType = buildConf->GetProjectType();
+	int sel = m_choiceProjectTypes->FindString(projType);
+	if(sel == wxNOT_FOUND){
+		sel = 0;
+	}
+	m_choiceProjectTypes->SetSelection(sel);
 }
 
 void ProjectSettingsDlg::SaveValues(const wxString &confName)
@@ -145,7 +159,11 @@ void ProjectSettingsDlg::SaveValues(const wxString &confName)
 	buildConf->SetLibraries(m_textLibraries->GetValue());
 	buildConf->SetLinkerRequired(!m_checkLinkerNeeded->IsChecked());
 	buildConf->SetLinkOptions(m_textLinkerOptions->GetValue());
-	
+	buildConf->SetLinkerName(m_textLinkerName->GetValue());
+	buildConf->SetCleanCommand(m_textCleanTool->GetValue());
+	buildConf->SetArchiveToolName(m_textArchiveTool->GetValue());
+	buildConf->SetProjectType(m_choiceProjectTypes->GetStringSelection());
+
 	BuildCommandList cmds;
 	cmds.clear();
 	for(size_t i=0; i<m_checkListPreBuildCommands->GetCount(); i++){
@@ -240,6 +258,7 @@ void ProjectSettingsDlg::DisableLinkerPage(bool disable)
 	m_textLinkerOptions->Enable(!disable);
 	m_buttonLibraries->Enable(!disable);
 	m_buttonLibraryPath->Enable(!disable);
+	m_textLinkerName->Enable(!disable);
 }
 
 void ProjectSettingsDlg::OnCheckCompilerNeeded(wxCommandEvent &event)

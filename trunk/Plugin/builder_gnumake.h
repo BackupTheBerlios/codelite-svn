@@ -27,7 +27,9 @@ public:
 private:
 	void GenerateMakefile(ProjectPtr proj);
 	void CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutputStream &text);
-	void CreateTargets(ProjectPtr proj, wxTextOutputStream &text);
+	void CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text);
+	void CreateObjectList(ProjectPtr proj, wxTextOutputStream &text);
+	void CreateTargets(BuildConfigPtr bldConf, wxTextOutputStream &text);
 	void CreateBuildEventRules(BuildConfigPtr bldConf, wxTextOutputStream &text);
 
 	wxString ParseIncludePath(const wxString &paths);
