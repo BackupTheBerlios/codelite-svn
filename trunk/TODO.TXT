@@ -1,27 +1,33 @@
 TODO List:
 ==========================
-50. Add build system to the editor
-27. Add option to create an external database
-51. Add option to re-create the symbols database
-28. Add menu option to set external database to workspace
-33. Add Java lexer
-34. Add XML lexer
-48. When closing the application, prompt if there are unsaved changes
-4. Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
-5. Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
-6. Replace the editor default menu 
-12. When using editor, write in status bar the current line and column.
-13. Add toolbar
-18. Add dependencies dialog for build order
-20. Add right click menu to tab
-21. When using 'Ctrl+F' (find dialog) or 'Ctrl+Shift+F' (find in files), open the dialog with selected text set in the 
+. Add build system to the editor
+. Add to the project properties dialog the following:
+	- Project type (remove it from Project level to Project settings)
+	- New Tools entry, that will include the following:
+		- Add Linker tool name
+		- Add Archive tool name
+		
+. Add option to create an external database
+. Add option to re-create the symbols database
+. Add menu option to set external database to workspace
+. Add Java lexer
+. Add XML lexer
+. When closing the application, prompt if there are unsaved changes
+	 Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
+	 Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
+	 Replace the editor default menu 
+. When using editor, write in status bar the current line and column.
+. Add toolbar
+. Add dependencies dialog for build order
+. Add right click menu to tab
+. When using 'Ctrl+F' (find dialog) or 'Ctrl+Shift+F' (find in files), open the dialog with selected text set in the 
 	'Find What:' field
-22. Add option to open type in the workspace (eclips's Ctrl+Shift+T)
-25. Change 'Find What' & 'Replace With' controls to comboboxs 
-26. Allow to rename a file from whithin the editor
-30. Support comment parsing (missing the in ctags options dialog as well as in the code)
-32. keyboard should open files when hitting on a tree control
-35. typedefs are not handled properly
-36. When opening a file from the command line, make sure that the workspace pane and the output pane are hidden
-46. Add posibility to copy project settings when creating new project
-49. Detect file changes while it was open in the editor
+. Add option to open type in the workspace (eclips's Ctrl+Shift+T)
+. Change 'Find What' & 'Replace With' controls to comboboxs 
+. Allow to rename a file from whithin the editor
+. Support comment parsing (missing the in ctags options dialog as well as in the code)
+. keyboard should open files when hitting on a tree control
+. typedefs are not handled properly
+. When opening a file from the command line, make sure that the workspace pane and the output pane are hidden
+. Add posibility to copy project settings when creating new project
+. Detect file changes while it was open in the editor
