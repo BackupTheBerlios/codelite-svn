@@ -232,7 +232,7 @@ void BuilderGnuMake::CreateBuildEventRules(BuildConfigPtr bldConf, wxTextOutputS
 		iter = cmds.begin();
 		for(; iter != cmds.end(); iter++){
 			if(iter->GetEnabled()){
-				text << wxT("\t@") << iter->GetCommand() << wxT("\n");
+				text << wxT("\t") << iter->GetCommand() << wxT("\n");
 			}
 		}
 		text << wxT("\t@echo Done\n");
