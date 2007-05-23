@@ -144,6 +144,16 @@ void BuilderGnuMake::CreateTargets(ProjectPtr proj, wxTextOutputStream &text)
 	text << wxT("## Main Build Traget \n");
 	text << wxT("##\n");
 	text << wxT("Main: StartMsg $(PreBuild) $(Objects) $(PostBuild)\n");
+	if(proj->GetType() == Project::STATIC_LIBRARY){
+		//create a static library
+		text << wxT("\t") << wxT("ar rcu $(OutputFile) $(Objects)\n");
+	}else if(proj->GetType() == Project::DYNAMIC_LIBRARY){
+		//create a shared library
+		text << wxT("\t") << wxT("$(CompilerName) $(LinkOptions) -o $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
+	}else if(proj->GetType() == Project::EXECUTABLE){
+		//create an executable
+		text << wxT("\t") << wxT("$(CompilerName) $(LinkOptions) -o $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
+	}
 	text << wxT("\n\n");
 
 	//create a nice start message to user

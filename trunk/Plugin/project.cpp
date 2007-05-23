@@ -5,7 +5,7 @@
 #include "dirsaver.h"
 
 const wxString Project::STATIC_LIBRARY = wxT("Static Library");
-const wxString Project::DYMANIC_LIBRARY = wxT("Dynamic Library");
+const wxString Project::DYNAMIC_LIBRARY = wxT("Dynamic Library");
 const wxString Project::EXECUTABLE = wxT("Executable");
 
 Project::Project()
@@ -162,6 +162,11 @@ bool Project::RemoveFile(const wxString &fileName, const wxString &virtualDir)
 wxString Project::GetName() const
 {
 	return m_doc.GetRoot()->GetPropVal(wxT("Name"), wxEmptyString);
+}
+
+wxString Project::GetType() const
+{
+	return m_doc.GetRoot()->GetPropVal(wxT("Type"), wxEmptyString);
 }
 
 ProjectTreePtr Project::AsTree()

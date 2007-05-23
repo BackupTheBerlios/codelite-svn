@@ -374,10 +374,11 @@ bool LEditor::SaveFileAs()
 			return false;
 		}
 		m_fileName = name;
+		return true;
 	}
 	
-	dlg->Destroy();
-	return true;
+	delete dlg;
+	return false;
 }
 
 // an internal function that does the actual file writing to disk

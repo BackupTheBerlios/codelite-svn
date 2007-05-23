@@ -150,7 +150,7 @@ wxWindow *NewDlg::CreateProjectPage()
 
 	m_projTypes = new wxListBox(panel, wxID_ANY);
 	m_projTypes->Append(Project::STATIC_LIBRARY);
-	m_projTypes->Append(Project::DYMANIC_LIBRARY);
+	m_projTypes->Append(Project::DYNAMIC_LIBRARY);
 	m_projTypes->Append(Project::EXECUTABLE);
 	m_projTypes->SetStringSelection(Project::EXECUTABLE);
 

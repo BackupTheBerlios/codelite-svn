@@ -486,7 +486,7 @@ void Frame::OnFileClose(wxCommandEvent &event)
 		return;
 	
 	bool veto;
-	ClosePage(editor, m_notebook->GetSelection(), true, veto);
+	ClosePage(editor, false, m_notebook->GetSelection(), true, veto);
 }
 
 void Frame::OnFileClosing(wxFlatNotebookEvent &event)
@@ -497,7 +497,7 @@ void Frame::OnFileClosing(wxFlatNotebookEvent &event)
 		return;	
 
 	bool veto;
-	ClosePage(editor, event.GetSelection(), false, veto);
+	ClosePage(editor, true, event.GetSelection(), false, veto);
 	if( veto ) event.Veto();
 	event.Skip();
 }
@@ -543,7 +543,7 @@ void Frame::OnCompleteWordUpdateUI(wxUpdateUIEvent &event)
 	event.Enable(editor && !editor->GetProjectName().IsEmpty());
 }
 
-void Frame::ClosePage(LEditor *editor, int index, bool doDelete, bool &veto)
+void Frame::ClosePage(LEditor *editor, bool notify, int index, bool doDelete, bool &veto)
 {
 	veto = false;
 	if( editor->GetModify() ) 
@@ -559,9 +559,12 @@ void Frame::ClosePage(LEditor *editor, int index, bool doDelete, bool &veto)
 				// try to save the file, if an error occured, return without
 				// closing the tab
 				if( !editor->SaveFile() ) {
+					//we faild in saving the file, dont allow the tab removal
+					//process to continue
+					veto = true;
 					return;
 				} else {
-					if( doDelete ) m_notebook->DeletePage(index, true);
+					if( doDelete ) m_notebook->DeletePage(index, notify);
 				}
 			}
 			break;
@@ -570,14 +573,14 @@ void Frame::ClosePage(LEditor *editor, int index, bool doDelete, bool &veto)
 			return; // do nothing
 		case wxNO:
 			// just delete the tab without saving the changes
-			if( doDelete ) m_notebook->DeletePage(index, true);
+			if( doDelete ) m_notebook->DeletePage(index, notify);
 			break;
 		}
 	} 
 	else 
 	{
 		// file is not modified, just remove the tab
-		if( doDelete ) m_notebook->DeletePage(index, true);
+		if( doDelete ) m_notebook->DeletePage(index, notify);
 	}
 }
 

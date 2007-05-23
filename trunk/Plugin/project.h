@@ -113,7 +113,7 @@ class Project
 {
 public:
 	static const wxString STATIC_LIBRARY;
-	static const wxString DYMANIC_LIBRARY;
+	static const wxString DYNAMIC_LIBRARY;
 	static const wxString EXECUTABLE;
 
 private:
@@ -134,6 +134,11 @@ public:
 	 */
 	wxString GetName() const;
 
+	/**
+	 * \return project type
+	 */
+	wxString GetType() const;
+
 	//-----------------------------------
 	// Project operations
 	//-----------------------------------
@@ -147,7 +152,7 @@ public:
 	 * Create new project 
 	 * \param name project name
 	 * \param path path of the file excluding  the file name (e.g. C:\)
-	 * \param projType project type: Project::STATIC_LIBRARY, Project::DYMANIC_LIBRARY, Project::EXECUTABLE
+	 * \param projType project type: Project::STATIC_LIBRARY, Project::DYNAMIC_LIBRARY, Project::EXECUTABLE
 	 * \return 
 	 */
 	bool Create(const wxString &name, const wxString &path, const wxString &projType = Project::STATIC_LIBRARY);

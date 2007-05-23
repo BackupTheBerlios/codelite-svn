@@ -82,7 +82,7 @@ private:
 	 * \return user's string or wxEmptyString if 'Cancel' pressed.
 	 */
 	wxString GetStringFromUser(const wxString& msg);
-	void ClosePage(LEditor *editor, int index, bool doDelete, bool &veto);
+	void ClosePage(LEditor *editor, bool notify, int index, bool doDelete, bool &veto);
 	void DispatchCommandEvent(wxCommandEvent &event);
 	void DispatchUpdateUIEvent(wxUpdateUIEvent &event);
 
