@@ -59,6 +59,14 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 {
 	wxFileName fileName(file_name);
 	wxFlatNotebook *notebook = Frame::Get()->GetNotebook();
+
+	//make sure that the notebook is visible
+	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Editor"));
+	if( info.IsOk() && !info.IsShown()){
+		info.Show();
+		Frame::Get()->GetDockingManager().Update();
+	}
+
 	// Search to see if this file is already opened
 	// in the notebook
 	LEditor* editor = NULL;

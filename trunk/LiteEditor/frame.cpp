@@ -19,6 +19,7 @@
 #include "wx/aui/framemanager.h"
 #include "options_base_dlg.h"
 #include "configuration_manager_dlg.h"
+#include "filedroptarget.h"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -136,6 +137,9 @@ Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPo
 
 	ManagerST::Get();	// Dummy call
 
+	//allow the main frame to receive files by drag and drop
+	SetDropTarget( new FileDropTarget() );
+
 	// Start the search thread
 	SearchThreadST::Get()->SetNotifyWindow(this);
 	SearchThreadST::Get()->Start();
@@ -208,6 +212,7 @@ void Frame::CreateGUIControls(void)
 	// Connect the main notebook events
 	m_notebook->Connect(m_notebook->GetId(), wxEVT_COMMAND_FLATNOTEBOOK_PAGE_CHANGED, wxFlatNotebookEventHandler(Frame::OnPageChanged), NULL, this);
 	m_notebook->Connect(m_notebook->GetId(), wxEVT_COMMAND_FLATNOTEBOOK_PAGE_CLOSING, wxFlatNotebookEventHandler(Frame::OnFileClosing), NULL, this);
+	m_notebook->Connect(m_notebook->GetId(), wxEVT_COMMAND_FLATNOTEBOOK_PAGE_CLOSED, wxFlatNotebookEventHandler(Frame::OnPageClosed), NULL, this);
 
 	// Initialise editor configuration file
 	wxFileName configFile(wxT("liteeditor.xml"));
@@ -436,14 +441,20 @@ void Frame::OnParseComments(wxCommandEvent &event)
 void Frame::OnFileNew(wxCommandEvent &event)
 {
 	static int fileCounter = 0;
-
 	wxUnusedVar(event);
+
 	wxString fileNameStr(wxT("Untitled"));
 	fileNameStr << ++fileCounter;
-
 	wxFileName fileName(fileNameStr);
 
 	// Create new editor and add it to the notebook
+	//make sure that the notebook is visible
+	wxAuiPaneInfo &info = m_mgr.GetPane(wxT("Editor"));
+	if( info.IsOk() && !info.IsShown()){
+		info.Show();
+		m_mgr.Update();
+	}
+
 	m_notebook->Freeze();
 	LEditor *editor = new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), wxEmptyString);
 	m_notebook->AddPage(editor, fileName.GetFullName(), true);
@@ -502,6 +513,21 @@ void Frame::OnPageChanged(wxFlatNotebookEvent &event)
 	event.Skip();
 }
 
+void Frame::OnPageClosed(wxFlatNotebookEvent &event)
+{
+	wxUnusedVar(event);
+	int count = m_notebook->GetPageCount();
+	if(count == 0){
+		//when there are no open tabs, we hide the notebook so 
+		//the Frame::OnDropTraget function will be called and allow us
+		//to drag files into the editor (the Notebook control, even when empty
+		//does not allow us to perform our custom drag and drop operations, since it
+		//overrides it with its own implementation)
+		m_mgr.GetPane(wxT("Editor")).Hide();
+		m_mgr.Update();
+	}
+}
+
 void Frame::OnFileSaveAll(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
@@ -535,7 +561,7 @@ void Frame::ClosePage(LEditor *editor, int index, bool doDelete, bool &veto)
 				if( !editor->SaveFile() ) {
 					return;
 				} else {
-					if( doDelete ) m_notebook->DeletePage(index, false);
+					if( doDelete ) m_notebook->DeletePage(index, true);
 				}
 			}
 			break;
@@ -544,14 +570,14 @@ void Frame::ClosePage(LEditor *editor, int index, bool doDelete, bool &veto)
 			return; // do nothing
 		case wxNO:
 			// just delete the tab without saving the changes
-			if( doDelete ) m_notebook->DeletePage(index, false);
+			if( doDelete ) m_notebook->DeletePage(index, true);
 			break;
 		}
 	} 
 	else 
 	{
 		// file is not modified, just remove the tab
-		if( doDelete ) m_notebook->DeletePage(index, false);
+		if( doDelete ) m_notebook->DeletePage(index, true);
 	}
 }
 

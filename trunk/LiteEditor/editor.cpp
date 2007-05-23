@@ -12,6 +12,7 @@
 #include <wx/wxFlatNotebook/renderer.h>
 #include "context_manager.h"
 #include "editor_config.h"
+#include "filedroptarget.h"
 
 // fix bug in wxscintilla.h
 #ifdef EVT_SCI_CALLTIP_CLICK
@@ -63,6 +64,8 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 	{
 		OpenFile(m_fileName.GetFullPath(), m_project);
 	}
+
+	SetDropTarget(new FileDropTarget());
 }
 
 LEditor::~LEditor()

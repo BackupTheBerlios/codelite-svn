@@ -272,6 +272,12 @@
 			<File
 				RelativePath=".\editor.h">
 			</File>
+			<File
+				RelativePath=".\filedroptarget.cpp">
+			</File>
+			<File
+				RelativePath=".\filedroptarget.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Application"

@@ -141,6 +141,7 @@ protected:
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);
 	void OnPageChanged(wxFlatNotebookEvent &event);
+	void OnPageClosed(wxFlatNotebookEvent &event);
 
 	// Any class wishing to process wxWindows events must use this macro
 	DECLARE_EVENT_TABLE()
