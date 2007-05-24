@@ -184,7 +184,7 @@ void NewItemDlg::DoCreateFile()
 bool NewItemDlg::Validate(wxString &errMsg)
 {
 	// make sure we have file name & path set up correctly
-	wxFileName fn(m_location->GetValue() + wxT("/"));
+	wxFileName fn(m_location->GetValue() + wxFileName::GetPathSeparator());
 
 	if( m_location->GetValue().Trim().IsEmpty() ){
 		errMsg = wxT("Missing location");
