@@ -115,6 +115,12 @@ BuildConfig::~BuildConfig()
 {
 }
 
+wxString BuildConfig::NormalizePath(const wxString &path) const
+{
+	wxFileName fn(path);
+	return fn.GetFullPath();
+}
+
 BuildConfig *BuildConfig::Clone() const
 {
 	wxXmlNode *node = ToXml();
@@ -234,7 +240,7 @@ void BuildConfig::FillFromSmiColonString(wxArrayString &arr, const wxString &str
 wxString BuildConfig::ArrayToSmiColonString(const wxArrayString &array) const{
 	wxString result;
 	for(size_t i=0; i<array.GetCount(); i++){
-		result += array.Item(i);
+		result += NormalizePath(array.Item(i));
 		result += wxT(";");
 	}
 	return result.BeforeLast(wxT(';'));

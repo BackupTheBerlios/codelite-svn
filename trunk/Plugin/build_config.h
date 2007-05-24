@@ -59,6 +59,8 @@ class BuildConfig : public ConfObject {
 private:
 	void FillFromSmiColonString(wxArrayString &arr, const wxString &str);
 	wxString ArrayToSmiColonString(const wxArrayString &array) const;
+	
+	wxString NormalizePath(const wxString &path) const;
 
 public:
 	BuildConfig(wxXmlNode *node);
@@ -89,11 +91,11 @@ public:
 	const wxString &GetName() const { return m_name; }
 	bool IsCompilerRequired() const { return m_compilerRequired; }
 	bool IsLinkerRequired() const { return m_linkerRequired; }
-	const wxString &GetOutputFileName() const { return m_outputFile; }
-	const wxString &GetIntermediateDirectory() const { return m_intermediateDirectory; }
+	wxString GetOutputFileName() const { return NormalizePath(m_outputFile); }
+	wxString GetIntermediateDirectory() const { return NormalizePath(m_intermediateDirectory); }
 	const wxString &GetCommand() const { return m_command; }
 	const wxString &GetCommandArguments() const { return m_commandArguments;}
-	const wxString &GetWorkingDirectory() const { return m_workingDirectory;}
+	wxString GetWorkingDirectory() const { return NormalizePath(m_workingDirectory);}
 	const wxString &GetCompilerName() const { return m_compilerName;}
 
 	void SetIncludePath(const wxArrayString &paths) { m_includePath = paths; }

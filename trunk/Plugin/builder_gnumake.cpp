@@ -68,7 +68,7 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 
 	//create new makefile file
 	wxString fn(path);
-	fn << wxT("/makefile");
+	fn << wxFileName::GetPathSeparator() << wxT("makefile");
 	wxFileOutputStream output(fn);
 
 	if(!output.IsOk())
@@ -142,7 +142,7 @@ void BuilderGnuMake::CreateObjectList(ProjectPtr proj, wxTextOutputStream &text)
 		if( !IsSourceFile(files[i].GetExt()) )
 			continue;
 
-		text << wxT("$(IntermediateDirectory)/") << files[i].GetName() << wxT(".o ");
+		text << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << files[i].GetName() << wxT(".o ");
 		if(counter % 10 == 0){
 			text << wxT("\\\n\t");
 		}
@@ -175,8 +175,8 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 
 		wxString objectName = files[i].GetName() << wxT(".o");
 		wxString fileName   = files[i].GetFullPath();
-		text << wxT("$(IntermediateDirectory)/") << objectName << wxT(": ") << fileName << wxT("\n");
-		text << wxT("\t") << wxT("$(CompilerName) $(CmpOptions) -c ") << fileName << wxT(" -o ") << wxT("$(IntermediateDirectory)/") << objectName << wxT("\n\n");
+		text << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << objectName << wxT(": ") << fileName << wxT("\n");
+		text << wxT("\t") << wxT("$(CompilerName) $(CmpOptions) -c ") << fileName << wxT(" -o ") << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << objectName << wxT("\n\n");
 	}
 
 	//add clean target
@@ -184,7 +184,24 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 	text << wxT("## Clean\n");
 	text << wxT("##\n");
 	text << wxT("clean:\n");
-	text << wxT("\t$(CleanCommand) $(Objects)\n");
+
+	if(wxGetOsVersion() & wxOS_WINDOWS){
+		//windows clean command
+		for(size_t i=0; i<files.size(); i++){
+			if( !IsSourceFile(files[i].GetExt()) )
+				continue;
+
+			wxString objectName = files[i].GetName() << wxT(".o");
+			text << wxT("\t") << wxT("-if exist ") << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << objectName << wxT(" del ") << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << objectName << wxT("\n");
+		}
+		//delete the output file as well
+		text << wxT("\t") << wxT("-if exist ") << wxT("$(OutputFile)") << wxT(" del ") << wxT("$(OutputFile)") << wxT("\n");;
+	}else{
+		//linux 
+		text << wxT("\t") << wxT("$(RM) ") << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << wxT("*.o") << wxT("\n");
+		//delete the output file as well
+		text << wxT("\t") << wxT("$(RM) ") << wxT("$(OutputFile)\n");
+	}
 	text << wxT("\n");
 }
 
@@ -272,7 +289,6 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 	text << wxT("IncludePath=") << ParseIncludePath(bldConf->GetIncludePath()) << wxT("\n");
 	text << wxT("Libs=") << ParseLibs(bldConf->GetLibraries()) << wxT("\n");
 	text << wxT("LibPath=") << ParseLibPath(bldConf->GetLibPath()) << wxT("\n");
-	text << wxT("CleanCommand=") << bldConf->GetCleanCommand() << wxT("\n");
 	text << wxT("LinkerName=") << bldConf->GetLinkerName() << wxT("\n");
 	text << wxT("ArchiveTool=") << bldConf->GetArchiveToolName() << wxT("\n");
 	text << wxT("endif\n\n");

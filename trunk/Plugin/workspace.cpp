@@ -62,11 +62,11 @@ bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 
 	// the database file names are relative to the workspace,
 	// convert them to absolute path
-	TagsManagerST::Get()->OpenDatabase(m_fileName.GetPath() + wxT("/") + dbfile);
+	TagsManagerST::Get()->OpenDatabase(m_fileName.GetPath() + wxFileName::GetPathSeparator() + dbfile);
 
 	// Load the external database
 	if( exDbfile.IsEmpty() == false ){
-		TagsManagerST::Get()->OpenExternalDatabase(m_fileName.GetPath() + wxT("/") + exDbfile);
+		TagsManagerST::Get()->OpenExternalDatabase(m_fileName.GetPath() + wxFileName::GetPathSeparator() + exDbfile);
 	}
 	
 	return true;
@@ -198,7 +198,7 @@ bool Workspace::CreateProject(const wxString &name, const wxString &path, const 
 	m_projects[name] = proj;
 	
 	// make the project path to be relative to the workspace
-	wxFileName tmp(path + wxT("/") + name + wxT(".project"));
+	wxFileName tmp(path + wxFileName::GetPathSeparator() + name + wxT(".project"));
 	tmp.MakeRelativeTo(m_fileName.GetPath());
 	
 	// Add an entry to the workspace file
