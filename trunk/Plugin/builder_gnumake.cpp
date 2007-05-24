@@ -242,10 +242,10 @@ void BuilderGnuMake::CreateBuildEventRules(BuildConfigPtr bldConf, wxTextOutputS
 	text << wxT("## ") << wxT("\n");
 
 	cmds.clear();
+	bldConf->GetPreBuildCommands(cmds);
 	text << wxT("PreBuild_") << name << wxT(":\n");
 	if(!cmds.empty()){
 		text << wxT("\t@echo Executing Pre Build commands ...\n");
-		bldConf->GetPreBuildCommands(cmds);
 		iter = cmds.begin();
 		for(; iter != cmds.end(); iter++){
 			if(iter->GetEnabled()){
