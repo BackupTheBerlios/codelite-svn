@@ -1,6 +1,5 @@
 TODO List:
 ==========================
-. Add an option to select the compiler type for new projects
 . Change GNU makefile generator to use the values from the selected compiler (-I, -L, -o etc...)
 . Add posibility to copy project settings when creating new project
 . Change the way project type acts:
