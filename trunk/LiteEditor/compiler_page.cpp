@@ -27,120 +27,121 @@ CompilerPage::CompilerPage( wxWindow* parent, wxString name, int id, wxPoint pos
 {
 	SetScrollRate( 5, 5 );
 
-	wxBoxSizer* mainSizer;
+		wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
-
+	
 	wxBoxSizer* bSizer11;
 	bSizer11 = new wxBoxSizer( wxHORIZONTAL );
-
+	
 	wxStaticBoxSizer* sbSizer5;
 	sbSizer5 = new wxStaticBoxSizer( new wxStaticBox( this, -1, wxT("Compiler Error Pattern:") ), wxVERTICAL );
-
+	
 	m_staticText5 = new wxStaticText( this, wxID_ANY, wxT("Regex Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer5->Add( m_staticText5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
+	
 	m_textErrorPattern = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer5->Add( m_textErrorPattern, 0, wxEXPAND|wxALL, 5 );
-
+	
 	m_staticText6 = new wxStaticText( this, wxID_ANY, wxT("File Index in Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer5->Add( m_staticText6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
+	
 	m_textErrorFileIndex = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer5->Add( m_textErrorFileIndex, 0, wxEXPAND|wxALL, 5 );
-
+	
 	m_staticText7 = new wxStaticText( this, wxID_ANY, wxT("Line Number in Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer5->Add( m_staticText7, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
+	
 	m_textErrorLineNumber = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer5->Add( m_textErrorLineNumber, 0, wxEXPAND|wxALL, 5 );
-
+	
 	bSizer11->Add( sbSizer5, 1, wxALL|wxEXPAND, 5 );
-
+	
 	wxStaticBoxSizer* sbSizer4;
 	sbSizer4 = new wxStaticBoxSizer( new wxStaticBox( this, -1, wxT("Compiler Warning Pattern:") ), wxVERTICAL );
-
+	
 	m_staticText51 = new wxStaticText( this, wxID_ANY, wxT("Regex Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer4->Add( m_staticText51, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
+	
 	m_textWarnPattern = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer4->Add( m_textWarnPattern, 0, wxEXPAND|wxALL, 5 );
-
+	
 	m_staticText61 = new wxStaticText( this, wxID_ANY, wxT("File Index in Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer4->Add( m_staticText61, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
+	
 	m_textWarnFileIndex = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer4->Add( m_textWarnFileIndex, 0, wxEXPAND|wxALL, 5 );
-
+	
 	m_staticText71 = new wxStaticText( this, wxID_ANY, wxT("Line Number in Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer4->Add( m_staticText71, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
+	
 	m_textWarnLineNumber = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer4->Add( m_textWarnLineNumber, 0, wxEXPAND|wxALL, 5 );
-
+	
 	bSizer11->Add( sbSizer4, 1, wxEXPAND|wxTOP|wxBOTTOM, 5 );
-
+	
 	mainSizer->Add( bSizer11, 0, wxALL|wxEXPAND, 0 );
-
+	
 	wxStaticBoxSizer* sbSizer41;
 	sbSizer41 = new wxStaticBoxSizer( new wxStaticBox( this, -1, wxT("Tools:") ), wxVERTICAL );
-
+	
 	wxFlexGridSizer* fgSizer4;
 	fgSizer4 = new wxFlexGridSizer( 2, 4, 0, 0 );
 	fgSizer4->AddGrowableCol( 1 );
 	fgSizer4->AddGrowableCol( 3 );
 	fgSizer4->SetFlexibleDirection( wxBOTH );
 	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-
+	
 	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("Compiler Name:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_staticText9, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
+	
 	m_textCompilerName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_textCompilerName, 0, wxALL|wxEXPAND, 5 );
-
+	
 	m_staticText11 = new wxStaticText( this, wxID_ANY, wxT("Linker Name:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_staticText11, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
+	
 	m_textLinkerName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_textLinkerName, 0, wxALL|wxEXPAND, 5 );
-
+	
 	m_staticText12 = new wxStaticText( this, wxID_ANY, wxT("Shared Object Linker:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_staticText12, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
+	
 	m_textSOLinker = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_textSOLinker, 0, wxALL|wxEXPAND, 5 );
-
+	
 	m_staticText10 = new wxStaticText( this, wxID_ANY, wxT("Archive Tool:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_staticText10, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
+	
 	m_textArchiveTool = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_textArchiveTool, 0, wxALL|wxEXPAND, 5 );
-
+	
 	sbSizer41->Add( fgSizer4, 1, wxEXPAND, 5 );
-
-	mainSizer->Add( sbSizer41, 1, wxALL|wxEXPAND, 5 );
-
+	
+	mainSizer->Add( sbSizer41, 0, wxALL|wxEXPAND, 5 );
+	
 	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("Switches:"), wxDefaultPosition, wxDefaultSize, 0 );
 	mainSizer->Add( m_staticText8, 0, wxALL, 5 );
-
+	
 	m_listSwitches = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
 	mainSizer->Add( m_listSwitches, 1, wxEXPAND|wxALL, 5 );
-
+	
 	wxFlexGridSizer* fgSizer2;
 	fgSizer2 = new wxFlexGridSizer( 2, 2, 0, 0 );
 	fgSizer2->AddGrowableCol( 1 );
 	fgSizer2->SetFlexibleDirection( wxBOTH );
 	fgSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-
+	
 	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Object extesion:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer2->Add( m_staticText3, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
+	
 	m_textObjectExtension = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer2->Add( m_textObjectExtension, 1, wxALL|wxEXPAND, 5 );
-
+	
 	mainSizer->Add( fgSizer2, 0, wxALL|wxEXPAND, 0 );
-
+	
 	this->SetSizer( mainSizer );
-	this->Layout();	CustomInitialize();
+	this->Layout();	
+	CustomInitialize();
 }
 
 void CompilerPage::CustomInitialize()

@@ -17,7 +17,7 @@
 #include <wx/panel.h>
 #include <wx/gbsizer.h>
 #include <wx/checklst.h>
-#include <wx/notebook.h>
+#include <wx/treebook.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -34,7 +34,7 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxChoice* m_choiceConfigurationType;
 		wxButton* m_buttonConfigManager;
 		wxStaticLine* m_staticline81;
-		wxNotebook* m_notebook3;
+		wxTreebook* m_notebook3;
 		wxPanel* m_generalPage;
 		wxStaticText* m_staticText22;
 		wxChoice* m_choiceProjectTypes;

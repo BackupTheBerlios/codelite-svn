@@ -4,6 +4,7 @@
 #include "manager.h"
 #include "configuration_manager_dlg.h"
 #include "macros.h"
+#include "editor_config.h"
 
 ProjectSettingsDlg::ProjectSettingsDlg( wxWindow* parent, const wxString &configName, const wxString &projectName, const wxString &title )
 : ProjectSettingsBaseDlg( parent, wxID_ANY, title )
@@ -124,6 +125,24 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 		sel = 0;
 	}
 	m_choiceProjectTypes->SetSelection(sel);
+
+	m_choiceCompilerType->Clear();
+	wxString cmpType = buildConf->GetCompilerType();
+	EditorConfigCookie cookie;
+	CompilerPtr cmp = EditorConfigST::Get()->GetFirstCompiler(cookie);
+	while(cmp){
+		m_choiceCompilerType->Append(cmp->GetName());
+		cmp = EditorConfigST::Get()->GetNextCompiler(cookie);
+	}
+
+	int where = m_choiceCompilerType->FindString(cmpType);
+	if(where == wxNOT_FOUND){
+		if(m_choiceCompilerType->GetCount() > 0){
+			m_choiceCompilerType->SetSelection(0);
+		}
+	}else{
+		m_choiceCompilerType->SetSelection(where);
+	}
 }
 
 void ProjectSettingsDlg::SaveValues(const wxString &confName)
@@ -151,6 +170,7 @@ void ProjectSettingsDlg::SaveValues(const wxString &confName)
 	buildConf->SetLinkerRequired(!m_checkLinkerNeeded->IsChecked());
 	buildConf->SetLinkOptions(m_textLinkerOptions->GetValue());
 	buildConf->SetProjectType(m_choiceProjectTypes->GetStringSelection());
+	buildConf->SetCompilerType(m_choiceCompilerType->GetStringSelection());
 
 	BuildCommandList cmds;
 	cmds.clear();
