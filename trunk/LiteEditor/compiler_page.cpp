@@ -22,11 +22,10 @@
 #include "editor_config.h"
 
 CompilerPage::CompilerPage( wxWindow* parent, wxString name, int id, wxPoint pos, wxSize size, int style ) 
-: wxPanel( parent, id, pos, size, style )
+: wxScrolledWindow( parent, id, pos, size, style )
 , m_cmpname(name)
 {
-	//load the compiler from the configuration file
-	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(name);
+	SetScrollRate( 5, 5 );
 
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
@@ -37,72 +36,94 @@ CompilerPage::CompilerPage( wxWindow* parent, wxString name, int id, wxPoint pos
 	wxStaticBoxSizer* sbSizer5;
 	sbSizer5 = new wxStaticBoxSizer( new wxStaticBox( this, -1, wxT("Compiler Error Pattern:") ), wxVERTICAL );
 
-	wxFlexGridSizer* fgSizer3;
-	fgSizer3 = new wxFlexGridSizer( 3, 2, 0, 0 );
-	fgSizer3->AddGrowableCol( 1 );
-	fgSizer3->SetFlexibleDirection( wxBOTH );
-	fgSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-
 	m_staticText5 = new wxStaticText( this, wxID_ANY, wxT("Regex Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer3->Add( m_staticText5, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	sbSizer5->Add( m_staticText5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 	m_textErrorPattern = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer3->Add( m_textErrorPattern, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
-	m_textErrorPattern->SetValue(cmp->GetErrPattern());
+	sbSizer5->Add( m_textErrorPattern, 0, wxEXPAND|wxALL, 5 );
 
 	m_staticText6 = new wxStaticText( this, wxID_ANY, wxT("File Index in Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer3->Add( m_staticText6, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	sbSizer5->Add( m_staticText6, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 	m_textErrorFileIndex = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer3->Add( m_textErrorFileIndex, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
-	m_textErrorFileIndex->SetValue(cmp->GetErrFileNameIndex());
+	sbSizer5->Add( m_textErrorFileIndex, 0, wxEXPAND|wxALL, 5 );
 
 	m_staticText7 = new wxStaticText( this, wxID_ANY, wxT("Line Number in Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer3->Add( m_staticText7, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
-	m_textErrorLineNumber = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer3->Add( m_textErrorLineNumber, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
-	m_textErrorLineNumber->SetValue(cmp->GetErrLineNumberIndex());
+	sbSizer5->Add( m_staticText7, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	sbSizer5->Add( fgSizer3, 0, wxALL|wxEXPAND, 5 );
+	m_textErrorLineNumber = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer5->Add( m_textErrorLineNumber, 0, wxEXPAND|wxALL, 5 );
 
 	bSizer11->Add( sbSizer5, 1, wxALL|wxEXPAND, 5 );
 
 	wxStaticBoxSizer* sbSizer4;
 	sbSizer4 = new wxStaticBoxSizer( new wxStaticBox( this, -1, wxT("Compiler Warning Pattern:") ), wxVERTICAL );
 
-	wxFlexGridSizer* fgSizer31;
-	fgSizer31 = new wxFlexGridSizer( 3, 2, 0, 0 );
-	fgSizer31->AddGrowableCol( 1 );
-	fgSizer31->SetFlexibleDirection( wxBOTH );
-	fgSizer31->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-
 	m_staticText51 = new wxStaticText( this, wxID_ANY, wxT("Regex Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_staticText51, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	sbSizer4->Add( m_staticText51, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 	m_textWarnPattern = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_textWarnPattern, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
-	m_textWarnPattern->SetValue(cmp->GetWarnPattern());
+	sbSizer4->Add( m_textWarnPattern, 0, wxEXPAND|wxALL, 5 );
 
 	m_staticText61 = new wxStaticText( this, wxID_ANY, wxT("File Index in Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_staticText61, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	sbSizer4->Add( m_staticText61, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 	m_textWarnFileIndex = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_textWarnFileIndex, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
-	m_textWarnFileIndex->SetValue(cmp->GetWarnFileNameIndex());
+	sbSizer4->Add( m_textWarnFileIndex, 0, wxEXPAND|wxALL, 5 );
 
 	m_staticText71 = new wxStaticText( this, wxID_ANY, wxT("Line Number in Pattern:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_staticText71, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
+	sbSizer4->Add( m_staticText71, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
 	m_textWarnLineNumber = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_textWarnLineNumber, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
-	m_textWarnLineNumber->SetValue(cmp->GetWarnLineNumberIndex());
+	sbSizer4->Add( m_textWarnLineNumber, 0, wxEXPAND|wxALL, 5 );
 
-	sbSizer4->Add( fgSizer31, 0, wxALL|wxEXPAND, 5 );
+	bSizer11->Add( sbSizer4, 1, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 
-	bSizer11->Add( sbSizer4, 1, wxALL|wxEXPAND, 5 );
+	mainSizer->Add( bSizer11, 0, wxALL|wxEXPAND, 0 );
 
-	mainSizer->Add( bSizer11, 0, wxALL|wxEXPAND, 5 );
+	wxStaticBoxSizer* sbSizer41;
+	sbSizer41 = new wxStaticBoxSizer( new wxStaticBox( this, -1, wxT("Tools:") ), wxVERTICAL );
+
+	wxFlexGridSizer* fgSizer4;
+	fgSizer4 = new wxFlexGridSizer( 2, 4, 0, 0 );
+	fgSizer4->AddGrowableCol( 1 );
+	fgSizer4->AddGrowableCol( 3 );
+	fgSizer4->SetFlexibleDirection( wxBOTH );
+	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("Compiler Name:"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( m_staticText9, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_textCompilerName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( m_textCompilerName, 0, wxALL|wxEXPAND, 5 );
+
+	m_staticText11 = new wxStaticText( this, wxID_ANY, wxT("Linker Name:"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( m_staticText11, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_textLinkerName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( m_textLinkerName, 0, wxALL|wxEXPAND, 5 );
+
+	m_staticText12 = new wxStaticText( this, wxID_ANY, wxT("Shared Object Linker:"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( m_staticText12, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_textSOLinker = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( m_textSOLinker, 0, wxALL|wxEXPAND, 5 );
+
+	m_staticText10 = new wxStaticText( this, wxID_ANY, wxT("Archive Tool:"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( m_staticText10, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_textArchiveTool = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( m_textArchiveTool, 0, wxALL|wxEXPAND, 5 );
+
+	sbSizer41->Add( fgSizer4, 1, wxEXPAND, 5 );
+
+	mainSizer->Add( sbSizer41, 1, wxALL|wxEXPAND, 5 );
+
+	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("Switches:"), wxDefaultPosition, wxDefaultSize, 0 );
+	mainSizer->Add( m_staticText8, 0, wxALL, 5 );
+
+	m_listSwitches = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
+	mainSizer->Add( m_listSwitches, 1, wxEXPAND|wxALL, 5 );
 
 	wxFlexGridSizer* fgSizer2;
 	fgSizer2 = new wxFlexGridSizer( 2, 2, 0, 0 );
@@ -115,21 +136,48 @@ CompilerPage::CompilerPage( wxWindow* parent, wxString name, int id, wxPoint pos
 
 	m_textObjectExtension = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer2->Add( m_textObjectExtension, 1, wxALL|wxEXPAND, 5 );
-	m_textObjectExtension->SetValue(cmp->GetObjectSuffix());
 
-	mainSizer->Add( fgSizer2, 0, wxEXPAND, 5 );
+	mainSizer->Add( fgSizer2, 0, wxALL|wxEXPAND, 0 );
 
-	wxStaticBoxSizer* sbSizer3;
-	sbSizer3 = new wxStaticBoxSizer( new wxStaticBox( this, -1, wxT("Switches:") ), wxVERTICAL );
-
-	m_listSwitches = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	sbSizer3->Add( m_listSwitches, 1, wxALL|wxEXPAND, 5 );
-	InitSwitches();
-
-	mainSizer->Add( sbSizer3, 1, wxALL|wxEXPAND, 5 );
 	this->SetSizer( mainSizer );
-	this->Layout();
+	this->Layout();	CustomInitialize();
+}
+
+void CompilerPage::CustomInitialize()
+{
+	//load the compiler from the configuration file
+	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(m_cmpname);
+	m_textObjectExtension->SetValue(cmp->GetObjectSuffix());
+	m_textErrorPattern->SetValue(cmp->GetErrPattern());
+	m_textErrorFileIndex->SetValue(cmp->GetErrFileNameIndex());
+	m_textErrorLineNumber->SetValue(cmp->GetErrLineNumberIndex());
+	m_textWarnPattern->SetValue(cmp->GetWarnPattern());
+	m_textWarnFileIndex->SetValue(cmp->GetWarnFileNameIndex());
+	m_textWarnLineNumber->SetValue(cmp->GetWarnLineNumberIndex());
+	m_textArchiveTool->SetValue(cmp->GetTool(wxT("ArchiveTool")));
+	m_textCompilerName->SetValue(cmp->GetTool(wxT("CompilerName")));
+	m_textLinkerName->SetValue(cmp->GetTool(wxT("LinkerName")));
+	m_textSOLinker->SetValue(cmp->GetTool(wxT("SharedObjectLinkerName")));
+	InitSwitches();
 	ConnectEvents();
+}
+
+void CompilerPage::Save()
+{
+	//load the compiler from the configuration file
+	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(m_cmpname);
+	cmp->SetErrPattern(m_textErrorPattern->GetValue());
+	cmp->SetErrFileNameIndex(m_textErrorFileIndex->GetValue());
+	cmp->SetErrLineNumberIndex(m_textErrorLineNumber->GetValue());
+	cmp->SetWarnPattern(m_textWarnPattern->GetValue());
+	cmp->SetWarnFileNameIndex(m_textWarnFileIndex->GetValue());
+	cmp->SetWarnLineNumberIndex(m_textWarnLineNumber->GetValue());
+	cmp->SetObjectSuffix(m_textObjectExtension->GetValue());
+	cmp->SetTool(wxT("ArchiveTool"), m_textArchiveTool->GetValue());
+	cmp->SetTool(wxT("CompilerName"), m_textCompilerName->GetValue());
+	cmp->SetTool(wxT("LinkerName"), m_textLinkerName->GetValue());
+	cmp->SetTool(wxT("SharedObjectLinkerName"), m_textSOLinker->GetValue());
+	EditorConfigST::Get()->SetCompiler(cmp);//save changes
 }
 
 void CompilerPage::AddSwitch(const wxString &name, const wxString &value, bool choose)

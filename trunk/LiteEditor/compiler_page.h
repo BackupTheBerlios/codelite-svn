@@ -18,7 +18,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class CompilerPage
 ///////////////////////////////////////////////////////////////////////////////
-class CompilerPage : public wxPanel 
+class CompilerPage : public wxScrolledWindow 
 {
 protected:
 	wxStaticText* m_staticText5;
@@ -33,9 +33,18 @@ protected:
 	wxTextCtrl* m_textWarnFileIndex;
 	wxStaticText* m_staticText71;
 	wxTextCtrl* m_textWarnLineNumber;
+	wxStaticText* m_staticText9;
+	wxTextCtrl* m_textCompilerName;
+	wxStaticText* m_staticText11;
+	wxTextCtrl* m_textLinkerName;
+	wxStaticText* m_staticText12;
+	wxTextCtrl* m_textSOLinker;
+	wxStaticText* m_staticText10;
+	wxTextCtrl* m_textArchiveTool;
+	wxStaticText* m_staticText8;
+	wxListCtrl* m_listSwitches;
 	wxStaticText* m_staticText3;
 	wxTextCtrl* m_textObjectExtension;
-	wxListCtrl* m_listSwitches;
 
 	wxString m_selSwitchName ;
 	wxString m_selSwitchValue;
@@ -44,15 +53,17 @@ protected:
 	// Virtual event handlers, overide them in your derived class
 	virtual void OnItemActivated( wxListEvent& event );
 	virtual void OnItemSelected( wxListEvent& event );
-	
+
 	void EditSwitch();
 	void InitSwitches();
-
+	void CustomInitialize();
 	void ConnectEvents();	
 	void AddSwitch(const wxString &name, const wxString &value, bool choose);
+	
 
 public:
 	CompilerPage( wxWindow* parent, wxString name, int id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 732,409 ), int style = wxTAB_TRAVERSAL );
+	void Save();
 
 };
 

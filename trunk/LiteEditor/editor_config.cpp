@@ -282,3 +282,19 @@ CompilerPtr EditorConfig::GetNextCompiler(EditorConfigCookie &cookie)
 	}
 	return NULL;
 }
+
+bool EditorConfig::IsCompilerExist(const wxString &name) const
+{
+	wxXmlNode *node = GetCompilerNode(name);
+	return node != NULL;
+}
+
+void EditorConfig::DeleteCompiler(const wxString &name)
+{
+	wxXmlNode *node = GetCompilerNode(name);
+	if(node){
+		node->GetParent()->RemoveChild(node);
+		delete node;
+		m_doc->Save(m_fileName.GetFullPath());
+	}
+}

@@ -13,7 +13,6 @@ BuildConfig::BuildConfig(wxXmlNode *node)
 		
 		// read the compile options
 		if(compile){
-			m_compilerName = XmlUtils::ReadString(compile, wxT("Name"), wxT("g++"));
 			m_compilerRequired = XmlUtils::ReadBool(compile, wxT("Required"), true);
 			m_compileOptions = XmlUtils::ReadString(compile, wxT("Options"));
 			wxXmlNode *child = compile->GetChildren();
@@ -30,7 +29,6 @@ BuildConfig::BuildConfig(wxXmlNode *node)
 		if(linker){
 			m_linkerRequired = XmlUtils::ReadBool(linker, wxT("Required"), true);
 			m_linkOptions = XmlUtils::ReadString(linker, wxT("Options"));
-			m_linkerName = XmlUtils::ReadString(linker, wxT("Name"));
 			wxXmlNode *child = linker->GetChildren();
 			while(child) {
 				if(child->GetName() == wxT("Library")){
@@ -79,18 +77,6 @@ BuildConfig::BuildConfig(wxXmlNode *node)
 			m_workingDirectory = XmlUtils::ReadString(general, wxT("WorkingDirectory"), wxT("."));
 		}
 
-		wxXmlNode *tools = XmlUtils::FindFirstByTagName(node, wxT("Tools"));
-		if(tools){
-			wxXmlNode *child = tools->GetChildren();
-			while(child) {
-				if(child->GetName() == wxT("ArchiveTool")){
-					m_archiveToolName = XmlUtils::ReadString(child, wxT("Name"));
-				}else if(child->GetName() == wxT("CleanCommand")){
-					m_cleanCommand = XmlUtils::ReadString(child, wxT("Name"));
-				}
-				child = child->GetNext();
-			}
-		}
 	}else{
 		//create default project settings
 		m_name = wxT("Debug");
@@ -103,10 +89,6 @@ BuildConfig::BuildConfig(wxXmlNode *node)
 		m_linkerRequired = true;
 		m_intermediateDirectory = wxT("./Debug");
 		m_workingDirectory = wxT("./Debug");
-		m_compilerName = wxT("g++");
-		m_linkerName = wxT("g++");
-		m_archiveToolName = wxT("ar rcu");
-		m_cleanCommand = wxT("rm -f");
 		m_projectType = Project::EXECUTABLE;
 	}
 }
@@ -146,7 +128,6 @@ wxXmlNode *BuildConfig::ToXml() const
 	//create the compile node
 	wxXmlNode *compile = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Compiler"));
 	compile->AddProperty(wxT("Required"), BoolToString(m_compilerRequired));
-	compile->AddProperty(wxT("Name"), m_compilerName);
 	compile->AddProperty(wxT("Options"), m_compileOptions);
 	node->AddChild(compile);
 
@@ -161,7 +142,6 @@ wxXmlNode *BuildConfig::ToXml() const
 	wxXmlNode *link = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Linker"));
 	link->AddProperty(wxT("Required"), BoolToString(m_linkerRequired));
 	link->AddProperty(wxT("Options"), m_linkOptions);
-	link->AddProperty(wxT("Name"), m_linkerName);
 	node->AddChild(link);
 
 	for(i=0; i<m_libPath.GetCount(); i++){
@@ -199,16 +179,6 @@ wxXmlNode *BuildConfig::ToXml() const
 		postBuild->AddChild(command);
 	}
 
-	//add the tool page
-	wxXmlNode *tools = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Tools"));
-	wxXmlNode *cleanCmd = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("CleanCommand"));
-	cleanCmd->AddProperty(wxT("Name"), m_cleanCommand);
-	tools->AddChild(cleanCmd);
-	
-	wxXmlNode *arTool = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("ArchiveTool"));
-	arTool->AddProperty(wxT("Name"), m_archiveToolName);
-	tools->AddChild(arTool);
-	node->AddChild(tools);
 	return node;
 }
 

@@ -649,3 +649,23 @@ EnvironmentVarieblesPtr Manager::GetEnvironmentVariables() const
 {
 	return WorkspaceST::Get()->GetEnvironmentVariables();
 }
+
+bool Manager::CreateDefaultNewCompiler(const wxString &name)
+{
+	if(EditorConfigST::Get()->IsCompilerExist(name)){
+		wxMessageBox(wxT("A compiler with this name already exist"), wxT("Error"), wxOK | wxICON_HAND);
+		return false;
+	}
+	
+	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(name);
+	cmp->SetName(name);
+	EditorConfigST::Get()->SetCompiler(cmp);
+	return true;
+}
+
+void Manager::DeleteCompiler(const wxString &name)
+{
+	if(wxMessageBox(wxT("Remove Compiler?"), wxT("Confirm"), wxYES_NO | wxICON_QUESTION) == wxYES){
+		EditorConfigST::Get()->DeleteCompiler(name);
+	}
+}

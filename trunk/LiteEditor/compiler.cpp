@@ -11,8 +11,12 @@ Compiler::Compiler(wxXmlNode *node)
 				m_switches[XmlUtils::ReadString(child, wxT("Name"))] = XmlUtils::ReadString(child, wxT("Value"));
 			}
 
+			if(child->GetName() == wxT("Tool")){
+				m_tools[XmlUtils::ReadString(child, wxT("Name"))] = XmlUtils::ReadString(child, wxT("Value"));
+			}
+
 			if(child->GetName() == wxT("Option")){
-				if(XmlUtils::ReadString(child, wxT("Name")) == wxT("ObjectsSuffix")){
+				if(XmlUtils::ReadString(child, wxT("Name")) == wxT("ObjectSuffix")){
 					m_objectSuffix = XmlUtils::ReadString(child, wxT("Value"));
 				}
 			}
@@ -23,7 +27,7 @@ Compiler::Compiler(wxXmlNode *node)
 					m_errorFileNameIndex = XmlUtils::ReadString(child, wxT("FileNameIndex"));
 					m_errorLineNubmerIndex = XmlUtils::ReadString(child, wxT("LineNumberIndex"));
 					m_errorPattern = child->GetNodeContent();
-				}else if(XmlUtils::ReadString(child, wxT("Name")) == wxT("Error")){
+				}else if(XmlUtils::ReadString(child, wxT("Name")) == wxT("Warning")){
 					//found the warning description
 					m_warningFileNameIndex = XmlUtils::ReadString(child, wxT("FileNameIndex"));
 					m_warningLineNubmerIndex = XmlUtils::ReadString(child, wxT("LineNumberIndex"));
@@ -35,7 +39,7 @@ Compiler::Compiler(wxXmlNode *node)
 	} else {
 		//create a default compiler:
 		//g++
-		m_name = wxT("g++");
+		m_name = wxT("GNU g++");
 		m_switches[wxT("Include")] = wxT("-I");
 		m_switches[wxT("Debug")] = wxT("-g");
 		m_switches[wxT("Preprocessor")] = wxT("-D");
@@ -44,6 +48,16 @@ Compiler::Compiler(wxXmlNode *node)
 		m_switches[wxT("Source")] = wxT("-c");
 		m_switches[wxT("Output")] = wxT("-o");
 		m_objectSuffix = wxT(".o");
+		m_errorPattern = wxT("(^[\\w\\.0-9_/]+ *)(:)(\\d+)(:)(.*?$)");
+		m_errorFileNameIndex = wxT("1");
+		m_errorLineNubmerIndex = wxT("3");
+		m_warningPattern = wxT("(^[\\w\\.0-9_/]+ *)(:)(\\d+)(:)( warning:)(.*?$)");
+		m_warningFileNameIndex = wxT("1");
+		m_warningLineNubmerIndex = wxT("3");
+		m_tools[wxT("LinkerName")] = wxT("g++");
+		m_tools[wxT("SharedObjectLinkerName")] = wxT("g++");
+		m_tools[wxT("CompilerName")] = wxT("g++");
+		m_tools[wxT("ArchiveTool")] = wxT("ar rcu");
 	}
 }
 
@@ -59,6 +73,14 @@ wxXmlNode *Compiler::ToXml() const
 	std::map<wxString, wxString>::const_iterator iter = m_switches.begin();
 	for(; iter != m_switches.end(); iter++){
 		wxXmlNode *child = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Switch"));
+		child->AddProperty(wxT("Name"), iter->first);
+		child->AddProperty(wxT("Value"), iter->second);
+		node->AddChild(child);
+	}
+
+	iter = m_tools.begin();
+	for(; iter != m_tools.end(); iter++){
+		wxXmlNode *child = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Tool"));
 		child->AddProperty(wxT("Name"), iter->first);
 		child->AddProperty(wxT("Value"), iter->second);
 		node->AddChild(child);
@@ -82,7 +104,7 @@ wxXmlNode *Compiler::ToXml() const
 	warning->AddProperty(wxT("FileNameIndex"), m_warningFileNameIndex);
 	warning->AddProperty(wxT("LineNumberIndex"), m_warningLineNubmerIndex);
 	XmlUtils::SetNodeContent(warning, m_warningPattern);
-	node->AddChild(error);
+	node->AddChild(warning);
 	return node;
 }
 
@@ -90,6 +112,15 @@ wxString Compiler::GetSwitch(const wxString &name) const
 {
 	std::map<wxString, wxString>::const_iterator iter = m_switches.find(name);
 	if(iter == m_switches.end()){
+		return wxEmptyString;
+	}
+	return iter->second;
+}
+
+wxString Compiler::GetTool(const wxString &name) const
+{
+	std::map<wxString, wxString>::const_iterator iter = m_tools.find(name);
+	if(iter == m_tools.end()){
 		return wxEmptyString;
 	}
 	return iter->second;

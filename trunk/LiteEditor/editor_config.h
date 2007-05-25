@@ -144,6 +144,16 @@ public:
 	 * (i.e. allow more than one enumeration on one and the same object simultaneously).
 	 */
 	CompilerPtr GetNextCompiler(EditorConfigCookie &cookie);
+	
+	/**
+	 * check whether a compiler with a given name already exist
+	 */
+	bool IsCompilerExist(const wxString &name) const;
+
+	/**
+	 * delete compiler
+	 */
+	void DeleteCompiler(const wxString &name);
 
 private:
 	EditorConfig();

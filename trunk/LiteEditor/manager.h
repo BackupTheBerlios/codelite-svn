@@ -290,6 +290,18 @@ public:
 	 */
 	EnvironmentVarieblesPtr GetEnvironmentVariables() const;
 
+	/**
+	 * create default new compiler
+	 * \return true on success false when a compiler with this name already exist
+	 */
+	bool CreateDefaultNewCompiler(const wxString &name);
+
+	/**
+	 * delete compiler
+	 * \param name compiler to delete
+	 */
+	void DeleteCompiler(const wxString &name);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

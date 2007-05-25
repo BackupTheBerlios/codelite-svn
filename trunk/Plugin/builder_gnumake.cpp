@@ -3,6 +3,7 @@
 #include "dirsaver.h"
 #include "macros.h"
 #include "wx/tokenzr.h"
+#include "editor_config.h"
 
 BuilderGnuMake::BuilderGnuMake()
 : Builder(wxT("GNU makefile for g++/gcc"))
@@ -281,7 +282,7 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 
 	text << wxT("## ") << name << wxT("\n");
 	text << wxT("ifeq ($(type), ") << name << wxT(")") << wxT("\n");
-	text << wxT("CompilerName") << wxT("=") << bldConf->GetCompilerName() << wxT("\n");
+	text << wxT("CompilerName") << wxT("=") << bldConf->GetCompilerT() << wxT("\n");
 	text << wxT("OutputFile") << wxT("=") << bldConf->GetOutputFileName() << wxT("\n");
 	text << wxT("IntermediateDirectory") << wxT("=") << bldConf->GetIntermediateDirectory() << wxT("\n");
 	text << wxT("CmpOptions") << wxT("=") << bldConf->GetCompileOptions() << wxT("\n");

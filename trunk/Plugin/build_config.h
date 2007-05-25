@@ -50,11 +50,8 @@ class BuildConfig : public ConfObject {
 	wxString m_command;
 	wxString m_commandArguments;
 	wxString m_workingDirectory;
-	wxString m_compilerName;
-	wxString m_linkerName;
+	wxString m_compilerType;
 	wxString m_projectType;
-	wxString m_archiveToolName;
-	wxString m_cleanCommand;
 
 private:
 	void FillFromSmiColonString(wxArrayString &arr, const wxString &str);
@@ -71,20 +68,17 @@ public:
 	//--------------------------------
 	// Setters / Getters
 	//--------------------------------
+	const wxString &GetCompilerType() const { return m_compilerType; }
+	void SetCompilerType(const wxString &cmpType) { m_compilerType = cmpType; }
+
 	wxString GetIncludePath() const;
 	const wxString &GetCompileOptions() const { return m_compileOptions; }
 	const wxString &GetLinkOptions() const { return m_linkOptions; }
 	wxString GetLibraries() const;
 	wxString GetLibPath() const;
 	
-	wxString GetLinkerName() const { return m_linkerName;}
 	wxString GetProjectType() const {return m_projectType;}
-	wxString GetCleanCommand() const {return m_cleanCommand;}
-	wxString GetArchiveToolName() const {return m_archiveToolName;}
-	void SetLinkerName(const wxString &name) { m_linkerName = name; }
 	void SetProjectType(const wxString &type) { m_projectType = type; }
-	void SetCleanCommand(const wxString &cmd) { m_cleanCommand = cmd; }
-	void SetArchiveToolName(const wxString &name) { m_archiveToolName = name; }
 
 	void GetPreBuildCommands(BuildCommandList &cmds) { cmds = m_preBuildCommands; }
 	void GetPostBuildCommands(BuildCommandList &cmds) { cmds = m_postBuildCommands; }
@@ -96,7 +90,6 @@ public:
 	const wxString &GetCommand() const { return m_command; }
 	const wxString &GetCommandArguments() const { return m_commandArguments;}
 	wxString GetWorkingDirectory() const { return NormalizePath(m_workingDirectory);}
-	const wxString &GetCompilerName() const { return m_compilerName;}
 
 	void SetIncludePath(const wxArrayString &paths) { m_includePath = paths; }
 	// set the include path from a semi-colon string
@@ -118,7 +111,6 @@ public:
 	void SetCommand(const wxString &cmd){ m_command = cmd; }
 	void SetCommandArguments(const wxString &cmdArgs){ m_commandArguments = cmdArgs;}
 	void SetWorkingDirectory(const wxString &dir){ m_workingDirectory = dir;}
-	void SetCompilerName(const wxString &cmpName){ m_compilerName = cmpName;}
 };
 
 typedef SmartPtr<BuildConfig> BuildConfigPtr;

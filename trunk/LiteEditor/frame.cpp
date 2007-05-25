@@ -20,6 +20,7 @@
 #include "options_base_dlg.h"
 #include "configuration_manager_dlg.h"
 #include "filedroptarget.h"
+#include "advanced_settings.h"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -118,6 +119,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("toggle_panes"), Frame::OnTogglePanes)
 	EVT_UPDATE_UI(XRCID("add_envvar"), Frame::OnWorkspaceOpen)
 	EVT_MENU(XRCID("add_envvar"), Frame::OnAddEnvironmentVariable)
+	EVT_MENU(XRCID("advance_settings"), Frame::OnAdvanceSettings)
 
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
@@ -777,8 +779,14 @@ void Frame::OnAddEnvironmentVariable(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 	EnvVarsTableDlg *dlg = new EnvVarsTableDlg(this);
-	if(dlg->ShowModal() == wxID_OK){
-		//do somethig
-	}
+	dlg->ShowModal();
+	dlg->Destroy();
+}
+
+void Frame::OnAdvanceSettings(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	AdvancedDlg *dlg = new AdvancedDlg(this);
+	dlg->ShowModal();
 	dlg->Destroy();
 }

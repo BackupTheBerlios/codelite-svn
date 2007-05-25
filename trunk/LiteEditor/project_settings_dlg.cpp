@@ -60,7 +60,6 @@ void ProjectSettingsDlg::ClearValues()
 	m_textCommandArguments->SetValue(wxEmptyString);
 	m_workingDirPicker->SetPath(wxEmptyString);
 	m_checkCompilerNeeded->SetValue(false);
-	m_textCompilerName->SetValue(wxEmptyString);
 	m_textCompilerOptions->SetValue(wxEmptyString);
 	DisableCompilerPage(false);
 	m_textAdditionalSearchPath->SetValue(wxEmptyString);
@@ -71,8 +70,6 @@ void ProjectSettingsDlg::ClearValues()
 	m_textLibraryPath->SetValue(wxEmptyString);
 	m_checkListPreBuildCommands->Clear();
 	m_checkListPostBuildCommands->Clear();
-	m_textArchiveTool->SetValue(wxEmptyString);
-	m_textLinkerName->SetValue(wxEmptyString);
 }
 
 void ProjectSettingsDlg::CopyValues(const wxString &confName)
@@ -94,7 +91,6 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 	m_textCommandArguments->SetValue(buildConf->GetCommandArguments());
 	m_workingDirPicker->SetPath(buildConf->GetWorkingDirectory());
 	m_checkCompilerNeeded->SetValue(!buildConf->IsCompilerRequired());
-	m_textCompilerName->SetValue(buildConf->GetCompilerName());
 	m_textCompilerOptions->SetValue(buildConf->GetCompileOptions());
 	DisableCompilerPage(m_checkCompilerNeeded->IsChecked());
 	m_textAdditionalSearchPath->SetValue(buildConf->GetIncludePath());
@@ -103,8 +99,6 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 	m_textLinkerOptions->SetValue(buildConf->GetLinkOptions());
 	m_textLibraries->SetValue(buildConf->GetLibraries());
 	m_textLibraryPath->SetValue(buildConf->GetLibPath());
-	m_textLinkerName->SetValue(buildConf->GetLinkerName());
-	m_textArchiveTool->SetValue(buildConf->GetArchiveToolName());
 	
 	buildConf->GetPreBuildCommands(preBuildCmds);
 	buildConf->GetPostBuildCommands(postBuildCmds);
@@ -150,15 +144,12 @@ void ProjectSettingsDlg::SaveValues(const wxString &confName)
 	
 	buildConf->SetWorkingDirectory(m_workingDirPicker->GetPath());
 	buildConf->SetCompilerRequired(!m_checkCompilerNeeded->IsChecked());
-	buildConf->SetCompilerName(m_textCompilerName->GetValue());
 	buildConf->SetCompileOptions(m_textCompilerOptions->GetValue());
 	buildConf->SetIncludePath(m_textAdditionalSearchPath->GetValue());
 	buildConf->SetLibPath(m_textLibraryPath->GetValue());
 	buildConf->SetLibraries(m_textLibraries->GetValue());
 	buildConf->SetLinkerRequired(!m_checkLinkerNeeded->IsChecked());
 	buildConf->SetLinkOptions(m_textLinkerOptions->GetValue());
-	buildConf->SetLinkerName(m_textLinkerName->GetValue());
-	buildConf->SetArchiveToolName(m_textArchiveTool->GetValue());
 	buildConf->SetProjectType(m_choiceProjectTypes->GetStringSelection());
 
 	BuildCommandList cmds;
@@ -242,7 +233,6 @@ void ProjectSettingsDlg::OnConfigurationTypeSelected(wxCommandEvent &event)
 
 void ProjectSettingsDlg::DisableCompilerPage(bool disable)
 {
-	m_textCompilerName->Enable(!disable);
 	m_textAdditionalSearchPath->Enable(!disable);
 	m_buttonAddSearchPath->Enable(!disable);
 	m_textCompilerOptions->Enable(!disable);
@@ -255,7 +245,6 @@ void ProjectSettingsDlg::DisableLinkerPage(bool disable)
 	m_textLinkerOptions->Enable(!disable);
 	m_buttonLibraries->Enable(!disable);
 	m_buttonLibraryPath->Enable(!disable);
-	m_textLinkerName->Enable(!disable);
 }
 
 void ProjectSettingsDlg::OnCheckCompilerNeeded(wxCommandEvent &event)

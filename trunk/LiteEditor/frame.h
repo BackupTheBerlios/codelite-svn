@@ -134,6 +134,8 @@ protected:
 	void OnConfigurationManager(wxCommandEvent &event);
 	void OnAddEnvironmentVariable(wxCommandEvent &event);
 
+	void OnAdvanceSettings(wxCommandEvent &event);
+
 	// tags menu
 	void OnCtagsOptions(wxCommandEvent &event);
 

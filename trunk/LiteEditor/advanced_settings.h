@@ -10,11 +10,10 @@
 
 #include <wx/wx.h>
 
+#include <wx/button.h>
+#include <wx/statline.h>
 #include <wx/wxFlatNotebook/wxFlatNotebook.h>
 #include <wx/panel.h>
-#include <wx/statline.h>
-#include <wx/button.h>
-#include "compiler_page.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -24,19 +23,27 @@
 ///////////////////////////////////////////////////////////////////////////////
 class AdvancedDlg : public wxDialog 
 {
-	private:
+	DECLARE_EVENT_TABLE();
 	
-	protected:
-		wxFlatNotebook* m_notebook; 
-		wxPanel* m_compilersPage;
-		wxFlatNotebook* m_compilersNotebook; 
-		wxStaticLine* m_staticline10;
-		wxButton* m_buttonOK;
-		wxButton* m_buttonCancel;
+protected:
+	wxFlatNotebook* m_notebook; 
+	wxPanel* m_compilersPage;
+	wxStaticText* m_staticText1;
+	wxButton* m_buttonNewCompiler;
+	wxStaticLine* m_staticline2;
+	wxFlatNotebook* m_compilersNotebook; 
+	wxStaticLine* m_staticline10;
+	wxButton* m_buttonOK;
+	wxButton* m_buttonCancel;
+
+	void OnButtonNewClicked(wxCommandEvent &);
+	void OnButtonOKClicked(wxCommandEvent &);
+	void OnDeleteCompiler(wxCommandEvent &);
+	void LoadCompilers();
 	
-	public:
-		AdvancedDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Advanced"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 581,415 ), int style = wxDEFAULT_DIALOG_STYLE );
-	
+public:
+	AdvancedDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Advanced"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 642,587 ), int style = wxDEFAULT_DIALOG_STYLE );
+
 };
 
 #endif //__advanced_settings__

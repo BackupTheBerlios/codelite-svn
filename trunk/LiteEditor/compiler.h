@@ -29,6 +29,8 @@ class Compiler : public ConfObject {
 	wxString m_warningLineNubmerIndex;
 	wxString m_warningFileNameIndex;
 
+	std::map<wxString, wxString> m_tools;
+
 public:
 	typedef std::map<wxString, wxString>::const_iterator ConstIterator;
 
@@ -44,6 +46,9 @@ public:
 	//---------------------------------------------------
 	//setters/getters
 	//---------------------------------------------------
+	wxString GetTool(const wxString &name) const;
+	void SetTool(const wxString &name, const wxString &tool){ m_tools[name] = tool; }
+
 	wxString GetSwitch(const wxString &name) const;
 	void SetSwitch(const wxString &name, const wxString &value) { m_switches[name] = value; }
 	const wxString &GetObjectSuffix() const { return m_objectSuffix; }
