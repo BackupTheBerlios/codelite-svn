@@ -38,6 +38,8 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxPanel* m_generalPage;
 		wxStaticText* m_staticText22;
 		wxChoice* m_choiceProjectTypes;
+		wxStaticText* m_staticText191;
+		wxChoice* m_choiceCompilerType;
 		wxStaticText* m_staticText15;
 		wxFilePickerCtrl* m_outputFilePicker;
 		wxStaticText* m_staticText16;
@@ -53,9 +55,6 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxPanel* m_compilerPage;
 		wxCheckBox* m_checkCompilerNeeded;
 		wxStaticLine* m_staticline7;
-		wxStaticText* m_staticText3;
-		wxTextCtrl* m_textCompilerName;
-		wxStaticLine* m_staticline6;
 		wxStaticText* m_staticText6;
 		wxTextCtrl* m_textCompilerOptions;
 		wxStaticText* m_staticText4;
@@ -64,9 +63,6 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxPanel* m_linkerPage;
 		wxCheckBox* m_checkLinkerNeeded;
 		wxStaticLine* m_staticline8;
-		wxStaticText* m_staticText23;
-		wxTextCtrl* m_textLinkerName;
-		wxStaticLine* m_staticline9;
 		wxStaticText* m_staticText10;
 		wxTextCtrl* m_textLinkerOptions;
 		wxStaticText* m_staticText7;
@@ -93,9 +89,6 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxButton* m_buttonEditPostBuildCmd;
 		wxButton* m_buttonUpPostBuildCmd;
 		wxButton* m_buttonDownPostBuildCmd;
-		wxPanel* m_toolsPage;
-		wxStaticText* m_staticText191;
-		wxTextCtrl* m_textArchiveTool;
 		wxStaticLine* m_staticline1;
 		wxButton* m_buttonOK;
 		wxButton* m_buttonCancel;

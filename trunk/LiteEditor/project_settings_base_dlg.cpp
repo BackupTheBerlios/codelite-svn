@@ -65,6 +65,13 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_choiceProjectTypes = new wxChoice( m_generalPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceProjectTypesNChoices, m_choiceProjectTypesChoices, 0 );
 	fgSizer3->Add( m_choiceProjectTypes, 0, wxALL|wxEXPAND, 5 );
 	
+	m_staticText191 = new wxStaticText( m_generalPage, wxID_ANY, wxT("Compiler:"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer3->Add( m_staticText191, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxArrayString m_choiceCompilerTypeChoices;
+	m_choiceCompilerType = new wxChoice( m_generalPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceCompilerTypeChoices, 0 );
+	fgSizer3->Add( m_choiceCompilerType, 0, wxALL|wxEXPAND, 5 );
+	
 	m_staticText15 = new wxStaticText( m_generalPage, wxID_ANY, wxT("Output File:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_staticText15, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -119,7 +126,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_generalPage->SetSizer( bSizer19 );
 	m_generalPage->Layout();
 	bSizer19->Fit( m_generalPage );
-	m_notebook3->AddPage( m_generalPage, wxT("General"), false );
+	m_notebook3->AddPage( m_generalPage, wxT("General"), true );
 	m_compilerPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* compilerPageSizer;
 	compilerPageSizer = new wxBoxSizer( wxVERTICAL );
@@ -130,20 +137,6 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	
 	m_staticline7 = new wxStaticLine( m_compilerPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	compilerPageSizer->Add( m_staticline7, 0, wxEXPAND | wxALL, 5 );
-	
-	wxBoxSizer* bSizer6;
-	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_staticText3 = new wxStaticText( m_compilerPage, wxID_ANY, wxT("Compiler Name:"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer6->Add( m_staticText3, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-	
-	m_textCompilerName = new wxTextCtrl( m_compilerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer6->Add( m_textCompilerName, 1, wxALL|wxEXPAND, 5 );
-	
-	compilerPageSizer->Add( bSizer6, 0, wxEXPAND, 5 );
-	
-	m_staticline6 = new wxStaticLine( m_compilerPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	compilerPageSizer->Add( m_staticline6, 0, wxEXPAND | wxALL, 5 );
 	
 	wxGridBagSizer* gbSizer1;
 	gbSizer1 = new wxGridBagSizer( 0, 0 );
@@ -182,20 +175,6 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	
 	m_staticline8 = new wxStaticLine( m_linkerPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	linkerPageSizer->Add( m_staticline8, 0, wxEXPAND | wxALL, 5 );
-	
-	wxBoxSizer* bSizer16;
-	bSizer16 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_staticText23 = new wxStaticText( m_linkerPage, wxID_ANY, wxT("Linker Name:"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_staticText23, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_textLinkerName = new wxTextCtrl( m_linkerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer16->Add( m_textLinkerName, 1, wxALL|wxEXPAND, 5 );
-	
-	linkerPageSizer->Add( bSizer16, 0, wxEXPAND, 5 );
-	
-	m_staticline9 = new wxStaticLine( m_linkerPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	linkerPageSizer->Add( m_staticline9, 0, wxEXPAND | wxALL, 5 );
 	
 	wxGridBagSizer* gbSizer2;
 	gbSizer2 = new wxGridBagSizer( 0, 0 );
@@ -319,23 +298,6 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_postBuildPage->Layout();
 	bSizer81->Fit( m_postBuildPage );
 	m_notebook3->AddPage( m_postBuildPage, wxT("PostBuild"), false );
-	m_toolsPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer31;
-	fgSizer31 = new wxFlexGridSizer( 4, 2, 0, 0 );
-	fgSizer31->AddGrowableCol( 1 );
-	fgSizer31->SetFlexibleDirection( wxBOTH );
-	fgSizer31->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText191 = new wxStaticText( m_toolsPage, wxID_ANY, wxT("Archive Tool:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_staticText191, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_textArchiveTool = new wxTextCtrl( m_toolsPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_textArchiveTool, 0, wxALL|wxEXPAND, 5 );
-	
-	m_toolsPage->SetSizer( fgSizer31 );
-	m_toolsPage->Layout();
-	fgSizer31->Fit( m_toolsPage );
-	m_notebook3->AddPage( m_toolsPage, wxT("Tools"), true );
 	
 	mainSizer->Add( m_notebook3, 1, wxEXPAND | wxALL, 5 );
 	

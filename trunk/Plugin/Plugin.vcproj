@@ -263,6 +263,37 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="Configuration"
+			Filter="">
+			<File
+				RelativePath=".\attribute_style.h">
+			</File>
+			<File
+				RelativePath=".\compiler.cpp">
+			</File>
+			<File
+				RelativePath=".\compiler.h">
+			</File>
+			<File
+				RelativePath=".\editor_config.cpp">
+			</File>
+			<File
+				RelativePath=".\editor_config.h">
+			</File>
+			<File
+				RelativePath=".\lexer_configuration.cpp">
+			</File>
+			<File
+				RelativePath=".\lexer_configuration.h">
+			</File>
+			<File
+				RelativePath=".\optionsconfig.cpp">
+			</File>
+			<File
+				RelativePath=".\optionsconfig.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

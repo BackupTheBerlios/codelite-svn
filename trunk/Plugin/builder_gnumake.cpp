@@ -279,10 +279,12 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 {
 	wxString name = bldConf->GetName();
 	name = NormalizeConfigName(name);
+	
+	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(bldConf->GetCompilerType());
 
 	text << wxT("## ") << name << wxT("\n");
 	text << wxT("ifeq ($(type), ") << name << wxT(")") << wxT("\n");
-	text << wxT("CompilerName") << wxT("=") << bldConf->GetCompilerT() << wxT("\n");
+	text << wxT("CompilerName") << wxT("=") << cmp->GetTool(wxT("CompilerName")) << wxT("\n");
 	text << wxT("OutputFile") << wxT("=") << bldConf->GetOutputFileName() << wxT("\n");
 	text << wxT("IntermediateDirectory") << wxT("=") << bldConf->GetIntermediateDirectory() << wxT("\n");
 	text << wxT("CmpOptions") << wxT("=") << bldConf->GetCompileOptions() << wxT("\n");
@@ -290,8 +292,8 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 	text << wxT("IncludePath=") << ParseIncludePath(bldConf->GetIncludePath()) << wxT("\n");
 	text << wxT("Libs=") << ParseLibs(bldConf->GetLibraries()) << wxT("\n");
 	text << wxT("LibPath=") << ParseLibPath(bldConf->GetLibPath()) << wxT("\n");
-	text << wxT("LinkerName=") << bldConf->GetLinkerName() << wxT("\n");
-	text << wxT("ArchiveTool=") << bldConf->GetArchiveToolName() << wxT("\n");
+	text << wxT("LinkerName=") << cmp->GetTool(wxT("LinkerName")) << wxT("\n");
+	text << wxT("ArchiveTool=") << cmp->GetTool(wxT("ArchiveTool")) << wxT("\n");
 	text << wxT("endif\n\n");
 
 	//create the intermediate directories
