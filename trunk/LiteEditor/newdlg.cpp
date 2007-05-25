@@ -12,6 +12,7 @@
 #include <map>
 #include "manager.h"
 #include "ctags_dialog.h"
+#include "editor_config.h"
 
 DEFINE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE)
 
@@ -93,7 +94,6 @@ void NewDlg::CreateGUIControls()
 
 	mainSizer->Add(new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL), 0, wxEXPAND );
 	mainSizer->Add(btnSizer, 0, wxALL | wxALIGN_RIGHT, 5);
-
 }
 
 wxWindow *NewDlg::CreateWorkspacePage()
@@ -168,6 +168,25 @@ wxWindow *NewDlg::CreateProjectPage()
 	m_projPathPicker = new wxDirPickerCtrl(panel, wxID_ANY, wxEmptyString, wxT("Choose directory:"), wxDefaultPosition, wxDefaultSize, wxDIRP_USE_TEXTCTRL); 
 	panelSizer->Add(m_projPathPicker, 0, wxEXPAND | wxALL, 5);
 	
+	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("Project Compiler:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
+	panelSizer->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
+
+	wxArrayString choices;
+	//get list of compilers from configuration file
+	EditorConfigCookie cookie;
+	CompilerPtr cmp = EditorConfigST::Get()->GetFirstCompiler(cookie);
+	while(cmp){
+		choices.Add(cmp->GetName());
+		cmp = EditorConfigST::Get()->GetNextCompiler(cookie);
+	}
+
+	m_choiceCmpType = new wxChoice(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, choices);
+	panelSizer->Add(m_choiceCmpType, 0, wxEXPAND | wxALL, 5);
+	
+	if(m_choiceCmpType->GetCount() > 0){
+		m_choiceCmpType->SetSelection(0);
+	}
+
 	hSizer->Add(m_projTypes, 1, wxALL | wxEXPAND, 5);
 	hSizer->Add(panelSizer, 2, wxALL | wxEXPAND, 5);
 	return panel;
@@ -206,7 +225,8 @@ void NewDlg::OnClick(wxCommandEvent & event)
 	} else if( m_book->GetSelection() == NEW_DLG_PROJECT ){
 		m_projectData.m_name = m_projName->GetValue();
 		m_projectData.m_path = m_projPathPicker->GetPath();
-		
+		m_projectData.m_cmpType = m_choiceCmpType->GetStringSelection();
+
 		if( m_projectData.m_name.Trim().IsEmpty() ){
 			wxMessageBox(wxT("Invalid project name"), wxT("Error"), wxOK | wxICON_HAND);
 			return;

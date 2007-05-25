@@ -33,12 +33,13 @@ FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint&
 
 	// Initialise images map
 	wxImageList *images = new wxImageList(16, 16, true);
-	images->Add(wxXmlResource::Get()->LoadBitmap(_T("project")));				//0
-	images->Add(wxXmlResource::Get()->LoadBitmap(_T("folder")));				//1
-	images->Add(wxXmlResource::Get()->LoadBitmap(_T("page_white_c")));			//2
-	images->Add(wxXmlResource::Get()->LoadBitmap(_T("page_white_cplusplus")));	//3
-	images->Add(wxXmlResource::Get()->LoadBitmap(_T("page_white_h")));			//4
-	images->Add(wxXmlResource::Get()->LoadBitmap(_T("page_white_text")));		//5
+	images->Add(wxXmlResource::Get()->LoadBitmap(wxT("project")));				//0
+	images->Add(wxXmlResource::Get()->LoadBitmap(wxT("folder")));				//1
+	images->Add(wxXmlResource::Get()->LoadBitmap(wxT("page_white_c")));			//2
+	images->Add(wxXmlResource::Get()->LoadBitmap(wxT("page_white_cplusplus")));	//3
+	images->Add(wxXmlResource::Get()->LoadBitmap(wxT("page_white_h")));			//4
+	images->Add(wxXmlResource::Get()->LoadBitmap(wxT("page_white_text")));		//5
+	images->Add(wxXmlResource::Get()->LoadBitmap(wxT("workspace")));			//6
 	AssignImageList( images );
 
 	Connect(GetId(), wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler(FileViewTree::OnPopupMenu));
@@ -50,14 +51,15 @@ FileViewTree::~FileViewTree()
 	delete m_folderMenu;
 	delete m_projectMenu;
 	delete m_fileMenu;
+	delete m_workspaceMenu;
 }
 
 void FileViewTree::Create(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
 {
 #ifndef __WXGTK__
-	style |= (wxTR_HIDE_ROOT | wxTR_HAS_BUTTONS | wxTR_LINES_AT_ROOT);
+	style |= (wxTR_HAS_BUTTONS | wxTR_LINES_AT_ROOT);
 #else
-	style |= (wxTR_HIDE_ROOT | wxTR_HAS_BUTTONS );
+	style |= (wxTR_HAS_BUTTONS );
 #endif
 	wxTreeCtrl::Create(parent, id, pos, size, style);
 
@@ -67,6 +69,7 @@ void FileViewTree::Create(wxWindow *parent, const wxWindowID id, const wxPoint& 
 	m_folderMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_folder"));
 	m_projectMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_project"));
 	m_fileMenu = wxXmlResource::Get()->LoadMenu(wxT("file_tree_file"));
+	m_workspaceMenu = wxXmlResource::Get()->LoadMenu(wxT("workspace_popup_menu"));
 	ConnectEvents();
 } 
 
@@ -76,7 +79,11 @@ void FileViewTree::BuildTree()
 		DeleteAllItems();
 
 		// Add an invisible tree root
-		wxTreeItemId root = AddRoot(wxT("Workspace"));
+		ProjectItem data;
+		data.m_displayName = WorkspaceST::Get()->GetName();
+		data.m_kind = ProjectItem::TypeWorkspace;
+
+		wxTreeItemId root = AddRoot(data.m_displayName, 6, -1, new FilewViewTreeItemData(data));
 		wxArrayString list;
 		ManagerST::Get()->GetProjectList(list);
 		
@@ -184,6 +191,10 @@ void FileViewTree::OnPopupMenu(wxTreeEvent &event)
 			break;
 		case ProjectItem::TypeFile:
 			PopupMenu( m_fileMenu );
+			break;
+		case ProjectItem::TypeWorkspace:
+			PopupMenu( m_workspaceMenu );
+			break;
 		default:
 			break;
 		}
@@ -236,9 +247,15 @@ void FileViewTree::OnExportMakefile(wxCommandEvent &event)
 	wxUnusedVar(event);
 	wxTreeItemId item = GetSelection();
 	if(item.IsOk()){
-		wxString projectName = GetItemText(item);
+		FilewViewTreeItemData *data = static_cast<FilewViewTreeItemData*>(GetItemData(item));
 		BuilderPtr builder = BuildManagerST::Get()->GetBuilder(wxT("GNU makefile for g++/gcc"));
-		builder->Export(projectName);
+		if(data->GetData().GetKind() == ProjectItem::TypeWorkspace){
+			//export makefile for all projects
+			builder->Export(wxEmptyString);
+		}else{
+			wxString projectName = GetItemText(item);
+			builder->Export(projectName);
+		}
 	}
 }
 

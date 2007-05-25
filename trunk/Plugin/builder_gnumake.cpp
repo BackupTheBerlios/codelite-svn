@@ -49,7 +49,16 @@ bool BuilderGnuMake::Export(const wxString &project)
 
 			ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(projectName, errMsg);
 			if(proj){
-				GenerateMakefile(proj);
+				//if project name is empty, generate for whole workspace
+				if(project.IsEmpty()){
+					GenerateMakefile(proj);
+				}else{
+					//project name is not empty, create makefile for this project
+					//only
+					if(proj->GetName() == project){
+						GenerateMakefile(proj);
+					}
+				}
 			}
 		}
 		return true;
@@ -280,7 +289,8 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 	wxString name = bldConf->GetName();
 	name = NormalizeConfigName(name);
 	
-	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(bldConf->GetCompilerType());
+	wxString cmpType = bldConf->GetCompilerType();
+	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(cmpType);
 
 	text << wxT("## ") << name << wxT("\n");
 	text << wxT("ifeq ($(type), ") << name << wxT(")") << wxT("\n");

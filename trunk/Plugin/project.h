@@ -10,6 +10,14 @@
 #include <list>
 #include "project_settings.h"
 
+class ProjectData {
+public:
+	wxString m_name;	//< project name
+	wxString m_path;	//< project directoy
+	wxString m_type;	//< project type (static library, dynamic or executable
+	wxString m_cmpType; //< Project compiler type
+};
+
 /**
  * \class ProjectItem
  * a node item that represents a displayable project item
@@ -25,7 +33,8 @@ public:
 	enum {
 		TypeVirtualDirectory,
 		TypeProject,
-		TypeFile
+		TypeFile,
+		TypeWorkspace
 	};
 
 public:

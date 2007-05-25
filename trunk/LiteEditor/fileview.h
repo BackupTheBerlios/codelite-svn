@@ -26,6 +26,7 @@ class FileViewTree : public wxTreeCtrl
 	wxMenu *m_folderMenu;
 	wxMenu *m_projectMenu;
 	wxMenu *m_fileMenu;
+	wxMenu *m_workspaceMenu;
 
 	std::list<wxTreeItemId> m_itemsToSort;
 public:

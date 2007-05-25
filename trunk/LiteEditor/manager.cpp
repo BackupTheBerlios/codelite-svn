@@ -213,14 +213,19 @@ void Manager::CreateWorkspace(const wxString &name, const wxString &path, const 
 	DoUpdateGUITrees();
 }
 
-void Manager::CreateProject(const wxString &name, const wxString &path, const wxString &type)
+void Manager::CreateProject(ProjectData &data)
 {
 	wxString errMsg;
-	bool res = WorkspaceST::Get()->CreateProject(name, path, type, errMsg);
+	bool res = WorkspaceST::Get()->CreateProject(data.m_name, data.m_path, data.m_type, errMsg);
 	CHECK_MSGBOX(res);
 
-	TagsManagerST::Get()->CreateProject(name);
-
+	TagsManagerST::Get()->CreateProject(data.m_name);
+	//set the compiler type
+	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(data.m_name, errMsg);
+	ProjectSettingsPtr settings = proj->GetSettings();
+	BuildConfigPtr bldConf = settings->GetBuildConfiguration(wxT("Debug"));
+	bldConf->SetCompilerType(data.m_cmpType);
+	proj->SetSettings(settings);
 	DoUpdateGUITrees();
 }
 

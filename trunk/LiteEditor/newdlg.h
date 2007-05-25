@@ -4,6 +4,7 @@
 #include "wx/dialog.h"
 #include "wx/listctrl.h"
 #include "ctags_manager.h"
+#include "project.h"
 
 DECLARE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE, -1)
 
@@ -28,12 +29,7 @@ public:
 	wxString m_externalTagsDB;	//< External tags database to use 
 };
 
-class ProjectData {
-public:
-	wxString m_name;	//< project name
-	wxString m_path;	//< project directoy
-	wxString m_type;	//< project type (static library, dynamic or executable
-};
+
 
 // Workspace dialog
 class NewDlg : public wxDialog
@@ -49,6 +45,8 @@ class NewDlg : public wxDialog
 	wxTextCtrl *m_projName;
 	wxDirPickerCtrl *m_projPathPicker;
 	wxListBox *m_projTypes;
+	wxChoice *m_choiceCmpType;
+	wxChoice *m_copySettings;
 
 	// Buttons
 	wxButton *m_create;

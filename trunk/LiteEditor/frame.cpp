@@ -695,7 +695,7 @@ void Frame::OnNewDlgCreate(wxCommandEvent &event)
 
 		} else if( dlg->GetSelection() == NEW_DLG_PROJECT ) {
 			ProjectData data = dlg->GetProjectData();
-			ManagerST::Get()->CreateProject(data.m_name, data.m_path, data.m_type);
+			ManagerST::Get()->CreateProject(data);
 		}
 	}
 }
