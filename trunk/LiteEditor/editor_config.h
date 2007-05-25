@@ -7,6 +7,7 @@
 #include "wx/xml/xml.h"
 #include "lexer_configuration.h"
 #include "optionsconfig.h"
+#include "compiler.h"
 
 // Cookie class for the editor to provide reentrance operations
 // on various methods (such as iteration)
@@ -116,10 +117,39 @@ public:
 	 */
 	void SetOptions(OptionsConfigPtr opts);
 
+	//-------------------------------------------------------------
+	// Compilers
+	//-------------------------------------------------------------
+
+	/**
+	 * Set or update a given compiler using its name as the index
+	 */
+	void SetCompiler(CompilerPtr cmp);
+
+	/**
+	 * Find and return compiler by name
+	 */
+	CompilerPtr GetCompiler(const wxString &name) const;
+
+	/**
+	 * Returns the first compiler found.
+	 * For this enumeration function you must pass in a 'cookie' parameter which is opaque for the application but is necessary for the library to make these functions reentrant 
+	 * (i.e. allow more than one enumeration on one and the same object simultaneously).
+	 */
+	CompilerPtr GetFirstCompiler(EditorConfigCookie &cookie);
+
+	/**
+	 * Returns the next compiler.
+	 * For this enumeration function you must pass in a 'cookie' parameter which is opaque for the application but is necessary for the library to make these functions reentrant 
+	 * (i.e. allow more than one enumeration on one and the same object simultaneously).
+	 */
+	CompilerPtr GetNextCompiler(EditorConfigCookie &cookie);
+
 private:
 	EditorConfig();
 	virtual ~EditorConfig();
-	wxXmlNode* GetLexerNode(const wxString& lexer);
+	wxXmlNode *GetLexerNode(const wxString& lexer);
+	wxXmlNode *GetCompilerNode(const wxString& name) const;
 };
 
 typedef Singleton<EditorConfig> EditorConfigST;

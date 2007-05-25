@@ -68,7 +68,7 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 
 	//create new makefile file
 	wxString fn(path);
-	fn << wxFileName::GetPathSeparator() << wxT("makefile");
+	fn << PATH_SEP << wxT("makefile");
 	wxFileOutputStream output(fn);
 
 	if(!output.IsOk())
@@ -142,7 +142,7 @@ void BuilderGnuMake::CreateObjectList(ProjectPtr proj, wxTextOutputStream &text)
 		if( !IsSourceFile(files[i].GetExt()) )
 			continue;
 
-		text << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << files[i].GetName() << wxT(".o ");
+		text << wxT("$(IntermediateDirectory)") << PATH_SEP << files[i].GetName() << wxT(".o ");
 		if(counter % 10 == 0){
 			text << wxT("\\\n\t");
 		}
@@ -175,8 +175,8 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 
 		wxString objectName = files[i].GetName() << wxT(".o");
 		wxString fileName   = files[i].GetFullPath();
-		text << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << objectName << wxT(": ") << fileName << wxT("\n");
-		text << wxT("\t") << wxT("$(CompilerName) $(CmpOptions) -c ") << fileName << wxT(" -o ") << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << objectName << wxT("\n\n");
+		text << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(": ") << fileName << wxT("\n");
+		text << wxT("\t") << wxT("$(CompilerName) $(CmpOptions) -c ") << fileName << wxT(" -o ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT("\n\n");
 	}
 
 	//add clean target
@@ -192,13 +192,13 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 				continue;
 
 			wxString objectName = files[i].GetName() << wxT(".o");
-			text << wxT("\t") << wxT("-if exist ") << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << objectName << wxT(" del ") << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << objectName << wxT("\n");
+			text << wxT("\t") << wxT("-if exist ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(" del ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT("\n");
 		}
 		//delete the output file as well
 		text << wxT("\t") << wxT("-if exist ") << wxT("$(OutputFile)") << wxT(" del ") << wxT("$(OutputFile)") << wxT("\n");;
 	}else{
 		//linux 
-		text << wxT("\t") << wxT("$(RM) ") << wxT("$(IntermediateDirectory)") << wxFileName::GetPathSeparator() << wxT("*.o") << wxT("\n");
+		text << wxT("\t") << wxT("$(RM) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << wxT("*.o") << wxT("\n");
 		//delete the output file as well
 		text << wxT("\t") << wxT("$(RM) ") << wxT("$(OutputFile)\n");
 	}

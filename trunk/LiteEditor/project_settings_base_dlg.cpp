@@ -46,7 +46,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_staticline81 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	mainSizer->Add( m_staticline81, 0, wxEXPAND | wxALL, 5 );
 	
-	m_notebook3 = new wxTreebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_notebook3 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	m_generalPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer19;
 	bSizer19 = new wxBoxSizer( wxVERTICAL );
@@ -119,7 +119,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_generalPage->SetSizer( bSizer19 );
 	m_generalPage->Layout();
 	bSizer19->Fit( m_generalPage );
-	m_notebook3->AddPage( m_generalPage, wxT("General"), true );
+	m_notebook3->AddPage( m_generalPage, wxT("General"), false );
 	m_compilerPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* compilerPageSizer;
 	compilerPageSizer = new wxBoxSizer( wxVERTICAL );
@@ -332,16 +332,10 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_textArchiveTool = new wxTextCtrl( m_toolsPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer31->Add( m_textArchiveTool, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText211 = new wxStaticText( m_toolsPage, wxID_ANY, wxT("Clean Command:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_staticText211, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_textCleanTool = new wxTextCtrl( m_toolsPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_textCleanTool, 0, wxALL|wxEXPAND, 5 );
-	
 	m_toolsPage->SetSizer( fgSizer31 );
 	m_toolsPage->Layout();
 	fgSizer31->Fit( m_toolsPage );
-	m_notebook3->AddPage( m_toolsPage, wxT("Tools"), false );
+	m_notebook3->AddPage( m_toolsPage, wxT("Tools"), true );
 	
 	mainSizer->Add( m_notebook3, 1, wxEXPAND | wxALL, 5 );
 	

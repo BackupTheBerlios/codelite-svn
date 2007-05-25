@@ -50,4 +50,9 @@
 const wxString clCMD_NEW = wxT("<New...>");
 const wxString clCMD_EDIT = wxT("<Edit...>");
 
+#ifdef __WXMSW__
+#define PATH_SEP wxT("\\")
+#else
+#define PATH_SEP wxT("/")
+#endif
 #endif // MACROS_H

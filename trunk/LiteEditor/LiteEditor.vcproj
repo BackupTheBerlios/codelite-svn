@@ -347,6 +347,18 @@
 				RelativePath=".\add_option_dialog.h">
 			</File>
 			<File
+				RelativePath=".\advanced_settings.cpp">
+			</File>
+			<File
+				RelativePath=".\advanced_settings.h">
+			</File>
+			<File
+				RelativePath=".\compiler_page.cpp">
+			</File>
+			<File
+				RelativePath=".\compiler_page.h">
+			</File>
+			<File
 				RelativePath=".\configuration_manager_base_dlg.cpp">
 			</File>
 			<File
@@ -498,6 +510,12 @@
 			Name="Configuration">
 			<File
 				RelativePath=".\attribute_style.h">
+			</File>
+			<File
+				RelativePath=".\compiler.cpp">
+			</File>
+			<File
+				RelativePath=".\compiler.h">
 			</File>
 			<File
 				RelativePath=".\editor_config.cpp">

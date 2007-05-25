@@ -72,7 +72,6 @@ void ProjectSettingsDlg::ClearValues()
 	m_checkListPreBuildCommands->Clear();
 	m_checkListPostBuildCommands->Clear();
 	m_textArchiveTool->SetValue(wxEmptyString);
-	m_textCleanTool->SetValue(wxEmptyString);
 	m_textLinkerName->SetValue(wxEmptyString);
 }
 
@@ -105,7 +104,6 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 	m_textLibraries->SetValue(buildConf->GetLibraries());
 	m_textLibraryPath->SetValue(buildConf->GetLibPath());
 	m_textLinkerName->SetValue(buildConf->GetLinkerName());
-	m_textCleanTool->SetValue(buildConf->GetCleanCommand());
 	m_textArchiveTool->SetValue(buildConf->GetArchiveToolName());
 	
 	buildConf->GetPreBuildCommands(preBuildCmds);
@@ -160,7 +158,6 @@ void ProjectSettingsDlg::SaveValues(const wxString &confName)
 	buildConf->SetLinkerRequired(!m_checkLinkerNeeded->IsChecked());
 	buildConf->SetLinkOptions(m_textLinkerOptions->GetValue());
 	buildConf->SetLinkerName(m_textLinkerName->GetValue());
-	buildConf->SetCleanCommand(m_textCleanTool->GetValue());
 	buildConf->SetArchiveToolName(m_textArchiveTool->GetValue());
 	buildConf->SetProjectType(m_choiceProjectTypes->GetStringSelection());
 
