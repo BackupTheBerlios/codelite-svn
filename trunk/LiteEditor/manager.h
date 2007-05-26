@@ -14,6 +14,7 @@
 #include "context_base.h"
 #include "ctags_manager.h"
 #include "workspace.h"
+#include "list"
 
 class wxFrame;
 class LEditor;
@@ -26,6 +27,7 @@ class LEditor;
 class Manager 
 {
 	friend class Singleton<Manager>;
+	wxString  m_startupDir;
 
 public:
 	/*!
@@ -136,6 +138,11 @@ public:
 	 * Return all project names under this workspace
 	 */
 	void GetProjectList(wxArrayString &list);
+
+	/**
+	 * find project by name
+	 */
+	ProjectPtr GetProject(const wxString &name) const;
 
 	/**
 	 * Add an existing project to the workspace. If no workspace is open,
@@ -301,6 +308,22 @@ public:
 	 * \param name compiler to delete
 	 */
 	void DeleteCompiler(const wxString &name);
+
+	/**
+	 * Return a list of availanle project templates
+	 * \param list output
+	 */
+	void GetProjectTemplateList(std::list<ProjectPtr> &list);
+
+	/**
+	 * Save project as template
+	 * \param proj project to duplicate
+	 * \param name the template name
+	 */
+	void SaveProjectTemplate(ProjectPtr proj, const wxString &name);
+
+	void SetStarupDirectory(const wxString &path){ m_startupDir = path; }
+	const wxString &GetStarupDirectory() const { return m_startupDir; }
 
 protected:
 	Manager(void);

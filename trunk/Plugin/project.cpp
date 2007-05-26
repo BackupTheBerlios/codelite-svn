@@ -39,8 +39,9 @@ bool Project::Create(const wxString &name, const wxString &path, const wxString 
 	m_doc.Save(m_fileName.GetFullPath());
 	//create build settings
 	SetSettings(new ProjectSettings(NULL));
-	GetSettings()->GetBuildConfiguration(wxT("Debug"))->SetProjectType(projType);
-	SetSettings(GetSettings());
+	ProjectSettingsPtr settings = GetSettings();
+	settings->SetProjectType(projType);
+	SetSettings(settings);
 	return true;
 }
 

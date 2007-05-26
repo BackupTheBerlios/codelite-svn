@@ -121,7 +121,7 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 	//-----------------------------------------------------------
 	bldConf = settings->GetFirstBuildConfiguration(cookie);
 	while(bldConf){
-		CreateTargets(bldConf, text);
+		CreateTargets(settings->GetProjectType(), bldConf, text);
 		bldConf = settings->GetNextBuildConfiguration(cookie);
 	}
 	
@@ -221,7 +221,7 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 	text << wxT("\n");
 }
 
-void BuilderGnuMake::CreateTargets(BuildConfigPtr bldConf, wxTextOutputStream &text)
+void BuilderGnuMake::CreateTargets(const wxString &type, BuildConfigPtr bldConf, wxTextOutputStream &text)
 {
 	//create the main target
 	wxString name = bldConf->GetName();
@@ -232,13 +232,13 @@ void BuilderGnuMake::CreateTargets(BuildConfigPtr bldConf, wxTextOutputStream &t
 	text << wxT("##\n");
 	text << name << wxT(": StartMsg PreBuild_") << name << wxT(" ") << wxT("$(Objects) ") << name << wxT("_link ") << wxT("PostBuild_") << name << wxT("\n\n");
 	text << name << wxT("_link:\n");
-	if(bldConf->GetProjectType() == Project::STATIC_LIBRARY){
+	if(type == Project::STATIC_LIBRARY){
 		//create a static library
 		text << wxT("\t") << wxT("$(ArchiveTool) $(OutputFile) $(Objects)\n");
-	}else if(bldConf->GetProjectType() == Project::DYNAMIC_LIBRARY){
+	}else if(type == Project::DYNAMIC_LIBRARY){
 		//create a shared library
 		text << wxT("\t") << wxT("$(SharedObjectLinkerName) $(LinkOptions) $(OutputSwitch) $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
-	}else if(bldConf->GetProjectType() == Project::EXECUTABLE){
+	}else if(type == Project::EXECUTABLE){
 		//create an executable
 		text << wxT("\t") << wxT("$(LinkerName) $(LinkOptions) $(OutputSwitch) $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
 	}

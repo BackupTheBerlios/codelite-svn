@@ -119,7 +119,7 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 	}
 
 	//set the project type
-	wxString projType = buildConf->GetProjectType();
+	wxString projType = projSettingsPtr->GetProjectType();
 	int sel = m_choiceProjectTypes->FindString(projType);
 	if(sel == wxNOT_FOUND){
 		sel = 0;
@@ -168,7 +168,7 @@ void ProjectSettingsDlg::SaveValues(const wxString &confName)
 	buildConf->SetLibraries(m_textLibraries->GetValue());
 	buildConf->SetLinkerRequired(!m_checkLinkerNeeded->IsChecked());
 	buildConf->SetLinkOptions(m_textLinkerOptions->GetValue());
-	buildConf->SetProjectType(m_choiceProjectTypes->GetStringSelection());
+	projSettingsPtr->SetProjectType(m_choiceProjectTypes->GetStringSelection());
 	buildConf->SetCompilerType(m_choiceCompilerType->GetStringSelection());
 	buildConf->SetPreprocessor(m_textPreprocessor->GetValue());
 

@@ -76,6 +76,7 @@ protected:
 	virtual void OnRemoveVirtualFolder(wxCommandEvent &event);
 	virtual void OnRemoveItem(wxCommandEvent &event);
 	virtual void OnExportMakefile(wxCommandEvent &event);
+	virtual void OnSaveAsTemplate(wxCommandEvent &event);
 
 	// Tree sorting
 	virtual int OnCompareItems(const wxTreeItemId& item1, const wxTreeItemId& item2);

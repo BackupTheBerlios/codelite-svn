@@ -21,6 +21,8 @@
 #include "context_manager.h"
 #include "wx/tokenzr.h"
 #include "buildmanager.h"
+#include "macros.h"
+#include "dirtraverser.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -216,16 +218,19 @@ void Manager::CreateWorkspace(const wxString &name, const wxString &path, const 
 void Manager::CreateProject(ProjectData &data)
 {
 	wxString errMsg;
-	bool res = WorkspaceST::Get()->CreateProject(data.m_name, data.m_path, data.m_type, errMsg);
+	bool res = WorkspaceST::Get()->CreateProject(data.m_name, 
+												 data.m_path, 
+												 data.m_srcProject->GetSettings()->GetProjectType(), 
+												 errMsg);
 	CHECK_MSGBOX(res);
 
 	TagsManagerST::Get()->CreateProject(data.m_name);
 	//set the compiler type
 	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(data.m_name, errMsg);
+
+	//copy the project settings to the new one
 	ProjectSettingsPtr settings = proj->GetSettings();
-	BuildConfigPtr bldConf = settings->GetBuildConfiguration(wxT("Debug"));
-	bldConf->SetCompilerType(data.m_cmpType);
-	proj->SetSettings(settings);
+	proj->SetSettings(data.m_srcProject->GetSettings());
 	DoUpdateGUITrees();
 }
 
@@ -673,4 +678,59 @@ void Manager::DeleteCompiler(const wxString &name)
 	if(wxMessageBox(wxT("Remove Compiler?"), wxT("Confirm"), wxYES_NO | wxICON_QUESTION) == wxYES){
 		EditorConfigST::Get()->DeleteCompiler(name);
 	}
+}
+
+void Manager::GetProjectTemplateList(std::list<ProjectPtr> &list)
+{
+	wxString tmplateDir = m_startupDir + PATH_SEP + wxT("templates");
+	
+	//read all files under this directory
+	DirTraverser dt(wxT("*.project"));
+
+	wxDir dir(tmplateDir);
+	dir.Traverse(dt);
+
+	wxArrayString &files = dt.GetFiles();
+
+	if(files.GetCount() > 0){
+		for(size_t i=0; i<files.GetCount(); i++){
+			ProjectPtr proj(new Project());
+			proj->Load(files.Item(i));
+			list.push_back(proj);
+		}
+	}else{
+		//create 3 default empty projects
+		ProjectPtr exeProj(new Project());
+		ProjectPtr libProj(new Project());
+		ProjectPtr dllProj(new Project());
+		libProj->Create(wxT("Static Library"), tmplateDir, Project::STATIC_LIBRARY);
+		dllProj->Create(wxT("Dynamic Library"), tmplateDir, Project::DYNAMIC_LIBRARY);
+		exeProj->Create(wxT("Executable"), tmplateDir, Project::EXECUTABLE);
+		list.push_back(libProj);
+		list.push_back(dllProj);
+		list.push_back(exeProj);
+	}
+}
+
+void Manager::SaveProjectTemplate(ProjectPtr proj, const wxString &name)
+{
+	//create new project
+	wxString tmplateDir = m_startupDir + PATH_SEP + wxT("templates");
+
+	ProjectPtr cloned(new Project());
+	cloned->Create(name, tmplateDir);
+
+	//copy project settings
+	cloned->SetSettings(proj->GetSettings());
+}
+
+ProjectPtr Manager::GetProject(const wxString &name) const
+{
+	wxString errMsg;
+	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(name, errMsg);
+	if( !proj ){
+		wxMessageBox(errMsg, wxT("Error"), wxOK | wxICON_HAND);
+		return NULL;
+	}
+	return proj;
 }

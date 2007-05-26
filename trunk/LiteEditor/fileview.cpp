@@ -8,6 +8,7 @@
 #include "new_item_dlg.h"
 #include "project_settings_dlg.h"
 #include "buildmanager.h"
+#include "macros.h"
 
 FileViewTree::FileViewTree()
 {
@@ -25,6 +26,7 @@ void FileViewTree::ConnectEvents()
 	Connect(XRCID("sort_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnSortItem), NULL, this);
 	Connect(XRCID("remove_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnRemoveItem), NULL, this);
 	Connect(XRCID("export_makefile"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnExportMakefile), NULL, this);
+	Connect(XRCID("save_as_template"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnSaveAsTemplate), NULL, this);
 }
 
 FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -528,4 +530,23 @@ int FileViewTree::OnCompareItems(const wxTreeItemId& item1, const wxTreeItemId& 
 {
 	// Items  has the same icons, compare text
 	return wxTreeCtrl::OnCompareItems(item1, item2);
+}
+
+void FileViewTree::OnSaveAsTemplate(wxCommandEvent & WXUNUSED(event))
+{
+	wxTreeItemId item = GetSelection();
+	if(item.IsOk()){
+		wxString name = GetItemText(item);
+		ProjectPtr proj = ManagerST::Get()->GetProject(name);
+		if(proj){
+			wxTextEntryDialog *dlg = new wxTextEntryDialog(this, wxT("New Template Name:"), wxT("Save As Template"), name);
+			if(dlg->ShowModal() == wxID_OK){
+				wxString newName = dlg->GetValue();
+				TrimString(newName);
+				if(newName.IsEmpty() == false){
+					ManagerST::Get()->SaveProjectTemplate(proj, newName);
+				}
+			}
+		}
+	}
 }

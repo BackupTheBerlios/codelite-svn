@@ -29,7 +29,7 @@ private:
 	void CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutputStream &text);
 	void CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text);
 	void CreateObjectList(ProjectPtr proj, wxTextOutputStream &text);
-	void CreateTargets(BuildConfigPtr bldConf, wxTextOutputStream &text);
+	void CreateTargets(const wxString &type, BuildConfigPtr bldConf, wxTextOutputStream &text);
 	void CreateBuildEventRules(BuildConfigPtr bldConf, wxTextOutputStream &text);
 
 	wxString ParseIncludePath(const wxString &paths);

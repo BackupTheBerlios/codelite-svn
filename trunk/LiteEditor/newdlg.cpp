@@ -149,12 +149,19 @@ wxWindow *NewDlg::CreateProjectPage()
 	wxStaticText* itemStaticText;
 
 	m_projTypes = new wxListBox(panel, wxID_ANY);
-	m_projTypes->Append(Project::STATIC_LIBRARY);
-	m_projTypes->Append(Project::DYNAMIC_LIBRARY);
-	m_projTypes->Append(Project::EXECUTABLE);
-	m_projTypes->SetStringSelection(Project::EXECUTABLE);
 
-	m_projectData.m_type = Project::EXECUTABLE;
+	ManagerST::Get()->GetProjectTemplateList(m_list);
+
+	std::list<ProjectPtr>::iterator iter = m_list.begin();
+	for(; iter != m_list.end(); iter++){
+		m_projTypes->Append((*iter)->GetName());
+	}
+
+	iter = m_list.begin();
+	if( iter != m_list.end() ){
+		m_projTypes->SetStringSelection((*iter)->GetName());
+		m_projectData.m_srcProject = (*iter);
+	}
 	
 	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("Project Name:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	panelSizer->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
@@ -227,6 +234,9 @@ void NewDlg::OnClick(wxCommandEvent & event)
 		m_projectData.m_path = m_projPathPicker->GetPath();
 		m_projectData.m_cmpType = m_choiceCmpType->GetStringSelection();
 
+		//the project type is determined according to the selected project name
+		m_projectData.m_srcProject = FindProject(m_projTypes->GetStringSelection());
+
 		if( m_projectData.m_name.Trim().IsEmpty() ){
 			wxMessageBox(wxT("Invalid project name"), wxT("Error"), wxOK | wxICON_HAND);
 			return;
@@ -245,7 +255,7 @@ void NewDlg::OnClick(wxCommandEvent & event)
 
 void NewDlg::OnListItemSelected(wxListEvent &event)
 {
-	m_projectData.m_type = event.GetText();
+	m_projectData.m_srcProject = FindProject( event.GetText() );
 }
 
 void NewDlg::ConnectEvents()
@@ -255,4 +265,16 @@ void NewDlg::ConnectEvents()
 	m_projTypes->Connect(wxID_ANY, wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler(NewDlg::OnListItemSelected), NULL, this);
 	m_ctagsOptions->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(NewDlg::OnClick), NULL, this);
 }
-	
+
+ProjectPtr NewDlg::FindProject(const wxString &name)
+{
+	std::list<ProjectPtr>::iterator iter = m_list.begin();
+	for(; iter != m_list.end(); iter++){
+		if((*iter)->GetName() == name){
+			return (*iter);
+		}
+	}
+	return NULL;
+}
+
+

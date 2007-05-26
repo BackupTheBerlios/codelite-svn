@@ -56,6 +56,7 @@ class NewDlg : public wxDialog
 	int m_selection;
 	wxFlatNotebook *m_book;
 	CtagsOptions m_ctagsOptionsData;
+	std::list<ProjectPtr> m_list;
 
 public:
 	virtual ~NewDlg( );
@@ -84,6 +85,7 @@ public:
 
 	// return the selected notebook tab
 	int GetSelection() const;
+	ProjectPtr FindProject(const wxString &name);
 
 protected:
 	void CreateGUIControls();

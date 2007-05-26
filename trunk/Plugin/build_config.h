@@ -82,9 +82,6 @@ public:
 	wxString GetLibraries() const;
 	wxString GetLibPath() const;
 	
-	wxString GetProjectType() const {return m_projectType;}
-	void SetProjectType(const wxString &type) { m_projectType = type; }
-
 	void GetPreBuildCommands(BuildCommandList &cmds) { cmds = m_preBuildCommands; }
 	void GetPostBuildCommands(BuildCommandList &cmds) { cmds = m_postBuildCommands; }
 	const wxString &GetName() const { return m_name; }

@@ -39,6 +39,9 @@ bool App::OnInit()
     if (!wxXmlResource::Get()->Load(wxT("rc/menu.xrc")))
         return false;
 
+	// keep the startup directory
+	ManagerST::Get()->SetStarupDirectory(::wxGetCwd());
+
 	// Create the main application window (a dialog in this case)
 	// NOTE: Vertical dimension comprises the caption bar.
 	//       Horizontal dimension has to take into account the thin

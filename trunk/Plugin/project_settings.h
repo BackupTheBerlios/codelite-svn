@@ -35,8 +35,8 @@ public:
  *
  */
 class ProjectSettings : public ConfObject {
-	wxString m_compilerName;
 	std::map<wxString, BuildConfigPtr> m_configs;
+	wxString m_projectType;
 
 public:
 	/** 
@@ -99,6 +99,10 @@ public:
 	 * \param configName configuration name to remove. 
 	 */
 	void RemoveConfiguration(const wxString &configName);
+
+	//setters/getters
+	const wxString &GetProjectType() const { return m_projectType; }
+	void SetProjectType(const wxString &type) { m_projectType = type;}
 };
 
 typedef SmartPtr<ProjectSettings> ProjectSettingsPtr;

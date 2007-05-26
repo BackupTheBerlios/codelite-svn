@@ -3,12 +3,12 @@
 #include "wx/tokenzr.h"
 #include "macros.h"
 #include "project.h"
+#include "editor_config.h"
 
 BuildConfig::BuildConfig(wxXmlNode *node)
 {
 	if( node ){
 		m_name = XmlUtils::ReadString(node, wxT("Name"));
-		m_projectType = XmlUtils::ReadString(node, wxT("Type"));
 		m_compilerType = XmlUtils::ReadString(node, wxT("CompilerType"));
 		wxXmlNode *compile = XmlUtils::FindFirstByTagName(node, wxT("Compiler"));
 		
@@ -93,7 +93,12 @@ BuildConfig::BuildConfig(wxXmlNode *node)
 		m_intermediateDirectory = wxT("./Debug");
 		m_workingDirectory = wxT("./Debug");
 		m_projectType = Project::EXECUTABLE;
-		m_compilerType = wxT("GNU g++");
+
+		EditorConfigCookie cookie;
+		CompilerPtr cmp = EditorConfigST::Get()->GetFirstCompiler(cookie);
+		if(cmp){
+			m_compilerType = cmp->GetName();
+		}
 	}
 }
 
@@ -119,7 +124,6 @@ wxXmlNode *BuildConfig::ToXml() const
 {
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Configuration"));
 	node->AddProperty(wxT("Name"), m_name);
-	node->AddProperty(wxT("Type"), m_projectType);
 	node->AddProperty(wxT("CompilerType"), m_compilerType);
 
 	wxXmlNode *general = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("General"));
