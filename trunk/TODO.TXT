@@ -1,8 +1,6 @@
 TODO List:
 ==========================
 . Add posibility to copy project settings when creating new project
-. Change the way project type acts:
-	- Add option to file view to save the project as template
 . Add option to create a recursive makefile for the workspace
 . Add the ability to build from whitin the IDE
 . Add option to create an external database
