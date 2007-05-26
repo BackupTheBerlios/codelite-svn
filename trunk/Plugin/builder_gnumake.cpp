@@ -152,7 +152,7 @@ void BuilderGnuMake::CreateObjectList(ProjectPtr proj, wxTextOutputStream &text)
 		if( !IsSourceFile(files[i].GetExt()) )
 			continue;
 
-		text << wxT("$(IntermediateDirectory)") << PATH_SEP << files[i].GetName() << wxT(".o ");
+		text << wxT("$(IntermediateDirectory)") << PATH_SEP << files[i].GetName() << wxT("$(ObjectSuffix) ");
 		if(counter % 10 == 0){
 			text << wxT("\\\n\t");
 		}
@@ -165,7 +165,7 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 {
 	std::vector<wxFileName> files;
 	proj->GetFiles(files);
-
+	
 	//create a nice start message to user
 	text << wxT("##\n");
 	text << wxT("## Startup message \n");
@@ -183,10 +183,10 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 		if( !IsSourceFile(files[i].GetExt()) )
 			continue;
 
-		wxString objectName = files[i].GetName() << wxT(".o");
+		wxString objectName = files[i].GetName() << wxT("$(ObjectSuffix)");
 		wxString fileName   = files[i].GetFullPath();
 		text << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(": ") << fileName << wxT("\n");
-		text << wxT("\t") << wxT("$(CompilerName) $(CmpOptions) -c ") << fileName << wxT(" -o ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT("\n\n");
+		text << wxT("\t") << wxT("$(CompilerName) $(CmpOptions) $(SourceSwitch) ") << fileName << wxT(" $(OutputSwitch) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT("\n\n");
 	}
 
 	//add clean target
@@ -201,14 +201,20 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 			if( !IsSourceFile(files[i].GetExt()) )
 				continue;
 
-			wxString objectName = files[i].GetName() << wxT(".o");
+			wxString objectName = files[i].GetName() << wxT("$(ObjectSuffix)");
 			text << wxT("\t") << wxT("-if exist ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(" del ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT("\n");
 		}
 		//delete the output file as well
 		text << wxT("\t") << wxT("-if exist ") << wxT("$(OutputFile)") << wxT(" del ") << wxT("$(OutputFile)") << wxT("\n");;
 	}else{
 		//linux 
-		text << wxT("\t") << wxT("$(RM) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << wxT("*.o") << wxT("\n");
+		for(size_t i=0; i<files.size(); i++){
+			if( !IsSourceFile(files[i].GetExt()) )
+				continue;
+
+			wxString objectName = files[i].GetName() << wxT("$(ObjectSuffix)");
+			text << wxT("\t") << wxT("$(RM) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT("\n");
+		}
 		//delete the output file as well
 		text << wxT("\t") << wxT("$(RM) ") << wxT("$(OutputFile)\n");
 	}
@@ -231,10 +237,10 @@ void BuilderGnuMake::CreateTargets(BuildConfigPtr bldConf, wxTextOutputStream &t
 		text << wxT("\t") << wxT("$(ArchiveTool) $(OutputFile) $(Objects)\n");
 	}else if(bldConf->GetProjectType() == Project::DYNAMIC_LIBRARY){
 		//create a shared library
-		text << wxT("\t") << wxT("$(LinkerName) $(LinkOptions) -o $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
+		text << wxT("\t") << wxT("$(SharedObjectLinkerName) $(LinkOptions) $(OutputSwitch) $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
 	}else if(bldConf->GetProjectType() == Project::EXECUTABLE){
 		//create an executable
-		text << wxT("\t") << wxT("$(LinkerName) $(LinkOptions) -o $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
+		text << wxT("\t") << wxT("$(LinkerName) $(LinkOptions) $(OutputSwitch) $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
 	}
 	text << wxT("\n\n");
 }
@@ -294,16 +300,26 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 
 	text << wxT("## ") << name << wxT("\n");
 	text << wxT("ifeq ($(type), ") << name << wxT(")") << wxT("\n");
+	text << wxT("LinkerName=") << cmp->GetTool(wxT("LinkerName")) << wxT("\n");
+	text << wxT("ArchiveTool=") << cmp->GetTool(wxT("ArchiveTool")) << wxT("\n");
+	text << wxT("SharedObjectLinkerName=") << cmp->GetTool(wxT("SharedObjectLinkerName")) << wxT("\n");
+	text << wxT("ObjectSuffix=") << cmp->GetObjectSuffix() << wxT("\n");
+	text << wxT("DebugSwitch=") << cmp->GetSwitch(wxT("Debug")) << wxT("\n");
+	text << wxT("IncludeSwitch=") << cmp->GetSwitch(wxT("Include")) << wxT("\n");
+	text << wxT("LibrarySwitch=") << cmp->GetSwitch(wxT("Library")) << wxT("\n");
+	text << wxT("OutputSwitch=") << cmp->GetSwitch(wxT("Output")) << wxT("\n");
+	text << wxT("LibraryPathSwitch=") << cmp->GetSwitch(wxT("LibraryPath")) << wxT("\n");
+	text << wxT("PreprocessorSwitch=") << cmp->GetSwitch(wxT("Preprocessor")) << wxT("\n");
+	text << wxT("SourceSwitch=") << cmp->GetSwitch(wxT("Source")) << wxT("\n");
 	text << wxT("CompilerName") << wxT("=") << cmp->GetTool(wxT("CompilerName")) << wxT("\n");
 	text << wxT("OutputFile") << wxT("=") << bldConf->GetOutputFileName() << wxT("\n");
 	text << wxT("IntermediateDirectory") << wxT("=") << bldConf->GetIntermediateDirectory() << wxT("\n");
-	text << wxT("CmpOptions") << wxT("=") << bldConf->GetCompileOptions() << wxT("\n");
+	text << wxT("Preprocessors=") << ParsePreprocessor(bldConf->GetPreprocessor()) << wxT("\n");
+	text << wxT("CmpOptions") << wxT("=") << bldConf->GetCompileOptions() << wxT(" $(Preprocessors)") << wxT("\n");
 	text << wxT("LinkOptions") << wxT("=") << bldConf->GetLinkOptions() << wxT("\n");
 	text << wxT("IncludePath=") << ParseIncludePath(bldConf->GetIncludePath()) << wxT("\n");
 	text << wxT("Libs=") << ParseLibs(bldConf->GetLibraries()) << wxT("\n");
 	text << wxT("LibPath=") << ParseLibPath(bldConf->GetLibPath()) << wxT("\n");
-	text << wxT("LinkerName=") << cmp->GetTool(wxT("LinkerName")) << wxT("\n");
-	text << wxT("ArchiveTool=") << cmp->GetTool(wxT("ArchiveTool")) << wxT("\n");
 	text << wxT("endif\n\n");
 
 	//create the intermediate directories
@@ -320,7 +336,7 @@ wxString BuilderGnuMake::ParseIncludePath(const wxString &paths)
 	while(tkz.HasMoreTokens()){
 		wxString path(tkz.NextToken());
 		TrimString(path);
-		incluedPath << wxT("-I") << path << wxT(" ");
+		incluedPath << wxT("$(IncludeSwitch)") << path << wxT(" ");
 	}
 	return incluedPath;
 }
@@ -331,13 +347,26 @@ wxString BuilderGnuMake::ParseLibPath(const wxString &paths)
 	//lib path
 	wxString libPath(wxEmptyString);
 	wxStringTokenizer tkz(paths, wxT(";"));
-	//prepend each include path with -L
+	//prepend each include path with libpath switch
 	while(tkz.HasMoreTokens()){
 		wxString path(tkz.NextToken());
 		TrimString(path);
-		libPath << wxT("-L") << path << wxT(" ");
+		libPath << wxT("$(LibraryPathSwitch)") << path << wxT(" ");
 	}
 	return libPath;
+}
+
+wxString BuilderGnuMake::ParsePreprocessor(const wxString &prep)
+{
+	wxString preprocessor(wxEmptyString);
+	wxStringTokenizer tkz(prep, wxT(";"));
+	//prepend each include path with libpath switch
+	while(tkz.HasMoreTokens()){
+		wxString p(tkz.NextToken());
+		TrimString(p);
+		preprocessor << wxT("$(PreprocessorSwitch)") << p << wxT(" ");
+	}
+	return preprocessor;
 }
 
 wxString BuilderGnuMake::ParseLibs(const wxString &libs)
@@ -357,7 +386,7 @@ wxString BuilderGnuMake::ParseLibs(const wxString &libs)
 		}
 		//remove suffixes
 		lib = lib.BeforeFirst(wxT('.'));
-		slibs << wxT("-l") << lib << wxT(" ");
+		slibs << wxT("$(LibrarySwitch)") << lib << wxT(" ");
 	}
 	return slibs;
 }

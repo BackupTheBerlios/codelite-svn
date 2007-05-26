@@ -77,6 +77,7 @@ public:
 	virtual void OnButtonOK(wxCommandEvent &event);
 	virtual void OnButtonApply(wxCommandEvent &event);
 	virtual void OnButtonConfigurationManager(wxCommandEvent &event);
+	virtual void OnButtonAddPreprocessor(wxCommandEvent &event);
 
 };
 

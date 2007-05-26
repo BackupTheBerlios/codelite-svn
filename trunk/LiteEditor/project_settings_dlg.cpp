@@ -100,7 +100,7 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 	m_textLinkerOptions->SetValue(buildConf->GetLinkOptions());
 	m_textLibraries->SetValue(buildConf->GetLibraries());
 	m_textLibraryPath->SetValue(buildConf->GetLibPath());
-	
+	m_textPreprocessor->SetValue(buildConf->GetPreprocessor());
 	buildConf->GetPreBuildCommands(preBuildCmds);
 	buildConf->GetPostBuildCommands(postBuildCmds);
 	BuildCommandList::iterator iter = preBuildCmds.begin();
@@ -160,7 +160,6 @@ void ProjectSettingsDlg::SaveValues(const wxString &confName)
 	buildConf->SetIntermediateDirectory(m_intermediateDirPicker->GetPath());
 	buildConf->SetCommand(m_textCommand->GetValue());
 	buildConf->SetCommandArguments(m_textCommandArguments->GetValue());
-	
 	buildConf->SetWorkingDirectory(m_workingDirPicker->GetPath());
 	buildConf->SetCompilerRequired(!m_checkCompilerNeeded->IsChecked());
 	buildConf->SetCompileOptions(m_textCompilerOptions->GetValue());
@@ -171,6 +170,7 @@ void ProjectSettingsDlg::SaveValues(const wxString &confName)
 	buildConf->SetLinkOptions(m_textLinkerOptions->GetValue());
 	buildConf->SetProjectType(m_choiceProjectTypes->GetStringSelection());
 	buildConf->SetCompilerType(m_choiceCompilerType->GetStringSelection());
+	buildConf->SetPreprocessor(m_textPreprocessor->GetValue());
 
 	BuildCommandList cmds;
 	cmds.clear();
@@ -215,7 +215,14 @@ void ProjectSettingsDlg::ConnectEvents()
 	ConnectButton(m_buttonDeletePostBuildCmd, ProjectSettingsDlg::OnDeletePostBuildCommand);
 	ConnectButton(m_buttonOK, ProjectSettingsDlg::OnButtonOK);
 	ConnectButton(m_buttonApply, ProjectSettingsDlg::OnButtonApply);
-	ConnectButton(m_buttonConfigManager, ProjectSettingsDlg::OnButtonConfigurationManager)
+	ConnectButton(m_buttonConfigManager, ProjectSettingsDlg::OnButtonConfigurationManager);
+	ConnectButton(m_buttonAddPreprocessor, ProjectSettingsDlg::OnButtonAddPreprocessor);
+}
+
+void ProjectSettingsDlg::OnButtonAddPreprocessor(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	PopupAddOptionDlg(m_textPreprocessor);
 }
 
 void ProjectSettingsDlg::OnButtonOK(wxCommandEvent &event)

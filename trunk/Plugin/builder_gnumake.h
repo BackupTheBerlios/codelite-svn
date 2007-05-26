@@ -35,5 +35,6 @@ private:
 	wxString ParseIncludePath(const wxString &paths);
 	wxString ParseLibPath(const wxString &paths);
 	wxString ParseLibs(const wxString &libs);
+	wxString ParsePreprocessor(const wxString &prep);
 };
 #endif // BUILDER_GNUMAKE_H

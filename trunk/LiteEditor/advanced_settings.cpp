@@ -37,7 +37,7 @@ AdvancedDlg::AdvancedDlg( wxWindow* parent, int id, wxString title, wxPoint pos,
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
 	
-	m_notebook = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxFNB_BACKGROUND_GRADIENT|wxFNB_DEFAULT_STYLE|wxFNB_DROPDOWN_TABS_LIST|wxFNB_NO_NAV_BUTTONS|wxFNB_NO_X_BUTTON|wxFNB_FF2);
+	m_notebook = new wxTreebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 	m_notebook->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
 	
 	m_compilersPage = new wxPanel( m_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
@@ -56,7 +56,7 @@ AdvancedDlg::AdvancedDlg( wxWindow* parent, int id, wxString title, wxPoint pos,
 	bSizer5->Add( bSizer4, 0, wxALIGN_RIGHT|wxEXPAND, 5 );
 	
 	m_staticline2 = new wxStaticLine( m_compilersPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	bSizer5->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
+	bSizer5->Add( m_staticline2, 0, wxEXPAND | wxRIGHT | wxLEFT, 5 );
 	
 	m_compilersNotebook = new wxFlatNotebook(m_compilersPage, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxFNB_BACKGROUND_GRADIENT|wxFNB_DROPDOWN_TABS_LIST|wxFNB_NO_NAV_BUTTONS|wxFNB_NO_X_BUTTON|wxFNB_FF2);
 	m_compilersNotebook->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );

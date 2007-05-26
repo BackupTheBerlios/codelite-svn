@@ -20,6 +20,8 @@ BuildConfig::BuildConfig(wxXmlNode *node)
 			while(child) {
 				if(child->GetName() == wxT("IncludePath")){
 					m_includePath.Add(XmlUtils::ReadString(child, wxT("Value")));
+				} else if(child->GetName() == wxT("Preprocessor")){
+					m_preprocessor.Add(XmlUtils::ReadString(child, wxT("Value")));
 				} 
 				child = child->GetNext();
 			}
@@ -141,6 +143,12 @@ wxXmlNode *BuildConfig::ToXml() const
 		compile->AddChild(option);
 	}
 
+	for(i=0; i<m_preprocessor.GetCount(); i++){
+		wxXmlNode *prep = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Preprocessor"));
+		prep->AddProperty(wxT("Value"), m_preprocessor.Item(i));
+		compile->AddChild(prep);
+	}
+
 	//add the link node
 	wxXmlNode *link = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Linker"));
 	link->AddProperty(wxT("Required"), BoolToString(m_linkerRequired));
@@ -183,6 +191,11 @@ wxXmlNode *BuildConfig::ToXml() const
 	}
 
 	return node;
+}
+
+void BuildConfig::SetPreprocessor(const wxString &pre)
+{
+	FillFromSmiColonString(m_preprocessor, pre);
 }
 
 void BuildConfig::SetIncludePath(const wxString &path)
@@ -234,3 +247,7 @@ wxString BuildConfig::GetIncludePath() const
 	return ArrayToSmiColonString(m_includePath);
 }
 
+wxString BuildConfig::GetPreprocessor() const 
+{
+	return ArrayToSmiColonString(m_preprocessor);
+}

@@ -13,6 +13,7 @@
 #include <wx/button.h>
 #include <wx/statline.h>
 #include <wx/wxFlatNotebook/wxFlatNotebook.h>
+#include "wx/treebook.h"
 #include <wx/panel.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -26,7 +27,7 @@ class AdvancedDlg : public wxDialog
 	DECLARE_EVENT_TABLE();
 	
 protected:
-	wxFlatNotebook* m_notebook; 
+	wxTreebook* m_notebook; 
 	wxPanel* m_compilersPage;
 	wxStaticText* m_staticText1;
 	wxButton* m_buttonNewCompiler;

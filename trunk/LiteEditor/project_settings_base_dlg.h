@@ -60,6 +60,9 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxStaticText* m_staticText4;
 		wxTextCtrl* m_textAdditionalSearchPath;
 		wxButton* m_buttonAddSearchPath;
+		wxStaticText* m_staticText171;
+		wxTextCtrl* m_textPreprocessor;
+		wxButton* m_buttonAddPreprocessor;
 		wxPanel* m_linkerPage;
 		wxCheckBox* m_checkLinkerNeeded;
 		wxStaticLine* m_staticline8;

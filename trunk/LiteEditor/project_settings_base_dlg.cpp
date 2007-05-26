@@ -126,7 +126,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_generalPage->SetSizer( bSizer19 );
 	m_generalPage->Layout();
 	bSizer19->Fit( m_generalPage );
-	m_notebook3->AddPage( m_generalPage, wxT("General"), true );
+	m_notebook3->AddPage( m_generalPage, wxT("General"), false );
 	m_compilerPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* compilerPageSizer;
 	compilerPageSizer = new wxBoxSizer( wxVERTICAL );
@@ -159,12 +159,21 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_buttonAddSearchPath = new wxButton( m_compilerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( m_buttonAddSearchPath, wxGBPosition( 1, 2 ), wxGBSpan( 1, 1 ), wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
+	m_staticText171 = new wxStaticText( m_compilerPage, wxID_ANY, wxT("Preprocessor:"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer1->Add( m_staticText171, wxGBPosition( 2, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_textPreprocessor = new wxTextCtrl( m_compilerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer1->Add( m_textPreprocessor, wxGBPosition( 2, 1 ), wxGBSpan( 1, 1 ), wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	
+	m_buttonAddPreprocessor = new wxButton( m_compilerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer1->Add( m_buttonAddPreprocessor, wxGBPosition( 2, 2 ), wxGBSpan( 1, 1 ), wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	
 	compilerPageSizer->Add( gbSizer1, 1, wxEXPAND, 5 );
 	
 	m_compilerPage->SetSizer( compilerPageSizer );
 	m_compilerPage->Layout();
 	compilerPageSizer->Fit( m_compilerPage );
-	m_notebook3->AddPage( m_compilerPage, wxT("Compiler"), false );
+	m_notebook3->AddPage( m_compilerPage, wxT("Compiler"), true );
 	m_linkerPage = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* linkerPageSizer;
 	linkerPageSizer = new wxBoxSizer( wxVERTICAL );

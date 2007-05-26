@@ -1,16 +1,15 @@
 TODO List:
 ==========================
-. Change GNU makefile generator to use the values from the selected compiler (-I, -L, -o etc...)
 . Add posibility to copy project settings when creating new project
 . Change the way project type acts:
 	- Add option to file view to save the project as template
 . Add option to create a recursive makefile for the workspace
+. Add the ability to build from whitin the IDE
 . Add option to create an external database
 . Add option to re-create the symbols database
 . Add menu option to set external database to workspace
 . Add Java lexer
 . Add XML lexer
-. Add Preprocessor entry to the project settings dialog
 . When closing the application, prompt if there are unsaved changes
 	 Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
 	 Add option to open resource in the workspace (eclips's Ctrl+Shift+R)

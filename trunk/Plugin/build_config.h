@@ -52,6 +52,7 @@ class BuildConfig : public ConfObject {
 	wxString m_workingDirectory;
 	wxString m_compilerType;
 	wxString m_projectType;
+	wxArrayString m_preprocessor;
 
 private:
 	void FillFromSmiColonString(wxArrayString &arr, const wxString &str);
@@ -68,6 +69,10 @@ public:
 	//--------------------------------
 	// Setters / Getters
 	//--------------------------------
+	wxString GetPreprocessor() const;
+	void GetPreprocessor(wxArrayString &arr){ arr = m_preprocessor;}
+	void SetPreprocessor(const wxString &prepr);
+	
 	const wxString &GetCompilerType() const { return m_compilerType; }
 	void SetCompilerType(const wxString &cmpType) { m_compilerType = cmpType; }
 
