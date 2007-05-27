@@ -539,7 +539,7 @@ void FileViewTree::OnSaveAsTemplate(wxCommandEvent & WXUNUSED(event))
 		wxString name = GetItemText(item);
 		ProjectPtr proj = ManagerST::Get()->GetProject(name);
 		if(proj){
-			wxTextEntryDialog *dlg = new wxTextEntryDialog(this, wxT("New Template Name:"), wxT("Save As Template"), name);
+			wxTextEntryDialog *dlg = new wxTextEntryDialog(NULL, wxT("New Template Name:"), wxT("Save As Template"), name);
 			if(dlg->ShowModal() == wxID_OK){
 				wxString newName = dlg->GetValue();
 				TrimString(newName);
