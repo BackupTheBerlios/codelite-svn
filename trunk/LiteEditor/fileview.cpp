@@ -558,5 +558,6 @@ void FileViewTree::OnBuildOrder(wxCommandEvent &event)
 	wxTreeItemId item = GetSelection();
 	if(item.IsOk()){
 		wxString projectName = GetItemText(item);
+		ManagerST::Get()->PopupProjectDependsDlg(projectName);
 	}
 }

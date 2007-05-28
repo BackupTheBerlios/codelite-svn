@@ -23,6 +23,7 @@
 #include "buildmanager.h"
 #include "macros.h"
 #include "dirtraverser.h"
+#include "depends_dlg.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -738,6 +739,8 @@ ProjectPtr Manager::GetProject(const wxString &name) const
 
 void Manager::PopupProjectDependsDlg(const wxString &projectName)
 {
-		
+	DependenciesDlg *dlg = new DependenciesDlg(GetMainFrame(), projectName);
+	dlg->ShowModal();
+	dlg->Destroy();
 }
 

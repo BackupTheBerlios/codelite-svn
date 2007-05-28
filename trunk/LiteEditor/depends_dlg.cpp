@@ -18,10 +18,16 @@
 #endif //WX_PRECOMP
 
 #include "depends_dlg.h"
+#include "depend_dlg_page.h"
+#include "manager.h"
+#include <wx/choicebk.h>
+#include "macros.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-DependenciesDlg::DependenciesDlg( wxWindow* parent, int id, wxString title, wxPoint pos, wxSize size, int style ) : wxDialog( parent, id, title, pos, size, style )
+DependenciesDlg::DependenciesDlg( wxWindow* parent, const wxString &projectName, int id, wxString title, wxPoint pos, wxSize size, int style ) 
+: wxDialog( parent, id, title, pos, size, style )
+, m_projectName(projectName)
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
@@ -47,4 +53,26 @@ DependenciesDlg::DependenciesDlg( wxWindow* parent, int id, wxString title, wxPo
 	
 	this->SetSizer( mainSizer );
 	this->Layout();
+
+	Init();
+}
+
+void DependenciesDlg::Init()
+{
+	//fill the pages of the choice book
+	wxArrayString projects;
+	ManagerST::Get()->GetProjectList(projects);
+	wxString activeProj = ManagerST::Get()->GetActiveProjectName();
+	for(size_t i=0; i<projects.GetCount(); i++){
+		m_book->AddPage(new DependenciesPage(m_book, projects.Item(i)), projects.Item(i), m_projectName == projects.Item(i));
+	}
+
+	//connect events
+	ConnectButton(m_buttonOK, DependenciesDlg::OnButtonOK);
+
+}
+
+void DependenciesDlg::OnButtonOK(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
 }

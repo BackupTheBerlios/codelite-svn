@@ -18,10 +18,13 @@
 #endif //WX_PRECOMP
 
 #include "depend_dlg_page.h"
+#include "manager.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-DependenciesPage::DependenciesPage( wxWindow* parent, int id, wxPoint pos, wxSize size, int style ) : wxPanel( parent, id, pos, size, style )
+DependenciesPage::DependenciesPage( wxWindow* parent, const wxString &projectName, int id, wxPoint pos, wxSize size, int style ) 
+: wxPanel( parent, id, pos, size, style )
+, m_projectName(projectName)
 {
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
@@ -46,4 +49,41 @@ DependenciesPage::DependenciesPage( wxWindow* parent, int id, wxPoint pos, wxSiz
 	
 	this->SetSizer( mainSizer );
 	this->Layout();
+
+	Init();
+}
+
+void DependenciesPage::Init()
+{
+	wxString errMsg;
+	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(m_projectName, errMsg);
+	if(proj){
+		//initialize the build order listbox
+		wxArrayString depArr = proj->GetDependencies();
+		size_t i=0;
+		for(i=0; i<depArr.GetCount(); i++){
+			m_listBoxBuildOrder->Append(depArr.Item(i));
+		}
+		//initialize the project dependencies check list
+		wxArrayString projArr;
+		ManagerST::Get()->GetProjectList(projArr);
+
+		for(i=0; i<projArr.GetCount(); i++){
+
+			if(projArr.Item(i) != m_projectName){
+				int idx = m_checkListProjectList->Append(projArr.Item(i));
+				m_checkListProjectList->Check(idx, depArr.Index(projArr.Item(i)) != wxNOT_FOUND);
+			}
+		}
+
+	}else{
+		wxMessageBox(errMsg, wxT("Lite Editr"));
+		return;
+	}
+}
+
+void DependenciesPage::Save()
+{
+	//create project dependencie list
+
 }

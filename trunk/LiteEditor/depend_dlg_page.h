@@ -20,16 +20,20 @@
 ///////////////////////////////////////////////////////////////////////////////
 class DependenciesPage : public wxPanel 
 {
-	private:
-	
-	protected:
-		wxStaticText* m_staticText1;
-		wxCheckListBox* m_checkListProjectList;
-		wxStaticText* m_staticText2;
-		wxListBox* m_listBoxBuildOrder;
-	
-	public:
-		DependenciesPage( wxWindow* parent, int id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 500,300 ), int style = wxTAB_TRAVERSAL );
+private:
+
+protected:
+	wxStaticText* m_staticText1;
+	wxCheckListBox* m_checkListProjectList;
+	wxStaticText* m_staticText2;
+	wxListBox* m_listBoxBuildOrder;
+	wxString m_projectName;
+
+	void Init();
+
+public:
+	DependenciesPage( wxWindow* parent, const wxString &projName, int id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 500,300 ), int style = wxTAB_TRAVERSAL );
+	void Save();
 	
 };
 
