@@ -1,64 +1,108 @@
 <?xml version="1.0" encoding="windows-1255"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="CodeLite"
 	ProjectGUID="{E8E7D604-D0FC-423A-81EF-70C182B40C14}"
-	Keyword="Win32Proj">
+	Keyword="Win32Proj"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="4"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\sdk\wxsqlite3\include;&quot;$(WXSTABLE)\lib\vc_lib\mswd&quot;;&quot;$(WXSTABLE)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;USE_TRACE;_CRT_SECURE_NO_DEPRECATE"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="precompiled_header.h"
 				WarningLevel="4"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="4"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="../lib/codelited.lib"/>
+				OutputFile="../lib/codelited.lib"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="4"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/lib/vc_lib/msw/&quot;;&quot;$(WXSTABLE)/include&quot;;..\sdk\wxscintilla\include;..\sdk\wxsqlite3\include"
@@ -67,118 +111,170 @@
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="precompiled_header.h"
 				WarningLevel="4"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="../lib/codelite.lib"/>
+				OutputFile="../lib/codelite.lib"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Debug Unicode|Win32"
 			OutputDirectory="../lib"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\sdk\wxsqlite3\include;&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswud&quot;;..\sdk\wxscintilla\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;USE_TRACE;_CRT_SECURE_NO_DEPRECATE"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="precompiled_header.h"
 				WarningLevel="4"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="4"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\codeliteud.lib"/>
+				OutputFile="..\lib\codeliteud.lib"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release Unicode|Win32"
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				AdditionalIncludeDirectories="..\sdk\wxsqlite3\include;&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswu&quot;;..\sdk\wxscintilla\include"
 				PreprocessorDefinitions="WIN32;_LIB;__WIN32__;_CRT_SECURE_NO_DEPRECATE"
-				MinimalRebuild="FALSE"
+				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="precompiled_header.h"
 				WarningLevel="4"
-				SuppressStartupBanner="TRUE"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="0"/>
+				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="0"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\codeliteu.lib"/>
+				OutputFile="..\lib\codeliteu.lib"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -187,137 +283,181 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
 			<File
-				RelativePath=".\calltip.cpp">
+				RelativePath=".\calltip.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\cl_process.cpp">
+				RelativePath=".\cl_process.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\comment.cpp">
+				RelativePath=".\comment.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\cpp_scanner.cpp">
+				RelativePath=".\cpp_scanner.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ctags_manager.cpp">
+				RelativePath=".\ctags_manager.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\dirtraverser.cpp">
+				RelativePath=".\dirtraverser.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\entry.cpp">
+				RelativePath=".\entry.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\language.cpp">
+				RelativePath=".\language.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\lex.yy.cpp">
+				RelativePath=".\lex.yy.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\parse_thread.cpp">
+				RelativePath=".\parse_thread.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\readtags.cpp">
+				RelativePath=".\readtags.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\symbol_tree.cpp">
+				RelativePath=".\symbol_tree.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\tag_tree.cpp">
+				RelativePath=".\tag_tree.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\tags_database.cpp">
+				RelativePath=".\tags_database.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\tokenizer.cpp">
+				RelativePath=".\tokenizer.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\worker_thread.cpp">
+				RelativePath=".\worker_thread.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
 			<File
-				RelativePath=".\calltip.h">
+				RelativePath=".\calltip.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cl_process.h">
+				RelativePath=".\cl_process.h"
+				>
 			</File>
 			<File
-				RelativePath=".\comment.h">
+				RelativePath=".\comment.h"
+				>
 			</File>
 			<File
-				RelativePath=".\cpp_scanner.h">
+				RelativePath=".\cpp_scanner.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ctags_manager.h">
+				RelativePath=".\ctags_manager.h"
+				>
 			</File>
 			<File
-				RelativePath=".\db_record.h">
+				RelativePath=".\db_record.h"
+				>
 			</File>
 			<File
-				RelativePath=".\dirsaver.h">
+				RelativePath=".\dirsaver.h"
+				>
 			</File>
 			<File
-				RelativePath=".\dirtraverser.h">
+				RelativePath=".\dirtraverser.h"
+				>
 			</File>
 			<File
-				RelativePath=".\entry.h">
+				RelativePath=".\entry.h"
+				>
 			</File>
 			<File
-				RelativePath=".\FlexLexer.h">
+				RelativePath=".\FlexLexer.h"
+				>
 			</File>
 			<File
-				RelativePath=".\language.h">
+				RelativePath=".\language.h"
+				>
 			</File>
 			<File
-				RelativePath=".\parse_thread.h">
+				RelativePath=".\parse_thread.h"
+				>
 			</File>
 			<File
-				RelativePath=".\precompiled_header.h">
+				RelativePath=".\precompiled_header.h"
+				>
 			</File>
 			<File
-				RelativePath=".\readtags.h">
+				RelativePath=".\readtags.h"
+				>
 			</File>
 			<File
-				RelativePath=".\singleton.h">
+				RelativePath=".\singleton.h"
+				>
 			</File>
 			<File
-				RelativePath=".\smart_ptr.h">
+				RelativePath=".\smart_ptr.h"
+				>
 			</File>
 			<File
-				RelativePath=".\symbol_tree.h">
+				RelativePath=".\symbol_tree.h"
+				>
 			</File>
 			<File
-				RelativePath=".\tag_tree.h">
+				RelativePath=".\tag_tree.h"
+				>
 			</File>
 			<File
-				RelativePath=".\tags_database.h">
+				RelativePath=".\tags_database.h"
+				>
 			</File>
 			<File
-				RelativePath=".\tokenizer.h">
+				RelativePath=".\tokenizer.h"
+				>
 			</File>
 			<File
-				RelativePath=".\tree.h">
+				RelativePath=".\tree.h"
+				>
 			</File>
 			<File
-				RelativePath=".\tree_node.h">
+				RelativePath=".\tree_node.h"
+				>
 			</File>
 			<File
-				RelativePath=".\worker_thread.h">
+				RelativePath=".\worker_thread.h"
+				>
 			</File>
 			<File
-				RelativePath=".\y.tab.h">
+				RelativePath=".\y.tab.h"
+				>
 			</File>
 		</Filter>
 		<Filter
-			Name="SDK_includes">
+			Name="SDK_includes"
+			>
 			<File
-				RelativePath="..\sdk\wxscintilla\include\wx\wxscintilla.h">
+				RelativePath="..\sdk\wxscintilla\include\wx\wxscintilla.h"
+				>
 			</File>
 		</Filter>
 	</Files>

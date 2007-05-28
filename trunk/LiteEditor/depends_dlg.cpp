@@ -69,10 +69,23 @@ void DependenciesDlg::Init()
 
 	//connect events
 	ConnectButton(m_buttonOK, DependenciesDlg::OnButtonOK);
-
+	ConnectButton(m_buttonCancel, DependenciesDlg::OnButtonCancel);
 }
 
 void DependenciesDlg::OnButtonOK(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
+	for(size_t i=0; i<m_book->GetPageCount(); i++){
+		DependenciesPage *page = dynamic_cast<DependenciesPage *>( m_book->GetPage(i) );
+		if(page){
+			page->Save();
+		}
+	}
+	EndModal(wxID_OK);
+}
+
+void DependenciesDlg::OnButtonCancel(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	EndModal(wxID_CANCEL);
 }

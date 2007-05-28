@@ -324,8 +324,9 @@ void Project::SetDependencies(wxArrayString &deps)
 	for(size_t i=0; i<deps.GetCount(); i++){
 		wxXmlNode *child = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Project"));
 		child->AddProperty(wxT("Name"), deps.Item(i));
-		m_doc.GetRoot()->AddChild(child);
+		node->AddChild(child);
 	}
+
 	//save changes
 	m_doc.Save(m_fileName.GetFullPath());
 }

@@ -32,6 +32,8 @@
 #define ConnectCmd(ctrl, fn)\
 	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(fn), NULL, this);
 
+#define ConnectCheckList(ctrl, fn)\
+	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler(fn), NULL, this);
 
 #define TrimString(str){\
 		str = str.Trim();\

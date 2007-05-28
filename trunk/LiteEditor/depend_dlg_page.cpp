@@ -19,6 +19,7 @@
 
 #include "depend_dlg_page.h"
 #include "manager.h"
+#include "macros.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -80,10 +81,34 @@ void DependenciesPage::Init()
 		wxMessageBox(errMsg, wxT("Lite Editr"));
 		return;
 	}
+
+	ConnectCheckList(m_checkListProjectList, DependenciesPage::OnCheckListItemToggled);
+}
+
+void DependenciesPage::OnCheckListItemToggled(wxCommandEvent &event)
+{
+	int item = event.GetSelection();
+	wxString name = m_checkListProjectList->GetString((unsigned int)item);
+	if(!m_checkListProjectList->IsChecked((unsigned int)item)){
+		unsigned int buildOrderId = m_listBoxBuildOrder->FindString(name);
+		if(buildOrderId != wxNOT_FOUND){
+			m_listBoxBuildOrder->Delete(buildOrderId);
+		}
+	} else {
+		m_listBoxBuildOrder->Append(name);
+	}
 }
 
 void DependenciesPage::Save()
 {
 	//create project dependencie list
+	ProjectPtr proj = ManagerST::Get()->GetProject(m_projectName);
 
+	wxArrayString depsArr;
+	for(size_t i=0; i<m_checkListProjectList->GetCount(); i++){
+		if(m_checkListProjectList->IsChecked((unsigned int)i)){
+			depsArr.Add(m_checkListProjectList->GetString((unsigned int)i));
+		}
+	}
+	proj->SetDependencies(depsArr);
 }
