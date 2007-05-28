@@ -1,5 +1,6 @@
 TODO List:
 ==========================
+. Add dependencies dialog for build order
 . Add option to create a recursive makefile for the workspace
 . Add the ability to build from whitin the IDE
 . Add posibility to copy project settings when creating new project
@@ -14,7 +15,6 @@ TODO List:
 	 Replace the editor default menu 
 . When using editor, write in status bar the current line and column.
 . Add toolbar
-. Add dependencies dialog for build order
 . Add right click menu to tab
 . When using 'Ctrl+F' (find dialog) or 'Ctrl+Shift+F' (find in files), open the dialog with selected text set in the 
 	'Find What:' field
