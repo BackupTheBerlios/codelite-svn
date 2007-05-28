@@ -322,8 +322,22 @@ public:
 	 */
 	void SaveProjectTemplate(ProjectPtr proj, const wxString &name);
 
+	/**
+	 * Set lite editor's startup directory
+	 */
 	void SetStarupDirectory(const wxString &path){ m_startupDir = path; }
+
+
+	/**
+	 * Get lite editor's startup directory
+	 */
 	const wxString &GetStarupDirectory() const { return m_startupDir; }
+
+	/**
+	 * Popup project dependencies dialog
+	 * \param projectName project name
+	 */
+	void PopupProjectDependsDlg(const wxString &projectName);
 
 protected:
 	Manager(void);

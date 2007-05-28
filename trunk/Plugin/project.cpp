@@ -35,7 +35,11 @@ bool Project::Create(const wxString &name, const wxString &path, const wxString 
 	headNode = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("VirtualDirectory"));
 	headNode->AddProperty(wxT("Name"), wxT("Header Files"));
 	m_doc.GetRoot()->AddChild(headNode);
-	
+
+	//creae dependencies node
+	wxXmlNode *depNode = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Dependencies"));
+	root->AddChild(depNode);
+
 	m_doc.Save(m_fileName.GetFullPath());
 	//create build settings
 	SetSettings(new ProjectSettings(NULL));
@@ -285,5 +289,43 @@ void Project::SetSettings(ProjectSettingsPtr settings)
 		delete oldSettings;
 	}
 	m_doc.GetRoot()->AddChild(settings->ToXml());
+	m_doc.Save(m_fileName.GetFullPath());
+}
+
+wxArrayString Project::GetDependencies() const
+{
+	wxArrayString result;
+	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc.GetRoot(), wxT("Dependencies"));
+	if(node){
+		wxXmlNode *child = node->GetChildren();
+		while(child){
+			if(child->GetName() == wxT("Project")){
+				result.Add(XmlUtils::ReadString(child, wxT("Name")));
+			}
+			child = child->GetNext();
+		}
+	}
+	return result;
+}
+
+void Project::SetDependencies(wxArrayString &deps)
+{
+	//remove old node
+	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc.GetRoot(), wxT("Dependencies"));
+	if(node){
+		m_doc.GetRoot()->RemoveChild(node);
+		delete node;
+	}
+	
+	node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Dependencies"));
+	m_doc.GetRoot()->AddChild(node);
+
+	//create a node for each dependency in the array
+	for(size_t i=0; i<deps.GetCount(); i++){
+		wxXmlNode *child = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Project"));
+		child->AddProperty(wxT("Name"), deps.Item(i));
+		m_doc.GetRoot()->AddChild(child);
+	}
+	//save changes
 	m_doc.Save(m_fileName.GetFullPath());
 }

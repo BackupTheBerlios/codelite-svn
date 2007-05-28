@@ -27,6 +27,7 @@ void FileViewTree::ConnectEvents()
 	Connect(XRCID("remove_item"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnRemoveItem), NULL, this);
 	Connect(XRCID("export_makefile"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnExportMakefile), NULL, this);
 	Connect(XRCID("save_as_template"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnSaveAsTemplate), NULL, this);
+	Connect(XRCID("build_order"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnBuildOrder), NULL, this);
 }
 
 FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -548,5 +549,14 @@ void FileViewTree::OnSaveAsTemplate(wxCommandEvent & WXUNUSED(event))
 				}
 			}
 		}
+	}
+}
+
+void FileViewTree::OnBuildOrder(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	wxTreeItemId item = GetSelection();
+	if(item.IsOk()){
+		wxString projectName = GetItemText(item);
 	}
 }

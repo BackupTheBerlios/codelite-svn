@@ -217,6 +217,16 @@ public:
 	//-----------------------------------
 	ProjectTreePtr AsTree();
 
+	/**
+	 * Return list of projects that this projects depends on
+	 */
+	wxArrayString GetDependencies() const;
+
+	/**
+	 * Set list of projects that this projects depends on
+	 */
+	void SetDependencies(wxArrayString &deps);
+
 private:
 	// Recursive helper function
 	void RecursiveAdd(wxXmlNode *xmlNode, ProjectTreePtr &ptp, ProjectTreeNode *nodeParent);

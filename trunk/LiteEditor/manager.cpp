@@ -734,3 +734,10 @@ ProjectPtr Manager::GetProject(const wxString &name) const
 	}
 	return proj;
 }
+
+
+void Manager::PopupProjectDependsDlg(const wxString &projectName)
+{
+		
+}
+

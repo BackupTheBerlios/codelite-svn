@@ -377,6 +377,18 @@
 				RelativePath=".\ctags_dialog.h">
 			</File>
 			<File
+				RelativePath=".\depend_dlg_page.cpp">
+			</File>
+			<File
+				RelativePath=".\depend_dlg_page.h">
+			</File>
+			<File
+				RelativePath=".\depends_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\depends_dlg.h">
+			</File>
+			<File
 				RelativePath=".\edit_configuration.cpp">
 			</File>
 			<File
