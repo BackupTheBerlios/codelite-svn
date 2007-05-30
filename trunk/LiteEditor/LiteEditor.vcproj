@@ -484,18 +484,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Search"
-			>
-			<File
-				RelativePath=".\search_thread.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\search_thread.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="Dialogs"
 			>
 			<File
