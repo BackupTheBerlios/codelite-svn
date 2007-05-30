@@ -464,14 +464,6 @@
 				RelativePath=".\compiler_thread.h"
 				>
 			</File>
-			<File
-				RelativePath=".\stop_request.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\stop_request.h"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>
