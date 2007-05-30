@@ -69,7 +69,7 @@ void WorkerThread::Stop()
 	
 	while( IsAlive() )
 	{
-		wxThread::Sleep( 1 );
+		wxThread::Sleep( 5 );
 	}
 }
 

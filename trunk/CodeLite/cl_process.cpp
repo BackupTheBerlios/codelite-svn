@@ -1,15 +1,10 @@
 #include "cl_process.h"
 
-#ifdef __VISUALC__
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-#endif 
-
-clProcess::clProcess(wxEvtHandler* evtHandler, int id)
-: wxProcess(evtHandler, id)
+clProcess::clProcess(int id, const wxString &cmdLine)
+: wxProcess(NULL, id)
 , m_pid(-1)
 , m_uid(id)
+, m_cmd(cmdLine)
 {
 }
 
@@ -37,3 +32,9 @@ void clProcess::Terminate()
 	wxMilliSleep( 20 );
 }
 
+long clProcess::Start()
+{
+	Redirect();
+	m_pid = wxExecute(m_cmd, wxEXEC_ASYNC, this);
+	return m_pid;
+}

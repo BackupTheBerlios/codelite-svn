@@ -20,16 +20,14 @@ class clProcess : public wxProcess
 	long m_pid;
 	int m_uid;
 	int m_type;
+	wxString m_cmd;
 
 public:
 	/**
 	 * Constructs a process object. id is only used in the case you want to use wxWidgets events. 
 	 * It identifies this object, or another window that will receive the event.
-	 * If the evtHandler parameter is different from NULL, 
-	 * it will receive a wxEVT_END_PROCESS notification event (you should insert EVT_END_PROCESS macro in the event table of the parent to handle it) 
-	 * with the given id.
 	 */
-	clProcess(wxEvtHandler* evtHandler, int id);
+	clProcess(int id, const wxString &cmdLine);
 
 	virtual ~clProcess();
 
@@ -49,6 +47,12 @@ public:
 	 * Kill the process
 	 */
 	void Terminate();
+
+	/** 
+	 * Start the process
+	 * \return the process id
+	 */
+	long Start();
 
 	int GetUid() { return m_uid; }
 	void SetType(int type) { m_type = type; }

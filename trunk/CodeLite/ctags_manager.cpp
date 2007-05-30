@@ -523,13 +523,12 @@ clProcess *TagsManager::StartCtagsProcess(int kind)
 	cmd << _T("\"") << m_ctagsPath.GetFullPath() << _T("\"") << ctagsCmd;
 	clProcess* process;
 
-	process = new clProcess(NULL, wxNewId());
-	process->Redirect();
-	process->SetType(kind);
+	process = new clProcess(wxNewId(), cmd);
 
 	// Launch it!
-	long pid = wxExecute(cmd, wxEXEC_ASYNC, process);
-	process->SetPid( pid );
+	process->Start();
+	process->SetType(kind);
+	
 	m_processes[process->GetPid()] = process;
 
 	if( process->GetPid() <= 0 ){
