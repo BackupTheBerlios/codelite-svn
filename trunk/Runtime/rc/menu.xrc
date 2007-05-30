@@ -349,10 +349,6 @@
         <object class="wxMenuItem" name="add_envvar">
             <label>En&amp;vironment Variables...\tCtrl+Shift+V</label>
         </object>
-        <object class="wxMenuItem" name="wxID_SEPARATOR"/>
-        <object class="wxMenuItem" name="export_makefile">
-            <label>Export &amp;Makefile</label>
-        </object>
     </object>
     
 	<object class="wxMenu" name="file_tree_file">

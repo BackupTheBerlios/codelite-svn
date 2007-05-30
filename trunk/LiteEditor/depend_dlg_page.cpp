@@ -78,7 +78,7 @@ void DependenciesPage::Init()
 		}
 
 	}else{
-		wxMessageBox(errMsg, wxT("Lite Editr"));
+		wxMessageBox(errMsg, wxT("Lite Editor"));
 		return;
 	}
 

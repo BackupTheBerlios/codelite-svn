@@ -250,14 +250,12 @@ void FileViewTree::OnExportMakefile(wxCommandEvent &event)
 	wxUnusedVar(event);
 	wxTreeItemId item = GetSelection();
 	if(item.IsOk()){
-		FilewViewTreeItemData *data = static_cast<FilewViewTreeItemData*>(GetItemData(item));
+		wxString projectName, errMsg;
 		BuilderPtr builder = BuildManagerST::Get()->GetBuilder(wxT("GNU makefile for g++/gcc"));
-		if(data->GetData().GetKind() == ProjectItem::TypeWorkspace){
-			//export makefile for all projects
-			builder->Export(wxEmptyString);
-		}else{
-			wxString projectName = GetItemText(item);
-			builder->Export(projectName);
+		projectName = GetItemText(item);
+		if( !builder->Export(projectName, errMsg) ){
+			wxMessageBox(errMsg, wxT("Lite Editor"), wxICON_HAND);
+			return;
 		}
 	}
 }

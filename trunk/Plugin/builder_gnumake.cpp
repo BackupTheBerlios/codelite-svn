@@ -1,9 +1,10 @@
+#include "project.h"
 #include "builder_gnumake.h"
 #include "configuration_mapping.h"
 #include "dirsaver.h"
-#include "macros.h"
 #include "wx/tokenzr.h"
 #include "editor_config.h"
+#include "macros.h"
 
 BuilderGnuMake::BuilderGnuMake()
 : Builder(wxT("GNU makefile for g++/gcc"))
@@ -14,56 +15,22 @@ BuilderGnuMake::~BuilderGnuMake()
 {
 }
 
-bool BuilderGnuMake::BuildProject(const wxString &project, const wxString &target)
+bool BuilderGnuMake::Export(const wxString &project, wxString &errMsg)
 {
-
-	return true;
-}
-
-bool BuilderGnuMake::BuildWorkspace(const wxString &target)
-{
-	return true;
-}
-
-bool BuilderGnuMake::Export(const wxString &project)
-{
-	wxString errMsg;
-	//get the build matrix
-	BuildMatrixPtr matrix = WorkspaceST::Get()->GetBuildMatrix();
-
-	//extract the selected configuration from
-	wxString selConf = matrix->GetSelectedConfigurationName();
-	WorkspaceConfigurationPtr wspConf = matrix->GetConfigurationByName(selConf);
-
-	//iterate over the projects that should be built and create makefile
-	//for each project
-	if(wspConf){
-		std::list<ConfigMappingEntry> list = wspConf->GetMapping();
-		std::list<ConfigMappingEntry>::iterator iter = list.begin();
-		for(; iter != list.end(); iter++){
-			wxString projectName = (*iter).m_project;
-			wxString configName  = (*iter).m_name; 
-
-			TrimString(configName);
-			TrimString(projectName);
-
-			ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(projectName, errMsg);
-			if(proj){
-				//if project name is empty, generate for whole workspace
-				if(project.IsEmpty()){
-					GenerateMakefile(proj);
-				}else{
-					//project name is not empty, create makefile for this project
-					//only
-					if(proj->GetName() == project){
-						GenerateMakefile(proj);
-					}
-				}
-			}
-		}
-		return true;
+	if(project.IsEmpty()){
+		return false;
 	}
-	return false;
+	
+	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(project, errMsg);
+	wxArrayString depsArr = proj->GetDependencies();
+	//iterate over the dependencies projects and generate makefile
+	for(size_t i=0; i<depsArr.GetCount(); i++){
+		ProjectPtr dependProj = WorkspaceST::Get()->FindProjectByName(depsArr.Item(i), errMsg);
+		GenerateMakefile(dependProj);
+	}
+	//generate makefile for the project itself
+	GenerateMakefile(proj);
+	return true;
 }
 
 
