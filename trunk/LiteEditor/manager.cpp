@@ -24,6 +24,7 @@
 #include "macros.h"
 #include "dirtraverser.h"
 #include "depends_dlg.h"
+#include "compiler_thread.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -184,6 +185,9 @@ void Manager::UnInitialize()
 	// Stop the search thread and free its resources
 	SearchThreadST::Get()->Stop();
 	SearchThreadST::Free();
+	
+	CompilerThreadST::Get()->Stop();
+	CompilerThreadST::Free();
 
 	wxFlatNotebook::CleanUp();
 	MenuManager::Free();

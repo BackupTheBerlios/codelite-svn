@@ -452,14 +452,6 @@
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="SDK_includes"
-			>
-			<File
-				RelativePath="..\sdk\wxscintilla\include\wx\wxscintilla.h"
-				>
-			</File>
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
