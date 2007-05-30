@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswud&quot;;..\CodeLite\;..\sdk\wxsqlite3\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -106,7 +106,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswu&quot;;..\CodeLite;..\sdk\wxsqlite3\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
@@ -430,6 +430,46 @@
 			</File>
 			<File
 				RelativePath=".\search_thread.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Compiler"
+			>
+			<File
+				RelativePath=".\clean_request.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\clean_request.h"
+				>
+			</File>
+			<File
+				RelativePath=".\compile_request.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\compile_request.h"
+				>
+			</File>
+			<File
+				RelativePath=".\compiler_action.h"
+				>
+			</File>
+			<File
+				RelativePath=".\compiler_thread.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\compiler_thread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stop_request.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\stop_request.h"
 				>
 			</File>
 		</Filter>
