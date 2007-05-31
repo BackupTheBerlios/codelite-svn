@@ -3,6 +3,7 @@ TODO List:
 . Add dependencies dialog for build order
 . Add option to create a recursive makefile for the workspace
 . Add the ability to build from whitin the IDE
+. Add option to select the make tool
 . Add posibility to copy project settings when creating new project
 . Add option to create an external database
 . Add option to re-create the symbols database
