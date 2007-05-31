@@ -15,6 +15,8 @@
 #include "ctags_manager.h"
 #include "workspace.h"
 #include "list"
+#include "compile_request.h"
+#include "clean_request.h"
 
 class wxFrame;
 class LEditor;
@@ -28,6 +30,8 @@ class Manager
 {
 	friend class Singleton<Manager>;
 	wxString  m_startupDir;
+	CleanRequest *m_cleanRequest;
+	CompileReqeust *m_compileRequest;
 
 public:
 	/*!
@@ -338,6 +342,18 @@ public:
 	 * \param projectName project name
 	 */
 	void PopupProjectDependsDlg(const wxString &projectName);
+
+	/**
+	 * Pass a command to the compiler thread to clean the 
+	 * given project
+	 */
+	void CleanProject(const wxString &project);
+	
+	/**
+	 * Pass a command to the compiler thread to build the 
+	 * given project
+	 */
+	void BuildProject(const wxString &project);
 
 protected:
 	Manager(void);

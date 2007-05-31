@@ -274,6 +274,8 @@ void ConfigurationManagerDlg::SaveCurrentSettings()
 		return;
 	}
 
+	matrix->SetSelectedConfigurationName(sel);
+
 	WorkspaceConfigurationPtr conf = matrix->GetConfigurationByName(sel);
 	if(!conf){
 		//create new configuration

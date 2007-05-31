@@ -1,8 +1,7 @@
 #include "compile_request.h"
 
-CompileReqeust::CompileReqeust(const wxString &projectName, const wxString &configurationName)
+CompileReqeust::CompileReqeust(const wxString &projectName)
 : m_project(projectName)
-, m_configuration(configurationName)
 {
 }
 

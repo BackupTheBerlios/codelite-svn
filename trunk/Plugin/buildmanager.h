@@ -7,7 +7,7 @@
 #include "singleton.h"
 #include "builder.h"
 
-class BuildManager;
+//class BuildManager;
 
 /**
  * \ingroup SDK

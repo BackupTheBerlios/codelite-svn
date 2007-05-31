@@ -75,6 +75,11 @@ wxString BuildMatrix::GetSelectedConfigurationName() const
 
 WorkspaceConfigurationPtr BuildMatrix::GetConfigurationByName(const wxString &name) const
 {
+	return FindConfiguration(name);
+}
+
+WorkspaceConfigurationPtr BuildMatrix::FindConfiguration(const wxString &name) const
+{
 	std::list<WorkspaceConfigurationPtr>::const_iterator iter = m_configurationList.begin();
 	for(; iter != m_configurationList.end(); iter++){
 		if((*iter)->GetName() == name){
@@ -82,6 +87,23 @@ WorkspaceConfigurationPtr BuildMatrix::GetConfigurationByName(const wxString &na
 		}
 	}
 	return NULL;
+}
+
+void BuildMatrix::SetSelectedConfigurationName(const wxString &name)
+{
+	//find the current selected configuration
+	std::list<WorkspaceConfigurationPtr>::iterator iter = m_configurationList.begin();
+	for(; iter != m_configurationList.end(); iter++){
+		if((*iter)->IsSelected()){
+			(*iter)->SetSelected(false);
+			break;
+		}
+	}
+	//set the new one
+	WorkspaceConfigurationPtr c = FindConfiguration(name);
+	if(c){
+		c->SetSelected(true);
+	}
 }
 
 //------------------------------------------------
@@ -135,3 +157,4 @@ wxXmlNode *WorkspaceConfiguration::ToXml() const{
 	}
 	return node;
 }
+

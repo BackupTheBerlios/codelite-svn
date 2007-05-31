@@ -10,7 +10,7 @@ Builder::~Builder()
 {
 }
 
-wxString Builder::NormalizeConfigName(const wxString &confgName) const
+wxString Builder::NormalizeConfigName(const wxString &confgName)
 {
 	wxString normalized(confgName);
 	TrimString(normalized);

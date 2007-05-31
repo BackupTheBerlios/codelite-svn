@@ -28,7 +28,7 @@ public:
 	 * Normalize the configuration name, this is done by removing any trailing and leading 
 	 * spaces from the string, and replacing any space character with underscore.
 	 */
-	wxString NormalizeConfigName(const wxString &confgName) const;
+	static wxString NormalizeConfigName(const wxString &confgName);
 
 	/**
 	 * \return the builder name 
@@ -43,6 +43,18 @@ public:
 	 * \return true on success, false otherwise.
 	 */
 	virtual bool Export(const wxString &project, wxString &errMsg) = 0;
+
+	/** 
+	 * Return the command that should be executed for performing the clean
+	 * task
+	 */
+	virtual wxString GetCleanCommand(const wxString &project) = 0;
+
+	/** 
+	 * Return the command that should be executed for performing the build
+	 * task for a given project
+	 */
+	virtual wxString GetBuildCommand(const wxString &project) = 0;
 };
 
 typedef SmartPtr<Builder> BuilderPtr;

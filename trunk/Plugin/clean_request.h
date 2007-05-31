@@ -1,10 +1,15 @@
 #ifndef CLEAN_REQUEST_H
 #define CLEAN_REQUEST_H
 #include "compiler_action.h"
+#include "wx/timer.h"
 
-class CleanRequest : public CompilerAction {
+class CleanRequest : public wxEvtHandler, public CompilerAction {
 	wxString m_project;
-	wxString m_configuration;
+	wxTimer *m_timer;
+
+protected:
+	void OnTimer(wxTimerEvent &event);
+	void OnProcessEnd(wxProcessEvent& event);
 
 public:
 	/**
@@ -13,7 +18,7 @@ public:
 	 * \param projectName the selected project to build
 	 * \param configurationName the workspace selected configuration
 	 */
-	CleanRequest(const wxString &projectName, const wxString &configurationName);
+	CleanRequest(const wxString &projectName);
 
 	///dtor
 	virtual ~CleanRequest();
@@ -23,7 +28,6 @@ public:
 
 	//setters/getters
 	const wxString &GetProjectName() const { return m_project; }
-	const wxString &GetConfigurationName() const { return m_configuration; }
 };
 
 #endif // CLEAN_REQUEST_H

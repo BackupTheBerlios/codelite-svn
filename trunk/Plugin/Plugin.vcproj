@@ -313,6 +313,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\procutils.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\procutils.h"
+				>
+			</File>
+			<File
 				RelativePath=".\xmlutils.cpp"
 				>
 			</File>
@@ -462,6 +470,14 @@
 			</File>
 			<File
 				RelativePath=".\compiler_thread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\read_proc_input_request.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\read_proc_input_request.h"
 				>
 			</File>
 		</Filter>

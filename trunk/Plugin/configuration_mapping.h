@@ -53,6 +53,9 @@ typedef SmartPtr<WorkspaceConfiguration> WorkspaceConfigurationPtr;
 class BuildMatrix {
 	std::list<WorkspaceConfigurationPtr> m_configurationList;
 
+protected:
+	WorkspaceConfigurationPtr FindConfiguration(const wxString &name) const;
+
 public:
 	BuildMatrix(wxXmlNode *node);
 	virtual ~BuildMatrix();
@@ -62,6 +65,7 @@ public:
 	void SetConfiguration(WorkspaceConfigurationPtr conf);
 	wxString GetProjectSelectedConf(const wxString &configName, const wxString &project) const;
 	wxString GetSelectedConfigurationName() const;
+	void SetSelectedConfigurationName(const wxString &name);
 	WorkspaceConfigurationPtr GetConfigurationByName(const wxString &name) const;
 };
 

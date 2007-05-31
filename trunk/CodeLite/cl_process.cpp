@@ -1,4 +1,6 @@
 #include "cl_process.h"
+#include <wx/txtstrm.h>
+#include <wx/sstream.h>
 
 clProcess::clProcess(int id, const wxString &cmdLine)
 : wxProcess(NULL, id)
@@ -37,4 +39,28 @@ long clProcess::Start()
 	Redirect();
 	m_pid = wxExecute(m_cmd, wxEXEC_ASYNC, this);
 	return m_pid;
+}
+
+bool clProcess::HasInput(wxString &input)
+{
+	bool hasInput = false;
+	
+	if ( IsInputAvailable() )
+	{
+		wxTextInputStream tis(*GetInputStream());
+
+		// this assumes that the output is always line buffered
+		input << tis.ReadLine();
+		hasInput = true;
+	}
+
+	if ( IsErrorAvailable() )
+	{
+		wxTextInputStream tis(*GetErrorStream());
+
+		input << tis.ReadLine();
+		hasInput = true;
+	}
+
+	return hasInput;
 }

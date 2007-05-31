@@ -1,8 +1,8 @@
 #ifndef CODELITE_TAGSPROCESS_H
 #define CODELITE_TAGSPROCESS_H
 
-#include <wx/process.h>
-#include "smart_ptr.h"
+#include "wx/process.h"
+#include "wx/string.h"
 
 /**
  * \ingroup CodeLite
@@ -57,6 +57,8 @@ public:
 	int GetUid() { return m_uid; }
 	void SetType(int type) { m_type = type; }
 	int GetType() const { return m_type; }
+
+	bool HasInput(wxString &input);
 };
 
 #endif // CODELITE_TAGSPROCESS_H

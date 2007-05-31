@@ -24,7 +24,7 @@
 #include "macros.h"
 #include "dirtraverser.h"
 #include "depends_dlg.h"
-#include "compiler_thread.h"
+
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -41,12 +41,18 @@ if( !res )													\
 }
 
 Manager::Manager(void)
+: m_cleanRequest(NULL)
+, m_compileRequest(NULL)
 {
 }
 
 Manager::~Manager(void)
 {
 	UnInitialize();
+	if(m_cleanRequest){
+		delete m_cleanRequest;
+		m_cleanRequest = NULL;
+	}
 }
 
 wxFrame *Manager::GetMainFrame()
@@ -186,9 +192,6 @@ void Manager::UnInitialize()
 	SearchThreadST::Get()->Stop();
 	SearchThreadST::Free();
 	
-	CompilerThreadST::Get()->Stop();
-	CompilerThreadST::Free();
-
 	wxFlatNotebook::CleanUp();
 	MenuManager::Free();
 	wxArtManagerST::Free();
@@ -748,3 +751,16 @@ void Manager::PopupProjectDependsDlg(const wxString &projectName)
 	dlg->Destroy();
 }
 
+void Manager::CleanProject(const wxString &projectName)
+{
+	if( m_cleanRequest ){
+		delete m_cleanRequest;
+	}
+
+	m_cleanRequest = new CleanRequest(projectName);
+	m_cleanRequest->Process();
+}
+
+void Manager::BuildProject(const wxString &projectName)
+{
+}

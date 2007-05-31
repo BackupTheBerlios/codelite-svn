@@ -28,6 +28,7 @@ void FileViewTree::ConnectEvents()
 	Connect(XRCID("export_makefile"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnExportMakefile), NULL, this);
 	Connect(XRCID("save_as_template"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnSaveAsTemplate), NULL, this);
 	Connect(XRCID("build_order"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnBuildOrder), NULL, this);
+	Connect(XRCID("clean_project"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnClean), NULL, this);
 }
 
 FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -251,6 +252,7 @@ void FileViewTree::OnExportMakefile(wxCommandEvent &event)
 	wxTreeItemId item = GetSelection();
 	if(item.IsOk()){
 		wxString projectName, errMsg;
+		//TODO:: make the builder name configurable
 		BuilderPtr builder = BuildManagerST::Get()->GetBuilder(wxT("GNU makefile for g++/gcc"));
 		projectName = GetItemText(item);
 		if( !builder->Export(projectName, errMsg) ){
@@ -510,7 +512,10 @@ void FileViewTree::OnProjectProperties(wxCommandEvent & WXUNUSED(event))
 
 	wxString title(GetItemText(item));
 	title << wxT(" Project Settings");
-	ProjectSettingsDlg *dlg = new ProjectSettingsDlg(this, wxEmptyString, GetItemText(item), title);
+
+	//open the project properties dialog
+	BuildMatrixPtr matrix = ManagerST::Get()->GetWorkspaceBuildMatrix();
+	ProjectSettingsDlg *dlg = new ProjectSettingsDlg(this, matrix->GetSelectedConfigurationName(), GetItemText(item), title);
 	dlg->ShowModal();
 	dlg->Destroy();
 }
@@ -559,3 +564,14 @@ void FileViewTree::OnBuildOrder(wxCommandEvent &event)
 		ManagerST::Get()->PopupProjectDependsDlg(projectName);
 	}
 }
+
+void FileViewTree::OnClean(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	wxTreeItemId item = GetSelection();
+	if(item.IsOk()){
+		wxString projectName = GetItemText(item);
+		ManagerST::Get()->CleanProject(projectName);
+	}
+}
+

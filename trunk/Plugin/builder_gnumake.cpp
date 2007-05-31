@@ -357,3 +357,27 @@ wxString BuilderGnuMake::ParseLibs(const wxString &libs)
 	}
 	return slibs;
 }
+
+wxString BuilderGnuMake::GetBuildCommand(const wxString &project)
+{
+	wxString errMsg, cmd;
+	//generate the makefile
+	Export(project, errMsg);
+	BuildMatrixPtr matrix = WorkspaceST::Get()->GetBuildMatrix();
+	wxString type = Builder::NormalizeConfigName(matrix->GetSelectedConfigurationName());
+	//TODO:: replace the hardcoded mingw32-make with a configurable value 
+	cmd << wxT("mingw32-make ") << wxT("type=") << type;
+	return cmd;
+}
+
+wxString BuilderGnuMake::GetCleanCommand(const wxString &project)
+{
+	wxString errMsg, cmd;
+	//generate the makefile
+	Export(project, errMsg);
+	BuildMatrixPtr matrix = WorkspaceST::Get()->GetBuildMatrix();
+	wxString type = Builder::NormalizeConfigName(matrix->GetSelectedConfigurationName());
+	//TODO:: replace the hardcoded mingw32-make with a configurable value 
+	cmd << wxT("mingw32-make ") << wxT("type=") << type << wxT(" clean");
+	return cmd;
+}

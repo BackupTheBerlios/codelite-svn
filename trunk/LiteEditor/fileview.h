@@ -78,6 +78,7 @@ protected:
 	virtual void OnExportMakefile(wxCommandEvent &event);
 	virtual void OnSaveAsTemplate(wxCommandEvent &event);
 	virtual void OnBuildOrder(wxCommandEvent &event);
+	virtual void OnClean(wxCommandEvent &event);
 
 	// Tree sorting
 	virtual int OnCompareItems(const wxTreeItemId& item1, const wxTreeItemId& item2);

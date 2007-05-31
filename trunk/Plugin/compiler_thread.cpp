@@ -1,5 +1,5 @@
 #include "compiler_thread.h"
-#include "compiler_action.h"
+#include "read_proc_input_request.h"
 
 CompilerThread::CompilerThread()
 {
@@ -11,7 +11,7 @@ CompilerThread::~CompilerThread()
 
 void CompilerThread::ProcessRequest(ThreadRequest *request)
 {
-	CompilerAction *req = dynamic_cast<CompilerAction *>(request);
+	ReadProcInputRequest *req = dynamic_cast<ReadProcInputRequest*>(request);
 	if(req){
 		req->Process();
 	}

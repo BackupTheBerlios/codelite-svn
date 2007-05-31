@@ -1,10 +1,10 @@
 #ifndef COMPILER_THREAD_H
 #define COMPILER_THREAD_H
 
-#include "worker_thread.h"
 #include "singleton.h"
+#include "worker_thread.h"
 #include "wx/string.h"
-
+class CompilerThread;
 class CompilerThread : public WorkerThread {
 	friend class Singleton<CompilerThread>;
 

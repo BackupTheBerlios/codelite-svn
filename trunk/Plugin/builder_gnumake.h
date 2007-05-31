@@ -20,6 +20,8 @@ public:
 	 * \return true on success, false otherwise.
 	 */
 	virtual bool Export(const wxString &project, wxString &errMsg);
+	virtual wxString GetBuildCommand(const wxString &project);
+	virtual wxString GetCleanCommand(const wxString &project);
 
 private:
 	void GenerateMakefile(ProjectPtr proj);

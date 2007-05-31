@@ -21,7 +21,6 @@
 #include "configuration_manager_dlg.h"
 #include "filedroptarget.h"
 #include "advanced_settings.h"
-#include "compiler_thread.h"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -146,10 +145,6 @@ Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPo
 	// Start the search thread
 	SearchThreadST::Get()->SetNotifyWindow(this);
 	SearchThreadST::Get()->Start();
-
-	//compiler thread
-	CompilerThreadST::Get()->SetNotifyWindow(this);
-	CompilerThreadST::Get()->Start();
 }
 
 Frame::~Frame(void)
