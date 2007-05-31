@@ -1,5 +1,4 @@
 #include "clean_request.h"
-#include "procutils.h"
 #include "buildmanager.h"
 #include "read_proc_input_request.h"
 #include "wx/process.h"
@@ -48,8 +47,8 @@ void CleanRequest::Process()
 	m_proc = new clProcess(wxNewId(), cmd);
 	if(m_proc){
 		m_proc->Start();
+		m_proc->Start();Connect(wxEVT_TIMER, wxTimerEventHandler(CleanRequest::OnTimer), NULL, this);
 		m_proc->Connect(wxEVT_END_PROCESS, wxProcessEventHandler(CleanRequest::OnProcessEnd), NULL, this);
-		m_timer->Connect(wxEVT_TIMER, wxTimerEventHandler(CleanRequest::OnTimer), NULL, this);
-		m_timer->Start(100);
+		m_timer->Start(10);
 	}
 }
