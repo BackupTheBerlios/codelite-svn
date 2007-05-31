@@ -91,6 +91,7 @@ protected:
 	// event handlers
 	//----------------------------------------------------
 	void OnSearchThread(wxCommandEvent &event);
+	void OnBuildEvent(wxCommandEvent &event);
 	void OnQuit(wxCommandEvent& WXUNUSED(event));
 	void OnClose(wxCloseEvent &event);
 	void OnAddSourceFile(wxCommandEvent& event);

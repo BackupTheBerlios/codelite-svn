@@ -757,7 +757,7 @@ void Manager::CleanProject(const wxString &projectName)
 		delete m_cleanRequest;
 	}
 
-	m_cleanRequest = new CleanRequest(projectName);
+	m_cleanRequest = new CleanRequest(GetMainFrame(), projectName);
 	m_cleanRequest->Process();
 }
 

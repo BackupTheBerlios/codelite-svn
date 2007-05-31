@@ -1,7 +1,8 @@
 #include "compile_request.h"
 
-CompileReqeust::CompileReqeust(const wxString &projectName)
-: m_project(projectName)
+CompileReqeust::CompileReqeust(wxEvtHandler *owner, const wxString &projectName)
+: CompilerAction(owner)
+, m_project(projectName)
 {
 }
 

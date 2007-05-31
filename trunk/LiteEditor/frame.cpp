@@ -33,6 +33,10 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHEND, Frame::OnSearchThread)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHSTARTED, Frame::OnSearchThread)
 
+	// build messages
+	EVT_COMMAND(wxID_ANY, wxEVT_BUILD_ADDLINE, Frame::OnBuildEvent)
+	EVT_COMMAND(wxID_ANY, wxEVT_BUILD_STARTED, Frame::OnBuildEvent)
+
 	// New dialog handlers
 	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE, Frame::OnNewDlgCreate)
 
@@ -789,4 +793,20 @@ void Frame::OnAdvanceSettings(wxCommandEvent &event)
 	AdvancedDlg *dlg = new AdvancedDlg(this);
 	dlg->ShowModal();
 	dlg->Destroy();
+}
+
+void Frame::OnBuildEvent(wxCommandEvent &event)
+{
+	// make sure that the output pane is visible and selection
+	// is set to the 'Find In Files' tab
+	ManagerST::Get()->ShowOutputPane(OutputPane::BUILD_WIN);
+	m_outputPane->CanFocus(false);
+	if(event.GetEventType() == wxEVT_BUILD_STARTED){
+		m_outputPane->Clear();
+		m_outputPane->AppendText(OutputPane::BUILD_WIN, wxT("Build Started...\n"));
+	}else if(event.GetEventType() == wxEVT_BUILD_ADDLINE){
+		m_outputPane->AppendText(OutputPane::BUILD_WIN, event.GetString() + wxT("\n"));
+	}
+	
+	m_outputPane->CanFocus(true);
 }

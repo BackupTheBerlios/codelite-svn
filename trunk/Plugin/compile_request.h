@@ -15,7 +15,7 @@ public:
 	 * \param projectName the selected project to build
 	 * \param configurationName the workspace selected configuration
 	 */
-	CompileReqeust(const wxString &projectName);
+	CompileReqeust(wxEvtHandler *owner, const wxString &projectName);
 
 	///dtor
 	virtual ~CompileReqeust();

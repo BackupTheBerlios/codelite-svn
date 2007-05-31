@@ -56,22 +56,29 @@ void OutputPane::CreateGUIControls()
 	mainSizer->Add(m_book, 1, wxEXPAND | wxALL | wxGROW, 1);
 
 	// Create the 'Find In Files Window'
-	wxScintilla *findInFilesWin = new wxScintilla(m_book, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-	// Hide margins
-	findInFilesWin->SetMarginWidth(0, 0);
-	findInFilesWin->SetMarginWidth(1, 0);
-	findInFilesWin->SetMarginWidth(2, 0);
+	wxScintilla *findInFilesWin = CreateScintillaPage();
+	wxScintilla *buildWin = CreateScintillaPage();
 
 	m_book->AddPage(findInFilesWin, FIND_IN_FILES_WIN, true);
-	findInFilesWin->SetReadOnly(true);
-		
-	findInFilesWin->Connect(wxID_ANY, wxEVT_SET_FOCUS, wxFocusEventHandler(OutputPane::OnSetFocus), NULL, this);
-	findInFilesWin->Connect(wxID_ANY, wxEVT_SCI_DOUBLECLICK, wxScintillaEventHandler(OutputPane::OnMouseDClick), NULL, this);
+	m_book->AddPage(buildWin, BUILD_WIN, false);
 
-	wxFont font(8, wxFONTFAMILY_TELETYPE, wxNORMAL, wxNORMAL);
-	findInFilesWin->StyleSetFont(wxSCI_STYLE_DEFAULT, font);
 	mainSizer->Fit(this);
 	mainSizer->Layout();
+}
+
+wxScintilla *OutputPane::CreateScintillaPage()
+{
+	wxScintilla *win = new wxScintilla(m_book, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+	// Hide margins
+	win->SetMarginWidth(0, 0);
+	win->SetMarginWidth(1, 0);
+	win->SetMarginWidth(2, 0);
+	win->SetReadOnly(true);
+	win->Connect(wxID_ANY, wxEVT_SET_FOCUS, wxFocusEventHandler(OutputPane::OnSetFocus), NULL, this);
+	win->Connect(wxID_ANY, wxEVT_SCI_DOUBLECLICK, wxScintillaEventHandler(OutputPane::OnMouseDClick), NULL, this);
+	wxFont font(8, wxFONTFAMILY_TELETYPE, wxNORMAL, wxNORMAL);
+	win->StyleSetFont(wxSCI_STYLE_DEFAULT, font);
+	return win;
 }
 
 void OutputPane::OnSetFocus(wxFocusEvent &event)
@@ -99,42 +106,33 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 		return;
 	
 	m_book->SetSelection((size_t)index);
-	switch( index )
-	{
-	case 0:	// Find In Files
-		{
-			wxScintilla *win = static_cast<wxScintilla*>(m_book->GetPage((size_t)index));
-			// enable writing
-			win->SetReadOnly(false);					
-			// add the text
-			win->AddText( text );						
-			// the next 4 lines make sure that the caret is at last line
-			// and is visible
-			win->SetSelectionEnd(win->GetLength());
-			win->SetSelectionStart(win->GetLength());
-			win->SetCurrentPos(win->GetLength());
-			win->EnsureCaretVisible();
-			// enable readonly mode 
-			win->SetReadOnly(true);	
-			
-			break;
-		}
-	default:
-		break;
-	}
+	wxScintilla *win = static_cast<wxScintilla*>(m_book->GetPage((size_t)index));
+	// enable writing
+	win->SetReadOnly(false);					
+	// add the text
+	win->AddText( text );						
+	// the next 4 lines make sure that the caret is at last line
+	// and is visible
+	win->SetSelectionEnd(win->GetLength());
+	win->SetSelectionStart(win->GetLength());
+	win->SetCurrentPos(win->GetLength());
+	win->EnsureCaretVisible();
+	// enable readonly mode 
+	win->SetReadOnly(true);	
 }
 
 void OutputPane::Clear()
 {
-	int index = CaptionToIndex(OutputPane::FIND_IN_FILES_WIN);
+	int index = m_book->GetSelection();
 	if( index == wxNOT_FOUND )
 		return;
 
-	wxScintilla *win = static_cast<wxScintilla*>(m_book->GetPage((size_t)index));
-
-	win->SetReadOnly(false);
-	win->ClearAll();
-	win->SetReadOnly(true);
+	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage((size_t)index));
+	if(win){
+		win->SetReadOnly(false);
+		win->ClearAll();
+		win->SetReadOnly(true);
+	}
 }
 
 int OutputPane::CaptionToIndex(const wxString &caption)

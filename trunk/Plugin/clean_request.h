@@ -18,7 +18,7 @@ public:
 	 * \param projectName the selected project to build
 	 * \param configurationName the workspace selected configuration
 	 */
-	CleanRequest(const wxString &projectName);
+	CleanRequest(wxEvtHandler *owner, const wxString &projectName);
 
 	///dtor
 	virtual ~CleanRequest();

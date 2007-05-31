@@ -453,6 +453,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\compiler_action.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\compiler_action.h"
 				>
 			</File>

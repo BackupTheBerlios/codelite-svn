@@ -40,7 +40,8 @@ public:
 
 private:
 	void CreateGUIControls();
-	
+	wxScintilla *CreateScintillaPage();
+
 public:
 	/**
 	 * Return the index of a given window by its caption
