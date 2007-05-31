@@ -313,14 +313,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\procutils.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\procutils.h"
-				>
-			</File>
-			<File
 				RelativePath=".\xmlutils.cpp"
 				>
 			</File>
@@ -462,14 +454,6 @@
 			</File>
 			<File
 				RelativePath=".\compiler_action.h"
-				>
-			</File>
-			<File
-				RelativePath=".\compiler_thread.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\compiler_thread.h"
 				>
 			</File>
 			<File
