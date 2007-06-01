@@ -4,6 +4,7 @@
 #include "macros.h"
 #include "project.h"
 #include "editor_config.h"
+#include "build_settings_config.h"
 
 BuildConfig::BuildConfig(wxXmlNode *node)
 {
@@ -94,8 +95,8 @@ BuildConfig::BuildConfig(wxXmlNode *node)
 		m_workingDirectory = wxT("./Debug");
 		m_projectType = Project::EXECUTABLE;
 
-		EditorConfigCookie cookie;
-		CompilerPtr cmp = EditorConfigST::Get()->GetFirstCompiler(cookie);
+		BuildSettingsConfigCookie cookie;
+		CompilerPtr cmp = BuildSettingsConfigST::Get()->GetFirstCompiler(cookie);
 		if(cmp){
 			m_compilerType = cmp->GetName();
 		}

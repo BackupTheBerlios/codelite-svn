@@ -13,6 +13,7 @@
 #include "manager.h"
 #include "ctags_dialog.h"
 #include "editor_config.h"
+#include "build_settings_config.h"
 
 DEFINE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE)
 
@@ -180,11 +181,11 @@ wxWindow *NewDlg::CreateProjectPage()
 
 	wxArrayString choices;
 	//get list of compilers from configuration file
-	EditorConfigCookie cookie;
-	CompilerPtr cmp = EditorConfigST::Get()->GetFirstCompiler(cookie);
+	BuildSettingsConfigCookie cookie;
+	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetFirstCompiler(cookie);
 	while(cmp){
 		choices.Add(cmp->GetName());
-		cmp = EditorConfigST::Get()->GetNextCompiler(cookie);
+		cmp = BuildSettingsConfigST::Get()->GetNextCompiler(cookie);
 	}
 
 	m_choiceCmpType = new wxChoice(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, choices);

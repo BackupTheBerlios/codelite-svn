@@ -389,6 +389,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\build_settings_config.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\build_settings_config.h"
+				>
+			</File>
+			<File
 				RelativePath=".\compiler.cpp"
 				>
 			</File>

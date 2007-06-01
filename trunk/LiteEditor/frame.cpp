@@ -21,6 +21,7 @@
 #include "configuration_manager_dlg.h"
 #include "filedroptarget.h"
 #include "advanced_settings.h"
+#include "build_settings_config.h"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -220,9 +221,12 @@ void Frame::CreateGUIControls(void)
 	m_notebook->Connect(m_notebook->GetId(), wxEVT_COMMAND_FLATNOTEBOOK_PAGE_CLOSING, wxFlatNotebookEventHandler(Frame::OnFileClosing), NULL, this);
 	m_notebook->Connect(m_notebook->GetId(), wxEVT_COMMAND_FLATNOTEBOOK_PAGE_CLOSED, wxFlatNotebookEventHandler(Frame::OnPageClosed), NULL, this);
 
-	// Initialise editor configuration file
-	wxFileName configFile(wxT("liteeditor.xml"));
+	// Initialise editor configuration files
+	wxFileName configFile(wxT("config/liteeditor.xml"));
 	EditorConfigST::Get()->Load(configFile);
+
+	wxFileName buildCfgFile(wxT("config/build_settings.xml"));
+	BuildSettingsConfigST::Get()->Load(buildCfgFile);
 
 	//--------------------------------------------------------------------------------------
 	// Start ctags process. 

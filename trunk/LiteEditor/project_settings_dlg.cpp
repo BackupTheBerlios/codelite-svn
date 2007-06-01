@@ -5,6 +5,7 @@
 #include "configuration_manager_dlg.h"
 #include "macros.h"
 #include "editor_config.h"
+#include "build_settings_config.h"
 
 ProjectSettingsDlg::ProjectSettingsDlg( wxWindow* parent, const wxString &configName, const wxString &projectName, const wxString &title )
 : ProjectSettingsBaseDlg( parent, wxID_ANY, title )
@@ -128,11 +129,11 @@ void ProjectSettingsDlg::CopyValues(const wxString &confName)
 
 	m_choiceCompilerType->Clear();
 	wxString cmpType = buildConf->GetCompilerType();
-	EditorConfigCookie cookie;
-	CompilerPtr cmp = EditorConfigST::Get()->GetFirstCompiler(cookie);
+	BuildSettingsConfigCookie cookie;
+	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetFirstCompiler(cookie);
 	while(cmp){
 		m_choiceCompilerType->Append(cmp->GetName());
-		cmp = EditorConfigST::Get()->GetNextCompiler(cookie);
+		cmp = BuildSettingsConfigST::Get()->GetNextCompiler(cookie);
 	}
 
 	int where = m_choiceCompilerType->FindString(cmpType);

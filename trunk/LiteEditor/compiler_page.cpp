@@ -20,6 +20,7 @@
 #include "compiler_page.h"
 #include "macros.h"
 #include "editor_config.h"
+#include "build_settings_config.h"
 
 CompilerPage::CompilerPage( wxWindow* parent, wxString name, int id, wxPoint pos, wxSize size, int style ) 
 : wxScrolledWindow( parent, id, pos, size, style )
@@ -147,7 +148,7 @@ CompilerPage::CompilerPage( wxWindow* parent, wxString name, int id, wxPoint pos
 void CompilerPage::CustomInitialize()
 {
 	//load the compiler from the configuration file
-	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(m_cmpname);
+	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetCompiler(m_cmpname);
 	m_textObjectExtension->SetValue(cmp->GetObjectSuffix());
 	m_textErrorPattern->SetValue(cmp->GetErrPattern());
 	m_textErrorFileIndex->SetValue(cmp->GetErrFileNameIndex());
@@ -166,7 +167,7 @@ void CompilerPage::CustomInitialize()
 void CompilerPage::Save()
 {
 	//load the compiler from the configuration file
-	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(m_cmpname);
+	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetCompiler(m_cmpname);
 	cmp->SetErrPattern(m_textErrorPattern->GetValue());
 	cmp->SetErrFileNameIndex(m_textErrorFileIndex->GetValue());
 	cmp->SetErrLineNumberIndex(m_textErrorLineNumber->GetValue());
@@ -178,7 +179,7 @@ void CompilerPage::Save()
 	cmp->SetTool(wxT("CompilerName"), m_textCompilerName->GetValue());
 	cmp->SetTool(wxT("LinkerName"), m_textLinkerName->GetValue());
 	cmp->SetTool(wxT("SharedObjectLinkerName"), m_textSOLinker->GetValue());
-	EditorConfigST::Get()->SetCompiler(cmp);//save changes
+	BuildSettingsConfigST::Get()->SetCompiler(cmp);//save changes
 }
 
 void CompilerPage::AddSwitch(const wxString &name, const wxString &value, bool choose)
@@ -252,7 +253,7 @@ void CompilerPage::InitSwitches()
 	m_listSwitches->InsertColumn(1, wxT("Value"));
 
 	//populate the list control
-	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(m_cmpname);
+	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetCompiler(m_cmpname);
 	Compiler::ConstIterator iter = cmp->SwitchesBegin();
 	for(; iter != cmp->SwitchesEnd(); iter++){
 		AddSwitch(iter->first, iter->second, iter == cmp->SwitchesBegin());
@@ -267,9 +268,9 @@ void CompilerPage::EditSwitch()
 	wxTextEntryDialog *dlg = new wxTextEntryDialog(this, message, wxT("Edit"), m_selSwitchValue);
 	if(dlg->ShowModal() == wxID_OK){
 		wxString newVal = dlg->GetValue();
-		CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(m_cmpname);
+		CompilerPtr cmp = BuildSettingsConfigST::Get()->GetCompiler(m_cmpname);
 		cmp->SetSwitch(m_selSwitchName, dlg->GetValue());
-		EditorConfigST::Get()->SetCompiler(cmp);
+		BuildSettingsConfigST::Get()->SetCompiler(cmp);
 		InitSwitches();
 	}
 	dlg->Destroy();

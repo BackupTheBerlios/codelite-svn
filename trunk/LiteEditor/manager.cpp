@@ -24,7 +24,7 @@
 #include "macros.h"
 #include "dirtraverser.h"
 #include "depends_dlg.h"
-
+#include "build_settings_config.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -670,21 +670,21 @@ EnvironmentVarieblesPtr Manager::GetEnvironmentVariables() const
 
 bool Manager::CreateDefaultNewCompiler(const wxString &name)
 {
-	if(EditorConfigST::Get()->IsCompilerExist(name)){
+	if(BuildSettingsConfigST::Get()->IsCompilerExist(name)){
 		wxMessageBox(wxT("A compiler with this name already exist"), wxT("Error"), wxOK | wxICON_HAND);
 		return false;
 	}
 	
-	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(name);
+	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetCompiler(name);
 	cmp->SetName(name);
-	EditorConfigST::Get()->SetCompiler(cmp);
+	BuildSettingsConfigST::Get()->SetCompiler(cmp);
 	return true;
 }
 
 void Manager::DeleteCompiler(const wxString &name)
 {
 	if(wxMessageBox(wxT("Remove Compiler?"), wxT("Confirm"), wxYES_NO | wxICON_QUESTION) == wxYES){
-		EditorConfigST::Get()->DeleteCompiler(name);
+		BuildSettingsConfigST::Get()->DeleteCompiler(name);
 	}
 }
 
@@ -763,4 +763,5 @@ void Manager::CleanProject(const wxString &projectName)
 
 void Manager::BuildProject(const wxString &projectName)
 {
+	wxUnusedVar(projectName);
 }

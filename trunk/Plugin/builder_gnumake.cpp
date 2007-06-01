@@ -3,8 +3,8 @@
 #include "configuration_mapping.h"
 #include "dirsaver.h"
 #include "wx/tokenzr.h"
-#include "editor_config.h"
 #include "macros.h"
+#include "build_settings_config.h"
 
 BuilderGnuMake::BuilderGnuMake()
 : Builder(wxT("GNU makefile for g++/gcc"))
@@ -287,7 +287,7 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 	name = NormalizeConfigName(name);
 	
 	wxString cmpType = bldConf->GetCompilerType();
-	CompilerPtr cmp = EditorConfigST::Get()->GetCompiler(cmpType);
+	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetCompiler(cmpType);
 
 	text << wxT("## ") << name << wxT("\n");
 	text << wxT("ifeq ($(type), ") << name << wxT(")") << wxT("\n");

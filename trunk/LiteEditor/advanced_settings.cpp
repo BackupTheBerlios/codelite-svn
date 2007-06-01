@@ -23,6 +23,7 @@
 #include "compiler_page.h"
 #include "editor_config.h"
 #include <wx/xrc/xmlres.h>
+#include "build_settings_config.h"
 
 BEGIN_EVENT_TABLE(AdvancedDlg, wxDialog)
 EVT_MENU(XRCID("delete_compiler"), AdvancedDlg::OnDeleteCompiler)
@@ -99,11 +100,11 @@ void AdvancedDlg::LoadCompilers()
 	m_compilersNotebook->Freeze();
 	m_compilersNotebook->DeleteAllPages();
 	
-	EditorConfigCookie cookie;
-	CompilerPtr cmp = EditorConfigST::Get()->GetFirstCompiler(cookie);
+	BuildSettingsConfigCookie cookie;
+	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetFirstCompiler(cookie);
 	while(cmp){
 		m_compilersNotebook->AddPage(new CompilerPage(m_compilersNotebook, cmp->GetName()), cmp->GetName()); 
-		cmp = EditorConfigST::Get()->GetNextCompiler(cookie);
+		cmp = BuildSettingsConfigST::Get()->GetNextCompiler(cookie);
 	}
 	m_compilersNotebook->Thaw();
 }
