@@ -48,7 +48,7 @@ class LEditor : public wxScintilla
 
 public:
 	/// Construct a LEditor object
-	LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxString& fileName, const wxString& project);
+	LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxString& fileName, const wxString& project, bool hidden = false);
 
 	/// Default destructor
 	virtual ~LEditor();

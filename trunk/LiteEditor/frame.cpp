@@ -22,6 +22,7 @@
 #include "filedroptarget.h"
 #include "advanced_settings.h"
 #include "build_settings_config.h"
+#include "list"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -134,6 +135,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_CLOSE(Frame::OnClose)
 END_EVENT_TABLE()
 Frame* Frame::m_theFrame = NULL;
+
+static std::list<LEditor*> g_cache;
 
 Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 : wxFrame(pParent, id, title, pos, size, style, name)
@@ -268,6 +271,12 @@ void Frame::CreateGUIControls(void)
 
 	SetAutoLayout (true);
 	Layout();
+
+	//create a cache
+	g_cache.push_back(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true));
+	g_cache.push_back(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true));
+	g_cache.push_back(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true));
+	g_cache.push_back(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true));
 }
 
 void Frame::OnQuit(wxCommandEvent& WXUNUSED(event))
@@ -466,7 +475,13 @@ void Frame::OnFileNew(wxCommandEvent &event)
 	}
 
 	m_notebook->Freeze();
-	LEditor *editor = new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), wxEmptyString);
+	LEditor *editor = NULL;
+	if( g_cache.empty() == false ){
+		editor = g_cache.back();
+		g_cache.pop_back();
+	}else{
+		editor = new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), wxEmptyString);
+	}
 	m_notebook->AddPage(editor, fileName.GetFullName(), true);
 	m_notebook->Thaw();
 

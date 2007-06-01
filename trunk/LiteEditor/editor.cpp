@@ -44,12 +44,14 @@ FindReplaceDialog* LEditor::m_findReplaceDlg = NULL;
 FindReplaceData LEditor::m_findReplaceData;
 std::map<wxString, int> LEditor::ms_bookmarkShapes;
 
-LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxString& fileName, const wxString& project)
+LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxString& fileName, const wxString& project, bool hidden)
 : wxScintilla(parent, id, wxDefaultPosition, size)
 , m_fileName(fileName)
 , m_project(project)
 , m_lastMatchPos(0)
 {
+	Show(!hidden);
+
 	ms_bookmarkShapes[wxT("Small Rectangle")] = wxSCI_MARK_SMALLRECT;
 	ms_bookmarkShapes[wxT("Rounded Rectangle")] = wxSCI_MARK_ROUNDRECT;
 	ms_bookmarkShapes[wxT("Small Arrow")] = wxSCI_MARK_ARROW;
@@ -320,7 +322,7 @@ void LEditor::DefineMarker(int marker, int markerType, wxColor fore, wxColor bac
 
 bool LEditor::SaveFile()
 {
-	if(GetFileName().GetFullName().Find(wxT("Untitled")) != -1)
+	if(GetFileName().GetFullName().Find(wxT("Untitled")) != -1 || GetFileName().GetFullName().IsEmpty())
 	{
 		return SaveFileAs();
 	}
