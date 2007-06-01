@@ -115,3 +115,23 @@ void BuildSettingsConfig::DeleteCompiler(const wxString &name)
 	}
 }
 
+void BuildSettingsConfig::SetBuildSystem(BuildSystemPtr bs)
+{
+	//find the old setting
+	wxXmlNode *node = XmlUtils::FindNodeByName(m_doc->GetRoot(), wxT("BuildSystem"), bs->GetName());
+	if(node){
+		node->GetParent()->RemoveChild(node);
+		delete node;
+	}
+	m_doc->GetRoot()->AddChild(bs->ToXml());
+	m_doc->Save(m_fileName.GetFullPath());
+}
+
+BuildSystemPtr BuildSettingsConfig::GetBuildSystem(const wxString &name)
+{
+	wxXmlNode *node = XmlUtils::FindNodeByName(m_doc->GetRoot(), wxT("BuildSystem"), name);
+	if(node){
+		return new BuildSystem(node);
+	}
+	return NULL;
+}

@@ -19,10 +19,18 @@
 class Builder {
 protected:
 	wxString m_name;
+	wxString m_buildTool;
+	wxString m_buildToolOptions;
+
+	wxString GetBuildToolFromConfig() const;
+	wxString GetBuildToolOptionsFromConfig() const;
 
 public:
-	Builder(const wxString &name) ;
+	Builder(const wxString &name, const wxString &buildTool, const wxString &buildToolOptions) ;
 	virtual ~Builder();
+
+	void SetBuildTool(const wxString &buildTool) { m_buildTool = buildTool; }
+	void SetBuildToolOptions(const wxString &buildToolOptions) { m_buildToolOptions = buildToolOptions; }
 
 	/**
 	 * Normalize the configuration name, this is done by removing any trailing and leading 
@@ -35,6 +43,21 @@ public:
 	 */
 	const wxString &GetName() const { return m_name; }
 	
+	/**
+	 * \return the build tool assoicated with this builder
+	 */
+	wxString GetBuildToolCommand() const;
+	
+	/**
+	 * return the build tool name 
+	 */
+	wxString GetBuildToolName() const;
+
+	/**
+	 * return the build tool options
+	 */
+	wxString GetBuildToolOptions() const;
+
 	/**
 	 * Export the build system specific file (e.g. GNU makefile, Ant file etc) 
 	 * to allow users to invoke them manualy from the command line

@@ -17,11 +17,9 @@
  * \date 09-17-2006
  * \author Eran
  */
-template <typename T>
+template <class T>
 class SmartPtr
 {
-	typedef T* type_ptr;
-
 	/**
      * The reference counting class
      *
@@ -34,7 +32,7 @@ class SmartPtr
 	 */
 	class SmartPtrRef
 	{
-		type_ptr m_data;
+		T* m_data;
 		int m_refCount;
 
 	public:
@@ -42,7 +40,7 @@ class SmartPtr
 		 * Construct a reference counting class for row pointer data
 		 * \param data pointer
 		 */
-		SmartPtrRef(type_ptr data)
+		SmartPtrRef(T* data)
 			: m_data( data )
 			, m_refCount( 1 )
 		{
@@ -59,7 +57,7 @@ class SmartPtr
 		/**
 		 * \return Pointer to the row data 
 		 */
-		type_ptr GetData() { return m_data; }
+		T* GetData() { return m_data; }
 
 		/**
 		 * Increase reference counting by 1
@@ -85,7 +83,7 @@ public:
 	 * Construct smart pointer from ptr
 	 * \param ptr pointer
 	 */
-	SmartPtr(type_ptr ptr)
+	SmartPtr(T* ptr)
 	{
 		// create a fresh copy
 		CreateFresh( ptr );
@@ -144,7 +142,7 @@ public:
 	 * if the current ptr is not NULL, it will be freed (reference counting free) before assingning the new ptr
 	 * \param ptr new pointer
 	 */
-	void Reset(type_ptr ptr)
+	void Reset(T* ptr)
 	{	
 		DeleteRefCount();
 		CreateFresh( ptr );
@@ -154,7 +152,7 @@ public:
 	 * Return pointer the row data pointer
 	 * \return pointer to the row data pointer
 	 */
-	type_ptr Get()
+	T* Get()
 	{
 		return m_ref->GetData();
 	}
@@ -163,7 +161,7 @@ public:
 	 * Overload the '->' operator 
 	 * \return pointer to the row data pointer
 	 */
-	type_ptr operator->() const 
+	T* operator->() const 
 	{
 		return m_ref->GetData();
 	}
@@ -214,7 +212,7 @@ private:
 		}
 	};
 
-	void CreateFresh(type_ptr ptr)
+	void CreateFresh(T* ptr)
 	{
 		m_ref = new SmartPtrRef( ptr );
 	}

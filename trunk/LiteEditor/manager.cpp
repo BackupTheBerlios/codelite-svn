@@ -176,6 +176,7 @@ void Manager::UnInitialize()
 	WorkspaceST::Free();
 	ContextManager::Free();
 	BuildManagerST::Free();
+	BuildSettingsConfigST::Free();
 
 	//-----------------------------------------------------
 	// Stop the parser thread and release its resources

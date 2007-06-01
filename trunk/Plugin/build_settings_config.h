@@ -6,6 +6,7 @@
 #include "compiler.h"
 #include "wx/xml/xml.h"
 #include "wx/filename.h"
+#include "build_system.h"
 
 // Cookie class for the editor to provide reentrance operations
 // on various methods (such as iteration)
@@ -72,6 +73,15 @@ public:
 	 */
 	void DeleteCompiler(const wxString &name);
 
+	/** 
+	 * Add build system 
+	 */
+	void SetBuildSystem(BuildSystemPtr bs);
+
+	/** 
+	 * get build system from configuration by name
+	 */ 
+	BuildSystemPtr GetBuildSystem(const wxString &name);
 };
 
 typedef Singleton<BuildSettingsConfig> BuildSettingsConfigST;

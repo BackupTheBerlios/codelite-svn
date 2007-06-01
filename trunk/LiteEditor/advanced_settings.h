@@ -15,6 +15,7 @@
 #include <wx/wxFlatNotebook/wxFlatNotebook.h>
 #include "wx/treebook.h"
 #include <wx/panel.h>
+#include "build_page.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -36,6 +37,7 @@ protected:
 	wxStaticLine* m_staticline10;
 	wxButton* m_buttonOK;
 	wxButton* m_buttonCancel;
+	BuildPage *m_buildPage;
 
 	void OnButtonNewClicked(wxCommandEvent &);
 	void OnButtonOKClicked(wxCommandEvent &);

@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswud&quot;;..\CodeLite\;..\sdk\wxsqlite3\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -106,7 +106,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswu&quot;;..\CodeLite;..\sdk\wxsqlite3\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
@@ -394,6 +394,14 @@
 			</File>
 			<File
 				RelativePath=".\build_settings_config.h"
+				>
+			</File>
+			<File
+				RelativePath=".\build_system.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\build_system.h"
 				>
 			</File>
 			<File

@@ -24,6 +24,7 @@
 #include "editor_config.h"
 #include <wx/xrc/xmlres.h>
 #include "build_settings_config.h"
+#include "build_page.h"
 
 BEGIN_EVENT_TABLE(AdvancedDlg, wxDialog)
 EVT_MENU(XRCID("delete_compiler"), AdvancedDlg::OnDeleteCompiler)
@@ -85,6 +86,9 @@ AdvancedDlg::AdvancedDlg( wxWindow* parent, int id, wxString title, wxPoint pos,
 	
 	mainSizer->Add( btnSizer, 0, wxALIGN_RIGHT, 5 );
 	
+	m_buildPage = new BuildPage(m_notebook);
+	m_notebook->AddPage(m_buildPage, wxT("Build Systems"), false);
+
 	this->SetSizer( mainSizer );
 	this->Layout();
 
@@ -135,6 +139,9 @@ void AdvancedDlg::OnButtonOKClicked(wxCommandEvent &event)
 			page->Save();
 		}
 	}
+	//save the build page
+	m_buildPage->Save();
+
 	EndModal(wxID_OK);
 }
 

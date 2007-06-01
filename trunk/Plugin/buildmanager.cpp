@@ -57,3 +57,7 @@ BuilderPtr BuildManager::GetBuilder(const wxString &name)
 	return NULL;
 }
 
+BuilderPtr BuildManager::GetSelectedBuilder()
+{
+	return m_builders.begin()->second;
+}

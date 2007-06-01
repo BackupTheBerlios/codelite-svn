@@ -43,6 +43,7 @@ public:
 	void RemoveBuilder(const wxString &name);
 	void GetBuilders(std::list<wxString> &list);
 	BuilderPtr GetBuilder(const wxString &name);
+	BuilderPtr GetSelectedBuilder();
 };
 
 typedef Singleton<BuildManager> BuildManagerST;

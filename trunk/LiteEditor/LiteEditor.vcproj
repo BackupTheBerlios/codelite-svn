@@ -503,6 +503,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\build_page.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\build_page.h"
+				>
+			</File>
+			<File
 				RelativePath=".\compiler_page.cpp"
 				>
 			</File>
