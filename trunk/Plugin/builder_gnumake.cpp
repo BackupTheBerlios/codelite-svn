@@ -23,16 +23,40 @@ bool BuilderGnuMake::Export(const wxString &project, wxString &errMsg)
 	
 	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(project, errMsg);
 	wxArrayString depsArr = proj->GetDependencies();
+
+	wxString fn;
+	fn << WorkspaceST::Get()->GetName() << wxT(".mk");
+	wxFileOutputStream output(fn);
+	wxTextOutputStream text(output);
+
+	text << wxT(".PHONY: clean All\n\n");
+	text << wxT("All:\n");
 	//iterate over the dependencies projects and generate makefile
 	for(size_t i=0; i<depsArr.GetCount(); i++){
 		ProjectPtr dependProj = WorkspaceST::Get()->FindProjectByName(depsArr.Item(i), errMsg);
 		GenerateMakefile(dependProj);
+		text << wxT("\t@cd \"") << dependProj->GetFileName().GetPath() << wxT("\" && ") << wxT("mingw32-make -f ") << dependProj->GetName() << wxT(".mk\n") ;
 	}
 	//generate makefile for the project itself
 	GenerateMakefile(proj);
+	text << wxT("\t@cd \"") << proj->GetFileName().GetPath() << wxT("\" && ") << wxT("mingw32-make -f ") << proj->GetName() << wxT(".mk\n\n") ;
+
+	//create the clean target
+	text << wxT("clean:\n");
+	for(size_t i=0; i<depsArr.GetCount(); i++){
+		ProjectPtr dependProj = WorkspaceST::Get()->FindProjectByName(depsArr.Item(i), errMsg);
+		text << wxT("\t@cd \"") << dependProj->GetFileName().GetPath() << wxT("\" && ") << wxT("mingw32-make -f ") << dependProj->GetName() << wxT(".mk clean\n") ;
+	}
+
+	//generate makefile for the project itself
+	text << wxT("\t@cd \"") << proj->GetFileName().GetPath() << wxT("\" && ") << wxT("mingw32-make -f ") << proj->GetName() << wxT(".mk clean\n") ;
 	return true;
 }
 
+void BuilderGnuMake::GenerateWorkspaceMakefile(wxArrayString &projects)
+{
+	wxUnusedVar(projects);
+}
 
 void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 {
@@ -45,7 +69,7 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 
 	//create new makefile file
 	wxString fn(path);
-	fn << PATH_SEP << wxT("makefile");
+	fn << PATH_SEP << proj->GetName() << wxT(".mk");
 	wxFileOutputStream output(fn);
 
 	if(!output.IsOk())
@@ -366,7 +390,7 @@ wxString BuilderGnuMake::GetBuildCommand(const wxString &project)
 	BuildMatrixPtr matrix = WorkspaceST::Get()->GetBuildMatrix();
 	wxString type = Builder::NormalizeConfigName(matrix->GetSelectedConfigurationName());
 	//TODO:: replace the hardcoded mingw32-make with a configurable value 
-	cmd << wxT("mingw32-make ") << wxT("type=") << type;
+	cmd << wxT("mingw32-make -f ") << WorkspaceST::Get()->GetName() << wxT(".mk type=") << type;
 	return cmd;
 }
 
@@ -378,6 +402,6 @@ wxString BuilderGnuMake::GetCleanCommand(const wxString &project)
 	BuildMatrixPtr matrix = WorkspaceST::Get()->GetBuildMatrix();
 	wxString type = Builder::NormalizeConfigName(matrix->GetSelectedConfigurationName());
 	//TODO:: replace the hardcoded mingw32-make with a configurable value 
-	cmd << wxT("mingw32-make ") << wxT("type=") << type << wxT(" clean");
+	cmd << wxT("mingw32-make -f ") << WorkspaceST::Get()->GetName() << wxT(".mk type=") << type << wxT(" clean");
 	return cmd;
 }

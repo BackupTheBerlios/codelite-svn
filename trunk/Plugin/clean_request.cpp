@@ -25,7 +25,7 @@ void CleanRequest::OnTimer(wxTimerEvent &event)
 	wxString data;
 	m_proc->HasInput(data);
 	if(!data.IsEmpty()){
-		AppendLine(data + wxT("\n"));
+		AppendLine(data);
 	}
 }
 
@@ -34,10 +34,13 @@ void CleanRequest::OnProcessEnd(wxProcessEvent& event)
 	wxUnusedVar(event);
 	wxString data;
 	//read all input before stopping the timer
+	
 	while( m_proc->HasInput(data) ){
+
 		if(!data.IsEmpty()){
-			AppendLine(data + wxT("\n"));
+			AppendLine(data);
 		}
+		data.Clear();
 	}
 
 	m_timer->Stop();
