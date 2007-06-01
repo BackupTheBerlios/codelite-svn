@@ -317,7 +317,11 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 	text << wxT("endif\n\n");
 
 	//create the intermediate directories
+#ifdef __WXGTK__
+	wxMkDir(bldConf->GetIntermediateDirectory().ToAscii(), 0777);
+#else
 	wxMkDir(bldConf->GetIntermediateDirectory());
+#endif
 }
 
 wxString BuilderGnuMake::ParseIncludePath(const wxString &paths)
