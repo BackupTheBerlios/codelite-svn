@@ -376,6 +376,7 @@ bool LEditor::SaveFileAs()
 			return false;
 		}
 		m_fileName = name;
+		delete dlg;
 		return true;
 	}
 	
