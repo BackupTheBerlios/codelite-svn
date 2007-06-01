@@ -1,7 +1,9 @@
 TODO List:
 ==========================
 . Add the ability to build from whitin the IDE
-. Add option to select the make tool
+. When creating new workspace create a directory with the workspace name and place there the .workspace file
+. When creating new project crreat a directory with the project name and place there the .project file 
+. When opening the 'new project' dialog, place the default directory at the workspace path
 . Add posibility to copy project settings when creating new project
 . Add option to create an external database
 . Add option to re-create the symbols database

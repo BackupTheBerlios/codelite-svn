@@ -18,4 +18,5 @@
       <Pattern Name="Warning" FileNameIndex="1" LineNumberIndex="3">(^[\w\.0-9_/]+ *)(:)(\d+)(:)( warning:)(.*?$)</Pattern>
     </Compiler>
   </Compilers>
+  <BuildSystem Name="GNU makefile for g++/gcc" ToolPath="make" Options="-f"/>
 </BuildSettings>
