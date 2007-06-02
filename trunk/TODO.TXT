@@ -1,12 +1,13 @@
 TODO List:
 ==========================
 . Replace File Picker controls in the editor to text control + file dialog (does not work well on Linux)
+. Add option to delete Workspace configuration
+. Add toolbar
 . When creating new workspace create a directory with the workspace name and place there the .workspace file
 . When creating new project crreat a directory with the project name and place there the .project file 
 . Under GTK, create a pool of hidden LEditor windows, since it takes time to create them 
 . When opening the 'new project' dialog, place the default directory at the workspace path
 . Add posibility to copy project settings when creating new project
-. Add option to delete Workspace configuration
 . Add option to create an external database
 . Add option to re-create the symbols database
 . Add menu option to set external database to workspace
@@ -17,7 +18,6 @@ TODO List:
 	 Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
 	 Replace the editor default menu 
 . When using editor, write in status bar the current line and column.
-. Add toolbar
 . Add right click menu to tab
 . When using 'Ctrl+F' (find dialog) or 'Ctrl+Shift+F' (find in files), open the dialog with selected text set in the 
 	'Find What:' field
