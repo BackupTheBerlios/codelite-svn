@@ -106,19 +106,21 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 		return;
 	
 	m_book->SetSelection((size_t)index);
-	wxScintilla *win = static_cast<wxScintilla*>(m_book->GetPage((size_t)index));
-	// enable writing
-	win->SetReadOnly(false);					
-	// add the text
-	win->AddText( text );						
-	// the next 4 lines make sure that the caret is at last line
-	// and is visible
-	win->SetSelectionEnd(win->GetLength());
-	win->SetSelectionStart(win->GetLength());
-	win->SetCurrentPos(win->GetLength());
-	win->EnsureCaretVisible();
-	// enable readonly mode 
-	win->SetReadOnly(true);	
+	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage((size_t)index));
+	if( win ){
+		// enable writing
+		win->SetReadOnly(false);					
+		// add the text
+		win->AddText( text );						
+		// the next 4 lines make sure that the caret is at last line
+		// and is visible
+		win->SetSelectionEnd(win->GetLength());
+		win->SetSelectionStart(win->GetLength());
+		win->SetCurrentPos(win->GetLength());
+		win->EnsureCaretVisible();
+		// enable readonly mode 
+		win->SetReadOnly(true);	
+	}
 }
 
 void OutputPane::Clear()
@@ -149,11 +151,9 @@ int OutputPane::CaptionToIndex(const wxString &caption)
 void OutputPane::OnMouseDClick(wxScintillaEvent &event)
 {
 	long pos = event.GetPosition();
-	int index = CaptionToIndex(OutputPane::FIND_IN_FILES_WIN);
-	if( index == wxNOT_FOUND )
-		return;
+	int fifWinIndex = CaptionToIndex(OutputPane::FIND_IN_FILES_WIN);
 
-	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage((size_t)index));
+	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage(m_book->GetSelection()));
 	if( !win ){
 		return;
 	}
@@ -161,13 +161,21 @@ void OutputPane::OnMouseDClick(wxScintillaEvent &event)
 	int line = win->LineFromPosition(pos);
 	wxString lineText = win->GetLine(line);
 
+	//remove selection
 	win->SetSelectionStart(pos);
 	win->SetSelectionEnd(pos);
+	if( fifWinIndex == m_book->GetSelection() ){
+		//Find in files
+		OnFindInFilesDClick(lineText);
+	}
+}
 
+void OutputPane::OnFindInFilesDClick(const wxString &line)
+{
 	// each line has the format of 
 	// file(line, col): text
-	wxString fileName = lineText.BeforeFirst(wxT('('));
-	wxString strLineNumber = lineText.AfterFirst(wxT('('));
+	wxString fileName = line.BeforeFirst(wxT('('));
+	wxString strLineNumber = line.AfterFirst(wxT('('));
 	strLineNumber = strLineNumber.BeforeFirst(wxT(','));
 	strLineNumber = strLineNumber.Trim();
 	long lineNumber = -1;
@@ -176,5 +184,3 @@ void OutputPane::OnMouseDClick(wxScintillaEvent &event)
 	// open the file in the editor
 	ManagerST::Get()->OpenFile(fileName, wxEmptyString, lineNumber - 1 );
 }
-
-

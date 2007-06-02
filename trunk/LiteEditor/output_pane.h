@@ -41,6 +41,7 @@ public:
 private:
 	void CreateGUIControls();
 	wxScintilla *CreateScintillaPage();
+	void OnFindInFilesDClick(const wxString &line);
 
 public:
 	/**

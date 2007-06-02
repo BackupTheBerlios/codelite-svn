@@ -507,7 +507,7 @@ wxString Manager::GetProjectCwd(const wxString &project) const
 void Manager::ShowOutputPane(wxString focusWin){
 	// make the output pane visible
 	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Output"));
-	if( info.IsOk() ){
+	if( info.IsOk() && !info.IsShown() ){
 		info.Show();
 		Frame::Get()->GetDockingManager().Update();
 	}
@@ -515,7 +515,7 @@ void Manager::ShowOutputPane(wxString focusWin){
 	// set the selection to focus win
 	OutputPane *pane = Frame::Get()->GetOutputPane();
 	int index = pane->CaptionToIndex(focusWin);
-	if( index != wxNOT_FOUND ){
+	if( index != wxNOT_FOUND && index != pane->GetNotebook()->GetSelection()){
 		pane->GetNotebook()->SetSelection((size_t)index);
 	}
 }
@@ -523,7 +523,7 @@ void Manager::ShowOutputPane(wxString focusWin){
 void Manager::ShowWorkspacePane(wxString focusWin){
 	// make the output pane visible
 	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Workspace"));
-	if( info.IsOk() ){
+	if( info.IsOk() && !info.IsShown() ){
 		info.Show();
 		Frame::Get()->GetDockingManager().Update();
 	}
@@ -531,7 +531,7 @@ void Manager::ShowWorkspacePane(wxString focusWin){
 	// set the selection to focus win
 	WorkspacePane *pane = Frame::Get()->GetWorkspacePane();
 	int index = pane->CaptionToIndex(focusWin);
-	if( index != wxNOT_FOUND ){
+	if( index != wxNOT_FOUND && index != pane->GetNotebook()->GetSelection()){
 		pane->GetNotebook()->SetSelection((size_t)index);
 	}
 }
