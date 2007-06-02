@@ -1,12 +1,12 @@
 TODO List:
 ==========================
-. Add the ability to build from whitin the IDE
 . Replace File Picker controls in the editor to text control + file dialog (does not work well on Linux)
 . When creating new workspace create a directory with the workspace name and place there the .workspace file
 . When creating new project crreat a directory with the project name and place there the .project file 
 . Under GTK, create a pool of hidden LEditor windows, since it takes time to create them 
 . When opening the 'new project' dialog, place the default directory at the workspace path
 . Add posibility to copy project settings when creating new project
+. Add option to delete Workspace configuration
 . Add option to create an external database
 . Add option to re-create the symbols database
 . Add menu option to set external database to workspace
