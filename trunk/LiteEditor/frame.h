@@ -113,19 +113,13 @@ protected:
 	void OnFileExistUpdateUI(wxUpdateUIEvent &event);
 	void OnCompleteWordUpdateUI(wxUpdateUIEvent &event);
 	void OnFindInFiles(wxCommandEvent &event);
-	
-	// View menu
 	void OnViewWorkspacePane(wxCommandEvent &event);
 	void OnViewOutputPane(wxCommandEvent &event);
 	void OnViewWorkspacePaneUI(wxUpdateUIEvent &event);
 	void OnViewOutputPaneUI(wxUpdateUIEvent &event);
 	void OnViewOptions(wxCommandEvent &event);
 	void OnTogglePanes(wxCommandEvent &event);
-
-	// New Dialog 'Create' button pressed
 	void OnNewDlgCreate(wxCommandEvent &event);
-	
-	// Project Menu
 	void OnProjectNewWorkspace(wxCommandEvent &event);
 	void OnProjectNewProject(wxCommandEvent &event);
 	void OnCreateWorkspace(wxCommandEvent &event);
@@ -134,12 +128,14 @@ protected:
 	void OnWorkspaceOpen(wxUpdateUIEvent &event);
 	void OnConfigurationManager(wxCommandEvent &event);
 	void OnAddEnvironmentVariable(wxCommandEvent &event);
-
 	void OnAdvanceSettings(wxCommandEvent &event);
-
-	// tags menu
 	void OnCtagsOptions(wxCommandEvent &event);
-
+	void OnBuildProject(wxCommandEvent &event);
+	void OnBuildProjectUI(wxUpdateUIEvent &event);
+	void OnStopBuild(wxCommandEvent &event);
+	void OnStopBuildUI(wxUpdateUIEvent &event);
+	void OnCleanProject(wxCommandEvent &event);
+	void OnCleanProjectUI(wxUpdateUIEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);
@@ -148,7 +144,6 @@ protected:
 
 	// Any class wishing to process wxWindows events must use this macro
 	DECLARE_EVENT_TABLE()
-
 };
 
 #endif // LITEEDITOR_FRAME_H

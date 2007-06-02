@@ -360,6 +360,11 @@ public:
 	 */
 	void StopBuild();
 
+	/**
+	 * return true if a compilation is in process (either clean or build)
+	 */
+	bool IsBuildInProgress() const;
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

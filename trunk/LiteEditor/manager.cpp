@@ -794,3 +794,8 @@ void Manager::StopBuild()
 		m_compileRequest->Stop();
 	}
 }
+
+bool Manager::IsBuildInProgress() const
+{
+	return (m_cleanRequest && m_cleanRequest->IsBusy()) || (m_compileRequest && m_compileRequest->IsBusy());
+}

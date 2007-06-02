@@ -29,27 +29,19 @@
 //----------------------------------------------------------------
 
 BEGIN_EVENT_TABLE(Frame, wxFrame)
-	// Search Thread handler
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_MATCHFOUND, Frame::OnSearchThread)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHCANCELED, Frame::OnSearchThread)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHEND, Frame::OnSearchThread)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHSTARTED, Frame::OnSearchThread)
-
-	// build messages
 	EVT_COMMAND(wxID_ANY, wxEVT_BUILD_ADDLINE, Frame::OnBuildEvent)
 	EVT_COMMAND(wxID_ANY, wxEVT_BUILD_STARTED, Frame::OnBuildEvent)
-
-	// New dialog handlers
 	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE, Frame::OnNewDlgCreate)
-
-	// Handler menu events
 	EVT_MENU(wxID_EXIT, Frame::OnQuit)
 	EVT_MENU(wxID_SAVE, Frame::OnSave)
 	EVT_MENU(wxID_SAVEAS, Frame::OnSaveAs)
 	EVT_MENU(XRCID("about"), Frame::OnAbout)
 	EVT_MENU(wxID_NEW, Frame::OnFileNew)
 	EVT_MENU(wxID_OPEN, Frame::OnFileOpen)
-	
 	EVT_MENU(wxID_CLOSE, Frame::OnFileClose)
 	EVT_MENU(XRCID("save_all"), Frame::OnFileSaveAll)
 	EVT_MENU(wxID_CUT, Frame::DispatchCommandEvent)
@@ -72,13 +64,11 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("removeall_bookmarks"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("goto_definition"), Frame::DispatchCommandEvent)
 	EVT_MENU(XRCID("goto_previous_definition"), Frame::DispatchCommandEvent)
-
 	EVT_MENU(XRCID("find_in_files"), Frame::OnFindInFiles)
 	EVT_MENU(XRCID("new_workspace"), Frame::OnProjectNewWorkspace)
 	EVT_MENU(XRCID("new_project"), Frame::OnProjectNewProject)
 	EVT_MENU(XRCID("switch_to_workspace"), Frame::OnSwitchWorkspace)
 	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
-
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CLOSE, Frame::OnFileExistUpdateUI)
@@ -126,6 +116,13 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("add_envvar"), Frame::OnWorkspaceOpen)
 	EVT_MENU(XRCID("add_envvar"), Frame::OnAddEnvironmentVariable)
 	EVT_MENU(XRCID("advance_settings"), Frame::OnAdvanceSettings)
+
+	EVT_MENU(XRCID("build_active_project"), Frame::OnBuildProject)
+	EVT_MENU(XRCID("clean_active_project"), Frame::OnCleanProject)
+	EVT_MENU(XRCID("stop_active_project_build"), Frame::OnStopBuild)
+	EVT_UPDATE_UI(XRCID("stop_active_project_build"), Frame::OnStopBuildUI)
+	EVT_UPDATE_UI(XRCID("clean_active_project"), Frame::OnCleanProjectUI)
+	EVT_UPDATE_UI(XRCID("build_active_project"), Frame::OnBuildProjectUI)
 
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
@@ -826,4 +823,41 @@ void Frame::OnBuildEvent(wxCommandEvent &event)
 	}else if(event.GetEventType() == wxEVT_BUILD_ADDLINE){
 		m_outputPane->AppendText(OutputPane::BUILD_WIN, event.GetString() + wxT("\n"));
 	}
+}
+
+// Build operations
+void Frame::OnBuildProject(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	ManagerST::Get()->BuildProject(ManagerST::Get()->GetActiveProjectName());
+}
+
+void Frame::OnBuildProjectUI(wxUpdateUIEvent &event)
+{
+	bool enable = !ManagerST::Get()->IsBuildInProgress() && !ManagerST::Get()->GetActiveProjectName().IsEmpty();
+	event.Enable(enable);
+}
+
+void Frame::OnStopBuildUI(wxUpdateUIEvent &event)
+{
+	bool enable = ManagerST::Get()->IsBuildInProgress();
+	event.Enable(enable);
+}
+
+void Frame::OnStopBuild(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	ManagerST::Get()->StopBuild();
+}
+
+void Frame::OnCleanProject(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	ManagerST::Get()->CleanProject(ManagerST::Get()->GetActiveProjectName());
+}
+
+void Frame::OnCleanProjectUI(wxUpdateUIEvent &event)
+{
+	bool enable = !ManagerST::Get()->IsBuildInProgress() && !ManagerST::Get()->GetActiveProjectName().IsEmpty();
+	event.Enable(enable);
 }
