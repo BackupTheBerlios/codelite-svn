@@ -30,7 +30,6 @@ private:
 	void CreateObjectList(ProjectPtr proj, wxTextOutputStream &text);
 	void CreateTargets(const wxString &type, BuildConfigPtr bldConf, wxTextOutputStream &text);
 	void CreateBuildEventRules(BuildConfigPtr bldConf, wxTextOutputStream &text);
-	void GenerateWorkspaceMakefile(wxArrayString &projects);
 
 	wxString ParseIncludePath(const wxString &paths);
 	wxString ParseLibPath(const wxString &paths);

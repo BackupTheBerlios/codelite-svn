@@ -34,31 +34,42 @@ bool BuilderGnuMake::Export(const wxString &project, wxString &errMsg)
 	text << wxT("All:\n");
 	//iterate over the dependencies projects and generate makefile
 	wxString buildTool = BuildManagerST::Get()->GetSelectedBuilder()->GetBuildToolCommand();
+	//generate the makefile for the selected workspace configuration
+	BuildMatrixPtr matrix = WorkspaceST::Get()->GetBuildMatrix();
+	wxString workspaceSelConf = matrix->GetSelectedConfigurationName();
 
+	wxString args;
 	for(size_t i=0; i<depsArr.GetCount(); i++){
 		ProjectPtr dependProj = WorkspaceST::Get()->FindProjectByName(depsArr.Item(i), errMsg);
 		GenerateMakefile(dependProj);
-		text << wxT("\t@cd \"") << dependProj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << dependProj->GetName() << wxT(".mk\n") ;
+		wxString projectSelConf = matrix->GetProjectSelectedConf(workspaceSelConf, dependProj->GetName());
+		args = wxT("type=");
+		args << NormalizeConfigName(projectSelConf) << wxT(" ");
+		text << wxT("\t@cd \"") << dependProj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << dependProj->GetName() << wxT(".mk ") << args << wxT("\n");
 	}
 	//generate makefile for the project itself
 	GenerateMakefile(proj);
-	text << wxT("\t@cd \"") << proj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << proj->GetName() << wxT(".mk\n\n") ;
+	wxString projectSelConf = matrix->GetProjectSelectedConf(workspaceSelConf, project);
+	args = wxT("type=");
+	args << NormalizeConfigName(projectSelConf) << wxT(" ");
+	text << wxT("\t@cd \"") << proj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << proj->GetName() << wxT(".mk ") << args << wxT("\n");
 
 	//create the clean target
 	text << wxT("clean:\n");
 	for(size_t i=0; i<depsArr.GetCount(); i++){
+		wxString projectSelConf = matrix->GetProjectSelectedConf(workspaceSelConf, depsArr.Item(i));
+		args = wxT("type=");
+		args << NormalizeConfigName(projectSelConf) << wxT(" ");
 		ProjectPtr dependProj = WorkspaceST::Get()->FindProjectByName(depsArr.Item(i), errMsg);
-		text << wxT("\t@cd \"") << dependProj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << dependProj->GetName() << wxT(".mk clean\n") ;
+		text << wxT("\t@cd \"") << dependProj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << dependProj->GetName() << wxT(".mk ") << args << wxT(" clean\n") ;
 	}
 
 	//generate makefile for the project itself
-	text << wxT("\t@cd \"") << proj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << proj->GetName() << wxT(".mk clean\n") ;
+	projectSelConf = matrix->GetProjectSelectedConf(workspaceSelConf, project);
+	args = wxT("type=");
+	args << NormalizeConfigName(projectSelConf) << wxT(" ");
+	text << wxT("\t@cd \"") << proj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << proj->GetName() << wxT(".mk ") << args << wxT(" clean\n") ;
 	return true;
-}
-
-void BuilderGnuMake::GenerateWorkspaceMakefile(wxArrayString &projects)
-{
-	wxUnusedVar(projects);
 }
 
 void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
@@ -204,7 +215,14 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 			text << wxT("\t") << wxT("-if exist ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(" del ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT("\n");
 		}
 		//delete the output file as well
+		wxString exeExt(wxEmptyString);
+		if(proj->GetSettings()->GetProjectType() == Project::EXECUTABLE){
+			//under windows, g++ automatically adds the .exe extension to executable
+			//make sure we deletes it as well
+			exeExt = wxT(".exe");
+		}
 		text << wxT("\t") << wxT("-if exist ") << wxT("$(OutputFile)") << wxT(" del ") << wxT("$(OutputFile)") << wxT("\n");;
+		text << wxT("\t") << wxT("-if exist ") << wxT("$(OutputFile)") << exeExt << wxT(" del ") << wxT("$(OutputFile)") << exeExt << wxT("\n");;
 	}else{
 		//linux 
 		for(size_t i=0; i<files.size(); i++){

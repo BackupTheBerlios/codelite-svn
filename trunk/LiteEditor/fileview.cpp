@@ -512,12 +512,14 @@ void FileViewTree::OnProjectProperties(wxCommandEvent & WXUNUSED(event))
 {
 	wxTreeItemId item = GetSelection();
 
-	wxString title(GetItemText(item));
+	wxString projectName(GetItemText(item));
+	wxString title(projectName);
 	title << wxT(" Project Settings");
 
 	//open the project properties dialog
 	BuildMatrixPtr matrix = ManagerST::Get()->GetWorkspaceBuildMatrix();
-	ProjectSettingsDlg *dlg = new ProjectSettingsDlg(this, matrix->GetSelectedConfigurationName(), GetItemText(item), title);
+	//find the project configuration name that matches the workspace selected configuration
+	ProjectSettingsDlg *dlg = new ProjectSettingsDlg(this, matrix->GetProjectSelectedConf(matrix->GetSelectedConfigurationName(), projectName), projectName, title);
 	dlg->ShowModal();
 	dlg->Destroy();
 }

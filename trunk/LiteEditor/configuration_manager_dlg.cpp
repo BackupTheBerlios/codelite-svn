@@ -211,6 +211,9 @@ void ConfigurationManagerDlg::OnButtonNew(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 	wxTextEntryDialog *dlg = new wxTextEntryDialog(this, wxT("Enter New Configuration Name:"), wxT("New Configuration"));
+	wxTextValidator validator(wxFILTER_ALPHANUMERIC);
+	dlg->SetTextValidator(validator);
+
 	if(dlg->ShowModal() == wxID_OK){
 		wxString value = dlg->GetValue();
 		TrimString(value);
