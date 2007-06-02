@@ -53,6 +53,11 @@ Manager::~Manager(void)
 		delete m_cleanRequest;
 		m_cleanRequest = NULL;
 	}
+	if(m_compileRequest){
+		delete m_compileRequest;
+		m_compileRequest = NULL;
+	}
+	
 }
 
 wxFrame *Manager::GetMainFrame()
@@ -754,6 +759,10 @@ void Manager::PopupProjectDependsDlg(const wxString &projectName)
 
 void Manager::CleanProject(const wxString &projectName)
 {
+	if( m_cleanRequest && m_cleanRequest->IsBusy() ){
+		return;
+	}
+
 	if( m_cleanRequest ){
 		delete m_cleanRequest;
 	}
@@ -764,5 +773,24 @@ void Manager::CleanProject(const wxString &projectName)
 
 void Manager::BuildProject(const wxString &projectName)
 {
-	wxUnusedVar(projectName);
+	if( m_compileRequest && m_compileRequest->IsBusy() ){
+		return;
+	}
+
+	if( m_compileRequest ){
+		delete m_compileRequest;
+	}
+	m_compileRequest = new CompileRequest(GetMainFrame(), projectName);
+	m_compileRequest->Process();
+}
+
+void Manager::StopBuild()
+{
+	if( m_compileRequest && !m_compileRequest->IsBusy() ){
+		return;
+	}
+
+	if( m_compileRequest ){
+		m_compileRequest->Stop();
+	}
 }

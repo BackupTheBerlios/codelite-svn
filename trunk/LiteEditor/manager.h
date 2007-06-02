@@ -31,7 +31,7 @@ class Manager
 	friend class Singleton<Manager>;
 	wxString  m_startupDir;
 	CleanRequest *m_cleanRequest;
-	CompileReqeust *m_compileRequest;
+	CompileRequest *m_compileRequest;
 
 public:
 	/*!
@@ -354,6 +354,11 @@ public:
 	 * given project
 	 */
 	void BuildProject(const wxString &project);
+
+	/** 
+	 * Stop current build process
+	 */
+	void StopBuild();
 
 protected:
 	Manager(void);

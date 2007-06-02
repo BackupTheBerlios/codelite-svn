@@ -29,6 +29,8 @@ void FileViewTree::ConnectEvents()
 	Connect(XRCID("save_as_template"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnSaveAsTemplate), NULL, this);
 	Connect(XRCID("build_order"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnBuildOrder), NULL, this);
 	Connect(XRCID("clean_project"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnClean), NULL, this);
+	Connect(XRCID("build_project"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnBuild), NULL, this);
+	Connect(XRCID("stop_build"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnStopBuild), NULL, this);
 }
 
 FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -575,3 +577,18 @@ void FileViewTree::OnClean(wxCommandEvent &event)
 	}
 }
 
+void FileViewTree::OnBuild(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	wxTreeItemId item = GetSelection();
+	if(item.IsOk()){
+		wxString projectName = GetItemText(item);
+		ManagerST::Get()->BuildProject(projectName);
+	}
+}
+
+void FileViewTree::OnStopBuild(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	ManagerST::Get()->StopBuild();
+}

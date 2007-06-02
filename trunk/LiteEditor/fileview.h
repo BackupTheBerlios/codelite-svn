@@ -79,6 +79,9 @@ protected:
 	virtual void OnSaveAsTemplate(wxCommandEvent &event);
 	virtual void OnBuildOrder(wxCommandEvent &event);
 	virtual void OnClean(wxCommandEvent &event);
+	virtual void OnBuild(wxCommandEvent &event);
+	virtual void OnStopBuild(wxCommandEvent &event);
+
 
 	// Tree sorting
 	virtual int OnCompareItems(const wxTreeItemId& item1, const wxTreeItemId& item2);
