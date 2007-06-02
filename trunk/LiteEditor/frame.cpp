@@ -179,7 +179,6 @@ void Frame::CreateGUIControls(void)
 
 	// tell wxAuiManager to manage this frame
 	m_mgr.SetManagedWindow(this);
-	m_mgr.SetFlags(m_mgr.GetFlags() | wxAUI_MGR_ALLOW_ACTIVE_PANE);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);
 
 	// Load the menubar from XRC and set this frame's menubar to it.
@@ -819,14 +818,12 @@ void Frame::OnBuildEvent(wxCommandEvent &event)
 {
 	// make sure that the output pane is visible and selection
 	// is set to the 'Find In Files' tab
+	m_outputPane->CanFocus(true);
 	ManagerST::Get()->ShowOutputPane(OutputPane::BUILD_WIN);
-	m_outputPane->CanFocus(false);
 	if(event.GetEventType() == wxEVT_BUILD_STARTED){
 		m_outputPane->Clear();
 		m_outputPane->AppendText(OutputPane::BUILD_WIN, wxT("Build Started...\n"));
 	}else if(event.GetEventType() == wxEVT_BUILD_ADDLINE){
 		m_outputPane->AppendText(OutputPane::BUILD_WIN, event.GetString() + wxT("\n"));
 	}
-	
-	m_outputPane->CanFocus(true);
 }
