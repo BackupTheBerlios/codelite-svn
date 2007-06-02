@@ -1,15 +1,10 @@
 #ifndef CLEAN_REQUEST_H
 #define CLEAN_REQUEST_H
 #include "compiler_action.h"
-#include "wx/timer.h"
 
-class CleanRequest : public wxEvtHandler, public CompilerAction {
+
+class CleanRequest : public CompilerAction {
 	wxString m_project;
-	wxTimer *m_timer;
-
-protected:
-	void OnTimer(wxTimerEvent &event);
-	void OnProcessEnd(wxProcessEvent& event);
 
 public:
 	/**

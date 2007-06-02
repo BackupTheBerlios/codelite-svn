@@ -113,6 +113,11 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 	//-----------------------------------------------------------
 	// create the build targets
 	//-----------------------------------------------------------
+	text << wxT("##\n");
+	text << wxT("## Main Build Tragets \n");
+	text << wxT("##\n");
+	text << wxT("BuildTarget: $(Target)\n\n");
+
 	bldConf = settings->GetFirstBuildConfiguration(cookie);
 	while(bldConf){
 		CreateTargets(settings->GetProjectType(), bldConf, text);
@@ -165,7 +170,7 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 	text << wxT("## Startup message \n");
 	text << wxT("##\n");
 	text << wxT("StartMsg:\n");
-	text << wxT("\t@echo Building project: ") << proj->GetName() << wxT("\n");
+	text << wxT("\t@echo ----------Building project: ") << proj->GetName() << wxT("----------\n");
 	text << wxT("\n\n");
 
 	//create rule per object
@@ -180,7 +185,7 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 		wxString objectName = files[i].GetName() << wxT("$(ObjectSuffix)");
 		wxString fileName   = files[i].GetFullPath();
 		text << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(": ") << fileName << wxT("\n");
-		text << wxT("\t") << wxT("$(CompilerName) $(CmpOptions) $(SourceSwitch) ") << fileName << wxT(" $(OutputSwitch) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT("\n\n");
+		text << wxT("\t") << wxT("$(CompilerName) $(CmpOptions) $(SourceSwitch) ") << fileName << wxT(" $(OutputSwitch) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(" $(IncludePath) \n\n");
 	}
 
 	//add clean target
@@ -221,9 +226,6 @@ void BuilderGnuMake::CreateTargets(const wxString &type, BuildConfigPtr bldConf,
 	wxString name = bldConf->GetName();
 	name = NormalizeConfigName(name);
 
-	text << wxT("##\n");
-	text << wxT("## Main Build Tragets \n");
-	text << wxT("##\n");
 	text << name << wxT(": StartMsg PreBuild_") << name << wxT(" ") << wxT("$(Objects) ") << name << wxT("_link ") << wxT("PostBuild_") << name << wxT("\n\n");
 	text << name << wxT("_link:\n");
 	if(type == Project::STATIC_LIBRARY){
@@ -314,6 +316,7 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 	text << wxT("IncludePath=") << ParseIncludePath(bldConf->GetIncludePath()) << wxT("\n");
 	text << wxT("Libs=") << ParseLibs(bldConf->GetLibraries()) << wxT("\n");
 	text << wxT("LibPath=") << ParseLibPath(bldConf->GetLibPath()) << wxT("\n");
+	text << wxT("Target=") << NormalizeConfigName(bldConf->GetName()) << wxT("\n");
 	text << wxT("endif\n\n");
 
 	//create the intermediate directories

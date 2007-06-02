@@ -2,11 +2,9 @@
 #define COMPILE_REQUEST_H
 
 #include "compiler_action.h"
-#include "wx/timer.h"
 
-class CompileReqeust : public wxEvtHandler, public CompilerAction {
+class CompileRequest : public CompilerAction {
 	wxString m_project;
-	wxTimer *m_timer;
 
 public:
 	/**
@@ -15,13 +13,16 @@ public:
 	 * \param projectName the selected project to build
 	 * \param configurationName the workspace selected configuration
 	 */
-	CompileReqeust(wxEvtHandler *owner, const wxString &projectName);
+	CompileRequest(wxEvtHandler *owner, const wxString &projectName);
 
 	///dtor
-	virtual ~CompileReqeust();
+	virtual ~CompileRequest();
 
 	//process the request
 	virtual void Process();
+
+	//setters/getters
+	const wxString &GetProjectName() const { return m_project; }
 };
 
 #endif // COMPILE_REQUEST_H
