@@ -1,5 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiteEditor", "LiteEditor\LiteEditor.vcproj", "{33133335-3996-408B-81E2-2FA20E5E4F64}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E8E7D604-D0FC-423A-81EF-70C182B40C14} = {E8E7D604-D0FC-423A-81EF-70C182B40C14}
@@ -16,18 +15,68 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiteEditor", "LiteEditor\Li
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CodeLite", "CodeLite\CodeLite.vcproj", "{E8E7D604-D0FC-423A-81EF-70C182B40C14}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxFlatNotebook", "sdk\wxflatnotebook\build\wxFlatNotebook\wxFlatNotebook.vcproj", "{F9550C0D-30DA-45C5-A08F-C41B14495A08}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxsqlite3", "sdk\wxsqlite3\build\wxsqlite3_wxsqlite3.vcproj", "{DC3A9951-C351-4C62-BF0C-37F7A2178999}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxscintilla", "sdk\wxscintilla\build\wxscintilla.vcproj", "{C441CED4-C175-4944-B4AC-775A0568ED2F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxflatmenu", "sdk\wxflatmenu\wxflatmenu\wxflatmenu.vcproj", "{AED4ECE5-FB94-4ABF-AC23-610876F65B56}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDK", "Plugin\Plugin.vcproj", "{08C385A7-9128-4789-B6AE-93B8B1D3B05B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug Unicode = Debug Unicode
+		Release Unicode = Release Unicode
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Debug Unicode.ActiveCfg = Debug Unicode|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Debug Unicode.Build.0 = Debug Unicode|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release Unicode.ActiveCfg = Release Unicode|Win32
+		{33133335-3996-408B-81E2-2FA20E5E4F64}.Release Unicode.Build.0 = Release Unicode|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Debug Unicode.ActiveCfg = Debug Unicode|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Debug Unicode.Build.0 = Debug Unicode|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release Unicode.ActiveCfg = Release Unicode|Win32
+		{E8E7D604-D0FC-423A-81EF-70C182B40C14}.Release Unicode.Build.0 = Release Unicode|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Debug Unicode.ActiveCfg = Debug Unicode|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Debug Unicode.Build.0 = Debug Unicode|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Release Unicode.ActiveCfg = Release Unicode|Win32
+		{F9550C0D-30DA-45C5-A08F-C41B14495A08}.Release Unicode.Build.0 = Release Unicode|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Debug Unicode.ActiveCfg = Unicode Debug Multilib|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Debug Unicode.Build.0 = Unicode Debug Multilib|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Release Unicode.ActiveCfg = Unicode Release Multilib|Win32
+		{DC3A9951-C351-4C62-BF0C-37F7A2178999}.Release Unicode.Build.0 = Unicode Release Multilib|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Debug Unicode.ActiveCfg = DebugUnicode|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Debug Unicode.Build.0 = DebugUnicode|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Release Unicode.ActiveCfg = ReleaseUnicode|Win32
+		{C441CED4-C175-4944-B4AC-775A0568ED2F}.Release Unicode.Build.0 = ReleaseUnicode|Win32
+		{AED4ECE5-FB94-4ABF-AC23-610876F65B56}.Debug Unicode.ActiveCfg = DebugUnicode|Win32
+		{AED4ECE5-FB94-4ABF-AC23-610876F65B56}.Debug Unicode.Build.0 = DebugUnicode|Win32
+		{AED4ECE5-FB94-4ABF-AC23-610876F65B56}.Release Unicode.ActiveCfg = Release Unicode|Win32
+		{AED4ECE5-FB94-4ABF-AC23-610876F65B56}.Release Unicode.Build.0 = Release Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug Unicode.ActiveCfg = Debug Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Debug Unicode.Build.0 = Debug Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release Unicode.ActiveCfg = Release Unicode|Win32
+		{08C385A7-9128-4789-B6AE-93B8B1D3B05B}.Release Unicode.Build.0 = Release Unicode|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Unicode|Win32 = Debug Unicode|Win32
 		Release Unicode|Win32 = Release Unicode|Win32

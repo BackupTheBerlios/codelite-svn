@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1255"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="CodeLite"
 	ProjectGUID="{E8E7D604-D0FC-423A-81EF-70C182B40C14}"
 	Keyword="Win32Proj"

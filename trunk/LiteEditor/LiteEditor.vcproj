@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="LiteEditor"
 	ProjectGUID="{33133335-3996-408B-81E2-2FA20E5E4F64}"
 	RootNamespace="LiteEditor"

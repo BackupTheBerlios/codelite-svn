@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="SDK"
 	ProjectGUID="{08C385A7-9128-4789-B6AE-93B8B1D3B05B}"
 	RootNamespace="Plugin"
