@@ -815,9 +815,23 @@ void Manager::ExecuteNoDebug(const wxString &projectName)
 
 	//change directory to the working directory
 	DirSaver ds;
-	::wxSetWorkingDirectory(wd);
-	
-	//execute the command line
-	wxExecute(execLine, wxEXEC_ASYNC, NULL);
-}
 
+	//when executing a project, the we first set the working directory to the 
+	//project directory
+	ProjectPtr proj = GetProject(projectName);
+	::wxSetWorkingDirectory(proj->GetFileName().GetPath());
+	
+	//now set the working directory according to working directory field from the 
+	//project settings
+	::wxSetWorkingDirectory(wd);
+
+	//execute the command line
+#ifdef __WXMSW__
+	wxExecute(execLine, wxEXEC_ASYNC, NULL);
+#else
+	//under GTK, spawn xterm window that will execute our program
+	wxString gtkExecLine(wxT("xterm -T "));
+	gtkExecLine << cmd << wxT(" -e ") << execLine;
+	wxExecute(gtkExecLine, wxEXEC_ASYNC, NULL);
+#endif
+}
