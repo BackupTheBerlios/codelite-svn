@@ -8,7 +8,7 @@ class wxTextCtrl;
 class wxCheckBox;
 class wxButton;
 class wxStaticText;
-class wxDirPickerCtrl;
+class DirPicker;
 class wxComboBox;
 
 DECLARE_EVENT_TYPE(wxEVT_FIF_FIND, -1)
@@ -26,7 +26,7 @@ class FindInFilesDialog : public wxDialog
 	wxCheckBox *m_matchCase;
 	wxCheckBox *m_matchWholeWord;
 	wxCheckBox *m_regualrExpression;
-	wxDirPickerCtrl *m_dirPicker;
+	DirPicker *m_dirPicker;
 	wxComboBox *m_fileTypes;
 
 	// Buttons

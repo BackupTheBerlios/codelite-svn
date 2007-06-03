@@ -15,9 +15,9 @@ class wxTextCtrl;
 class wxCheckBox;
 class wxButton;
 class wxStaticText;
-class wxDirPickerCtrl;
+class DirPicker;
 class wxComboBox;
-class wxFilePickerCtrl;
+class FilePicker;
 class wxFlatNotebook;
 class wxListBox;
 
@@ -39,11 +39,11 @@ class NewDlg : public wxDialog
 
 	// Options
 	wxTextCtrl *m_name;
-	wxDirPickerCtrl *m_pathPicker;
-	wxFilePickerCtrl *m_tagsPicker;
+	DirPicker *m_pathPicker;
+	FilePicker *m_tagsPicker;
 
 	wxTextCtrl *m_projName;
-	wxDirPickerCtrl *m_projPathPicker;
+	DirPicker *m_projPathPicker;
 	wxListBox *m_projTypes;
 	wxChoice *m_choiceCmpType;
 	wxChoice *m_copySettings;

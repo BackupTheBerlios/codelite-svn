@@ -12,7 +12,7 @@
 
 #include <wx/choicebk.h>
 #include "wx/panel.h"
-#include <wx/filepicker.h>
+#include "filepicker.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -39,7 +39,7 @@ public:
 
 class BuildSystemPage : public wxPanel {
 	wxStaticText* m_staticText17;
-	wxFilePickerCtrl* m_filePicker;
+	FilePicker* m_filePicker;
 	wxStaticText* m_staticText18;
 	wxTextCtrl* m_textBuildToolOptions;
 	wxString m_name;

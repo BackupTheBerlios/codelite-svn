@@ -13,7 +13,8 @@
 #include <wx/choice.h>
 #include <wx/button.h>
 #include <wx/statline.h>
-#include <wx/filepicker.h>
+#include "filepicker.h"
+#include "dirpicker.h"
 #include <wx/panel.h>
 #include <wx/gbsizer.h>
 #include <wx/checklst.h>
@@ -41,9 +42,9 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxStaticText* m_staticText191;
 		wxChoice* m_choiceCompilerType;
 		wxStaticText* m_staticText15;
-		wxFilePickerCtrl* m_outputFilePicker;
+		FilePicker* m_outputFilePicker;
 		wxStaticText* m_staticText16;
-		wxDirPickerCtrl* m_intermediateDirPicker;
+		DirPicker* m_intermediateDirPicker;
 		wxStaticText* m_staticText17;
 		wxStaticLine* m_staticline5;
 		wxStaticText* m_staticText18;
@@ -51,7 +52,7 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxStaticText* m_staticText19;
 		wxTextCtrl* m_textCommandArguments;
 		wxStaticText* m_staticText20;
-		wxDirPickerCtrl* m_workingDirPicker;
+		DirPicker* m_workingDirPicker;
 		wxPanel* m_compilerPage;
 		wxCheckBox* m_checkCompilerNeeded;
 		wxStaticLine* m_staticline7;

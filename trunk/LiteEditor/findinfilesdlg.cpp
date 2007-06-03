@@ -4,10 +4,11 @@
 #include <wx/button.h>
 #include <wx/stattext.h>
 #include "search_thread.h"
-#include <wx/filepicker.h>
 #include <wx/collpane.h>
 #include <wx/statline.h>
 #include <wx/combobox.h>
+#include "dirpicker.h"
+#include "wx/sizer.h"
 
 DEFINE_EVENT_TYPE(wxEVT_FIF_FIND)
 DEFINE_EVENT_TYPE(wxEVT_FIF_STOP)
@@ -78,7 +79,7 @@ void FindInFilesDialog::CreateGUIControls()
 	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Look In:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	mainSizer->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
 
-	m_dirPicker = new wxDirPickerCtrl(this, wxID_ANY, wxEmptyString, wxT("Look In"), wxDefaultPosition, wxDefaultSize, wxDIRP_USE_TEXTCTRL  | wxDIRP_DIR_MUST_EXIST); 
+	m_dirPicker = new DirPicker(this, wxID_ANY, wxT("Browse"));
 	mainSizer->Add(m_dirPicker, 0, wxEXPAND | wxALL, 5);
 
 	// Add the options

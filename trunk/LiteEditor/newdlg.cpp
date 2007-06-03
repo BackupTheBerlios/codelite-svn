@@ -3,7 +3,8 @@
 #include <wx/checkbox.h>
 #include <wx/button.h>
 #include <wx/stattext.h>
-#include <wx/filepicker.h>
+#include "filepicker.h"
+#include "dirpicker.h"
 #include <wx/statline.h>
 #include <wx/msgdlg.h>
 #include <wx/wxFlatNotebook/wxFlatNotebook.h>
@@ -114,7 +115,7 @@ wxWindow *NewDlg::CreateWorkspacePage()
 	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("Workspace Path:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	panelSizer->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
 
-	m_pathPicker = new wxDirPickerCtrl(panel, wxID_ANY, wxEmptyString, wxT("Choose directory:"), wxDefaultPosition, wxDefaultSize, wxDIRP_USE_TEXTCTRL); 
+	m_pathPicker = new DirPicker(panel);
 	panelSizer->Add(m_pathPicker, 0, wxEXPAND | wxALL, 5);
 
 	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("External Tags Database:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
@@ -123,9 +124,8 @@ wxWindow *NewDlg::CreateWorkspacePage()
 	const wxString WildCard(wxT("Code Lite Tags file (*.tags)|*.tags|")
 							wxT("All Files (*.*)|*.*"));
 
-	m_tagsPicker = new wxFilePickerCtrl(panel, wxID_ANY, wxEmptyString, wxT("Choose directory:"), WildCard, wxDefaultPosition, wxDefaultSize, wxFLP_USE_TEXTCTRL  | wxFLP_OPEN | wxFLP_FILE_MUST_EXIST); 
+	m_tagsPicker = new FilePicker(panel, wxID_ANY, wxEmptyString, wxT("Select a file:"), WildCard, wxT("Browse"), wxDefaultPosition, wxDefaultSize, wxFD_OPEN|wxFD_FILE_MUST_EXIST);
 	panelSizer->Add(m_tagsPicker, 0, wxEXPAND | wxALL, 5);
-
 	
 	wxStaticBoxSizer *vSz = new wxStaticBoxSizer( new wxStaticBox( panel, -1, wxT("CTags:") ), wxHORIZONTAL );
 	panelSizer->Add(vSz, 0, wxEXPAND | wxALL, 5);
@@ -173,7 +173,7 @@ wxWindow *NewDlg::CreateProjectPage()
 	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("Project Path:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	panelSizer->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
 
-	m_projPathPicker = new wxDirPickerCtrl(panel, wxID_ANY, wxEmptyString, wxT("Choose directory:"), wxDefaultPosition, wxDefaultSize, wxDIRP_USE_TEXTCTRL); 
+	m_projPathPicker = new DirPicker(panel);
 	panelSizer->Add(m_projPathPicker, 0, wxEXPAND | wxALL, 5);
 	
 	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("Project Compiler:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );

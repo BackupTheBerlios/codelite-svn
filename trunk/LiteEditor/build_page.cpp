@@ -85,7 +85,7 @@ BuildSystemPage::BuildSystemPage(wxWindow *parent, wxString name)
 	m_staticText17 = new wxStaticText( this, wxID_ANY, wxT("Build Tool:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_staticText17, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_filePicker = new wxFilePickerCtrl( this, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_OPEN | wxFLP_USE_TEXTCTRL );
+	m_filePicker = new FilePicker(this);
 	fgSizer4->Add( m_filePicker, 1, wxALL|wxEXPAND, 5 );
 	
 	m_staticText18 = new wxStaticText( this, wxID_ANY, wxT("Build Tool Switches:"), wxDefaultPosition, wxDefaultSize, 0 );
