@@ -1,11 +1,11 @@
 TODO List:
 ==========================
-. Replace File Picker controls in the editor to text control + file dialog (does not work well on Linux)
-. Add option to delete Workspace configuration
+. Add option to delete Workspace build configuration
 . Add toolbar
 . When creating new workspace create a directory with the workspace name and place there the .workspace file
 . When creating new project crreat a directory with the project name and place there the .project file 
 . Under GTK, create a pool of hidden LEditor windows, since it takes time to create them 
+. Build order dialog - add button to move up/down items
 . When opening the 'new project' dialog, place the default directory at the workspace path
 . Add posibility to copy project settings when creating new project
 . Add option to create an external database
