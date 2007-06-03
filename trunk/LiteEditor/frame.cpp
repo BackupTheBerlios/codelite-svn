@@ -123,6 +123,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("stop_active_project_build"), Frame::OnStopBuildUI)
 	EVT_UPDATE_UI(XRCID("clean_active_project"), Frame::OnCleanProjectUI)
 	EVT_UPDATE_UI(XRCID("build_active_project"), Frame::OnBuildProjectUI)
+	EVT_MENU(XRCID("execute_no_debug"), Frame::OnExecuteNoDebug)
+	EVT_UPDATE_UI(XRCID("execute_no_debug"), Frame::OnExecuteNoDebugUI)
 
 	/*
 	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
@@ -860,4 +862,15 @@ void Frame::OnCleanProjectUI(wxUpdateUIEvent &event)
 {
 	bool enable = !ManagerST::Get()->IsBuildInProgress() && !ManagerST::Get()->GetActiveProjectName().IsEmpty();
 	event.Enable(enable);
+}
+
+void Frame::OnExecuteNoDebug(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	ManagerST::Get()->ExecuteNoDebug(ManagerST::Get()->GetActiveProjectName());
+}
+
+void Frame::OnExecuteNoDebugUI(wxUpdateUIEvent &event)
+{
+	event.Enable(ManagerST::Get()->GetActiveProjectName().IsEmpty() == false);
 }

@@ -799,3 +799,9 @@ bool Manager::IsBuildInProgress() const
 {
 	return (m_cleanRequest && m_cleanRequest->IsBusy()) || (m_compileRequest && m_compileRequest->IsBusy());
 }
+
+void Manager::ExecuteNoDebug(const wxString &projectName)
+{
+	
+}
+

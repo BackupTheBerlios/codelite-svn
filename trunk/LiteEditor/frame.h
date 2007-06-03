@@ -136,6 +136,8 @@ protected:
 	void OnStopBuildUI(wxUpdateUIEvent &event);
 	void OnCleanProject(wxCommandEvent &event);
 	void OnCleanProjectUI(wxUpdateUIEvent &event);
+	void OnExecuteNoDebug(wxCommandEvent &event);
+	void OnExecuteNoDebugUI(wxUpdateUIEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

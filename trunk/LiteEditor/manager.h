@@ -365,6 +365,11 @@ public:
 	 */
 	bool IsBuildInProgress() const;
 
+	/** 
+	 * Execute the project with no debugger
+	 */
+	void ExecuteNoDebug(const wxString &projectName);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);
