@@ -25,6 +25,7 @@
 #include "dirtraverser.h"
 #include "depends_dlg.h"
 #include "build_settings_config.h"
+#include "dirsaver.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -780,6 +781,9 @@ void Manager::BuildProject(const wxString &projectName)
 	if( m_compileRequest ){
 		delete m_compileRequest;
 	}
+	//save all files before compiling
+	SaveAll();
+
 	m_compileRequest = new CompileRequest(GetMainFrame(), projectName);
 	m_compileRequest->Process();
 }
@@ -802,6 +806,18 @@ bool Manager::IsBuildInProgress() const
 
 void Manager::ExecuteNoDebug(const wxString &projectName)
 {
+	BuildConfigPtr bldConf = WorkspaceST::Get()->GetProjSelBuildConf(projectName);
+	wxString cmd = bldConf->GetCommand();
+	wxString cmdArgs = bldConf->GetCommandArguments();
+	//execute command & cmdArgs
+	wxString execLine(cmd + wxT(" ") + cmdArgs);
+	wxString wd = bldConf->GetWorkingDirectory();
+
+	//change directory to the working directory
+	DirSaver ds;
+	::wxSetWorkingDirectory(wd);
 	
+	//execute the command line
+	wxExecute(execLine, wxEXEC_ASYNC, NULL);
 }
 

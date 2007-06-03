@@ -335,7 +335,7 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 	// good idea of the scope we are in it
 	TagEntry tag;
 	if( TagsManagerST::Get()->FunctionByLine(rCtrl.LineFromPosition(start)+1,	// scintilla are counting from zero, while ctags are counting from one
-		rCtrl.GetFileName().GetFullName(), rCtrl.GetProjectName(), tag) )
+		rCtrl.GetFileName().GetFullPath(), rCtrl.GetProjectName(), tag) )
 	{
 		line = tag.GetLine();
 	}

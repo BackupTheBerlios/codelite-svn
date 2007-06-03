@@ -576,3 +576,20 @@ void Workspace::SetEnvironmentVariables(EnvironmentVarieblesPtr env)
 	m_doc.Save(m_fileName.GetFullPath());
 }
 
+BuildConfigPtr Workspace::GetProjSelBuildConf(const wxString &projectName) const
+{
+	BuildMatrixPtr matrix = GetBuildMatrix();
+	wxString workspaceConfig = matrix->GetSelectedConfigurationName();
+	wxString projConf = matrix->GetProjectSelectedConf(workspaceConfig, projectName);
+
+	//Get the project setting and retrieve the selected configuration
+	wxString errMsg;
+	ProjectPtr proj = FindProjectByName(projectName, errMsg);
+	if( proj ){
+		ProjectSettingsPtr settings = proj->GetSettings();
+		if(settings){
+			return settings->GetBuildConfiguration(projConf);
+		}
+	}
+	return NULL;
+}

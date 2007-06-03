@@ -217,6 +217,12 @@ public:
 	 */
 	wxString GetName() const;
 
+
+	/**
+	 * return the project build configuration that matches the
+	 * workspace selected configuration from the build matrix
+	 */
+	BuildConfigPtr GetProjSelBuildConf(const wxString &projectName) const;
 private:
 	/**
 	 * Do the actual add project 
