@@ -22,6 +22,8 @@
 	<object class="wxBitmap" name="page_white_text">res/page_white_text.png</object>
   <object class="wxBitmap" name="cross">res/cross.png</object>
   <object class="wxBitmap" name="document_delete">res/document_delete.png</object>
+  <object class="wxBitmap" name="build">res/cog.png</object>
+  <object class="wxBitmap" name="find_results">res/page_find.png</object>
   
   <object class="wxBitmap" name="file_view">res/folder_table.png</object>
   <object class="wxBitmap" name="class_view">res/chart_organisation.png</object>

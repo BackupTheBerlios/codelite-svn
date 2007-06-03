@@ -50,17 +50,21 @@ void OutputPane::CreateGUIControls()
 
 	mainSizer->Add(mb, 0, wxGROW | wxALL, 1);
 
-	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_BOTTOM | wxFNB_FF2 | wxFNB_CUSTOM_DLG; 
+	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_FF2 | wxFNB_CUSTOM_DLG | wxFNB_BACKGROUND_GRADIENT | wxFNB_TABS_BORDER_SIMPLE; 
 	m_book = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
 	m_book->SetCustomizeOptions(wxFNB_CUSTOM_LOCAL_DRAG | wxFNB_CUSTOM_ORIENTATION | wxFNB_CUSTOM_TAB_LOOK);
 	mainSizer->Add(m_book, 1, wxEXPAND | wxALL | wxGROW, 1);
+
+	m_images.Add(wxXmlResource::Get()->LoadBitmap(wxT("find_results")));
+	m_images.Add(wxXmlResource::Get()->LoadBitmap(wxT("build")));
+	m_book->SetImageList( &m_images );
 
 	// Create the 'Find In Files Window'
 	wxScintilla *findInFilesWin = CreateScintillaPage();
 	wxScintilla *buildWin = CreateScintillaPage();
 
-	m_book->AddPage(findInFilesWin, FIND_IN_FILES_WIN, true);
-	m_book->AddPage(buildWin, BUILD_WIN, false);
+	m_book->AddPage(findInFilesWin, FIND_IN_FILES_WIN, true, 0);
+	m_book->AddPage(buildWin, BUILD_WIN, false, 1);
 
 	mainSizer->Fit(this);
 	mainSizer->Layout();

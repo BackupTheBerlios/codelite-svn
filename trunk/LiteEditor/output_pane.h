@@ -4,9 +4,9 @@
 
 #include "wx/panel.h"
 #include "wx/wxscintilla.h"
+#include "wx/wxFlatNotebook/wxFlatNotebook.h"
 
 class OutputPane;
-class wxFlatNotebook;
 
 /**
  * \ingroup LiteEditor
@@ -37,6 +37,7 @@ public:
 	wxFlatNotebook *m_book;
 	wxString m_caption;
 	bool m_canFocus;
+	wxFlatNotebookImageList m_images;
 
 private:
 	void CreateGUIControls();
