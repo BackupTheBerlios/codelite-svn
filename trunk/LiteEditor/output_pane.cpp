@@ -95,6 +95,7 @@ void OutputPane::OnSetFocus(wxFocusEvent &event)
 	if( prevFocusWin ){
 		prevFocusWin->SetFocus();
 	}
+	event.Skip();
 }
 
 void OutputPane::OnClearAll(wxCommandEvent &event)
