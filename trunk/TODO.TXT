@@ -1,17 +1,17 @@
 TODO List:
 ==========================
-. Add option to delete Workspace build configuration
 . Add toolbar
+. Under GTK, create a pool of hidden LEditor windows, since it takes time to create them 
+. Add Java lexer
+. Add XML lexer
+. Add option to delete Workspace build configuration
 . When creating new workspace create a directory with the workspace name and place there the .workspace file
 . When creating new project crreat a directory with the project name and place there the .project file 
-. Under GTK, create a pool of hidden LEditor windows, since it takes time to create them 
 . Build order dialog - add button to move up/down items
 . Add posibility to copy project settings when creating new project
 . Add option to create an external database
 . Add option to re-create the symbols database
 . Add menu option to set external database to workspace
-. Add Java lexer
-. Add XML lexer
 . When closing the application, prompt if there are unsaved changes
 	 Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
 	 Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
