@@ -370,6 +370,15 @@ public:
 	 */
 	void ExecuteNoDebug(const wxString &projectName);
 
+	// Update the toolbar's configuration choice controls
+	void DoUpdateConfigChoiceControl();
+
+	/**
+	 * Set the workspace active build configuration name
+	 * \param name active configuration name
+	 */
+	void SetWorkspaceConfigurationName(const wxString &name);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);
@@ -379,6 +388,7 @@ private:
 	 * Update the symbol & file tress
 	 */
 	void DoUpdateGUITrees();
+	
 
 	// Create environment variables for the workspace
 	void CreateEnvironmentVars(const wxString &wpsPath);

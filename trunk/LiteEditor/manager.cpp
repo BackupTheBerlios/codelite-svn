@@ -228,6 +228,8 @@ void Manager::CreateWorkspace(const wxString &name, const wxString &path, const 
 	CreateEnvironmentVars(path);
 
 	DoUpdateGUITrees();
+	//Update the configuration choice on the toolbar
+	DoUpdateConfigChoiceControl();
 }
 
 void Manager::CreateProject(ProjectData &data)
@@ -273,6 +275,36 @@ void Manager::OpenWorkspace(const wxString &path)
 	CreateEnvironmentVars(path);
 
 	DoUpdateGUITrees();
+
+	//Update the configuration choice on the toolbar
+	DoUpdateConfigChoiceControl();
+}
+
+void Manager::DoUpdateConfigChoiceControl()
+{
+	BuildMatrixPtr matrix = WorkspaceST::Get()->GetBuildMatrix();
+	wxChoice *choice = Frame::Get()->GetConfigChoice();
+	
+	choice->Enable(true);
+	choice->Freeze();
+	
+	std::list<WorkspaceConfigurationPtr> confs = matrix->GetConfigurations();
+	std::list<WorkspaceConfigurationPtr>::iterator iter = confs.begin();
+	choice->Clear();
+	for(; iter != confs.end(); iter++){
+		choice->Append((*iter)->GetName());
+	}
+
+	if(choice->GetCount() > 0){
+		int where = choice->FindString(matrix->GetSelectedConfigurationName());
+		if(where != wxNOT_FOUND){
+			choice->SetSelection(where);
+		}else{
+			choice->SetSelection(0);
+		}
+	}
+
+	choice->Thaw();
 }
 
 ProjectTreePtr Manager::GetProjectFileViewTree(const wxString &projectName)
@@ -834,4 +866,11 @@ void Manager::ExecuteNoDebug(const wxString &projectName)
 	gtkExecLine << cmd << wxT(" -e \"") << execLine << wxT(";\"");
 	wxExecute(gtkExecLine, wxEXEC_ASYNC, NULL);
 #endif
+}
+
+void Manager::SetWorkspaceConfigurationName(const wxString &name)
+{
+	BuildMatrixPtr matrix = GetWorkspaceBuildMatrix();
+	matrix->SetSelectedConfigurationName(name);
+	SetWorkspaceBuildMatrix(matrix);
 }

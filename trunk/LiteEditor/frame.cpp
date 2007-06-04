@@ -23,6 +23,7 @@
 #include "advanced_settings.h"
 #include "build_settings_config.h"
 #include "list"
+#include "macros.h"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -301,8 +302,33 @@ void Frame::CreateToolbars()
 	tb->AddSeparator();
 	tb->AddTool(wxID_UNDO, wxT("Undo"), wxXmlResource::Get()->LoadBitmap(wxT("undo")), wxT("Undo (Ctrl+Z)"));
 	tb->AddTool(wxID_REDO, wxT("Redo"), wxXmlResource::Get()->LoadBitmap(wxT("redo")), wxT("Redo (Ctrl+Y)"));
-	tb->Realize();
+	
+	tb->AddSeparator();
+	tb->AddTool(XRCID("toggle_bookmark"), wxT("Toggle Bookmark"), wxXmlResource::Get()->LoadBitmap(wxT("bookmark")), wxT("Toggle Bookmark (Ctrl+F2)"));
+	tb->AddTool(XRCID("next_bookmark"), wxT("Next Bookmark"), wxXmlResource::Get()->LoadBitmap(wxT("bookmark_previous")), wxT("Next Bookmark (F2)"));
+	tb->AddTool(XRCID("previous_bookmark"), wxT("Previous Bookmark"), wxXmlResource::Get()->LoadBitmap(wxT("bookmark_next")), wxT("Previous Bookmark (Shift+F2)"));
+	tb->AddTool(XRCID("removeall_bookmarks"), wxT("Remove All Bookmarks"), wxXmlResource::Get()->LoadBitmap(wxT("bookmark_remove_all")), wxT("Remove All Bookmarks"));
+	
+	tb->AddSeparator();
+	tb->AddTool(wxID_FIND, wxT("Find and Replace"), wxXmlResource::Get()->LoadBitmap(wxT("find_and_replace")), wxT("Find And Replace (Ctrl+F)"));
+	tb->AddTool(XRCID("find_in_files"), wxT("Find In Files"), wxXmlResource::Get()->LoadBitmap(wxT("find_in_files")), wxT("Find In Files (Ctrl+Shift+F)"));
+	
+	tb->AddSeparator();
 
+	wxArrayString choices;
+	m_workspaceConfig = new wxChoice(tb, wxID_ANY, wxDefaultPosition, wxDefaultSize, choices);
+	m_workspaceConfig->Enable(false);
+	tb->AddControl(m_workspaceConfig);
+
+	// Connect an event to handle changes in the choice control
+	ConnectChoice(m_workspaceConfig, Frame::OnWorkspaceConfigChanged);
+
+	tb->AddTool(XRCID("build_active_project"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("build_active_project")), wxT("Build Active Project (F7)"));
+	tb->AddTool(XRCID("clean_active_project"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("clean")), wxT("Clean Active Project"));
+	tb->AddTool(XRCID("stop_active_project_build"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("stop_build")), wxT("Stop Current Build"));
+	tb->AddTool(XRCID("execute_no_debug"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("execute")), wxT("Run Active Project"));
+
+	tb->Realize();
 	m_mgr.AddPane(tb, wxAuiPaneInfo().Name(wxT("Standard Toolbar")).Caption(wxT("Standard")).ToolbarPane().Top());
 }
 
@@ -903,3 +929,12 @@ void Frame::OnExecuteNoDebugUI(wxUpdateUIEvent &event)
 {
 	event.Enable(ManagerST::Get()->GetActiveProjectName().IsEmpty() == false);
 }
+
+void Frame::OnWorkspaceConfigChanged(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	wxString selectionStr = m_workspaceConfig->GetStringSelection();
+	//update the workspace configuration file
+	ManagerST::Get()->SetWorkspaceConfigurationName(selectionStr);
+}
+

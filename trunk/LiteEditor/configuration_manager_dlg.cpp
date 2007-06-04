@@ -240,6 +240,7 @@ void ConfigurationManagerDlg::OnButtonApply(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 	SaveCurrentSettings();
+	ManagerST::Get()->DoUpdateConfigChoiceControl();
 }
 
 
@@ -264,6 +265,7 @@ void ConfigurationManagerDlg::OnButtonOK(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 	SaveCurrentSettings();
+	ManagerST::Get()->DoUpdateConfigChoiceControl();
 	EndModal(wxID_OK);
 }
 

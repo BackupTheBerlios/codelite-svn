@@ -15,6 +15,7 @@
 #include "ctags_dialog.h"
 #include "cl_process.h"
 #include "envvar_table.h"
+#include "wx/choice.h"
 
 // forward decls
 class TagEntry;
@@ -35,6 +36,7 @@ class Frame : public wxFrame
 	FindReplaceData m_data;
 	WorkspacePane *m_workspacePane;
 	wxArrayString m_files;
+	wxChoice *m_workspaceConfig;
 
 public:
 	// the access method to the singleton frame is by using the Get method
@@ -45,6 +47,12 @@ public:
 	 * Return the main editor notebook
 	 */
 	wxFlatNotebook *GetNotebook() { return m_notebook; }
+
+
+	/**
+	 * Return the workspace configuration choice control
+	 */
+	wxChoice *GetConfigChoice() { return m_workspaceConfig; }
 
 	/**
 	 * Close the current file
@@ -139,6 +147,7 @@ protected:
 	void OnCleanProjectUI(wxUpdateUIEvent &event);
 	void OnExecuteNoDebug(wxCommandEvent &event);
 	void OnExecuteNoDebugUI(wxUpdateUIEvent &event);
+	void OnWorkspaceConfigChanged(wxCommandEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

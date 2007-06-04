@@ -38,4 +38,17 @@
 	<object class="wxBitmap" name="paste">res/paste.png</object>
 	<object class="wxBitmap" name="undo">res/undo.png</object>
 	<object class="wxBitmap" name="redo">res/redo.png</object>
+	
+	<object class="wxBitmap" name="bookmark">res/bookmark.png</object>
+	<object class="wxBitmap" name="bookmark_next">res/bookmark_up.png</object>
+	<object class="wxBitmap" name="bookmark_previous">res/bookmark_down.png</object>
+	<object class="wxBitmap" name="bookmark_remove_all">res/bookmark_delete.png</object>
+
+	<object class="wxBitmap" name="build_active_project">res/hammer.png</object>
+	<object class="wxBitmap" name="stop_build">res/stop.png</object>
+	<object class="wxBitmap" name="execute">res/execute.png</object>
+	<object class="wxBitmap" name="clean">res/clean.png</object>
+	
+	<object class="wxBitmap" name="find_in_files">res/folder_find.png</object>
+	<object class="wxBitmap" name="find_and_replace">res/find.png</object>
 </resource>
