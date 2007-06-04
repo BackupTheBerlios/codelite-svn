@@ -70,7 +70,7 @@ private:
 	// make our frame's constructor private
 	Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style = wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX | wxCAPTION | wxSYSTEM_MENU | wxRESIZE_BORDER | wxCLIP_CHILDREN, const wxString& name = wxT("Main Frame"));
 
-private:
+private:	
 	/**
 	 * Construct all the GUI controls of the main frame. this function is called
 	 * at construction time
@@ -85,6 +85,7 @@ private:
 	void ClosePage(LEditor *editor, bool notify, int index, bool doDelete, bool &veto);
 	void DispatchCommandEvent(wxCommandEvent &event);
 	void DispatchUpdateUIEvent(wxUpdateUIEvent &event);
+	void CreateToolbars();
 
 protected:
 	//----------------------------------------------------

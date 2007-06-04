@@ -14,18 +14,28 @@
     <object class="wxBitmap" name="struct">res/struct.png</object>  
     <object class="wxBitmap" name="bookmark_blue">res/media_stop.png</object>
     <object class="wxBitmap" name="workspace">res/cubes.png</object>
-	
 	<object class="wxBitmap" name="folder">res/folder.png</object>
 	<object class="wxBitmap" name="page_white_c">res/page_white_c.png</object>
 	<object class="wxBitmap" name="page_white_cplusplus">res/page_white_cplusplus.png</object>
 	<object class="wxBitmap" name="page_white_h">res/page_white_h.png</object>
 	<object class="wxBitmap" name="page_white_text">res/page_white_text.png</object>
-  <object class="wxBitmap" name="cross">res/cross.png</object>
-  <object class="wxBitmap" name="document_delete">res/document_delete.png</object>
-  <object class="wxBitmap" name="build">res/cog.png</object>
-  <object class="wxBitmap" name="find_results">res/page_find.png</object>
-  
-  <object class="wxBitmap" name="file_view">res/folder_table.png</object>
-  <object class="wxBitmap" name="class_view">res/chart_organisation.png</object>
+    <object class="wxBitmap" name="cross">res/cross.png</object>
+    <object class="wxBitmap" name="document_delete">res/document_delete.png</object>
+    <object class="wxBitmap" name="build">res/cog.png</object>
+    <object class="wxBitmap" name="find_results">res/page_find.png</object>
+    <object class="wxBitmap" name="file_view">res/folder_table.png</object>
+    <object class="wxBitmap" name="class_view">res/chart_organisation.png</object>
+    
+	<object class="wxBitmap" name="page_close">res/page_close.png</object>
+	<object class="wxBitmap" name="page_new">res/page_new.png</object>
+	<object class="wxBitmap" name="save_all">res/save_all.png</object>
+	<object class="wxBitmap" name="page_save">res/page_save.png</object>
+	<object class="wxBitmap" name="page_open">res/page_open.png</object>
+	<object class="wxBitmap" name="refresh">res/refresh.png</object>
+	<object class="wxBitmap" name="save_as">res/save_as.png</object>
+	<object class="wxBitmap" name="cut">res/cut.png</object>
+	<object class="wxBitmap" name="copy">res/copy.png</object>
+	<object class="wxBitmap" name="paste">res/paste.png</object>
+	<object class="wxBitmap" name="undo">res/undo.png</object>
+	<object class="wxBitmap" name="redo">res/redo.png</object>
 </resource>
-   

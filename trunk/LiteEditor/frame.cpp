@@ -180,10 +180,13 @@ void Frame::CreateGUIControls(void)
 	m_mgr.SetManagedWindow(this);
 	m_mgr.SetFlags(m_mgr.GetFlags() | wxAUI_MGR_ALLOW_ACTIVE_PANE);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);
+	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_PANE_BORDER_SIZE, 1);
+	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_SASH_SIZE, 2);
 
 	// Load the menubar from XRC and set this frame's menubar to it.
     SetMenuBar(wxXmlResource::Get()->LoadMenuBar(wxT("main_menu")));
 	
+
 	//---------------------------------------------
 	// Add the output pane
 	//---------------------------------------------
@@ -260,14 +263,14 @@ void Frame::CreateGUIControls(void)
 
 	// "commit" all changes made to wxAuiManager
 	wxString pers = EditorConfigST::Get()->LoadPerspective(wxT("Default"));
+	CreateToolbars();
 
 	// if we have a perspective, use it, else use the default persprective
 	if( pers.IsEmpty() == false ){
 		m_mgr.LoadPerspective(pers);
-	} else {
-		m_mgr.Update();
-	}
+	} 
 
+	m_mgr.Update();
 	SetAutoLayout (true);
 	Layout();
 
@@ -276,6 +279,31 @@ void Frame::CreateGUIControls(void)
 	//g_cache.push_back(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true));
 	//g_cache.push_back(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true));
 	//g_cache.push_back(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true));
+}
+
+void Frame::CreateToolbars()
+{
+	//create the standard toolbar
+	wxToolBar *tb = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_FLAT | wxTB_NODIVIDER);
+	tb->AddTool(wxID_NEW, wxT("New"), wxXmlResource::Get()->LoadBitmap(wxT("page_new")), wxT("New File (Ctrl+N)"));
+	tb->AddTool(wxID_OPEN, wxT("Open"), wxXmlResource::Get()->LoadBitmap(wxT("page_open")), wxT("Open File (Ctrl+O)"));
+	tb->AddTool(wxID_REFRESH, wxT("Reload"), wxXmlResource::Get()->LoadBitmap(wxT("refresh")), wxT("Reload File (Ctrl+R)"));
+	tb->AddSeparator();
+	tb->AddTool(wxID_SAVE, wxT("Save"), wxXmlResource::Get()->LoadBitmap(wxT("page_save")), wxT("Save (Ctrl+S)"));
+	tb->AddTool(wxID_SAVEAS, wxT("Save As"), wxXmlResource::Get()->LoadBitmap(wxT("save_as")), wxT("Save As"));
+	tb->AddTool(XRCID("save_all"), wxT("Save All"), wxXmlResource::Get()->LoadBitmap(wxT("save_all")), wxT("Save All"));
+	tb->AddSeparator();
+	tb->AddTool(wxID_CLOSE, wxT("Close"), wxXmlResource::Get()->LoadBitmap(wxT("page_close")), wxT("Close File (Ctrl+W)"));
+	tb->AddSeparator();
+	tb->AddTool(wxID_CUT, wxT("Cut"), wxXmlResource::Get()->LoadBitmap(wxT("cut")), wxT("Cut (Ctrl+X)"));
+	tb->AddTool(wxID_COPY, wxT("Copy"), wxXmlResource::Get()->LoadBitmap(wxT("copy")), wxT("Copy (Ctrl+C)"));
+	tb->AddTool(wxID_PASTE, wxT("Paste"), wxXmlResource::Get()->LoadBitmap(wxT("paste")), wxT("Paste (Ctrl+V)"));
+	tb->AddSeparator();
+	tb->AddTool(wxID_UNDO, wxT("Undo"), wxXmlResource::Get()->LoadBitmap(wxT("undo")), wxT("Undo (Ctrl+Z)"));
+	tb->AddTool(wxID_REDO, wxT("Redo"), wxXmlResource::Get()->LoadBitmap(wxT("redo")), wxT("Redo (Ctrl+Y)"));
+	tb->Realize();
+
+	m_mgr.AddPane(tb, wxAuiPaneInfo().Name(wxT("Standard Toolbar")).Caption(wxT("Standard")).ToolbarPane().Top());
 }
 
 void Frame::OnQuit(wxCommandEvent& WXUNUSED(event))
