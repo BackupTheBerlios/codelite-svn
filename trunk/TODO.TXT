@@ -1,6 +1,5 @@
 TODO List:
 ==========================
-. Add toolbar
 . Under GTK, create a pool of hidden LEditor windows, since it takes time to create them 
 . Add Java lexer
 . Add XML lexer
