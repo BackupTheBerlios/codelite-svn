@@ -812,11 +812,14 @@ public:
     wxSCIListBoxWin(wxWindow* parent, wxWindowID id, Point WXUNUSED(location)) :
 #ifdef __WXMSW__
         wxPopupWindow(parent, wxRAISED_BORDER)
+		{
+		SetBackgroundColour(*wxWHITE);  
 #else
 		wxPopupWindow(parent, wxSIMPLE_BORDER)
-#endif
-    {
-		SetBackgroundColour(*wxWHITE);  
+		{
+		SetBackgroundColour(*wxBLACK);  
+
+#endif 
 
         lv = new wxSCIListBox(parent, id, wxDefaultPosition, wxDefaultSize,
                               wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER | wxBORDER_NONE);
