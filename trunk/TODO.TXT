@@ -1,7 +1,5 @@
 TODO List:
 ==========================
-. Add Java lexer
-. Add XML lexer
 . Add option to delete Workspace build configuration
 . When creating new workspace create a directory with the workspace name and place there the .workspace file
 . When creating new project crreat a directory with the project name and place there the .project file 

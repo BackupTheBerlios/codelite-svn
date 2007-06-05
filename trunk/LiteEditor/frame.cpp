@@ -584,6 +584,8 @@ void Frame::OnFileNew(wxCommandEvent &event)
 	//allocate new editor instance using the creator
 	//this is done due to low performance on GTK 
 	LEditor *editor = EditorCreatorST::Get()->NewInstance();
+	editor->SetFileName(fileName);
+
 	m_notebook->AddPage(editor, fileName.GetFullName(), true);
 	m_notebook->Thaw();
 	editor->SetFocus ();

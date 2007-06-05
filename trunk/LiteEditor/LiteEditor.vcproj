@@ -334,6 +334,9 @@
 			<File
 				RelativePath=".\resources.xrc">
 			</File>
+			<File
+				RelativePath="..\Todo.txt">
+			</File>
 		</Filter>
 		<Filter
 			Name="Dialogs">

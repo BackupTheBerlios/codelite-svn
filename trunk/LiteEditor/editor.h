@@ -65,6 +65,9 @@ public:
 	// Return the file name opened in this editor
 	const wxFileName& GetFileName() const { return m_fileName; }
 
+	// set this editor file name
+	void SetFileName(const wxFileName &name) { m_fileName = name; }
+
 	// Return the project name
 	const wxString &GetProject() const { return m_project; }
 	// Set the project name
