@@ -1,6 +1,5 @@
 TODO List:
 ==========================
-. Add option to show/hide toolbar in view menu
 . Add Java lexer
 . Add XML lexer
 . Add option to delete Workspace build configuration
