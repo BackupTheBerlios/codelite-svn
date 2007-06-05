@@ -26,7 +26,6 @@
 #include "depends_dlg.h"
 #include "build_settings_config.h"
 #include "dirsaver.h"
-#include "editor_creator_thread.h"
 #include "editor_creator.h"
 
 #define CHECK_MSGBOX(res)									\
@@ -202,8 +201,6 @@ void Manager::UnInitialize()
 	SearchThreadST::Free();
 	
 	//stop the creator thread
-	EditorCreatorThreadST::Get()->Stop();
-	EditorCreatorThreadST::Free();
 	EditorCreatorST::Free();
 
 	wxFlatNotebook::CleanUp();
