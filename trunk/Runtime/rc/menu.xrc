@@ -126,19 +126,6 @@
 			</object>
 
 			<object class="wxMenuItem" name="wxID_SEPARATOR"/>
-            <object class="wxMenu" name="view_as_menu">
-                <label>View As</label>
-                <style>wxMENU_TEAROFF</style>
-                <object class="wxMenuItem" name="view_as_cpp">
-                    <label>C++</label>
-                    <radio>1</radio>
-                </object>
-                <object class="wxMenuItem" name="view_as_text">
-                    <label>Text</label>
-                    <radio>1</radio>
-                </object>
-            </object>
-            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
             <object class="wxMenuItem" name="toggle_panes">
                 <label>&amp;Maximize Editing Area...\tCtrl+M</label>
                 <help>Hide all panes and maximize the editing area</help>
@@ -147,6 +134,7 @@
             <object class="wxMenuItem" name="options">
                 <label>&amp;Options...\tAlt+O</label>
             </object>
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
         </object>		  
 	    
         <object class="wxMenu" name="search_menu">

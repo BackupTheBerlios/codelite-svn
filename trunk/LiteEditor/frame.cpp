@@ -107,10 +107,10 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("output_pane"), Frame::OnViewOutputPane)
 	EVT_UPDATE_UI(XRCID("output_pane"), Frame::OnViewOutputPaneUI)
 	EVT_UPDATE_UI(XRCID("workspace_pane"), Frame::OnViewWorkspacePaneUI)
-	EVT_MENU(XRCID("view_as_cpp"), Frame::DispatchCommandEvent)
-	EVT_MENU(XRCID("view_as_text"), Frame::DispatchCommandEvent)
-	EVT_UPDATE_UI(XRCID("view_as_cpp"), Frame::DispatchUpdateUIEvent)
-	EVT_UPDATE_UI(XRCID("view_as_text"), Frame::DispatchUpdateUIEvent)
+	
+	EVT_MENU_RANGE(viewAsMenuItemID, viewAsMenuItemMaxID, Frame::DispatchCommandEvent)
+	EVT_UPDATE_UI_RANGE(viewAsMenuItemID, viewAsMenuItemMaxID, Frame::DispatchUpdateUIEvent)
+
 	EVT_MENU(XRCID("options"), Frame::OnViewOptions)
 	EVT_UPDATE_UI(XRCID("word_wrap"), Frame::DispatchUpdateUIEvent)
 	EVT_MENU(XRCID("word_wrap"), Frame::DispatchCommandEvent)
@@ -196,7 +196,6 @@ void Frame::CreateGUIControls(void)
 
 	// Load the menubar from XRC and set this frame's menubar to it.
     SetMenuBar(wxXmlResource::Get()->LoadMenuBar(wxT("main_menu")));
-	
 
 	//---------------------------------------------
 	// Add the output pane
@@ -240,6 +239,7 @@ void Frame::CreateGUIControls(void)
 	// Initialise editor configuration files
 	wxFileName configFile(wxT("config/liteeditor.xml"));
 	EditorConfigST::Get()->Load(configFile);
+	CreateViewAsSubMenu();
 
 	wxFileName buildCfgFile(wxT("config/build_settings.xml"));
 	BuildSettingsConfigST::Get()->Load(buildCfgFile);
@@ -284,6 +284,43 @@ void Frame::CreateGUIControls(void)
 	m_mgr.Update();
 	SetAutoLayout (true);
 	Layout();
+}
+
+void Frame::CreateViewAsSubMenu()
+{
+	//get the 'View As' menu
+
+	int idx = GetMenuBar()->FindMenu(wxT("View"));
+	if(idx != wxNOT_FOUND){
+		wxMenu *menu = GetMenuBar()->GetMenu(idx);
+		wxMenu *submenu = new wxMenu();
+
+		//create a view as sub menu and attach it
+		wxMenuItem *item(NULL);
+		
+		int minId = viewAsMenuItemID;
+
+		//load all lexers
+		// load generic lexers
+		EditorConfigCookie cookie;
+		LexerConfPtr lex = EditorConfigST::Get()->GetFirstLexer(cookie);
+		while(lex){
+			item = new wxMenuItem(submenu, minId, lex->GetName(), wxEmptyString, wxITEM_CHECK);
+			m_viewAsMap[minId] = lex->GetName();
+			minId++;
+			submenu->Append(item);
+			lex = EditorConfigST::Get()->GetNextLexer(cookie);
+		}
+		menu->Append(viewAsSubMenuID, wxT("View As"), submenu);
+	}
+}
+
+wxString Frame::GetViewAsLanguageById(int id) const
+{
+	if(m_viewAsMap.find(id) == m_viewAsMap.end()){
+		return wxEmptyString;
+	}
+	return m_viewAsMap.find(id)->second;
 }
 
 void Frame::CreateToolbars()
@@ -348,6 +385,12 @@ void Frame::DispatchCommandEvent(wxCommandEvent &event)
 		return;	
 	}
 
+	if(event.GetId() >= viewAsMenuItemID && event.GetId() <= viewAsMenuItemMaxID){
+		//keep the old id as int and override the value set in the event object
+		//to trick the event system
+		event.SetInt(event.GetId());
+		event.SetId(viewAsMenuItemID);
+	}
 	editor->OnMenuCommand(event);
 }
 
@@ -364,6 +407,12 @@ void Frame::DispatchUpdateUIEvent(wxUpdateUIEvent &event)
 		return;	
 	}
 
+	if(event.GetId() >= viewAsMenuItemID && event.GetId() <= viewAsMenuItemMaxID){
+		//keep the old id as int and override the value set in the event object
+		//to trick the event system
+		event.SetInt(event.GetId());
+		event.SetId(viewAsMenuItemID);
+	}
 	editor->OnUpdateUI(event);
 }
 

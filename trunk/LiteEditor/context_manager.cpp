@@ -2,13 +2,26 @@
 #include "context_cpp.h"
 #include "context_text.h"
 #include "context_base.h"
+#include "generic_context.h"
+#include "editor_config.h"
 
 ContextManager::ContextManager()
 {
 	// register available context
 	m_contextPool[wxT("C++")] = ContextBasePtr( new ContextCpp() );
 	m_contextPool[wxT("Text")] = ContextBasePtr( new ContextText() );
-	m_contextPool[wxT("Default")] = ContextBasePtr( new ContextText() );
+
+	// load generic lexers
+	EditorConfigCookie cookie;
+	LexerConfPtr lex = EditorConfigST::Get()->GetFirstLexer(cookie);
+	while(lex){
+		//skip hardcoded lexers
+		if(lex->GetName() != wxT("C++") && lex->GetName() != wxT("Text")){
+			std::pair<wxString, ContextBasePtr> entry(lex->GetName(), new ContextGeneric(lex->GetName()));
+			m_contextPool.insert(entry);
+		}
+		lex = EditorConfigST::Get()->GetNextLexer(cookie);
+	}
 }
 
 ContextManager::~ContextManager()

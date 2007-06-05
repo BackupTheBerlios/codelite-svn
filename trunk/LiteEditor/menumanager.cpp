@@ -1,5 +1,7 @@
 #include "menumanager.h"
 #include "menu_event_handlers.h"
+#include "macros.h"
+
 
 MenuManager::MenuManager(void)
 {
@@ -22,8 +24,7 @@ MenuManager::MenuManager(void)
 	PushHandler(new BookmarkHandler(XRCID("removeall_bookmarks")));
 	PushHandler(new GotoDefinitionHandler(XRCID("goto_definition")));
 	PushHandler(new GotoDefinitionHandler(XRCID("goto_previous_definition")));
-	PushHandler(new ViewAsHandler(XRCID("view_as_cpp")));
-	PushHandler(new ViewAsHandler(XRCID("view_as_text")));
+	PushHandler(new ViewAsHandler(viewAsMenuItemID));
 	PushHandler(new WordWrapHandler(XRCID("word_wrap")));
 }
 

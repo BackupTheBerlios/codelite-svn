@@ -1,5 +1,6 @@
 #include "menu_event_handlers.h"
 #include "editor.h" 
+#include "frame.h"
 
 //------------------------------------
 // Handle copy events
@@ -248,11 +249,10 @@ void ViewAsHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 	if( !editor ){
 		return;
 	}
-
-	if (event.GetId() == XRCID("view_as_cpp")){
-		editor->SetSyntaxHighlight(wxT("C++"));
-	} else if(event.GetId() == XRCID("view_as_text")){
-		editor->SetSyntaxHighlight(wxT("Text"));
+	
+	wxString lexName = Frame::Get()->GetViewAsLanguageById(event.GetInt());
+	if(lexName.IsEmpty() == false){
+		editor->SetSyntaxHighlight(lexName);
 	}
 }
 
@@ -265,13 +265,8 @@ void ViewAsHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event
 	
 	event.Enable(true);
 
-	if(event.GetId() == XRCID("view_as_cpp")){
-		event.Check(editor->GetContext()->GetName() == wxT("C++"));
-	}
-	
-	if(event.GetId() == XRCID("view_as_text")){
-		event.Check(editor->GetContext()->GetName() == wxT("Text"));
-	}
+	wxString lexName = Frame::Get()->GetViewAsLanguageById(event.GetInt());
+	event.Check(editor->GetContext()->GetName() == lexName);
 }
 
 //----------------------------------------------------

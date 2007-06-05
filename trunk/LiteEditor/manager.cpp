@@ -621,7 +621,7 @@ ContextBasePtr Manager::NewContextByFileName(const wxFileName &fileName, LEditor
 	}
 
 	// return the default context
-	return ContextManager::Get()->NewContext(parent, wxT("Default"));
+	return ContextManager::Get()->NewContext(parent, wxT("Text"));
 }
 
 void Manager::ApplySettingsChanges()

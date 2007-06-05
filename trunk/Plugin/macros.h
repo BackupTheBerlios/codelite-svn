@@ -57,4 +57,10 @@ const wxString clCMD_EDIT = wxT("<Edit...>");
 #else
 #define PATH_SEP wxT("/")
 #endif
+
+#define viewAsMenuItemID  23500
+#define viewAsMenuItemMaxID  23500+100
+
+#define viewAsSubMenuID 23499
+
 #endif // MACROS_H

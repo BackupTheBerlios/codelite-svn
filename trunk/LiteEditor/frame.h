@@ -39,11 +39,17 @@ class Frame : public wxFrame
 	wxArrayString m_files;
 	wxChoice *m_workspaceConfig;
 	wxTimer *m_timer;
+	std::map<int, wxString> m_viewAsMap;
 
 public:
 	// the access method to the singleton frame is by using the Get method
 	static Frame* Get();
 	virtual ~Frame(void);
+
+	/**
+	 * Return language name by menu item id
+	 */
+	wxString GetViewAsLanguageById(int id) const;
 
 	/**
 	 * Return the main editor notebook
@@ -98,7 +104,8 @@ private:
 	void CreateToolbars();
 	void ViewPaneUI(const wxString &paneName, wxUpdateUIEvent&event);
 	void ViewPane(const wxString &paneName, wxCommandEvent &event);
-
+	void CreateViewAsSubMenu();
+    
 protected:
 	//----------------------------------------------------
 	// event handlers

@@ -24,10 +24,13 @@ protected:
 	LEditor *m_container;
 	wxString m_name;
 
+protected:
+	void SetName(const wxString &name){m_name = name;}
+
 public:
 
 	// ctor-dtor
-	ContextBase(LEditor *container, const wxString &name);
+	ContextBase(LEditor *container);
 	ContextBase(const wxString &name);
 	virtual ~ContextBase();
 

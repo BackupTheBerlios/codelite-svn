@@ -1,82 +1,85 @@
-#include "context_text.h"
+#include "generic_context.h"
 #include <vector>
 #include "editor_config.h"
 #include "editor.h"
 
-ContextText::ContextText(LEditor *container) 
+ContextGeneric::ContextGeneric(LEditor *container, const wxString &name) 
 : ContextBase(container)
 {
-	// Initialise default style settings
-	SetName(wxT("Text"));
-
 	//-----------------------------------------------
 	// Load laguage settings from configuration file
 	//-----------------------------------------------
+	SetName(name);
 
 	// Set the key words and the lexer
 	wxString keyWords;
 	std::list<StyleProperty> styles;
-
+	LexerConfPtr lexPtr;
 	// Read the configuration file
 	if(EditorConfigST::Get()->IsOk()){
-		styles = EditorConfigST::Get()->GetLexer(wxT("Text"))->GetProperties();
+		lexPtr = EditorConfigST::Get()->GetLexer(name);
 	}
 
 	// Update the control
 	LEditor &rCtrl = GetCtrl();
-	rCtrl.SetLexer(wxSCI_LEX_NULL);
+	rCtrl.SetLexer(lexPtr->GetLexerId());
+	rCtrl.SetKeyWords(0, lexPtr->GetKeyWords());
 	rCtrl.StyleClearAll();
-
+	
+	styles = lexPtr->GetProperties();
 	std::list<StyleProperty>::iterator iter = styles.begin();
-	if(iter != styles.end()){
-		int size = (*iter).GetFontSize();
-		wxString face = (*iter).GetFaceName();
-		bool bold = (*iter).IsBold();
-
+	for(; iter != styles.end(); iter++)
+	{
+		StyleProperty st = (*iter);
+		int size = st.GetFontSize();
+		wxString face = st.GetFaceName();
+		bool bold = st.IsBold();
+		
 		wxFont font(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
 		font.SetFaceName(face);
 
-		rCtrl.StyleSetFont(0, font);
-		rCtrl.StyleSetSize(0, (*iter).GetFontSize());
-		rCtrl.StyleSetForeground(0, (*iter).GetFgColour());
+		rCtrl.StyleSetFont(st.GetId(), font);
+		rCtrl.StyleSetSize(st.GetId(), (*iter).GetFontSize());
+		rCtrl.StyleSetForeground(st.GetId(), (*iter).GetFgColour());
 	}
 }
 
-ContextText::~ContextText()
+
+ContextGeneric::~ContextGeneric()
 {
 }
 
-ContextBase *ContextText::NewInstance(LEditor *container){
-	return new ContextText(container);
+ContextBase *ContextGeneric::NewInstance(LEditor *container){
+	return new ContextGeneric(container, GetName());
 }
 
 // Dont implement this function, maybe derived child will want 
 // to do something with it
-void ContextText::AutoIndent(const wxChar &nChar)
+void ContextGeneric::AutoIndent(const wxChar &nChar)
 {
 	ContextBase::AutoIndent(nChar);
 }
 
 // Dont implement this function, maybe derived child will want 
 // to do something with it
-void ContextText::CodeComplete()
+void ContextGeneric::CodeComplete()
 {
 }
 
 // Dont implement this function, maybe derived child will want 
 // to do something with it
-void ContextText::CompleteWord()
+void ContextGeneric::CompleteWord()
 {
 }
 
 // Dont implement this function, maybe derived child will want 
 // to do something with it
-void ContextText::GotoDefinition()
+void ContextGeneric::GotoDefinition()
 {
 }
 
 // Dont implement this function, maybe derived child will want 
 // to do something with it
-void ContextText::GotoPreviousDefintion()
+void ContextGeneric::GotoPreviousDefintion()
 {
 }

@@ -278,6 +278,12 @@
 			<File
 				RelativePath=".\filedroptarget.h">
 			</File>
+			<File
+				RelativePath=".\generic_context.cpp">
+			</File>
+			<File
+				RelativePath=".\generic_context.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Application"

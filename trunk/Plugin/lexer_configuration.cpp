@@ -3,27 +3,28 @@
 #include "macros.h"
 
 LexerConf::LexerConf(wxXmlNode *element)
-: m_element(element)
 {
-	if( m_element ){
+	if( element ){
+		m_lexerId = XmlUtils::ReadLong(element, wxT("Id"), 0);
+
 		// read the lexer name
-		m_name = m_element->GetPropVal(wxT("Name"), wxEmptyString);
+		m_name = element->GetPropVal(wxT("Name"), wxEmptyString);
 
 		// load key words
-		wxXmlNode *node = XmlUtils::FindFirstByTagName(m_element, wxT("KeyWords"));
+		wxXmlNode *node = XmlUtils::FindFirstByTagName(element, wxT("KeyWords"));
 		if( node ){
 			m_keyWords = node->GetNodeContent();
 		}
 
 		// load extensions
-		node = XmlUtils::FindFirstByTagName(m_element, wxT("Extensions"));
+		node = XmlUtils::FindFirstByTagName(element, wxT("Extensions"));
 		if( node ){
 			m_extension = node->GetNodeContent();
 		}
 
 		// load properties
 		// Search for <properties>
-		node = XmlUtils::FindFirstByTagName(m_element, wxT("Properties"));
+		node = XmlUtils::FindFirstByTagName(element, wxT("Properties"));
 		if( node )
 		{
 			// We found the element, read the attributes
@@ -37,8 +38,9 @@ LexerConf::LexerConf(wxXmlNode *element)
 					wxString face = XmlUtils::ReadString(prop, wxT("Face"), wxT("Courier"));
 					wxString colour = XmlUtils::ReadString(prop, wxT("Colour"), wxT("black"));
 					long fontSize = XmlUtils::ReadLong(prop, wxT("Size"), 10);
+					long propId   = XmlUtils::ReadLong(prop, wxT("Id"), 0);
 
-					StyleProperty property = StyleProperty(colour, fontSize, Name, face, bold.CmpNoCase(wxT("Yes")) == 0);
+					StyleProperty property = StyleProperty(propId, colour, fontSize, Name, face, bold.CmpNoCase(wxT("Yes")) == 0);
 					m_properties.push_back( property );
 				}
 				prop = prop->GetNext();
@@ -57,6 +59,10 @@ wxXmlNode *LexerConf::ToXml() const
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Lexer"));
 	//set the lexer name
 	node->AddProperty(wxT("Name"), GetName());
+
+	wxString strId;
+	strId << GetLexerId();
+	node->AddProperty(wxT("Id"), strId);
 	
 	//set the keywords node
 	wxXmlNode *keyWords = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("KeyWords"));
@@ -74,11 +80,15 @@ wxXmlNode *LexerConf::ToXml() const
 	for(; iter != m_properties.end(); iter ++){
 		StyleProperty p = (*iter);
 		wxXmlNode *property = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("Property"));
+
+		wxString strId;
+		strId << p.GetId();
+		property->AddProperty(wxT("Id"), strId);
 		property->AddProperty(wxT("Name"), p.GetName());
 		property->AddProperty(wxT("Bold"), BoolToString(p.IsBold()));
 		property->AddProperty(wxT("Face"), p.GetFaceName());
 		property->AddProperty(wxT("Colour"), p.GetFgColour());
-
+			
 		wxString strSize;
 		strSize << p.GetFontSize();
 		property->AddProperty(wxT("Size"), strSize);

@@ -6,35 +6,13 @@
 #include "editor_config.h"
 
 ContextCpp::ContextCpp(LEditor *container)
-: ContextBase(container, wxT("C++"))
+: ContextBase(container)
 , m_tipKind(TipNone)
 {
-	// Initialise the map between a macro of proerpty and its value
-	m_propertyInt[_T("DEFAULT")] = 0;
-	m_propertyInt[_T("COMMENT")] = 1;
-	m_propertyInt[_T("COMMENTLINE")] = 2;
-	m_propertyInt[_T("COMMENTDOC")] = 3;
-	m_propertyInt[_T("NUMBER")] = 4;
-	m_propertyInt[_T("WORD")] = 5;
-	m_propertyInt[_T("STRING")] = 6;
-	m_propertyInt[_T("CHARACTER")] = 7;
-	m_propertyInt[_T("UUID")] = 8;
-	m_propertyInt[_T("PREPROCESSOR")] = 9;
-	m_propertyInt[_T("OPERATOR")] = 10;
-	m_propertyInt[_T("IDENTIFIER")] = 11;
-	m_propertyInt[_T("STRINGEOL")] = 12;
-	m_propertyInt[_T("VERBATIM")] = 13;
-	m_propertyInt[_T("REGEX")] = 14;
-	m_propertyInt[_T("COMMENTLINEDOC")] = 15;
-	m_propertyInt[_T("WORD2")] = 16;
-	m_propertyInt[_T("COMMENTDOCKEYWORD")] = 17;
-	m_propertyInt[_T("COMMENTDOCKEYWORDERROR")] = 18;
-	m_propertyInt[_T("GLOBALCLASS")] = 19;
-
-	// Initialise CPP style settings
-		//-----------------------------------------------
+	//-----------------------------------------------
 	// Load laguage settings from configuration file
 	//-----------------------------------------------
+	SetName(wxT("C++"));
 
 	// Set the key words and the lexer
 	wxString keyWords;
@@ -47,7 +25,7 @@ ContextCpp::ContextCpp(LEditor *container)
 
 	// Update the control
 	LEditor &rCtrl = GetCtrl();
-	rCtrl.SetLexer(wxSCI_LEX_CPP);
+	rCtrl.SetLexer(lexPtr->GetLexerId());
 	rCtrl.SetKeyWords(0, lexPtr->GetKeyWords());
 	rCtrl.StyleClearAll();
 	
@@ -56,20 +34,16 @@ ContextCpp::ContextCpp(LEditor *container)
 	for(; iter != styles.end(); iter++)
 	{
 		StyleProperty st = (*iter);
-		std::map<wxString, int>::iterator mapiter = m_propertyInt.find(st.GetName());
-		if(mapiter == m_propertyInt.end())
-			continue;
-
-		int size = (*iter).GetFontSize();
-		wxString face = (*iter).GetFaceName();
-		bool bold = (*iter).IsBold();
-
+		int size = st.GetFontSize();
+		wxString face = st.GetFaceName();
+		bool bold = st.IsBold();
+		
 		wxFont font(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
 		font.SetFaceName(face);
 
-		rCtrl.StyleSetFont(mapiter->second, font);
-		rCtrl.StyleSetSize(mapiter->second, (*iter).GetFontSize());
-		rCtrl.StyleSetForeground(mapiter->second, (*iter).GetFgColour());
+		rCtrl.StyleSetFont(st.GetId(), font);
+		rCtrl.StyleSetSize(st.GetId(), (*iter).GetFontSize());
+		rCtrl.StyleSetForeground(st.GetId(), (*iter).GetFgColour());
 	}
 }
 

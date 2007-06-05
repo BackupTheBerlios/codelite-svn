@@ -6,15 +6,17 @@
 
 class StyleProperty
 {
+	int m_id;
 	wxString m_fgColour;
 	long m_fontSize;
 	wxString m_name;
 	wxString m_faceName;
 	bool m_bold;
-
+	
 public:
-	StyleProperty(const wxString& fgColour, const int fontSize, const wxString& name, const wxString& face, bool bold)
-		: m_fgColour(fgColour)
+	StyleProperty(int id, const wxString& fgColour, const int fontSize, const wxString& name, const wxString& face, bool bold)
+		: m_id(id)
+		, m_fgColour(fgColour)
 		, m_fontSize(fontSize)
 		, m_name(name)
 		, m_faceName(face)
@@ -23,7 +25,8 @@ public:
 	};
 
 	StyleProperty()
-		: m_fgColour(_T("BLACK"))
+		: m_id(0)
+		, m_fgColour(_T("BLACK"))
 		, m_fontSize(10)
 		, m_name(wxEmptyString)
 		, m_faceName(_T("Courier"))
@@ -36,30 +39,30 @@ public:
 		*this = rhs;
 	};
 
-	StyleProperty& operator=(const StyleProperty& rhs)
-	{
+	StyleProperty& operator=(const StyleProperty& rhs){
 		m_fgColour = rhs.m_fgColour;
 		m_faceName = rhs.m_faceName;
 		m_bold = rhs.m_bold;
 		m_fontSize = rhs.m_fontSize;
 		m_name = rhs.m_name;
+		m_id = rhs.m_id;
 		return *this;
-	};
+	}
 
-	virtual ~StyleProperty()
-	{
-	};
+	virtual ~StyleProperty(){}
 
 	const wxString& GetFgColour() const { return m_fgColour; }
 	const long GetFontSize() const { return m_fontSize; }
 	const wxString& GetFaceName() const { return m_faceName; }
 	bool IsBold() const { return m_bold; }
 	const wxString& GetName() const { return m_name; }
+	int GetId() const { return m_id; }
 
 	void SetFgColour(const wxString& colour) { m_fgColour = colour; }
 	void SetFontSize(long size) { m_fontSize = size; }
 	void SetFaceName(const wxString& face){ m_faceName = face; }
 	void SetBold(bool bold) { m_bold = bold; }
+	void SetId(int id){m_id = id;}
 };
 
 typedef std::list<StyleProperty> StylePropertyList;

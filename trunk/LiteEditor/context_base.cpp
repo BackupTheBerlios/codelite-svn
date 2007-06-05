@@ -3,9 +3,9 @@
 #include "editor_config.h"
 #include "editor.h"
 
-ContextBase::ContextBase(LEditor *container, const wxString &name)
+ContextBase::ContextBase(LEditor *container)
 : m_container(container)
-, m_name(name)
+, m_name(wxEmptyString)
 {
 }
 
