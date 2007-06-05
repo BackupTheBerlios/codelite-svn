@@ -24,6 +24,8 @@
 #include "build_settings_config.h"
 #include "list"
 #include "macros.h"
+#include "editor_creator_thread.h"
+#include "editor_creator.h"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -136,8 +138,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 END_EVENT_TABLE()
 Frame* Frame::m_theFrame = NULL;
 
-//static std::list<LEditor*> g_cache;
-
 Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 : wxFrame(pParent, id, title, pos, size, style, name)
 , m_restartCtags(true)
@@ -153,6 +153,14 @@ Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPo
 	// Start the search thread
 	SearchThreadST::Get()->SetNotifyWindow(this);
 	SearchThreadST::Get()->Start();
+	
+	//start the editor creator thread
+	EditorCreatorThreadST::Get()->SetEditorParent(m_notebook);
+	EditorCreatorThreadST::Get()->Start();
+	EditorCreatorST::Get()->SetParent(m_notebook);
+
+	//put a dummy request on the queue to give it a kick start
+	EditorCreatorThreadST::Get()->Add(new ThreadRequest());
 }
 
 Frame::~Frame(void)
@@ -274,12 +282,6 @@ void Frame::CreateGUIControls(void)
 	m_mgr.Update();
 	SetAutoLayout (true);
 	Layout();
-
-	//create a cache
-	//g_cache.push_back(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true));
-	//g_cache.push_back(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true));
-	//g_cache.push_back(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true));
-	//g_cache.push_back(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true));
 }
 
 void Frame::CreateToolbars()
@@ -529,12 +531,13 @@ void Frame::OnFileNew(wxCommandEvent &event)
 
 	m_notebook->Freeze();
 	LEditor *editor = NULL;
+	editor = EditorCreatorST::Get()->NewInstance();
 //	if( g_cache.empty() == false ){
 //		editor = g_cache.back();
 //		g_cache.pop_back();
 //		editor->Show();
 //	}else{
-		editor = new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), wxEmptyString);
+//		editor = new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), wxEmptyString);
 //	}
 	m_notebook->AddPage(editor, fileName.GetFullName(), true);
 	m_notebook->Thaw();

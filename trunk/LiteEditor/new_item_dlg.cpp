@@ -19,6 +19,7 @@
 #include "wx/xrc/xmlres.h"
 #include "wx/textctrl.h"
 #include "dirsaver.h"
+#include "macros.h"
 
 static const wxString FileTypeCpp = wxT("C++ Source File (.cpp)");
 static const wxString FileTypeC = wxT("C Source File (.c)");
@@ -154,28 +155,31 @@ void NewItemDlg::DoCreateFile()
 	}
 
 	// Construct the file name
+	wxString fileName(m_fileName->GetValue());
+	TrimString(fileName);
+
 	if(m_fileTypeValue == FileTypeAny){
-		m_newFileName = wxFileName(m_location->GetValue(), m_fileName->GetValue());
+		m_newFileName = wxFileName(m_location->GetValue(),fileName);
 	} else if( m_fileTypeValue == FileTypeC ){
 		// If user already provided suffix, dont add another one on top of it
-		if( m_fileName->GetValue().Find(wxT(".")) == wxNOT_FOUND ){
-			m_newFileName = wxFileName(m_location->GetValue(), m_fileName->GetValue(), wxT("c"));
+		if(fileName.Find(wxT(".")) == wxNOT_FOUND ){
+			m_newFileName = wxFileName(m_location->GetValue(),fileName, wxT("c"));
 		} else {
-			m_newFileName = wxFileName(m_location->GetValue(), m_fileName->GetValue());
+			m_newFileName = wxFileName(m_location->GetValue(),fileName);
 		}
 	} else if( m_fileTypeValue == FileTypeCpp ){
 		// If user already provided suffix, dont add another one on top of it
-		if( m_fileName->GetValue().Find(wxT(".")) == wxNOT_FOUND ){
-			m_newFileName = wxFileName(m_location->GetValue(), m_fileName->GetValue(), wxT("cpp"));
+		if(fileName.Find(wxT(".")) == wxNOT_FOUND ){
+			m_newFileName = wxFileName(m_location->GetValue(),fileName, wxT("cpp"));
 		} else {
-			m_newFileName = wxFileName(m_location->GetValue(), m_fileName->GetValue());
+			m_newFileName = wxFileName(m_location->GetValue(),fileName);
 		}
 	} else if( m_fileTypeValue == FileTypeHeader ){
 		// If user already provided suffix, dont add another one on top of it
-		if( m_fileName->GetValue().Find(wxT(".")) == wxNOT_FOUND ){
-			m_newFileName = wxFileName(m_location->GetValue(), m_fileName->GetValue(), wxT("h"));
+		if(fileName.Find(wxT(".")) == wxNOT_FOUND ){
+			m_newFileName = wxFileName(m_location->GetValue(),fileName, wxT("h"));
 		} else {
-			m_newFileName = wxFileName(m_location->GetValue(), m_fileName->GetValue());
+			m_newFileName = wxFileName(m_location->GetValue(),fileName);
 		}
 	}
 	EndModal(wxID_OK);
