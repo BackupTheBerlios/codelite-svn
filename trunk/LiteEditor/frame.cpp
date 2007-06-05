@@ -937,12 +937,8 @@ void Frame::OnWorkspaceConfigChanged(wxCommandEvent &event)
 void Frame::OnTimer(wxTimerEvent &event)
 {
 	//increase pool size if needed
-	size_t poolSize = EditorCreatorST::Get()->GetQueueCount();
-	if(poolSize < 5){
-		size_t amountToAdd = 5 - poolSize;
-		for(size_t i=0; i<amountToAdd; i++){
-			EditorCreatorST::Get()->Add(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true)); 
-		}
+	if(EditorCreatorST::Get()->GetQueueCount() == 0){
+		EditorCreatorST::Get()->Add(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true)); 
 	}
 	event.Skip();
 }
