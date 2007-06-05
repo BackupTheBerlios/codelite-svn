@@ -19,7 +19,6 @@ TODO List:
 . Add option to open type in the workspace (eclips's Ctrl+Shift+T)
 . Change 'Find What' & 'Replace With' controls to comboboxs 
 . Allow to rename a file from whithin the editor
-. Support comment parsing (missing the in ctags options dialog as well as in the code)
 . keyboard should open files when hitting on a tree control
 . typedefs are not handled properly
 . When opening a file from the command line, make sure that the workspace pane and the output pane are hidden
