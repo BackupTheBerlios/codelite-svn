@@ -878,3 +878,12 @@ void Manager::SetWorkspaceConfigurationName(const wxString &name)
 	matrix->SetSelectedConfigurationName(name);
 	SetWorkspaceBuildMatrix(matrix);
 }
+
+void Manager::ShowMainToolbar(bool show)
+{
+	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Standard Toolbar"));
+	if( info.IsOk() ){
+		show ? info.Show() : info.Hide();
+		Frame::Get()->GetDockingManager().Update();
+	}
+}

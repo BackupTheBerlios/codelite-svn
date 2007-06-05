@@ -96,6 +96,8 @@ private:
 	void DispatchCommandEvent(wxCommandEvent &event);
 	void DispatchUpdateUIEvent(wxUpdateUIEvent &event);
 	void CreateToolbars();
+	void ViewPaneUI(const wxString &paneName, wxUpdateUIEvent&event);
+	void ViewPane(const wxString &paneName, wxCommandEvent &event);
 
 protected:
 	//----------------------------------------------------
@@ -126,6 +128,8 @@ protected:
 	void OnFindInFiles(wxCommandEvent &event);
 	void OnViewWorkspacePane(wxCommandEvent &event);
 	void OnViewOutputPane(wxCommandEvent &event);
+	void OnViewToolbar(wxCommandEvent &event);
+	void OnViewToolbarUI(wxUpdateUIEvent &event);
 	void OnViewWorkspacePaneUI(wxUpdateUIEvent &event);
 	void OnViewOutputPaneUI(wxUpdateUIEvent &event);
 	void OnViewOptions(wxCommandEvent &event);

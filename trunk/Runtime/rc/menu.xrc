@@ -112,15 +112,20 @@
         <object class="wxMenu" name="view_menu">
             <label>&amp;View</label>
             <style>wxMENU_TEAROFF</style>
-            <object class="wxMenuItem" name="workspace_pane">
-                 <label>&amp;Workspace Pane\tCtrl+Shift+W</label>
-				<checkable>1</checkable>
-            </object>
             <object class="wxMenuItem" name="output_pane">
 				<label>O&amp;utput Pane\tCtrl+Alt+O</label>
 				<checkable>1</checkable>
             </object>
-            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+			<object class="wxMenuItem" name="workspace_pane">
+				<label>&amp;Workspace Pane\tCtrl+Shift+W</label>
+				<checkable>1</checkable>
+			</object>
+			<object class="wxMenuItem" name="show_toolbar">
+				<label>&amp;Show ToolBar</label>
+				<checkable>1</checkable>
+			</object>
+
+			<object class="wxMenuItem" name="wxID_SEPARATOR"/>
             <object class="wxMenu" name="view_as_menu">
                 <label>View As</label>
                 <style>wxMENU_TEAROFF</style>

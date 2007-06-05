@@ -216,6 +216,12 @@ public:
 	void HideOutputPane();
 
 	/**
+	 * Show the main toolbar
+	 * \param show set to true to show it, false otherwise
+	 */
+	void ShowMainToolbar(bool show = true);
+
+	/**
 	 * Show the workspace pane and set focus to focusWin
 	 * \param focusWin tab name to set the focus
 	 */

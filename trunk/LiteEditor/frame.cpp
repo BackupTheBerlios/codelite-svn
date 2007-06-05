@@ -102,6 +102,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("complete_word"), Frame::OnCompleteWord)
 	EVT_MENU(XRCID("tags_options"), Frame::OnCtagsOptions)
 	EVT_MENU(XRCID("workspace_pane"), Frame::OnViewWorkspacePane)
+	EVT_MENU(XRCID("show_toolbar"), Frame::OnViewToolbar)
+	EVT_UPDATE_UI(XRCID("show_toolbar"), Frame::OnViewToolbarUI)
 	EVT_MENU(XRCID("output_pane"), Frame::OnViewOutputPane)
 	EVT_UPDATE_UI(XRCID("output_pane"), Frame::OnViewOutputPaneUI)
 	EVT_UPDATE_UI(XRCID("workspace_pane"), Frame::OnViewWorkspacePaneUI)
@@ -789,20 +791,34 @@ void Frame::OnCtagsOptions(wxCommandEvent &event)
 
 void Frame::OnViewOutputPane(wxCommandEvent &event)
 {
-	wxAuiPaneInfo &info = m_mgr.GetPane(wxT("Output"));
-	if(info.IsOk()){
-		if( event.IsChecked() ){
-			info.Show();
-		} else {
-			info.Hide();
-		}
-		m_mgr.Update();
-	}
+	ViewPane(wxT("Output"), event);
 }
 
 void Frame::OnViewWorkspacePane(wxCommandEvent &event)
 {
-	wxAuiPaneInfo &info = m_mgr.GetPane(wxT("Workspace"));
+	ViewPane(wxT("Workspace"), event);
+}
+
+void Frame::OnViewToolbar(wxCommandEvent &event)
+{
+	ViewPane(wxT("Standard Toolbar"), event);
+}
+
+void Frame::OnViewWorkspacePaneUI(wxUpdateUIEvent &event){
+	ViewPaneUI(wxT("Workspace"), event);
+}
+
+void Frame::OnViewToolbarUI(wxUpdateUIEvent &event){
+	ViewPaneUI(wxT("Standard Toolbar"), event);
+}
+
+void Frame::OnViewOutputPaneUI(wxUpdateUIEvent &event){
+	ViewPaneUI(wxT("Output"), event);
+}
+
+void Frame::ViewPane(const wxString &paneName, wxCommandEvent &event)
+{
+	wxAuiPaneInfo &info = m_mgr.GetPane(paneName);
 	if(info.IsOk()){
 		if( event.IsChecked() ){
 			info.Show();
@@ -811,17 +827,12 @@ void Frame::OnViewWorkspacePane(wxCommandEvent &event)
 		}
 		m_mgr.Update();
 	}
+
 }
 
-void Frame::OnViewWorkspacePaneUI(wxUpdateUIEvent &event){
-	wxAuiPaneInfo &info = m_mgr.GetPane(wxT("Workspace"));
-	if(info.IsOk()){
-		event.Check(info.IsShown());
-	}
-}
-
-void Frame::OnViewOutputPaneUI(wxUpdateUIEvent &event){
-	wxAuiPaneInfo &info = m_mgr.GetPane(wxT("Output"));
+void Frame::ViewPaneUI(const wxString &paneName, wxUpdateUIEvent &event)
+{
+	wxAuiPaneInfo &info = m_mgr.GetPane(paneName);
 	if(info.IsOk()){
 		event.Check(info.IsShown());
 	}
@@ -942,3 +953,4 @@ void Frame::OnTimer(wxTimerEvent &event)
 	}
 	event.Skip();
 }
+
