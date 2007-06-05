@@ -80,11 +80,12 @@ void LEditor::SetProperties()
 	OptionsConfigPtr options = EditorConfigST::Get()->GetOptions();
 
 	SetMouseDwellTime(200);
-	SetProperty(_("fold"), _("1"));
-	SetProperty(_("styling.within.preprocessor"), _("1"));
+	SetProperty(wxT("fold"), wxT("1"));
+	SetProperty(wxT("fold.html"), wxT("1"));
+	SetProperty(wxT("styling.within.preprocessor"), wxT("1"));
 
 	// Fold and comments as well
-	SetProperty(_("fold.comment"), _("1"));
+	SetProperty(wxT("fold.comment"), wxT("1"));
 
 	//Set the selection color to grey/black as default
 #ifdef __WXMSW__
@@ -362,7 +363,7 @@ bool LEditor::SaveFileAs()
 {
 	// Prompt the user for a new file name
 	const wxString ALL(_T("All Files (*.*)|*.*"));
-	wxFileDialog *dlg = new wxFileDialog(this, _("Save As"), m_fileName.GetPath(), m_fileName.GetFullName(), ALL, 
+	wxFileDialog *dlg = new wxFileDialog(this, wxT("Save As"), m_fileName.GetPath(), m_fileName.GetFullName(), ALL, 
 											wxFD_SAVE | wxFD_OVERWRITE_PROMPT , 
 											wxDefaultPosition);
 
@@ -391,7 +392,7 @@ bool LEditor::SaveToFile(const wxFileName &fileName)
 	if(file.IsOpened() == false)
 	{
 		// Nothing to be done
-		wxString msg = wxString::Format(_("Failed to open file %s"), fileName.GetFullPath().GetData());
+		wxString msg = wxString::Format(wxT("Failed to open file %s"), fileName.GetFullPath().GetData());
 		wxMessageBox( msg );
 		return false;
 	}
@@ -431,7 +432,7 @@ void LEditor::OpenFile(const wxString &fileName, const wxString &project)
 	if(file.IsOpened() == false)
 	{
 		// Nothing to be done
-		wxString msg = wxString::Format(_("Failed to open file %s"), fileName.GetData());
+		wxString msg = wxString::Format(wxT("Failed to open file %s"), fileName.GetData());
 		wxMessageBox( msg );
 		return;
 	}
@@ -1067,7 +1068,7 @@ void LEditor::ReloadFile()
 	if(file.IsOpened() == false)
 	{
 		// Nothing to be done
-		wxString msg = wxString::Format(_("Failed to open file %s"), m_fileName.GetFullPath().GetData());
+		wxString msg = wxString::Format(wxT("Failed to open file %s"), m_fileName.GetFullPath().GetData());
 		wxMessageBox( msg );
 		return;
 	}
