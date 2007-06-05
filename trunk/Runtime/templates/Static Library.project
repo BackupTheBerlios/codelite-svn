@@ -2,15 +2,28 @@
 <CodeLite_Project Name="Static Library">
   <VirtualDirectory Name="Source Files"/>
   <VirtualDirectory Name="Header Files"/>
-  <Settings Type="Static Library">
+   <Settings Type="Static Library">
     <Configuration Name="Debug" CompilerType="GNU g++">
-      <General OutputFile="" IntermediateDirectory="./Debug" Command="" CommandArguments="" WorkingDirectory="./Debug"/>
+      <General OutputFile="./Debug/libDynamicLibray.a" IntermediateDirectory="./Debug" Command="" CommandArguments="" WorkingDirectory="./Debug"/>
       <Compiler Required="yes" Options="-g">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Required="yes" Options="-O0">
         <LibraryPath Value="."/>
-        <LibraryPath Value="Debug"/>
+        <LibraryPath Value="./Debug"/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
+
+	<Configuration Name="Release" CompilerType="GNU g++">
+      <General OutputFile="./Release/libDynamicLibray.a" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory="./Release"/>
+      <Compiler Required="yes" Options="-O2">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Required="yes" Options="-O2">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="./Release"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>

@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Project Name="Executable">
+
   <VirtualDirectory Name="Source Files"/>
   <VirtualDirectory Name="Header Files"/>
+  
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="GNU g++">
-      <General OutputFile="" IntermediateDirectory="./Debug" Command="" CommandArguments="" WorkingDirectory="./Debug"/>
+      <General OutputFile="./Debug/HelloWorld" IntermediateDirectory="./Debug" Command="HelloWorld" CommandArguments="" WorkingDirectory="./Debug"/>
       <Compiler Required="yes" Options="-g">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Required="yes" Options="-O0">
         <LibraryPath Value="."/>
-        <LibraryPath Value="Debug"/>
+        <LibraryPath Value="./Debug"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>
     </Configuration>
+
+    <Configuration Name="Release" CompilerType="GNU g++">
+      <General OutputFile="./Release/HelloWorld" IntermediateDirectory="./Release" Command="HelloWorld" CommandArguments="" WorkingDirectory="./Release"/>
+      <Compiler Required="yes" Options="-O2">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Required="yes" Options="-O2">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="./Release"/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
+    
   </Settings>
 </CodeLite_Project>

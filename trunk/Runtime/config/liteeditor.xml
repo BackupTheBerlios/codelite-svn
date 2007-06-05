@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LiteEditor>
+  <Layout>
+    <Perspective Name="Default" Value="layout2|name=Output;caption=Output;state=6293500;dir=3;layer=1;row=0;pos=0;prop=100000;bestw=602;besth=498;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Workspace;caption=Workspace;state=6309884;dir=4;layer=1;row=0;pos=0;prop=100000;bestw=300;besth=400;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Editor;caption=;state=256;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=20;besth=20;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Standard Toolbar;caption=Standard;state=2108156;dir=1;layer=10;row=0;pos=0;prop=100000;bestw=692;besth=22;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=10;floaty=920;floatw=709;floath=46|dock_size(1,10,0)=24|dock_size(5,0,0)=20|dock_size(3,1,0)=277|dock_size(4,1,0)=302|"/>
+  </Layout>
+  <Lexers>
+    <Lexer Name="Text" Id="1">
+      <KeyWords/>
+      <Extensions/>
+      <Properties>
+        <Property Id="0" Name="Default" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+      </Properties>
+    </Lexer>
+    <Lexer Name="C++" Id="3">
+      <KeyWords>and and_eq asm auto bitand bitor bool break case catch char class compl const const_cast continue default delete do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace new not not_eq operator or or_eq private protected public register reinterpret_cast return short signed Sizeof static static_cast struct switch template this throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while xor xor_eq</KeyWords>
+      <Extensions>*.cxx;*.hpp;*.cc;*.h;*.c;*.cpp</Extensions>
+      <Properties>
+        <Property Id="0" Name="Default" Bold="no" Face="Courier New" Colour="medium blue" Size="10"/>
+        <Property Id="1" Name="Comment" Bold="no" Face="Courier New" Colour="#004000" Size="10"/>
+        <Property Id="2" Name="C++ comment" Bold="no" Face="Courier New" Colour="#008000" Size="10"/>
+        <Property Id="3" Name="C style comment" Bold="no" Face="Courier New" Colour="FOREST GREEN" Size="10"/>
+        <Property Id="4" Name="Number" Bold="no" Face="Courier New" Colour="#0000FF" Size="10"/>
+        <Property Id="5" Name="C++ keyword" Bold="yes" Face="Courier New" Colour="#0000FF" Size="10"/>
+        <Property Id="6" Name="String" Bold="no" Face="Courier New" Colour="#800000" Size="10"/>
+        <Property Id="7" Name="Character" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="8" Name="Uuid" Bold="no" Face="Courier New" Colour="medium blue" Size="10"/>
+        <Property Id="9" Name="Preprocessor" Bold="no" Face="Courier New" Colour="#0000FF" Size="10"/>
+        <Property Id="10" Name="Operator" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="11" Name="Identifier" Bold="no" Face="Courier New" Colour="black" Size="10"/>
+        <Property Id="12" Name="Open string" Bold="no" Face="Courier New" Colour="#800000" Size="10"/>
+        <Property Id="15" Name="Doxygen C++ comment" Bold="no" Face="Courier New" Colour="FOREST GREEN" Size="10"/>
+        <Property Id="17" Name="Doxygen keyword" Bold="no" Face="Courier New" Colour="blue" Size="10"/>
+        <Property Id="18" Name="Doxygen keyword error" Bold="no" Face="Courier New" Colour="rgb(255,0,0)" Size="10"/>
+        <Property Id="19" Name="Global class" Bold="no" Face="Courier New" Colour="medium blue" Size="10"/>
+      </Properties>
+    </Lexer>
+    <Lexer Name="Java" Id="3">
+      <KeyWords>abstract assert boolean break byte case catch char class const continue default do double else extends final finally float for future generic goto if implements import inner instanceof int interface long native new null outer package private protected public rest return short static super switch synchronized this throw throws transient try var void volatile while</KeyWords>
+      <Extensions>*.java</Extensions>
+      <Properties>
+        <Property Id="0" Name="Default" Bold="no" Face="Courier New" Colour="medium blue" Size="10"/>
+        <Property Id="1" Name="Comment" Bold="no" Face="Courier New" Colour="#004000" Size="10"/>
+        <Property Id="2" Name="Single line comment" Bold="no" Face="Courier New" Colour="#008000" Size="10"/>
+        <Property Id="3" Name="C style comment" Bold="no" Face="Courier New" Colour="FOREST GREEN" Size="10"/>
+        <Property Id="4" Name="Number" Bold="no" Face="Courier New" Colour="#0000FF" Size="10"/>
+        <Property Id="5" Name="Java keyword" Bold="yes" Face="Courier New" Colour="#0000FF" Size="10"/>
+        <Property Id="6" Name="String" Bold="no" Face="Courier New" Colour="#800000" Size="10"/>
+        <Property Id="7" Name="Character" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="8" Name="Uuid" Bold="no" Face="Courier New" Colour="medium blue" Size="10"/>
+        <Property Id="9" Name="Preprocessor" Bold="no" Face="Courier New" Colour="#0000FF" Size="10"/>
+        <Property Id="10" Name="Operator" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="11" Name="Identifier" Bold="no" Face="Courier New" Colour="black" Size="10"/>
+        <Property Id="12" Name="Open string" Bold="no" Face="Courier New" Colour="#800000" Size="10"/>
+        <Property Id="15" Name="Doxygen single line comment" Bold="no" Face="Courier New" Colour="FOREST GREEN" Size="10"/>
+        <Property Id="17" Name="Doxygen keyword" Bold="no" Face="Courier New" Colour="blue" Size="10"/>
+        <Property Id="18" Name="Doxygen keyword error" Bold="no" Face="Courier New" Colour="rgb(255,0,0)" Size="10"/>
+        <Property Id="19" Name="Global class" Bold="no" Face="Courier New" Colour="medium blue" Size="10"/>
+      </Properties>
+    </Lexer>
+    <Lexer Name="XML" Id="5">
+      <KeyWords/>
+      <Extensions>*.xml;*xrc;*.project;*.workspace</Extensions>
+      <Properties>
+        <Property Id="0" Name="Default" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="1" Name="Tags" Bold="no" Face="Courier New" Colour="#004080" Size="10"/>
+        <Property Id="2" Name="Unknown Tags" Bold="no" Face="Courier New" Colour="#FF0000" Size="10"/>
+        <Property Id="3" Name="Attributes" Bold="no" Face="Courier New" Colour="#408080" Size="10"/>
+        <Property Id="4" Name="Unknown Attributes" Bold="no" Face="Courier New" Colour="#FF0000" Size="10"/>
+        <Property Id="5" Name="Numbers" Bold="no" Face="Courier New" Colour="#0000FF" Size="10"/>
+        <Property Id="6" Name="Double quoted strings" Bold="no" Face="Courier New" Colour="#800000" Size="10"/>
+        <Property Id="7" Name="Single quoted strings" Bold="no" Face="Courier New" Colour="#800000" Size="10"/>
+        <Property Id="8" Name="Other inside tag" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="9" Name="Comment" Bold="no" Face="Courier New" Colour="#008000" Size="10"/>
+        <Property Id="10" Name="Entities" Bold="no" Face="Courier New" Colour="#FF8000" Size="10"/>
+        <Property Id="11" Name="XML style tag ends " Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="12" Name="XML identifier start " Bold="no" Face="Courier New" Colour="#FF8080" Size="10"/>
+        <Property Id="13" Name="XML identifier end '?&gt;'" Bold="no" Face="Courier New" Colour="#FF8080" Size="10"/>
+        <Property Id="14" Name="CDATA" Bold="no" Face="Courier New" Colour="#800000" Size="10"/>
+        <Property Id="15" Name="Question" Bold="no" Face="Courier New" Colour="#0000FF" Size="10"/>
+        <Property Id="16" Name="Unquoted Value" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="17" Name="SGML tags " Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="18" Name="SGML command" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="19" Name="SGML 1st param" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="20" Name="SGML double string" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="21" Name="SGML single string" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="22" Name="SGML error" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="23" Name="SGML special (#xxxx type)" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="24" Name="SGML entity" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="25" Name="SGML comment" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+        <Property Id="26" Name="SGML block" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+      </Properties>
+    </Lexer>
+  </Lexers>
+  <Options DisplayFoldMargin="yes" UnderlineFoldedLine="yes" FoldStyle="Flatten Tree Square Headers" DisplayBookmarkMargin="yes" BookmarkShape="Small Rectangle" BookmarkBgColour="#0C85DE" BookmarkFgColour="#42A9F4" HighlightCaretLine="yes" ShowLineNumber="no" IndentationGuides="no"/>
+</LiteEditor>
