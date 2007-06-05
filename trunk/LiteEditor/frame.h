@@ -16,6 +16,7 @@
 #include "cl_process.h"
 #include "envvar_table.h"
 #include "wx/choice.h"
+#include "wx/timer.h"
 
 // forward decls
 class TagEntry;
@@ -37,6 +38,7 @@ class Frame : public wxFrame
 	WorkspacePane *m_workspacePane;
 	wxArrayString m_files;
 	wxChoice *m_workspaceConfig;
+	wxTimer *m_timer;
 
 public:
 	// the access method to the singleton frame is by using the Get method
@@ -148,6 +150,7 @@ protected:
 	void OnExecuteNoDebug(wxCommandEvent &event);
 	void OnExecuteNoDebugUI(wxUpdateUIEvent &event);
 	void OnWorkspaceConfigChanged(wxCommandEvent &event);
+	void OnTimer(wxTimerEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

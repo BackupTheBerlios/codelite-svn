@@ -24,7 +24,6 @@
 #include "build_settings_config.h"
 #include "list"
 #include "macros.h"
-#include "editor_creator_thread.h"
 #include "editor_creator.h"
 
 //----------------------------------------------------------------
@@ -135,6 +134,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	*/
 
 	EVT_CLOSE(Frame::OnClose)
+	EVT_TIMER(wxID_ANY, Frame::OnTimer)
+
 END_EVENT_TABLE()
 Frame* Frame::m_theFrame = NULL;
 
@@ -155,16 +156,15 @@ Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPo
 	SearchThreadST::Get()->Start();
 	
 	//start the editor creator thread
-	EditorCreatorThreadST::Get()->SetEditorParent(m_notebook);
-	EditorCreatorThreadST::Get()->Start();
 	EditorCreatorST::Get()->SetParent(m_notebook);
-
-	//put a dummy request on the queue to give it a kick start
-	EditorCreatorThreadST::Get()->Add(new ThreadRequest());
+	m_timer = new wxTimer(this);
+	m_timer->Start(100);
 }
 
 Frame::~Frame(void)
 {
+	m_timer->Stop();
+	delete m_timer;
 	ManagerST::Free();
 
 	// uninitialize AUI manager
@@ -530,18 +530,11 @@ void Frame::OnFileNew(wxCommandEvent &event)
 	}
 
 	m_notebook->Freeze();
-	LEditor *editor = NULL;
-	editor = EditorCreatorST::Get()->NewInstance();
-//	if( g_cache.empty() == false ){
-//		editor = g_cache.back();
-//		g_cache.pop_back();
-//		editor->Show();
-//	}else{
-//		editor = new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), wxEmptyString);
-//	}
+	//allocate new editor instance using the creator
+	//this is done due to low performance on GTK 
+	LEditor *editor = EditorCreatorST::Get()->NewInstance();
 	m_notebook->AddPage(editor, fileName.GetFullName(), true);
 	m_notebook->Thaw();
-
 	editor->SetFocus ();
 	editor->SetSCIFocus(true);
 }
@@ -941,3 +934,15 @@ void Frame::OnWorkspaceConfigChanged(wxCommandEvent &event)
 	ManagerST::Get()->SetWorkspaceConfigurationName(selectionStr);
 }
 
+void Frame::OnTimer(wxTimerEvent &event)
+{
+	//increase pool size if needed
+	size_t poolSize = EditorCreatorST::Get()->GetQueueCount();
+	if(poolSize < 5){
+		size_t amountToAdd = 5 - poolSize;
+		for(size_t i=0; i<amountToAdd; i++){
+			EditorCreatorST::Get()->Add(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true)); 
+		}
+	}
+	event.Skip();
+}
