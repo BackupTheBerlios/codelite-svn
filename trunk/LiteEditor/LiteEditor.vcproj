@@ -509,6 +509,12 @@
 		<Filter
 			Name="Manager">
 			<File
+				RelativePath=".\editor_creator.cpp">
+			</File>
+			<File
+				RelativePath=".\editor_creator.h">
+			</File>
+			<File
 				RelativePath=".\manager.cpp">
 			</File>
 			<File
