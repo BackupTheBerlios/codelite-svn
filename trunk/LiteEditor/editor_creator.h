@@ -3,7 +3,7 @@
 
 #include "singleton.h"
 #include "wx/string.h"
-#include "sync_queue.h"
+#include "deque"
 
 class LEditor;
 class wxWindow;
@@ -14,7 +14,7 @@ class wxWindow;
  */
 class EditorCreator {
 	friend class Singleton<EditorCreator>;
-	SyncQueue<LEditor*> m_queue;
+	std::deque<LEditor*> m_queue;
 	wxWindow *m_parent;
 
 public:
