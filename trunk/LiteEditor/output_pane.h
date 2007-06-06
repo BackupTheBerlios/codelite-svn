@@ -79,6 +79,7 @@ public:
 	// Event handlers
 	//-----------------------------------------------
 	void OnClearAll(wxCommandEvent &event);
+	void OnWordWrap(wxCommandEvent &event);
 	void OnSetFocus(wxFocusEvent &event);
 	void OnMouseDClick(wxScintillaEvent &event);
 };

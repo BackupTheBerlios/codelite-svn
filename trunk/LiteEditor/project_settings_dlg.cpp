@@ -287,7 +287,7 @@ void ProjectSettingsDlg::OnCheckLinkerNeeded(wxCommandEvent &event)
 
 void ProjectSettingsDlg::PopupAddOptionDlg(wxTextCtrl *ctrl)
 {
-	AddOptionDlg *dlg = new AddOptionDlg(this, ctrl->GetValue());
+	AddOptionDlg *dlg = new AddOptionDlg(NULL, ctrl->GetValue());
 	if(dlg->ShowModal() == wxID_OK){
 		wxString updatedValue = dlg->GetValue();
 		ctrl->SetValue(updatedValue);

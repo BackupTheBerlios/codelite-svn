@@ -33,7 +33,10 @@ void CleanRequest::Process()
 
 	m_proc = new clProcess(wxNewId(), cmd);
 	if(m_proc){
-		m_proc->Start();
+		if(m_proc->Start() == 0){
+			SetBusy(false);
+			return;
+		}
 		Connect(wxEVT_TIMER, wxTimerEventHandler(CleanRequest::OnTimer), NULL, this);
 		m_proc->Connect(wxEVT_END_PROCESS, wxProcessEventHandler(CleanRequest::OnProcessEnd), NULL, this);
 		m_timer->Start(10);

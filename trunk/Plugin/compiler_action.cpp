@@ -13,6 +13,15 @@ void CompilerAction::AppendLine(const wxString &line)
 	m_owner->ProcessEvent(event);
 }
 
+void CompilerAction::Stop()
+{
+	m_stop = true;
+	//kill the build process
+	if(m_proc){
+		m_proc->Terminate();
+	}
+}
+
 void CompilerAction::SendStartMsg()
 {
 	if( !m_owner)

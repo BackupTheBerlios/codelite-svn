@@ -158,11 +158,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28ud_aui.lib wxbase28ud_net.lib wxbase28ud_xml.lib wxmsw28ud_html.lib wxmsw28ud_core.lib wxmsw28ud_adv.lib wxmsw28ud_xrc.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib comctl32.lib rpcrt4.lib shell32.lib gdi32.lib kernel32.lib user32.lib comdlg32.lib ole32.lib oleaut32.lib advapi32.lib wxsqlite3ud.lib sqlite3.lib codeliteud.lib wxscintillaud.lib wxflatmenuud.lib pluginud.lib"
+				AdditionalDependencies="wxmsw28ud_aui.lib wxbase28ud_net.lib wxbase28ud_xml.lib wxmsw28ud_html.lib wxmsw28ud_core.lib wxmsw28ud_adv.lib wxmsw28ud_xrc.lib wxbase28ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib comctl32.lib rpcrt4.lib shell32.lib gdi32.lib kernel32.lib user32.lib comdlg32.lib ole32.lib oleaut32.lib advapi32.lib wxsqlite3ud.lib sqlite3.lib codeliteud.lib wxscintillaud.lib pluginud.lib"
 				OutputFile="../Runtime/LiteEditorUD.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(WXSTABLE)\lib&quot;;&quot;$(WXSTABLE)\lib\vc_lib&quot;;..\sdk\lib;..\lib;..\sdk\wxsqlite3\lib;..\sdk\wxsqlite3\sqlite3\lib;..\sdk\wxscintilla\lib;..\sdk\wxflatmenu\lib"
+				AdditionalLibraryDirectories="&quot;$(WXSTABLE)\lib&quot;;&quot;$(WXSTABLE)\lib\vc_lib&quot;;..\sdk\lib;..\lib;..\sdk\wxsqlite3\lib;..\sdk\wxsqlite3\sqlite3\lib;..\sdk\wxscintilla\lib"
 				GenerateDebugInformation="TRUE"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -207,11 +207,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28u_aui.lib wxbase28u_net.lib wxbase28u_xml.lib wxmsw28u_html.lib wxmsw28u_core.lib wxmsw28u_adv.lib wxmsw28u_xrc.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib comctl32.lib rpcrt4.lib shell32.lib gdi32.lib kernel32.lib user32.lib comdlg32.lib ole32.lib oleaut32.lib advapi32.lib wxsqlite3u.lib sqlite3.lib codeliteu.lib wxscintillau.lib wxflatmenuu.lib pluginu.lib"
+				AdditionalDependencies="wxmsw28u_aui.lib wxbase28u_net.lib wxbase28u_xml.lib wxmsw28u_html.lib wxmsw28u_core.lib wxmsw28u_adv.lib wxmsw28u_xrc.lib wxbase28u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib comctl32.lib rpcrt4.lib shell32.lib gdi32.lib kernel32.lib user32.lib comdlg32.lib ole32.lib oleaut32.lib advapi32.lib wxsqlite3u.lib sqlite3.lib codeliteu.lib wxscintillau.lib pluginu.lib"
 				OutputFile="../Runtime/LiteEditorU.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(WXSTABLE)\lib&quot;;&quot;$(WXSTABLE)\lib\vc_lib&quot;;..\sdk\lib;..\lib;..\sdk\wxsqlite3\lib;..\sdk\wxsqlite3\sqlite3\lib;..\sdk\wxscintilla\lib;..\sdk\wxflatmenu\lib"
+				AdditionalLibraryDirectories="&quot;$(WXSTABLE)\lib&quot;;&quot;$(WXSTABLE)\lib\vc_lib&quot;;..\sdk\lib;..\lib;..\sdk\wxsqlite3\lib;..\sdk\wxsqlite3\sqlite3\lib;..\sdk\wxscintilla\lib"
 				GenerateDebugInformation="FALSE"/>
 			<Tool
 				Name="VCMIDLTool"/>

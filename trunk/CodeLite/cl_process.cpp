@@ -1,6 +1,7 @@
 #include "cl_process.h"
 #include <wx/txtstrm.h>
 #include <wx/sstream.h>
+#include "procutils.h"
 
 clProcess::clProcess(int id, const wxString &cmdLine)
 : wxProcess(NULL, id)
@@ -26,8 +27,10 @@ void clProcess::SetPid(long pid)
 
 void clProcess::Terminate()
 {
-	wxKill(GetPid(), wxSIGKILL);
-	
+	wxKillError rc;
+	ProcUtils pu;
+	pu.KillProcTree(GetPid());
+
 	// Sleep for 20 ms to allow the process to be killed and 
 	// the main frame to handle the event or else we can get 
 	// memory leak

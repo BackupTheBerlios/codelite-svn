@@ -15,7 +15,6 @@
 #include "workspace.h"
 #include "cpp_symbol_tree.h"
 #include "fileview.h"
-#include "art_manager.h"
 #include <wx/file.h>
 #include "wx/arrstr.h"
 #include "context_manager.h"
@@ -205,7 +204,6 @@ void Manager::UnInitialize()
 
 	wxFlatNotebook::CleanUp();
 	MenuManager::Free();
-	wxArtManagerST::Free();
 }
 
 void Manager::CreateEnvironmentVars(const wxString &path)

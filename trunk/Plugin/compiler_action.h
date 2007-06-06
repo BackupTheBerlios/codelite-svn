@@ -23,7 +23,7 @@ public:
 	
 	bool IsBusy() const { return m_busy; }
 	void SetBusy(bool busy) { m_busy = busy; }
-	void Stop() { m_stop = true; }
+	void Stop();
 
 public:
 	//construct a compiler action 

@@ -1,5 +1,4 @@
 #include "output_pane.h"
-#include "flat_menu_bar.h"
 #include <wx/xrc/xmlres.h>
 #include "wx/wxFlatNotebook/wxFlatNotebook.h"
 #include "manager.h"
@@ -28,27 +27,29 @@ OutputPane::~OutputPane()
 
 void OutputPane::CreateGUIControls()
 {
-	wxArtManagerST::Get()->SetMenuTheme( StyleXP );
-	wxArtManagerST::Get()->SetRaiseToolbar( false );
-	wxArtManagerST::Get()->DrawMenuBarBorder( false );
-	wxArtManagerST::Get()->SetMenuBarColour( wxT("Default") );
-	wxArtManagerST::Get()->SetMBVerticalGradient(true);
-
 	wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(mainSizer);
 
-	wxFlatMenuBar *mb = new wxFlatMenuBar(this, wxID_ANY, true, SmallIcons);
-	mb->SetSize(wxSize(-1, 28));
-	
-	wxBitmap bmp = wxXmlResource::Get()->LoadBitmap(_T("document_delete"));
+	wxToolBar *tb = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_FLAT | wxTB_NODIVIDER);
 
-	wxFlatToolbarItem *tool = new wxFlatToolbarItem(bmp, wxNewId(), wxT("Clear All"));
-	mb->AppendToolbarItem(tool);
+	int id = wxNewId();
+	tb->AddTool(id, 
+				wxT("Clear All"), 
+				wxXmlResource::Get()->LoadBitmap(wxT("document_delete")), 
+				wxT("Clear All"));
+	Connect( id, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( OutputPane::OnClearAll ));
 
+	id = wxNewId();
+	tb->AddTool(id, 
+				wxT("Word Wrap"), 
+				wxXmlResource::Get()->LoadBitmap(wxT("word_wrap")), 
+				wxT("Word Wrap"));
+	Connect( id, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( OutputPane::OnWordWrap ));
+	tb->Realize(); 
 	// Connect handlers
-	Connect( tool->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( OutputPane::OnClearAll ));
+	
 
-	mainSizer->Add(mb, 0, wxGROW | wxALL, 1);
+	mainSizer->Add(tb, 0, wxEXPAND | wxALL, 1);
 
 	long style = wxFNB_NO_X_BUTTON | wxFNB_NO_NAV_BUTTONS | wxFNB_DROPDOWN_TABS_LIST | wxFNB_FF2 | wxFNB_CUSTOM_DLG | wxFNB_BACKGROUND_GRADIENT | wxFNB_TABS_BORDER_SIMPLE; 
 	m_book = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
@@ -104,13 +105,34 @@ void OutputPane::OnClearAll(wxCommandEvent &event)
 	Clear();
 }
 
+void OutputPane::OnWordWrap(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	int index = m_book->GetSelection();
+	if( index == wxNOT_FOUND )
+		return;
+
+	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage((size_t)index));
+	if(win){
+		if(win->GetWrapMode() == wxSCI_WRAP_WORD){
+			win->SetWrapMode(wxSCI_WRAP_NONE);
+		}else{
+			win->SetWrapMode(wxSCI_WRAP_WORD);
+		}
+	}
+}
+
+
 void OutputPane::AppendText(const wxString &winName, const wxString &text)
 {
 	int index = CaptionToIndex(winName);
 	if( index == wxNOT_FOUND )
 		return;
 	
-	m_book->SetSelection((size_t)index);
+	if(index != m_book->GetSelection()){
+		m_book->SetSelection((size_t)index);
+	}
+
 	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage((size_t)index));
 	if( win ){
 		// enable writing

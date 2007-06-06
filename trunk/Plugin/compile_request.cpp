@@ -31,7 +31,10 @@ void CompileRequest::Process()
 
 	m_proc = new clProcess(wxNewId(), cmd);
 	if(m_proc){
-		m_proc->Start();
+		if(m_proc->Start() == 0){
+			SetBusy(false);
+			return;
+		}
 		Connect(wxEVT_TIMER, wxTimerEventHandler(CompileRequest::OnTimer), NULL, this);
 		m_proc->Connect(wxEVT_END_PROCESS, wxProcessEventHandler(CompileRequest::OnProcessEnd), NULL, this);
 		m_timer->Start(10);

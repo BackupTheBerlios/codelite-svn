@@ -213,6 +213,12 @@
 				RelativePath=".\macros.h">
 			</File>
 			<File
+				RelativePath=".\procutils.cpp">
+			</File>
+			<File
+				RelativePath=".\procutils.h">
+			</File>
+			<File
 				RelativePath=".\xmlutils.cpp">
 			</File>
 			<File
