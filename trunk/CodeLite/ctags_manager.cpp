@@ -1,5 +1,4 @@
 #include "precompiled_header.h"
-
 #include "ctags_manager.h"
 #include <wx/txtstrm.h>
 #include <wx/file.h>
@@ -8,12 +7,9 @@
 #include <wx/progdlg.h>
 #include "dirtraverser.h"
 #include "wx/tokenzr.h"
-
-#ifdef __VISUALC__
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-#endif 
+#include "wx/filename.h"
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
 
 // Descending sorting function
 struct SDescendingSort
@@ -102,8 +98,7 @@ TagsManager::TagsManager() : wxEvtHandler()
 	m_pExternalDb = new TagsDatabase(true);	// use it as memory database
 
 	// Initialise ctags command pattern
-	m_ctagsCmd[TagsGlobal] = _T("  --fields=aKmSsnit --c-kinds=+p --C++-kinds=+p --filter=yes --filter-terminator=\"<<EOF>>\" ");
-	m_ctagsCmd[TagsLocal] =  _T("  --fields=aKmSsnit --c-kinds=+l --C++-kinds=+l --filter=yes --filter-terminator=\"<<EOF>>\" ");
+	m_ctagsCmd[TagsLocal] =  _T("  --fields=aKmSsnit --c-kinds=+l --C++-kinds=+l  ");
 }  
 
 TagsManager::~TagsManager()
@@ -349,28 +344,51 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 {
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
-
 	wxString tags;
 	
-	if( !m_ctags )
-	{
-		return TagTreePtr(NULL);
-	}
-		
+	wxString tmpFileName = wxFileName::CreateTempFileName(wxT("CtagsInputFile"));
+	wxFileName fn(tmpFileName);
+	fn.MakeAbsolute();
 	size_t i=0;
-	for(; i<fpArr.size(); i++)
-	{
-		wxString fileTags;
-		SourceToTags(fpArr[i], fileTags, m_ctags);
 
-		if( comments && m_parseComments )
-		{
+	//create a file with list of files for ctags to process
+	wxFileOutputStream out(fn.GetFullPath());
+	wxTextOutputStream text( out );
+
+	for(; i<fpArr.size(); i++){
+		text << fpArr[i].GetFullPath() << wxT("\n");
+	}
+	out.Close();
+
+	//start ctags and tell him to parse files from the temporary file
+	//get ctags execution line
+	wxString cmd;
+	
+	// Get ctags flags from the map
+	wxString ctagsCmd;
+	ctagsCmd << m_options.ToString() << wxT(" --fields=aKmSsnit --c-kinds=+p --C++-kinds=+p ");
+	
+	// build the command, we surround ctags name with double quatations
+	cmd << wxT("\"") << m_ctagsPath.GetFullPath() << wxT("\"") << ctagsCmd 
+		<< wxT(" -f -") // send output to stdout
+		<< wxT(" -L") << wxT("\"") << fn.GetFullPath() << wxT("\""); //read input files from temp file
+
+	//run ctags in sync mode
+	wxArrayString stdoutArr;
+	wxExecute(cmd, stdoutArr);
+
+	for(size_t i=0; i<stdoutArr.GetCount(); i++){
+		tags += stdoutArr.Item(i);
+		tags += wxT("\n");
+	}
+
+	for(; i<fpArr.size(); i++){
+		if( comments && m_parseComments ){
 			// parse comments
 			LanguageST::Get()->ParseComments( fpArr[i], comments );
 		}
-		tags << fileTags;
 	}
-
+	
 	TagTreePtr ttp = TagTreePtr( TreeFromTags(tags, project) );
 	return ttp;
 }
