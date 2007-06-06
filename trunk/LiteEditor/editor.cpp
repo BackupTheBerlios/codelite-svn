@@ -13,6 +13,7 @@
 #include "context_manager.h"
 #include "editor_config.h"
 #include "filedroptarget.h"
+#include "fileutils.h"
 
 // fix bug in wxscintilla.h
 #ifdef EVT_SCI_CALLTIP_CLICK
@@ -428,19 +429,8 @@ void LEditor::OpenFile(const wxString &fileName, const wxString &project)
 	if(fileName.IsEmpty() == true)
 		return;
 
-	wxFFile file(fileName.GetData(), _T("r"));
-	if(file.IsOpened() == false)
-	{
-		// Nothing to be done
-		wxString msg = wxString::Format(wxT("Failed to open file %s"), fileName.GetData());
-		wxMessageBox( msg );
-		return;
-	}
-
-	// Read the entire file content
 	wxString text;
-	file.ReadAll(&text);
-	file.Close();
+	FileUtils::ReadFileUTF8(fileName, text);
 	SetText( text );
 
 	// make sure user can not undo this operation
@@ -1064,20 +1054,9 @@ void LEditor::ReloadFile()
 	if(m_fileName.GetFullPath().IsEmpty() == true || m_fileName.GetFullPath().StartsWith(wxT("Untitled")))
 		return;
 
-	wxFFile file(m_fileName.GetFullPath().GetData(), _T("r"));
-	if(file.IsOpened() == false)
-	{
-		// Nothing to be done
-		wxString msg = wxString::Format(wxT("Failed to open file %s"), m_fileName.GetFullPath().GetData());
-		wxMessageBox( msg );
-		return;
-	}
-
 	// Read the entire file content
 	wxString text;
-	file.ReadAll(&text);
-	file.Close();
-
+	FileUtils::ReadFileUTF8(m_fileName, text);
 	SetText( text );
 	SetDirty(false);
 }

@@ -488,6 +488,42 @@ void Manager::AddFileToProject(const wxString &fileName, const wxString &vdFullP
 	}
 }
 
+void Manager::AddFilesToProject(const wxArrayString &files, const wxString &vdFullPath)
+{
+	wxString project;
+	project = vdFullPath.BeforeFirst(wxT(':'));
+
+	std::vector<wxFileName> vFiles;
+	size_t i=0;
+	for(i=0; i<files.GetCount(); i++){
+		vFiles.push_back(files.Item(i));
+	}
+
+	// Add the file to the project
+	wxString errMsg;
+	bool res = true;
+	for(i=0; i<files.GetCount(); i++){
+		res = WorkspaceST::Get()->AddNewFile(vdFullPath, files.Item(i), errMsg);
+		CHECK_MSGBOX(res);
+	}
+
+	TagTreePtr ttp;
+	if( project.IsEmpty() == false ){
+		std::vector<DbRecordPtr> comments;
+		if(TagsManagerST::Get()->GetParseComments()){
+			ttp = TagsManagerST::Get()->ParseSourceFiles(vFiles, project, &comments);
+			TagsManagerST::Get()->StoreComments(comments);
+		}else{
+			ttp = TagsManagerST::Get()->ParseSourceFiles(vFiles, project);
+		}
+		TagsManagerST::Get()->Store(ttp);
+
+		// Update 
+		TagTreePtr dummy;
+		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(dummy );
+	}
+}
+
 bool Manager::RemoveFile(const wxString &fileName, const wxString &vdFullPath)
 {
 	// First, close any open tab with this file

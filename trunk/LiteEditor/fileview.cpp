@@ -304,8 +304,8 @@ void FileViewTree::OnAddExistingItem(wxCommandEvent & WXUNUSED(event))
 
 		wxArrayString paths;
 		dlg->GetPaths( paths );
+		ManagerST::Get()->AddFilesToProject(paths, vdPath);
 		for(size_t i=0; i<paths.Count(); i++){
-			ManagerST::Get()->AddFileToProject(paths.Item(i), vdPath, false);
 
 			// Add the tree node
 			wxFileName fnFileName(paths.Item(i));

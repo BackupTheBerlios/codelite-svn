@@ -246,17 +246,6 @@ void Frame::CreateGUIControls(void)
 	BuildSettingsConfigST::Get()->Load(buildCfgFile);
 
 	//--------------------------------------------------------------------------------------
-	// Start ctags process. 
-	// ctags process must be started somewhere in the main frames' (here is a good place ^^)
-	// constructor since to execute it, we are using wxExecute() which,  
-	// according to the documentation, will fail if used outside of the main thread. 
-	//--------------------------------------------------------------------------------------
-	
-	// We keep a pointer to wxProcess object returend from ctags starting process
-	TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
-	TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
-
-	//--------------------------------------------------------------------------------------
 	// Start the parsing thread, the parsing thread and the SymbolTree (or its derived)
 	// Are connected. The constructor of SymbolTree, calls ParseThreadST::Get()->SetNotifyWindow(this)
 	// to allows it to receive events for gui changes.
