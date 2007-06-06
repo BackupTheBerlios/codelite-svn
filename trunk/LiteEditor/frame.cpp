@@ -177,7 +177,7 @@ Frame::~Frame(void)
 Frame* Frame::Get()
 {
     if( !m_theFrame )
-		m_theFrame = new Frame(NULL, wxID_ANY, _("Lite Editor"), wxDefaultPosition, wxSize(800, 600), wxDEFAULT_FRAME_STYLE | wxMAXIMIZE | wxNO_FULL_REPAINT_ON_RESIZE);
+		m_theFrame = new Frame(NULL, wxID_ANY, wxT("Lite Editor"), wxDefaultPosition, wxSize(800, 600), wxDEFAULT_FRAME_STYLE | wxMAXIMIZE | wxNO_FULL_REPAINT_ON_RESIZE);
 	return m_theFrame;
 }
 
@@ -245,6 +245,10 @@ void Frame::CreateGUIControls(void)
 	wxFileName buildCfgFile(wxT("config/build_settings.xml"));
 	BuildSettingsConfigST::Get()->Load(buildCfgFile);
 
+	//start ctags process
+	TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
+	TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
+
 	//--------------------------------------------------------------------------------------
 	// Start the parsing thread, the parsing thread and the SymbolTree (or its derived)
 	// Are connected. The constructor of SymbolTree, calls ParseThreadST::Get()->SetNotifyWindow(this)
@@ -260,7 +264,7 @@ void Frame::CreateGUIControls(void)
 	statusBar->SetFieldsCount(3);
 	SetStatusBar(statusBar);
 	
-	GetStatusBar()->SetStatusText(_("Ready"));
+	GetStatusBar()->SetStatusText(wxT("Ready"));
 
 	// "commit" all changes made to wxAuiManager
 	wxString pers = EditorConfigST::Get()->LoadPerspective(wxT("Default"));
@@ -437,7 +441,7 @@ void Frame::OnClose(wxCloseEvent& event)
 wxString Frame::GetStringFromUser(const wxString& msg)
 {
 	wxString userString;
-	wxTextEntryDialog *dlg = new wxTextEntryDialog(this, msg, _("Enter Text"));
+	wxTextEntryDialog *dlg = new wxTextEntryDialog(this, msg, wxT("Enter Text"));
 	if(dlg->ShowModal() == wxID_OK)
 	{
 		userString = dlg->GetValue();
@@ -505,11 +509,11 @@ void Frame::OnCompleteWord(wxCommandEvent& WXUNUSED(event))
 
 void Frame::OnBuildExternalDatabase(wxCommandEvent& WXUNUSED(event))
 {
-	wxDirDialog *dlg = new wxDirDialog(this, _("Select the root directory of the include path:"), wxGetCwd());
+	wxDirDialog *dlg = new wxDirDialog(this, wxT("Select the root directory of the include path:"), wxGetCwd());
 	if(dlg->ShowModal() == wxID_OK)
 	{
 		// get output file name from user
-		wxString db = GetStringFromUser(_("Insert full path name for the database (example: /home/eran/cpp.db):"));
+		wxString db = GetStringFromUser(wxT("Insert full path name for the database (example: /home/eran/cpp.db):"));
 
 		// Get the dirname
 		wxString path = dlg->GetPath();
@@ -531,7 +535,7 @@ void Frame::OnUseExternalDatabase(wxCommandEvent& WXUNUSED(event))
 	const wxString ALL(	wxT("Tags Database File (*.db)|*.db|")
 						wxT("All Files (*.*)|*.*"));
 	
-	wxFileDialog *dlg = new wxFileDialog(this, _("Select an external database:"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , wxDefaultPosition);
+	wxFileDialog *dlg = new wxFileDialog(this, wxT("Select an external database:"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , wxDefaultPosition);
 
 	if (dlg->ShowModal() == wxID_OK)
 	{
@@ -541,7 +545,7 @@ void Frame::OnUseExternalDatabase(wxCommandEvent& WXUNUSED(event))
 		// build the external database
 		TagsManagerST::Get()->OpenExternalDatabase(dbname);
 
-		GetStatusBar()->SetStatusText(wxString::Format(_("External DB: '%s'"), dbname.GetFullPath().GetData()), 2);
+		GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), dbname.GetFullPath().GetData()), 2);
 
 	}
 	dlg->Destroy();
@@ -585,7 +589,7 @@ void Frame::OnFileNew(wxCommandEvent &event)
 void Frame::OnFileOpen(wxCommandEvent & WXUNUSED(event))
 {
 	const wxString ALL(	wxT("All Files (*.*)|*.*"));
-	wxFileDialog *dlg = new wxFileDialog(this, _("Open File"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxFD_MULTIPLE, wxDefaultPosition);
+	wxFileDialog *dlg = new wxFileDialog(this, wxT("Open File"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxFD_MULTIPLE, wxDefaultPosition);
 	if (dlg->ShowModal() == wxID_OK){
 		wxArrayString paths;
 		dlg->GetPaths(paths);

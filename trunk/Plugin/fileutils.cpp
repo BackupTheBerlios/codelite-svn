@@ -48,5 +48,6 @@ bool FileUtils::ReadFileUTF8(const wxFileName &fn, wxString &data)
 
 	data = wxString::FromAscii(pdata);
 	file.Close();
+	delete [] pdata;
     return true;
 }

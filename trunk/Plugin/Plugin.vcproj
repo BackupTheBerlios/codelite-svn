@@ -5,104 +5,60 @@
 	Name="SDK"
 	ProjectGUID="{08C385A7-9128-4789-B6AE-93B8B1D3B05B}"
 	RootNamespace="Plugin"
-	Keyword="Win32Proj"
-	>
+	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32"/>
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug Unicode|Win32"
 			OutputDirectory="../lib"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswud&quot;;..\CodeLite\;..\sdk\wxsqlite3\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE"
-				MinimalRebuild="true"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="4"
-			/>
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="4"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\pluginud.lib"
-			/>
+				OutputFile="..\lib\pluginud.lib"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release Unicode|Win32"
 			OutputDirectory="Release Unicode"
 			IntermediateDirectory="Release Unicode"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswu&quot;;..\CodeLite;..\sdk\wxsqlite3\include"
@@ -110,61 +66,38 @@
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="0"
-			/>
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="0"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\pluginu.lib"
-			/>
+				OutputFile="..\lib\pluginu.lib"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/lib/vc_lib/msw/&quot;;&quot;$(WXSTABLE)/include&quot;;..\CodeLite;..\sdk\wxsqlite3\include"
@@ -172,317 +105,241 @@
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="0"
-			/>
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="0"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\plugin.lib"
-			/>
+				OutputFile="..\lib\plugin.lib"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
+			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(WXSTABLE)\lib\vc_lib\mswd&quot;;&quot;$(WXSTABLE)\include&quot;;..\CodeLite;..\sdk\wxsqlite3\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
-				MinimalRebuild="true"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="4"
-			/>
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="4"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\lib\plugind.lib"
-			/>
+				OutputFile="..\lib\plugind.lib"/>
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCFxCopTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
 	<References>
 	</References>
 	<Files>
 		<Filter
-			Name="BuildConfiguration"
-			>
+			Name="BuildConfiguration">
 			<File
-				RelativePath=".\build_config.cpp"
-				>
+				RelativePath=".\build_config.cpp">
 			</File>
 			<File
-				RelativePath=".\build_config.h"
-				>
+				RelativePath=".\build_config.h">
 			</File>
 			<File
-				RelativePath=".\configuration_mapping.cpp"
-				>
+				RelativePath=".\configuration_mapping.cpp">
 			</File>
 			<File
-				RelativePath=".\configuration_mapping.h"
-				>
+				RelativePath=".\configuration_mapping.h">
 			</File>
 			<File
-				RelativePath=".\configuration_object.h"
-				>
+				RelativePath=".\configuration_object.h">
 			</File>
 			<File
-				RelativePath=".\project_settings.cpp"
-				>
+				RelativePath=".\project_settings.cpp">
 			</File>
 			<File
-				RelativePath=".\project_settings.h"
-				>
+				RelativePath=".\project_settings.h">
 			</File>
 		</Filter>
 		<Filter
-			Name="Common"
-			>
+			Name="Common">
 			<File
-				RelativePath=".\macros.h"
-				>
+				RelativePath=".\fileutils.cpp">
 			</File>
 			<File
-				RelativePath=".\xmlutils.cpp"
-				>
+				RelativePath=".\fileutils.h">
 			</File>
 			<File
-				RelativePath=".\xmlutils.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Workspace"
-			>
-			<File
-				RelativePath=".\envvar.cpp"
-				>
+				RelativePath=".\macros.h">
 			</File>
 			<File
-				RelativePath=".\envvar.h"
-				>
+				RelativePath=".\xmlutils.cpp">
 			</File>
 			<File
-				RelativePath=".\project.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\project.h"
-				>
-			</File>
-			<File
-				RelativePath=".\workspace.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\workspace.h"
-				>
+				RelativePath=".\xmlutils.h">
 			</File>
 		</Filter>
 		<Filter
-			Name="Builders"
-			>
+			Name="Workspace">
 			<File
-				RelativePath=".\builder.cpp"
-				>
+				RelativePath=".\envvar.cpp">
 			</File>
 			<File
-				RelativePath=".\builder.h"
-				>
+				RelativePath=".\envvar.h">
 			</File>
 			<File
-				RelativePath=".\buildmanager.cpp"
-				>
+				RelativePath=".\project.cpp">
 			</File>
 			<File
-				RelativePath=".\buildmanager.h"
-				>
+				RelativePath=".\project.h">
+			</File>
+			<File
+				RelativePath=".\workspace.cpp">
+			</File>
+			<File
+				RelativePath=".\workspace.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Builders">
+			<File
+				RelativePath=".\builder.cpp">
+			</File>
+			<File
+				RelativePath=".\builder.h">
+			</File>
+			<File
+				RelativePath=".\buildmanager.cpp">
+			</File>
+			<File
+				RelativePath=".\buildmanager.h">
 			</File>
 			<Filter
-				Name="Implementations"
-				>
+				Name="Implementations">
 				<File
-					RelativePath=".\builder_gnumake.cpp"
-					>
+					RelativePath=".\builder_gnumake.cpp">
 				</File>
 				<File
-					RelativePath=".\builder_gnumake.h"
-					>
+					RelativePath=".\builder_gnumake.h">
 				</File>
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Configuration"
-			>
+			Name="Configuration">
 			<File
-				RelativePath=".\attribute_style.h"
-				>
+				RelativePath=".\attribute_style.h">
 			</File>
 			<File
-				RelativePath=".\build_settings_config.cpp"
-				>
+				RelativePath=".\build_settings_config.cpp">
 			</File>
 			<File
-				RelativePath=".\build_settings_config.h"
-				>
+				RelativePath=".\build_settings_config.h">
 			</File>
 			<File
-				RelativePath=".\build_system.cpp"
-				>
+				RelativePath=".\build_system.cpp">
 			</File>
 			<File
-				RelativePath=".\build_system.h"
-				>
+				RelativePath=".\build_system.h">
 			</File>
 			<File
-				RelativePath=".\compiler.cpp"
-				>
+				RelativePath=".\compiler.cpp">
 			</File>
 			<File
-				RelativePath=".\compiler.h"
-				>
+				RelativePath=".\compiler.h">
 			</File>
 			<File
-				RelativePath=".\editor_config.cpp"
-				>
+				RelativePath=".\editor_config.cpp">
 			</File>
 			<File
-				RelativePath=".\editor_config.h"
-				>
+				RelativePath=".\editor_config.h">
 			</File>
 			<File
-				RelativePath=".\lexer_configuration.cpp"
-				>
+				RelativePath=".\lexer_configuration.cpp">
 			</File>
 			<File
-				RelativePath=".\lexer_configuration.h"
-				>
+				RelativePath=".\lexer_configuration.h">
 			</File>
 			<File
-				RelativePath=".\optionsconfig.cpp"
-				>
+				RelativePath=".\optionsconfig.cpp">
 			</File>
 			<File
-				RelativePath=".\optionsconfig.h"
-				>
+				RelativePath=".\optionsconfig.h">
 			</File>
 		</Filter>
 		<Filter
-			Name="Search"
-			>
+			Name="Search">
 			<File
-				RelativePath=".\search_thread.cpp"
-				>
+				RelativePath=".\search_thread.cpp">
 			</File>
 			<File
-				RelativePath=".\search_thread.h"
-				>
+				RelativePath=".\search_thread.h">
 			</File>
 		</Filter>
 		<Filter
-			Name="Compiler"
-			>
+			Name="Compiler">
 			<File
-				RelativePath=".\clean_request.cpp"
-				>
+				RelativePath=".\clean_request.cpp">
 			</File>
 			<File
-				RelativePath=".\clean_request.h"
-				>
+				RelativePath=".\clean_request.h">
 			</File>
 			<File
-				RelativePath=".\compile_request.cpp"
-				>
+				RelativePath=".\compile_request.cpp">
 			</File>
 			<File
-				RelativePath=".\compile_request.h"
-				>
+				RelativePath=".\compile_request.h">
 			</File>
 			<File
-				RelativePath=".\compiler_action.cpp"
-				>
+				RelativePath=".\compiler_action.cpp">
 			</File>
 			<File
-				RelativePath=".\compiler_action.h"
-				>
+				RelativePath=".\compiler_action.h">
 			</File>
 			<File
-				RelativePath=".\read_proc_input_request.cpp"
-				>
+				RelativePath=".\read_proc_input_request.cpp">
 			</File>
 			<File
-				RelativePath=".\read_proc_input_request.h"
-				>
+				RelativePath=".\read_proc_input_request.h">
 			</File>
 		</Filter>
 	</Files>

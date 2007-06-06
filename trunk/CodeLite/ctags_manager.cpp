@@ -89,7 +89,7 @@ wxString CtagsOptions::ToString() const
 //------------------------------------------------------------------------------
 
 TagsManager::TagsManager() : wxEvtHandler()
-, m_ctagsPath(_T("ctags"))
+, m_ctagsPath(wxT("ctags"))
 , m_ctags(NULL)
 , m_localCtags(NULL)
 , m_parseComments(false)
@@ -98,7 +98,8 @@ TagsManager::TagsManager() : wxEvtHandler()
 	m_pExternalDb = new TagsDatabase(true);	// use it as memory database
 
 	// Initialise ctags command pattern
-	m_ctagsCmd[TagsLocal] =  _T("  --fields=aKmSsnit --c-kinds=+l --C++-kinds=+l  ");
+	m_ctagsCmd[TagsLocal] =  wxT("  --fields=aKmSsnit --c-kinds=+l --C++-kinds=+l  --filter=yes --filter-terminator=\"<<EOF>>\" ");
+	m_ctagsCmd[TagsGlobal] =  wxT("  --fields=aKmSsnit --c-kinds=+p --C++-kinds=+p --filter=yes --filter-terminator=\"<<EOF>>\"  ");
 }  
 
 TagsManager::~TagsManager()
@@ -106,18 +107,15 @@ TagsManager::~TagsManager()
 	delete m_pDb;
 	delete m_pExternalDb;
 
-	bool debug;
-	debug = m_ctags->Disconnect(m_ctags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
-	debug = m_localCtags->Disconnect(m_localCtags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
-	wxUnusedVar(debug);
+	m_ctags->Disconnect(m_ctags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+	m_localCtags->Disconnect(m_localCtags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
 
 	// terminate ctags processes
 	m_localCtags->Terminate();
 	m_ctags->Terminate();
 }
 
-void TagsManager::OpenDatabase(const wxFileName& fileName)
-{
+void TagsManager::OpenDatabase(const wxFileName& fileName){
 	m_pDb->OpenDatabase(fileName);
 }
 
@@ -140,9 +138,9 @@ TagTreePtr TagsManager::ParseTagsFile(const wxFileName& fp, const wxString& proj
 
 	// Load the records and build a language tree
 	TagEntry root;
-	root.SetName(_T("<ROOT>"));
+	root.SetName(wxT("<ROOT>"));
 	
-	TagTreePtr tree( new TagTree(_T("<ROOT>"), root) );
+	TagTreePtr tree( new TagTree(wxT("<ROOT>"), root) );
 	while (tagsNext (file, &entry) == TagSuccess)
 	{
 		TagEntry tag( entry, project );
@@ -265,9 +263,9 @@ TagTreePtr TagsManager::ParseTags(const wxString& tags, const wxString& project)
 
 	// Load the records and build a language tree
 	TagEntry root;
-	root.SetName(_T("<ROOT>"));
+	root.SetName(wxT("<ROOT>"));
 
-	TagTreePtr tree( new TagTree(_T("<ROOT>"), root) );
+	TagTreePtr tree( new TagTree(wxT("<ROOT>"), root) );
 
 	const wxCharBuffer data = _C(tags);
 	char* pStart = const_cast<char*>(data.data());
@@ -331,7 +329,7 @@ void TagsManager::CreateProject(const wxString &projectName)
 	proj.SetPath(projectName);
 	proj.SetName(projectName);
 	proj.SetProject(projectName);
-	proj.SetKind(_T("project"));
+	proj.SetKind(wxT("project"));
 
 	// Obtain an sql insert statement
 	wxSQLite3Statement insertStmt = m_pDb->PrepareStatement(proj.GetInsertOneStatement());
@@ -377,20 +375,19 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 	wxArrayString stdoutArr;
 	wxExecute(cmd, stdoutArr);
 
-	for(size_t i=0; i<stdoutArr.GetCount(); i++){
+	for(i=0; i<stdoutArr.GetCount(); i++){
 		tags += stdoutArr.Item(i);
 		tags += wxT("\n");
 	}
 
-	for(; i<fpArr.size(); i++){
+	for(i=0; i<fpArr.size(); i++){
 		if( comments && m_parseComments ){
 			// parse comments
 			LanguageST::Get()->ParseComments( fpArr[i], comments );
 		}
 	}
 	
-	TagTreePtr ttp = TagTreePtr( TreeFromTags(tags, project) );
-	return ttp;
+	return TagTreePtr( TreeFromTags(tags, project) );
 }
 
 std::vector<TagEntry>* TagsManager::ParseLocals(const wxString& scope)
@@ -406,7 +403,7 @@ std::vector<TagEntry>* TagsManager::ParseLocals(const wxString& scope)
 	}
 
 	// Put the content into temporary file
-	wxFileName fp(wxGetCwd(), _T("temp_source_file"));
+	wxFileName fp(wxGetCwd(), wxT("temp_source_file"));
 	
 	wxFile file(fp.GetFullPath(), wxFile::write);
 	file.Write(scope);
@@ -443,7 +440,7 @@ std::vector<TagEntry>* TagsManager::VectorFromTags(const wxString& tags, bool on
 		TagFromLine(line, tag, wxEmptyString);
 
 		// Only local tags are collected
-		if(onlyLocals && tag.GetKind() == _T("local"))
+		if(onlyLocals && tag.GetKind() == wxT("local"))
 			vtags->push_back(tag);
 
 		// collect all?
@@ -492,8 +489,8 @@ TagTreePtr TagsManager::Load(const wxFileName& path, const wxString& project)
 		// Load the records and build a language tree
 		TagEntry root;
 		std::vector<TagEntry> rejectedTags;
-		root.SetName(_T("<ROOT>"));
-		tree.Reset( new TagTree(_T("<ROOT>"), root) );
+		root.SetName(wxT("<ROOT>"));
+		tree.Reset( new TagTree(wxT("<ROOT>"), root) );
 		while( rs.NextRow() )
 		{
 			TagEntry entry(rs);
@@ -538,7 +535,7 @@ clProcess *TagsManager::StartCtagsProcess(int kind)
 	ctagsCmd << m_options.ToString() << wxT(" ") << iter->second;
 	
 	// build the command, we surround ctags name with double quatations
-	cmd << _T("\"") << m_ctagsPath.GetFullPath() << _T("\"") << ctagsCmd;
+	cmd << wxT("\"") << m_ctagsPath.GetFullPath() << wxT("\"") << ctagsCmd;
 	clProcess* process;
 
 	process = new clProcess(wxNewId(), cmd);
@@ -582,7 +579,7 @@ void TagsManager::SetCtagsPath(const wxString& path)
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
 
-	m_ctagsPath = wxFileName(path, _T("ctags"));
+	m_ctagsPath = wxFileName(path, wxT("ctags"));
 }
 
 void TagsManager::OnCtagsEnd(wxProcessEvent& event)
@@ -621,7 +618,7 @@ void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, clProce
 	if( out ) 
 	{
 		wxString cmd(source.GetFullPath());
-		cmd += _T("\n");
+		cmd += wxT("\n");
 
 		const wxCharBuffer pWriteData = _C(cmd);
 		out->Write(pWriteData.data(), cmd.Length());
@@ -638,8 +635,8 @@ void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, clProce
 		{
 			wxTextInputStream in(*ctags->GetInputStream());
 			wxString msg;
-			msg << in.ReadLine() << _T("\n");
-			if( msg.Contains(_T("<<EOF>>")) )
+			msg << in.ReadLine() << wxT("\n");
+			if( msg.Contains(wxT("<<EOF>>")) )
 				break;
 			tags += msg;
 		}
@@ -652,9 +649,9 @@ TagTreePtr TagsManager::TreeFromTags(const wxString& tags, const wxString& proje
 {
 	// Load the records and build a language tree
 	TagEntry root;
-	root.SetName(_T("<ROOT>"));
+	root.SetName(wxT("<ROOT>"));
 
-	TagTreePtr tree( new TagTree(_T("<ROOT>"), root) );
+	TagTreePtr tree( new TagTree(wxT("<ROOT>"), root) );
 
 	const wxCharBuffer data = _C(tags);
 	char* pStart = const_cast<char*>(data.data());
@@ -676,7 +673,7 @@ TagTreePtr TagsManager::TreeFromTags(const wxString& tags, const wxString& proje
 
 		// Add the tag to the tree, locals are not added to the 
 		// tree
-		if( tag.GetKind() != _T("local") )
+		if( tag.GetKind() != wxT("local") )
 			tree->AddEntry(tag);
 
 		// Get next line
@@ -689,7 +686,7 @@ TagTreePtr TagsManager::TreeFromTags(const wxString& tags, const wxString& proje
 bool TagsManager::FunctionByLine(const int lineNo, const wxString& fileName, const wxString& project, TagEntry& tag)
 {
 	wxString query;
-	query << _T("select * from tags where line <=") << lineNo << _T(" AND  project='") << project << _T("' and file='") << fileName << _T("' and kind='function' order by line DESC");
+	query << wxT("select * from tags where line <=") << lineNo << wxT(" AND  project='") << project << wxT("' and file='") << fileName << wxT("' and kind='function' order by line DESC");
 
 	try	
 	{
@@ -761,14 +758,14 @@ void TagsManager::GetTags(const wxString& name, const wxString& scopeName, std::
 	// Since '_' (underscore) is a vaild char for C++/C word, 
 	// and it is also a wildcard in databases, we need to set it
 	// with escape
-	escapedName.Replace(_T("_"), _T("^_"));
-	nameMatch << _T(" name like '") << escapedName << _T("%%' ESCAPE '^'");
+	escapedName.Replace(wxT("_"), wxT("^_"));
+	nameMatch << wxT(" name like '") << escapedName << wxT("%%' ESCAPE '^'");
 
-	if( scopeName.IsEmpty() == false && scopeName != _T("<global>"))
+	if( scopeName.IsEmpty() == false && scopeName != wxT("<global>"))
 	{
 		wxString parents;
 
-		parents << _T(" parent in ('<global>', '") << scopeName << _T("'");
+		parents << wxT(" parent in ('<global>', '") << scopeName << wxT("'");
 		// Incase this parent inhertis from other parent, add it to the possible
 		// parents
 		TagEntry tag;
@@ -778,27 +775,27 @@ void TagsManager::GetTags(const wxString& name, const wxString& scopeName, std::
 			if(tag.GetInherits().IsEmpty())
 				break;
 
-			parents << _T(", '") << tag.GetInherits() << _T("'");
+			parents << wxT(", '") << tag.GetInherits() << wxT("'");
 			ss = tag.GetInherits();
 		}
 
-		parents << _T(") ");
+		parents << wxT(") ");
 
-		query << _T("select * from tags where ")
+		query << wxT("select * from tags where ")
 			  << parents 
-			  << _T(" and ") << nameMatch
-			  << _T(" order by name") ;
+			  << wxT(" and ") << nameMatch
+			  << wxT(" order by name") ;
 	}
 	else
 	{
 		// If no scope is available, search for all classes, namespaces etc and globals
-		query << _T("select * from tags  where") 
-			  << _T("(")
-			  << _T("(kind='struct' or kind='class' or kind='typedef' or kind='namespace' or kind='union' or kind='macro' or kind='variable') OR ")
-			  << _T("((kind='function' or kind='prototype') AND parent='<global>') ")
-			  << _T(")")
-			  << _T(" AND ") << nameMatch
-			  << _T(" order by name") ;
+		query << wxT("select * from tags  where") 
+			  << wxT("(")
+			  << wxT("(kind='struct' or kind='class' or kind='typedef' or kind='namespace' or kind='union' or kind='macro' or kind='variable') OR ")
+			  << wxT("((kind='function' or kind='prototype') AND parent='<global>') ")
+			  << wxT(")")
+			  << wxT(" AND ") << nameMatch
+			  << wxT(" order by name") ;
 	}
 
 	wxSQLite3ResultSet rs = m_pDb->Query(query);
@@ -866,8 +863,8 @@ void TagsManager::TagsByParent(const wxString& parent, std::vector<TagEntry> &ta
 	wxString sql;
 	wxString tmp_parent(parent);
 
-	sql << _T("select * from tags where parent='") << parent << _T("' order by name;");
-	GetTagsBySQL(sql, tags, wxEmptyString, _T("~"));	// Skip destructors
+	sql << wxT("select * from tags where parent='") << parent << wxT("' order by name;");
+	GetTagsBySQL(sql, tags, wxEmptyString, wxT("~"));	// Skip destructors
 	
 	if( tags.empty() )
 		return;		
@@ -885,8 +882,8 @@ void TagsManager::TagsByParent(const wxString& parent, std::vector<TagEntry> &ta
 			if(tag.GetInherits().IsEmpty() == false)
 			{
 				sql.Empty();
-				sql << _T("select * from tags where parent='") << tag.GetInherits() << _T("';") ;
-				GetTagsBySQL(sql, tags, wxEmptyString, _T("~")); // Skip destructors
+				sql << wxT("select * from tags where parent='") << tag.GetInherits() << wxT("';") ;
+				GetTagsBySQL(sql, tags, wxEmptyString, wxT("~")); // Skip destructors
 				tmp_parent = tag.GetInherits();
 			}
 			else
@@ -967,7 +964,7 @@ bool TagsManager::GetClassTagByName(const wxString& name, TagEntry &tag)
 
 	// Get our parent tags
 	wxString sql;
-	sql << _T("select * from tags where name='") << name << _T("' and (kind='struct' or kind='class' or kind='union' or kind='typedef') order by name;");
+	sql << wxT("select * from tags where name='") << name << wxT("' and (kind='struct' or kind='class' or kind='union' or kind='typedef') order by name;");
 
 	try
 	{
@@ -1014,9 +1011,9 @@ bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& s
 void TagsManager::FindSymbol(const wxString& name, std::vector<TagEntry> &tags)
 {
 	wxString query;
-	query << _T("select * from tags where name='") 
+	query << wxT("select * from tags where name='") 
 		<< name 
-		<< _T("' and kind != 'project';");
+		<< wxT("' and kind != 'project';");
 
 	try
 	{
@@ -1052,7 +1049,7 @@ void TagsManager::FindSymbol(const wxString& name, std::vector<TagEntry> &tags)
 void TagsManager::DeleteProject(const wxString& projectName)
 {
 	wxString query;
-	query << _T("delete from tags where project='") << projectName << _T("'");
+	query << wxT("delete from tags where project='") << projectName << wxT("'");
 	m_pDb->Begin();
 	m_pDb->ExecuteUpdate(query);
 	m_pDb->Commit();
@@ -1079,7 +1076,7 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 	// Create a progress dialog
 	if( updateDlgParent )
 	{
-		prgDlg = new wxProgressDialog (_("Building tags database ..."), wxEmptyString, static_cast<int>(traverser.GetFiles().size())+10, updateDlgParent, wxPD_APP_MODAL |	wxPD_SMOOTH | wxPD_AUTO_HIDE);
+		prgDlg = new wxProgressDialog (wxT("Building tags database ..."), wxEmptyString, static_cast<int>(traverser.GetFiles().size())+10, updateDlgParent, wxPD_APP_MODAL |	wxPD_SMOOTH | wxPD_AUTO_HIDE);
 		prgDlg->SetSize(wxSize(800, -1));
 		prgDlg->Layout();
 		prgDlg->Centre();
@@ -1109,7 +1106,7 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 	if( prgDlg )
 	{
 		wxString msg;
-		msg << _("Updating database this can take a while ...");
+		msg << wxT("Updating database this can take a while ...");
 		prgDlg->Update(maxVal, msg);
 	}
 
@@ -1123,7 +1120,7 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 	if( prgDlg )
 	{
 		wxString msg;
-		msg << _("Done");
+		msg << wxT("Done");
 		prgDlg->Update(maxVal+10, msg);
 		prgDlg->Destroy();
 	}
@@ -1155,24 +1152,24 @@ CallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString & sc
 	{
 		// Get the function(s) signatures from database
 		// Trim whitespace from right and left
-		static wxString trimString(_T("({};\r\n\t\v "));
+		static wxString trimString(wxT("({};\r\n\t\v "));
 
 		expression.erase(0, expression.find_first_not_of(trimString)); 
 		expression.erase(expression.find_last_not_of(trimString)+1);
 
 		wxArrayString dl;
-		dl.Add(_T("::"));
-		dl.Add(_T("->"));
-		dl.Add(_T("."));
+		dl.Add(wxT("::"));
+		dl.Add(wxT("->"));
+		dl.Add(wxT("."));
 		StringTokenizer tok( expression, dl );
 		wxString funcName = tok.Last();
 
 		wxString sql;
 		std::vector<TagEntry> tags;
 		if( parent.IsEmpty() )
-			sql << _T("SELECT * FROM TAGS WHERE name='") << funcName << _T("' AND (parent='<global>' OR parent='") << scopeName << _T("') AND (kind='function' OR kind='prototype')");
+			sql << wxT("SELECT * FROM TAGS WHERE name='") << funcName << wxT("' AND (parent='<global>' OR parent='") << scopeName << wxT("') AND (kind='function' OR kind='prototype')");
 		else
-			sql << _T("SELECT * FROM TAGS WHERE name='") << funcName << _T("' AND parent='") << parent << _T("' AND (kind='function' OR kind='prototype')");
+			sql << wxT("SELECT * FROM TAGS WHERE name='") << funcName << wxT("' AND parent='") << parent << wxT("' AND (kind='function' OR kind='prototype')");
 		TagsManagerST::Get()->GetTagsBySQL( sql, tags );
 
 		if( tags.size() > 0 )
@@ -1181,7 +1178,7 @@ CallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString & sc
 			for(size_t i=0; i<tags.size(); i++)
 			{
 				wxString tip;
-				tip << tags[i].GetName() << _T(" ") << tags[i].GetSignature();
+				tip << tags[i].GetName() << wxT(" ") << tags[i].GetSignature();
 				tips.push_back( tip );
 			}
 		}
@@ -1227,8 +1224,8 @@ wxString TagsManager::GetComment(const wxString &file, const int line)
 {
 	wxString sql;
 	// the comments is searched one line above the requested line
-	sql << _T("SELECT * FROM COMMENTS WHERE file='") 
-		<< file << _T("' AND line=") << line - 1;
+	sql << wxT("SELECT * FROM COMMENTS WHERE file='") 
+		<< file << wxT("' AND line=") << line - 1;
 
 	try
 	{
