@@ -146,7 +146,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				AdditionalIncludeDirectories="..\sdk\wxsqlite3\include;&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswu&quot;;..\sdk\wxscintilla\include"
-				PreprocessorDefinitions="WIN32;_LIB;__WIN32__;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;_LIB;__WIN32__;_CRT_SECURE_NO_DEPRECATE;__WXMSW__"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
