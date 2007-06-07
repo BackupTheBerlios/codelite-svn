@@ -229,7 +229,11 @@ void Manager::CreateWorkspace(const wxString &name, const wxString &path, const 
 	//initialize some environment variable to be available for this workspace
 	CreateEnvironmentVars(path);
 
-	DoUpdateGUITrees();
+	//build the gui tree
+	TagTreePtr dummy;
+	Frame::Get()->GetWorkspacePane()->BuildFileTree();
+	Frame::Get()->GetWorkspacePane()->BuildSymbolTree(dummy);
+	
 	//Update the configuration choice on the toolbar
 	DoUpdateConfigChoiceControl();
 }
@@ -250,7 +254,7 @@ void Manager::CreateProject(ProjectData &data)
 	//copy the project settings to the new one
 	ProjectSettingsPtr settings = proj->GetSettings();
 	proj->SetSettings(data.m_srcProject->GetSettings());
-	DoUpdateGUITrees();
+	RebuildFileView();
 }
 
 void Manager::OpenWorkspace(const wxString &path)
@@ -269,6 +273,7 @@ void Manager::OpenWorkspace(const wxString &path)
 	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), exDbfile.GetData()), 2);
 
 	// load ctags options
+	wxBusyCursor cursor;
 	CtagsOptions options = WorkspaceST::Get()->LoadCtagsOptions();
 	TagsManagerST::Get()->SetCtagsOptions( options );
 	TagsManagerST::Get()->ParseComments(options.GetParseComments());
@@ -276,7 +281,9 @@ void Manager::OpenWorkspace(const wxString &path)
 	//initialize some environment variable to be available for this workspace
 	CreateEnvironmentVars(path);
 
-	DoUpdateGUITrees();
+	TagTreePtr dummy;
+	Frame::Get()->GetWorkspacePane()->BuildFileTree();
+	Frame::Get()->GetWorkspacePane()->BuildSymbolTree(dummy);
 
 	//Update the configuration choice on the toolbar
 	DoUpdateConfigChoiceControl();
@@ -350,6 +357,15 @@ void Manager::AddProject(const wxString & path)
 	// Parse & Store
 	TagTreePtr ttp;
 	std::vector<DbRecordPtr> comments;
+	//in order to add files properly to the project
+	//the application must set its working directory
+	//to the project path
+	DirSaver ds;
+
+	wxString new_cwd = p->GetFileName().GetPath();
+	::wxSetWorkingDirectory(new_cwd);
+
+	wxBusyCursor cursor;
 	if (TagsManagerST::Get()->GetParseComments()) {
 		ttp = TagsManagerST::Get()->ParseSourceFiles(vList, p->GetName(), &comments);
 		TagsManagerST::Get()->StoreComments(comments);
@@ -358,17 +374,15 @@ void Manager::AddProject(const wxString & path)
 	}
 
 	TagsManagerST::Get()->Store(ttp);
-	
 	// Update the trees
-	DoUpdateGUITrees();
+	Frame::Get()->GetWorkspacePane()->GetSymbolTree()->AddSymbols(ttp);
+	RebuildFileView();
 }
 
-void Manager::DoUpdateGUITrees()
+void Manager::RebuildFileView()
 {
 	// update symbol tree
 	WorkspacePane *wp = Frame::Get()->GetWorkspacePane();
-	TagTreePtr dummy;
-	wp->BuildSymbolTree( dummy );
 	wp->BuildFileTree();
 }
 
@@ -505,8 +519,18 @@ void Manager::AddFilesToProject(const wxArrayString &files, const wxString &vdFu
 		CHECK_MSGBOX(res);
 	}
 
+	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(project, errMsg);
 	TagTreePtr ttp;
 	if( project.IsEmpty() == false ){
+		//in order to add files properly to the project
+		//the application must set its working directory
+		//to the project path
+		DirSaver ds;
+
+		wxString new_cwd = proj->GetFileName().GetPath();
+		::wxSetWorkingDirectory(new_cwd);
+
+		wxBusyCursor cursor;
 		std::vector<DbRecordPtr> comments;
 		if(TagsManagerST::Get()->GetParseComments()){
 			ttp = TagsManagerST::Get()->ParseSourceFiles(vFiles, project, &comments);
@@ -551,15 +575,22 @@ bool Manager::RemoveFile(const wxString &fileName, const wxString &vdFullPath)
 	bool res = WorkspaceST::Get()->RemoveFile(vdFullPath, fileName, errMsg);
 	CHECK_MSGBOX_BOOL(res);
 
+	RemoveFileFromSymbolTree(absPath, project);
+	return true;
+}
+
+void Manager::RemoveFileFromSymbolTree(const wxFileName &fileName, const wxString &project)
+{
 	if( project.IsEmpty() == false ){
+		// Build second tree from the updated file
+		TagTreePtr tree = TagsManagerST::Get()->ParseSourceFile(fileName, project);
+		
 		// Remove the file from the tags database as well
-		TagsManagerST::Get()->Delete(TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName(), project, absPath.GetFullPath());
+		TagsManagerST::Get()->Delete(TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName(), project, fileName.GetFullPath());
 		
 		// Update 
-		TagTreePtr dummy;
-		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(dummy );
+		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->RemoveSymbols(tree);
 	}
-	return true;
 }
 
 wxString Manager::GetProjectCwd(const wxString &project) const 

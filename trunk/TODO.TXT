@@ -1,8 +1,5 @@
 TODO List:
 ==========================
-. compiler error line does not show (last line is missing ... )
-. Very annoying flickering
-. Adding new project - even empty - is very slow
 . Double click on compiler line does not jump to file
 . When using the Go to definition feature - if the line is not visible - user can not see the caret line
   (this happen when using the Go To Previous)

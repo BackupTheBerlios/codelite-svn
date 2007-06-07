@@ -442,4 +442,22 @@ void SymbolTree::OnDeleteProject(SymbolTreeEvent& event)
 	}
 }
 
+void SymbolTree::RemoveSymbols(TagTreePtr tree)
+{
+	std::vector<std::pair<wxString, TagEntry> >  deletedItems;
+	tree->ToVector(deletedItems);
 
+	//send event to this object to remove the symbols
+	SymbolTreeEvent event(deletedItems, wxEVT_COMMAND_SYMBOL_TREE_DELETE_ITEM);
+	wxPostEvent(this, event);
+}
+
+void SymbolTree::AddSymbols(TagTreePtr tree)
+{
+	std::vector<std::pair<wxString, TagEntry> >  newItems;
+	tree->ToVector(newItems);
+
+	//send event to this object to remove the symbols
+	SymbolTreeEvent event(newItems, wxEVT_COMMAND_SYMBOL_TREE_ADD_ITEM);
+	wxPostEvent(this, event);
+}

@@ -358,7 +358,9 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 	wxTextOutputStream text( out );
 
 	for(; i<fpArr.size(); i++){
-		text << fpArr[i].GetFullPath() << wxT("\n");
+		wxFileName file(fpArr[i]);
+		file.MakeAbsolute();
+		text << file.GetFullPath() << wxT("\n");
 	}
 	out.Close();
 

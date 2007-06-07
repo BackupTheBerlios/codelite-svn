@@ -148,7 +148,6 @@ Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPo
 , m_findInFilesDlg(NULL)
 {
 	CreateGUIControls();
-
 	ManagerST::Get();	// Dummy call
 
 	//allow the main frame to receive files by drag and drop
@@ -187,10 +186,9 @@ void Frame::CreateGUIControls(void)
     SetIcon(wxICON(mainicon));
 #endif
 
-
 	// tell wxAuiManager to manage this frame
 	m_mgr.SetManagedWindow(this);
-	m_mgr.SetFlags(m_mgr.GetFlags() | wxAUI_MGR_ALLOW_ACTIVE_PANE);
+	m_mgr.SetFlags(m_mgr.GetFlags());
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_PANE_BORDER_SIZE, 1);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_SASH_SIZE, 2);
@@ -566,14 +564,6 @@ void Frame::OnFileNew(wxCommandEvent &event)
 	fileNameStr << ++fileCounter;
 	wxFileName fileName(fileNameStr);
 
-	// Create new editor and add it to the notebook
-	//make sure that the notebook is visible
-	wxAuiPaneInfo &info = m_mgr.GetPane(wxT("Editor"));
-	if( info.IsOk() && !info.IsShown()){
-		info.Show();
-		m_mgr.Update();
-	}
-
 	m_notebook->Freeze();
 	//allocate new editor instance using the creator
 	//this is done due to low performance on GTK 
@@ -638,16 +628,7 @@ void Frame::OnPageChanged(wxFlatNotebookEvent &event)
 void Frame::OnPageClosed(wxFlatNotebookEvent &event)
 {
 	wxUnusedVar(event);
-	int count = m_notebook->GetPageCount();
-	if(count == 0){
-		//when there are no open tabs, we hide the notebook so 
-		//the Frame::OnDropTraget function will be called and allow us
-		//to drag files into the editor (the Notebook control, even when empty
-		//does not allow us to perform our custom drag and drop operations, since it
-		//overrides it with its own implementation)
-		m_mgr.GetPane(wxT("Editor")).Hide();
-		m_mgr.Update();
-	}
+	m_notebook->GetPageCount();
 }
 
 void Frame::OnFileSaveAll(wxCommandEvent &event)
@@ -930,7 +911,7 @@ void Frame::OnBuildEvent(wxCommandEvent &event)
 		m_outputPane->Clear();
 		m_outputPane->AppendText(OutputPane::BUILD_WIN, wxT("Build Started...\n"));
 	}else if(event.GetEventType() == wxEVT_BUILD_ADDLINE){
-		m_outputPane->AppendText(OutputPane::BUILD_WIN, event.GetString() + wxT("\n"));
+		m_outputPane->AppendText(OutputPane::BUILD_WIN, event.GetString());
 	}
 }
 

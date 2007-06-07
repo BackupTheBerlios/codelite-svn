@@ -50,24 +50,30 @@ long clProcess::Start()
 	return m_pid;
 }
 
-bool clProcess::HasInput(wxString &input)
+bool clProcess::HasInput(wxString &input, wxString &errors)
 {
 	bool hasInput = false;
 	
-	if ( IsInputAvailable() )
+	while ( IsInputAvailable() )
 	{
 		wxTextInputStream tis(*GetInputStream());
 
 		// this assumes that the output is always line buffered
 		input << tis.ReadLine();
+		if(!input.EndsWith(wxT("\n"))){
+			input << wxT("\n");
+		}
 		hasInput = true;
 	}
 
-	if ( IsErrorAvailable() )
+	while ( IsErrorAvailable() )
 	{
 		wxTextInputStream tis(*GetErrorStream());
 
-		input << tis.ReadLine();
+		errors << tis.ReadLine();
+		if(!errors.EndsWith(wxT("\n"))){
+			errors << wxT("\n");
+		}
 		hasInput = true;
 	}
 

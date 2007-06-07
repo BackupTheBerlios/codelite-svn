@@ -82,6 +82,8 @@ public:
 	void OnWordWrap(wxCommandEvent &event);
 	void OnSetFocus(wxFocusEvent &event);
 	void OnMouseDClick(wxScintillaEvent &event);
+	void OnPaint(wxPaintEvent &event);
+	void OnEraseBg(wxEraseEvent &){};
 };
 
 #endif // OUTPUT_PANE_H

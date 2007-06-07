@@ -21,6 +21,12 @@ WorkspacePane::~WorkspacePane()
 
 }
 
+void WorkspacePane::OnPaint(wxPaintEvent &event)
+{
+	wxPaintDC dc(this);
+	event.Skip();
+}
+
 int WorkspacePane::CaptionToIndex(const wxString &caption)
 {
 	int i = 0;

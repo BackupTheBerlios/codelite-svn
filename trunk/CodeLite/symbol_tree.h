@@ -113,6 +113,18 @@ public:
 		AssignImageList(images);
 	};
 
+	/**
+	 * Remove symbols from the tree
+	 * \param tree 
+	 */
+	void RemoveSymbols(TagTreePtr tree);
+
+	/**
+	 * Add symbols to the tree
+	 * \param tree 
+	 */
+	void AddSymbols(TagTreePtr tree);
+
 protected:
 
 	/**
@@ -156,7 +168,7 @@ protected:
 	 */
 	void UpdateGuiItem(TagEntry& data, const wxString& key);
 
-    DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 	void OnAddSymbols(SymbolTreeEvent& event);
 	void OnDeleteSymbols(SymbolTreeEvent& event);
 	void OnUpdateSymbols(SymbolTreeEvent& event);

@@ -1,4 +1,5 @@
 #include "compiler_action.h"
+#include "wx/tokenzr.h"
 
 DEFINE_EVENT_TYPE(wxEVT_BUILD_ADDLINE)
 DEFINE_EVENT_TYPE(wxEVT_BUILD_STARTED)
@@ -38,39 +39,42 @@ void CompilerAction::OnTimer(wxTimerEvent &event)
 		m_proc->Terminate();
 		return;
 	}
+	PrintOutput();
+}
 
-	wxString data;
-
-	m_proc->HasInput(data);
-	if(!data.IsEmpty()){
-		//filter out non-intersting messages such as 'Entering Directory' ..
-		if(data.Contains(wxT("Entering directory")) || data.Contains(wxT("Leaving directory"))){
-			return;
+void CompilerAction::PrintOutput()
+{
+	wxString data, errors;
+	m_proc->HasInput(data, errors);
+	//loop over the lines read from the compiler
+	wxStringTokenizer tkz(data, wxT("\n"));
+	while(tkz.HasMoreTokens()){
+		wxString line = tkz.NextToken();
+		if(line.Contains(wxT("Entering directory")) || line.Contains(wxT("Leaving directory"))){
+			//skip it
+			continue;
+		}else{
+			//print it
+			AppendLine(line + wxT("\n"));
 		}
-		AppendLine(data);
 	}
+
+	if(!errors.IsEmpty()){
+		AppendLine(errors);
+	}
+	data.Clear();
+	errors.Clear();
 }
 
 void CompilerAction::OnProcessEnd(wxProcessEvent& event)
 {
 	wxUnusedVar(event);
-	wxString data;
-	//read all input before stopping the timer
 	
+	//read all input before stopping the timer
 	if( !m_stop ){
-		while( m_proc->HasInput(data) ){
-
-			if(!data.IsEmpty()){
-				if(data.Contains(wxT("Entering directory")) || data.Contains(wxT("Leaving directory"))){
-					data.Clear();
-					continue;
-				}
-				AppendLine(data);
-			}
-			data.Clear();
-		}
+		PrintOutput();
 	}
-
+	
 	m_timer->Stop();
 	m_busy = false;
 	m_stop = false;

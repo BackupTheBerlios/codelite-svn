@@ -394,8 +394,12 @@ private:
 	/**
 	 * Update the symbol & file tress
 	 */
-	void DoUpdateGUITrees();
+	void RebuildFileView();
 	
+	/**
+	 * Remove a file from the gui tree
+	 */
+	void RemoveFileFromSymbolTree(const wxFileName &fileName, const wxString &project);
 
 	// Create environment variables for the workspace
 	void CreateEnvironmentVars(const wxString &wpsPath);

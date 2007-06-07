@@ -58,7 +58,7 @@ public:
 	void SetType(int type) { m_type = type; }
 	int GetType() const { return m_type; }
 
-	bool HasInput(wxString &input);
+	bool HasInput(wxString &input, wxString &errors);
 };
 
 #endif // CODELITE_TAGSPROCESS_H

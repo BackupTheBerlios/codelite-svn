@@ -17,10 +17,12 @@ protected:
 	bool m_busy;
 	bool m_stop;
 
-public:
+protected:
 	virtual void OnTimer(wxTimerEvent &event);
 	virtual void OnProcessEnd(wxProcessEvent& event);
-	
+	virtual void PrintOutput();
+
+public:
 	bool IsBusy() const { return m_busy; }
 	void SetBusy(bool busy) { m_busy = busy; }
 	void Stop();

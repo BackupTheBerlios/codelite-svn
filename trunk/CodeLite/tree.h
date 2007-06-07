@@ -67,6 +67,12 @@ public:
 	 * comparison will compare sub-tree which root of its fromNode
 	 */
 	void Compare(Tree* targetTree, std::vector<std::pair<TKey, TData> >& deletedItems, std::vector<std::pair<TKey, TData> >& modifiedItems, std::vector<std::pair<TKey, TData> >& newItems, TreeNode<TKey, TData>* fromNode = NULL);
+
+	/**
+	 * Serialize the tree to vector
+	 * \param vec output vector
+	 */
+	void ToVector(std::vector<std::pair<TKey, TData> >& vec);
 };
 
 template <typename TKey, typename TData>
@@ -122,6 +128,22 @@ template <typename TKey, typename TData>
 void Tree<TKey, TData>::Print(std::ostream& stream , int depth)
 {
 	m_root->Print(stream, depth);
+}
+
+template <typename TKey, typename TData>
+void Tree<TKey, TData>::ToVector(std::vector<std::pair<TKey, TData> >& vec)
+{
+	TreeWalker<TKey, TData> walker(GetRoot());
+	for(; !walker.End(); walker++)
+	{
+		if( walker.GetNode()->IsRoot() )
+			continue;
+
+		std::pair<TKey, TData> itemPair;
+		itemPair.first = walker.GetNode()->GetKey();
+		itemPair.second = walker.GetNode()->GetData();
+		vec.push_back( itemPair );
+	}
 }
 
 template <typename TKey, typename TData>

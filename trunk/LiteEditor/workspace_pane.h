@@ -36,6 +36,10 @@ public:
 	// Return the index of the given tab by name
 	int CaptionToIndex(const wxString &caption);
 
+	// event handlers
+	void OnPaint(wxPaintEvent &event);
+	void OnEraseBg(wxEraseEvent &){};
+
 	//-----------------------------------------------
 	// Setters/Getters
 	//-----------------------------------------------

@@ -19,6 +19,10 @@ OutputPane::OutputPane(wxWindow *parent, const wxString &caption)
 	CreateGUIControls();	
 }
 
+void OutputPane::OnPaint(wxPaintEvent &event){
+	wxPaintDC dc(this);
+	event.Skip();
+}
 
 OutputPane::~OutputPane()
 {
