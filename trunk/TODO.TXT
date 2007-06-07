@@ -1,5 +1,12 @@
 TODO List:
 ==========================
+. Adding new project - even empty - is very slow
+. Build order is getting screwed ...
+. Very annoying flickering
+. Double click on compiler line does not jump to file
+. When using the Go to definition feature - if the line is not visible - user can not see the caret line
+  (this happen when using the Go To Previous)
+. compiler error line does not show (last line is missing ... )
 . Add option to delete Workspace build configuration
 . When creating new workspace create a directory with the workspace name and place there the .workspace file
 . When creating new project crreat a directory with the project name and place there the .project file 
