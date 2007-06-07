@@ -2,7 +2,9 @@
 #include "map"
 
 ProcUtils::ProcUtils()
+#ifdef __WXMSW__
 :hInstLib(NULL)
+#endif
 {
 #ifdef __WXMSW__
 	//load kernel32.dll once
@@ -96,7 +98,7 @@ void ProcUtils::GetProcTree(std::map<unsigned long, bool> &parentsMap, long pid)
 	CloseHandle (hProcessSnap);
 }
 #else
-void ProcUtils::KillProcTree(std::map<unsigned long, bool> &, long )
+void ProcUtils::GetProcTree(std::map<unsigned long, bool> &, long )
 {
 	//dont do nothing on other platforms
 }

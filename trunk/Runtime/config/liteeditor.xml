@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LiteEditor>
   <Layout>
-    <Perspective Name="Default" Value="layout2|name=Output;caption=Output;state=6293502;dir=3;layer=1;row=0;pos=0;prop=100000;bestw=602;besth=498;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Workspace;caption=Workspace;state=6293502;dir=4;layer=1;row=0;pos=0;prop=100000;bestw=300;besth=400;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Editor;caption=;state=16640;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=20;besth=20;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Standard Toolbar;caption=Standard;state=2108156;dir=1;layer=10;row=0;pos=0;prop=100000;bestw=692;besth=22;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=10;floaty=920;floatw=709;floath=46|dock_size(1,10,0)=24|dock_size(5,0,0)=20|"/>
+    <Perspective Name="Default" Value="layout2|name=Output;caption=Output;state=6293502;dir=3;layer=1;row=0;pos=0;prop=100000;bestw=602;besth=505;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Workspace;caption=Workspace;state=6293502;dir=4;layer=1;row=0;pos=0;prop=100000;bestw=300;besth=400;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Editor;caption=;state=16640;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=20;besth=20;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Standard Toolbar;caption=Standard;state=2108156;dir=1;layer=10;row=0;pos=0;prop=100000;bestw=696;besth=32;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=20|dock_size(1,10,0)=34|"/>
   </Layout>
   <Lexers>
     <Lexer Name="Text" Id="1">
