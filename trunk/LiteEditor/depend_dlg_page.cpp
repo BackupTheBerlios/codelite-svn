@@ -106,10 +106,8 @@ void DependenciesPage::Save()
 	ProjectPtr proj = ManagerST::Get()->GetProject(m_projectName);
 
 	wxArrayString depsArr;
-	for(size_t i=0; i<m_checkListProjectList->GetCount(); i++){
-		if(m_checkListProjectList->IsChecked((unsigned int)i)){
-			depsArr.Add(m_checkListProjectList->GetString((unsigned int)i));
-		}
+	for(size_t i=0; i<m_listBoxBuildOrder->GetCount(); i++){
+		depsArr.Add(m_listBoxBuildOrder->GetString((unsigned int)i));
 	}
 	proj->SetDependencies(depsArr);
 }

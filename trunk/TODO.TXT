@@ -1,6 +1,5 @@
 TODO List:
 ==========================
-. Build order is getting screwed ...
 . compiler error line does not show (last line is missing ... )
 . Very annoying flickering
 . Adding new project - even empty - is very slow
