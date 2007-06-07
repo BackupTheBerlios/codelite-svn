@@ -3,7 +3,7 @@
 
 #include <wx/wxprec.h>
 
-#ifdef __VISUALC__
+#ifdef __WXMSW__ 
 	#ifdef _DEBUG
 		#include <crtdbg.h>
 		#define DEBUG_NEW new(_NORMAL_BLOCK ,__FILE__, __LINE__)

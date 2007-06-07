@@ -27,9 +27,15 @@ void clProcess::SetPid(long pid)
 
 void clProcess::Terminate()
 {
-	wxKillError rc;
+	std::map<unsigned long, bool> tree;
 	ProcUtils pu;
-	pu.KillProcTree(GetPid());
+	pu.GetProcTree(tree, GetPid());
+
+	wxKillError rc;
+	std::map<unsigned long, bool>::iterator iter = tree.begin();
+	for(; iter != tree.end(); iter++){
+		wxKill(iter->first, wxSIGKILL, &rc);
+	}
 
 	// Sleep for 20 ms to allow the process to be killed and 
 	// the main frame to handle the event or else we can get 

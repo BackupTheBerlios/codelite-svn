@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/include&quot;;&quot;$(WXSTABLE)/lib/vc_lib/mswud&quot;;..\CodeLite\;..\sdk\wxsqlite3\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;__WXMSW__"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -211,12 +211,6 @@
 			</File>
 			<File
 				RelativePath=".\macros.h">
-			</File>
-			<File
-				RelativePath=".\procutils.cpp">
-			</File>
-			<File
-				RelativePath=".\procutils.h">
 			</File>
 			<File
 				RelativePath=".\xmlutils.cpp">

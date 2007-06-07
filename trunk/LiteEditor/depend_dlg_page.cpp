@@ -63,7 +63,8 @@ void DependenciesPage::Init()
 		wxArrayString depArr = proj->GetDependencies();
 		size_t i=0;
 		for(i=0; i<depArr.GetCount(); i++){
-			m_listBoxBuildOrder->Append(depArr.Item(i));
+			wxString item = depArr.Item(i);
+			m_listBoxBuildOrder->Append(item);
 		}
 		//initialize the project dependencies check list
 		wxArrayString projArr;

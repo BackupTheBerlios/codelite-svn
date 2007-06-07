@@ -11,6 +11,10 @@
 #include <wx/wfstream.h>
 #include <wx/txtstrm.h>
 
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
+
 // Descending sorting function
 struct SDescendingSort
 {
