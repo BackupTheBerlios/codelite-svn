@@ -82,7 +82,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(WXSTABLE)\include&quot;;&quot;$(WXSTABLE)\lib\vc_lib\msw&quot;;&quot;$(WXSTABLE)\contrib\include&quot;;..\CodeLite;.\include;..\sdk\wxsqlite3\include;..\sdk\wxscintilla\include;..\sdk\wxflatnotebook\include\;..\sdk\wxflatmenu\wxflatmenu;..\Plugin;$(NOINHERIT)"
+				AdditionalIncludeDirectories="&quot;$(WXSTABLE)\include&quot;;&quot;$(WXSTABLE)\lib\vc_lib\msw&quot;;&quot;$(WXSTABLE)\contrib\include&quot;;..\CodeLite;.\include;..\sdk\wxsqlite3\include;..\sdk\wxscintilla\include;..\sdk\wxflatnotebook\include\;..\Plugin;$(NOINHERIT)"
 				PreprocessorDefinitions="WIN32;__WIN32__;__WXMSW__;_WINDOWS;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
@@ -104,7 +104,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28_aui.lib wxbase28_net.lib wxbase28_xml.lib wxmsw28_xrc.lib wxmsw28_adv.lib wxmsw28_html.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxmsw28_core.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib wxsqlite3.lib sqlite3.lib codelite.lib wxscintilla.lib comctl32.lib rpcrt4.lib shell32.lib gdi32.lib kernel32.lib user32.lib comdlg32.lib ole32.lib oleaut32.lib advapi32.lib wxflatmenu.lib plugin.lib"
+				AdditionalDependencies="wxmsw28_aui.lib wxbase28_net.lib wxbase28_xml.lib wxmsw28_xrc.lib wxmsw28_adv.lib wxmsw28_html.lib wxbase28.lib wxtiff.lib wxjpeg.lib wxmsw28_core.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib wxsqlite3.lib sqlite3.lib codelite.lib wxscintilla.lib comctl32.lib rpcrt4.lib shell32.lib gdi32.lib kernel32.lib user32.lib comdlg32.lib ole32.lib oleaut32.lib advapi32.lib plugin.lib"
 				OutputFile="../Runtime/LiteEditorR.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
