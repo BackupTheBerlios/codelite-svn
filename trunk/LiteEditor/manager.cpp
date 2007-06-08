@@ -112,7 +112,12 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 
 		// Create new editor and add it to the notebook
 		notebook ->Freeze();
-		editor = new LEditor(Frame::Get(), wxID_ANY, wxSize(1, 1), fileName.GetFullPath(), projectName);
+		editor = EditorCreatorST::Get()->NewInstance();
+		editor->SetFileName(fileName);
+		editor->SetProject(projectName);
+		editor->ReloadFile();
+		editor->SetSavePoint();
+
 		notebook ->AddPage(editor, fileName.GetFullName(), true);
 		notebook ->Thaw();
 	}
