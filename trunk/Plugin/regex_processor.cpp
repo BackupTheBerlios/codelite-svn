@@ -4,7 +4,11 @@
 RegexProcessor::RegexProcessor(const wxString &reStr)
 : m_isOk(true)
 {
+#if wxUSE_UNICODE
 	if(re_comp(&m_re, reStr.ToAscii().data())){
+#else
+	if(re_comp(&m_re, reStr.ToAscii())){
+#endif
 		m_isOk = false;
 	}
 }
@@ -25,13 +29,18 @@ bool RegexProcessor::GetGroup(const wxString &str, int grp, wxString &out)
 	}
 
 	regmatch* matches = new regmatch[re_nsubexp(m_re)];
+#if wxUSE_UNICODE
 	int retval = re_exec(m_re, str.ToAscii().data(), re_nsubexp(m_re), &matches[0]);
+#else
+	int retval = re_exec(m_re, str.ToAscii(), re_nsubexp(m_re), &matches[0]);
+#endif
 	if(retval < 1)                                              // line G
     {
         delete[] matches;
         return false;
     }
-	out = str.Mid(matches[grp].begin, matches[grp].end - matches[grp].begin);
+
+	out = str.Mid(matches[grp].begin, matches[grp+1].begin - matches[grp].begin);
 	delete [] matches;
 	return true;
 }
