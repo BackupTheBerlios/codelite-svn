@@ -259,6 +259,9 @@ void OutputPane::OnBuildWindowDClick(const wxString &line)
 		strLineNumber.ToLong(&lineNumber);
 
 		// open the file in the editor
+		wxString msg;
+		msg << wxT("Opening file: ") << fileName << wxT(" at Line: ") << lineNumber -1;
+		wxMessageBox(msg);
 		ManagerST::Get()->OpenFile(fileName, wxEmptyString, lineNumber - 1 );
 	}
 }
