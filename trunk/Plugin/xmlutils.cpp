@@ -2,6 +2,10 @@
 
 wxXmlNode *XmlUtils::FindNodeByName(const wxXmlNode *parent, const wxString &tagName, const wxString &name)
 {
+	if(!parent){
+		return NULL;
+	}
+
 	wxXmlNode *child = parent->GetChildren();
 	while( child ){
 		if( child->GetName() == tagName){

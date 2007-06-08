@@ -82,6 +82,9 @@ long EditorConfig::LoadNotebookStyle(const wxString &nbName)
 {
 	long style = wxNOT_FOUND;
 	wxXmlNode *layoutNode = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("Layout"));
+	if(!layoutNode){
+		return style;
+	}
 
 	wxXmlNode *child = layoutNode->GetChildren();
 	while( child ){

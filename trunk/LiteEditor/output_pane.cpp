@@ -4,6 +4,7 @@
 #include "manager.h"
 #include "regex_processor.h"
 #include "build_settings_config.h"
+#include "dirsaver.h"
 
 #ifndef wxScintillaEventHandler
 #define wxScintillaEventHandler(func) \
@@ -259,9 +260,9 @@ void OutputPane::OnBuildWindowDClick(const wxString &line)
 		strLineNumber.ToLong(&lineNumber);
 
 		// open the file in the editor
-		wxString msg;
-		msg << wxT("Opening file: ") << fileName << wxT(" at Line: ") << lineNumber -1;
-		wxMessageBox(msg);
+		DirSaver ds;
+		::wxSetWorkingDirectory(ManagerST::Get()->GetProject(ManagerST::Get()->GetActiveProjectName())->GetFileName().GetPath());
+
 		ManagerST::Get()->OpenFile(fileName, wxEmptyString, lineNumber - 1 );
 	}
 }

@@ -49,8 +49,6 @@ bool RegexProcessor::GetGroup(const wxString &str, int grp, wxString &out)
 	
 	std::string out_s = std::string(pline.data() + matches[grp].begin, pline.data()+matches[grp].end);
 	out = _U(out_s.c_str());
-
-	printf("out=%s\n", out_s.c_str());
 	delete [] matches;
 	return true;
 }
