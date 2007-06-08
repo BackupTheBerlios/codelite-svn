@@ -341,11 +341,42 @@
 			<File
 				RelativePath=".\compiler_action.h">
 			</File>
+		</Filter>
+		<Filter
+			Name="regex"
+			Filter="">
 			<File
-				RelativePath=".\read_proc_input_request.cpp">
+				RelativePath=".\frontend.c">
 			</File>
 			<File
-				RelativePath=".\read_proc_input_request.h">
+				RelativePath=".\memory.c">
+			</File>
+			<File
+				RelativePath=".\regerror.c">
+			</File>
+			<File
+				RelativePath=".\regexp.c">
+			</File>
+			<File
+				RelativePath=".\regexp.h">
+			</File>
+			<File
+				RelativePath=".\regexp_custom.h">
+			</File>
+			<File
+				RelativePath=".\regexp_int.h">
+			</File>
+			<File
+				RelativePath=".\regmagic.h">
+			</File>
+			<File
+				RelativePath=".\regsub.c">
+			</File>
+			<File
+				RelativePath=".\report.c">
+			</File>
+			<File
+				RelativePath=".\widechar.c">
 			</File>
 		</Filter>
 	</Files>

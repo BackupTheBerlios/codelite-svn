@@ -2,11 +2,12 @@
 #define REGEX_PROCESSOR_H
 
 #include "wx/string.h"
-
-class wxRegEx;
+#include "regexp.h"
 
 class RegexProcessor {
-	wxRegEx *m_re;
+	regexp *m_re;
+	bool m_isOk;
+
 public:
 	RegexProcessor(const wxString &reStr);
 	virtual ~RegexProcessor();
