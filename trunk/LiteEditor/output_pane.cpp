@@ -2,6 +2,8 @@
 #include <wx/xrc/xmlres.h>
 #include "wx/wxFlatNotebook/wxFlatNotebook.h"
 #include "manager.h"
+#include "regex_processor.h"
+#include "build_settings_config.h"
 
 #ifndef wxScintillaEventHandler
 #define wxScintillaEventHandler(func) \
@@ -183,6 +185,7 @@ void OutputPane::OnMouseDClick(wxScintillaEvent &event)
 {
 	long pos = event.GetPosition();
 	int fifWinIndex = CaptionToIndex(OutputPane::FIND_IN_FILES_WIN);
+	int buildWinIndex = CaptionToIndex(OutputPane::BUILD_WIN);
 
 	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage(m_book->GetSelection()));
 	if( !win ){
@@ -198,6 +201,9 @@ void OutputPane::OnMouseDClick(wxScintillaEvent &event)
 	if( fifWinIndex == m_book->GetSelection() ){
 		//Find in files
 		OnFindInFilesDClick(lineText);
+	} else if(buildWinIndex == m_book->GetSelection()){
+		//build window
+		OnBuildWindowDClick(lineText);
 	}
 }
 
@@ -214,4 +220,45 @@ void OutputPane::OnFindInFilesDClick(const wxString &line)
 
 	// open the file in the editor
 	ManagerST::Get()->OpenFile(fileName, wxEmptyString, lineNumber - 1 );
+}
+
+void OutputPane::OnBuildWindowDClick(const wxString &line)
+{
+	wxString fileName, strLineNumber;
+	bool match = false;
+
+	//get the selected compiler
+	BuildConfigPtr bldConf = ManagerST::Get()->GetActiveProjectBuildConf();
+	wxString cmpType = bldConf->GetCompilerType();
+	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetCompiler(cmpType);
+
+	long idx;
+	//try to match an error pattern to the line
+	RegexProcessor re(cmp->GetErrPattern());
+	cmp->GetErrFileNameIndex().ToLong(&idx);
+	if(re.GetGroup(line, idx, fileName)){
+		//we found the file name, get the line number
+		cmp->GetErrLineNumberIndex().ToLong(&idx);
+		re.GetGroup(line, idx, strLineNumber);
+		match = true;
+	}
+	//try to match warning pattern
+	if(!match){
+		RegexProcessor re(cmp->GetWarnPattern());
+		cmp->GetWarnFileNameIndex().ToLong(&idx);
+		if(re.GetGroup(line, idx, fileName)){
+			//we found the file name, get the line number
+			cmp->GetWarnLineNumberIndex().ToLong(&idx);
+			re.GetGroup(line, idx, strLineNumber);
+			match = true;
+		}
+	}
+
+	if(match){
+		long lineNumber = -1;
+		strLineNumber.ToLong(&lineNumber);
+
+		// open the file in the editor
+		ManagerST::Get()->OpenFile(fileName, wxEmptyString, lineNumber - 1 );
+	}
 }

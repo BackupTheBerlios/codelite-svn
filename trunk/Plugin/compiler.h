@@ -68,7 +68,7 @@ public:
 	void SetWarnPattern(const wxString &s) { m_warningPattern = s; }
 	void SetWarnFileNameIndex(const wxString &s) { m_warningFileNameIndex = s; }
 	void SetWarnLineNumberIndex(const wxString &s) { m_warningLineNubmerIndex = s; };
-};
+};	
 
 typedef SmartPtr<Compiler> CompilerPtr;
 #endif // COMPILER_H

@@ -75,6 +75,9 @@ bool BuilderGnuMake::Export(const wxString &project, wxString &errMsg)
 void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 {
 	ProjectSettingsPtr settings = proj->GetSettings();
+	if(!settings){
+		return;
+	}
 	wxString path = proj->GetFileName().GetPath();
 
 	DirSaver ds;

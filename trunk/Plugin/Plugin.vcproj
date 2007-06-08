@@ -213,6 +213,12 @@
 				RelativePath=".\macros.h">
 			</File>
 			<File
+				RelativePath=".\regex_processor.cpp">
+			</File>
+			<File
+				RelativePath=".\regex_processor.h">
+			</File>
+			<File
 				RelativePath=".\xmlutils.cpp">
 			</File>
 			<File

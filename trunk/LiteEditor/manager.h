@@ -386,6 +386,12 @@ public:
 	 */
 	void SetWorkspaceConfigurationName(const wxString &name);
 
+	/**
+	 * Return the active's project build configuration that matches 
+	 * the workspace selected configuration
+	 */
+	BuildConfigPtr GetActiveProjectBuildConf();
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

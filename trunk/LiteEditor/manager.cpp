@@ -498,6 +498,7 @@ bool Manager::AddFileToProject(const wxString &fileName, const wxString &vdFullP
 		// Update 
 		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->AddSymbols(ttp);
 	}
+	return true;
 }
 
 void Manager::AddFilesToProject(const wxArrayString &files, const wxString &vdFullPath, wxArrayString &actualAdded)
@@ -954,3 +955,13 @@ void Manager::ShowMainToolbar(bool show)
 		Frame::Get()->GetDockingManager().Update();
 	}
 }
+
+BuildConfigPtr Manager::GetActiveProjectBuildConf()
+{
+	BuildMatrixPtr matrix = GetWorkspaceBuildMatrix();
+	wxString projConf = matrix->GetProjectSelectedConf(matrix->GetSelectedConfigurationName(), GetActiveProjectName());
+	ProjectSettingsPtr settings = GetProjectSettings(GetActiveProjectName());
+	return settings->GetBuildConfiguration(projConf);
+}
+
+

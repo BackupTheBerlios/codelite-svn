@@ -43,6 +43,7 @@ private:
 	void CreateGUIControls();
 	wxScintilla *CreateScintillaPage();
 	void OnFindInFilesDClick(const wxString &line);
+	void OnBuildWindowDClick(const wxString &line);
 
 public:
 	/**
