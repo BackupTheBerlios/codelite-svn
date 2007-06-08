@@ -1,6 +1,16 @@
 #include "regex_processor.h"
 #include "macros.h"
 
+#if wxUSE_UNICODE
+    #ifndef _U
+        #define _U(x) wxString((x),wxConvUTF8)
+    #endif
+#else
+    #ifndef _U
+        #define _U(x) (x)
+    #endif
+#endif
+
 RegexProcessor::RegexProcessor(const wxString &reStr)
 : m_isOk(true)
 {
@@ -38,7 +48,7 @@ bool RegexProcessor::GetGroup(const wxString &str, int grp, wxString &out)
     }
 	
 	std::string out_s = std::string(pline.data() + matches[grp].begin, pline.data()+matches[grp].end);
-	out = wxString::FromAscii(out_s.c_str());
+	out = _U(out_s.c_str());
 
 	printf("out=%s\n", out.GetData());
 	delete [] matches;
