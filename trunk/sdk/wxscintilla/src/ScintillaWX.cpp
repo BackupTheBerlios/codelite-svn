@@ -547,10 +547,12 @@ void ScintillaWX::Paste() {
 
 void ScintillaWX::CopyToClipboard (const SelectionText& st) {
 #if wxUSE_CLIPBOARD
-	wxTheClipboard->UsePrimarySelection(false);
-        wxString text = wxTextBuffer::Translate(sci2wx(st.s, st.len-1));
-        wxTheClipboard->SetData(new wxTextDataObject(text));
-        wxTheClipboard->Close(); 
+	if (wxTheClipboard->Open()) { 
+		wxTheClipboard->UsePrimarySelection(false);
+		wxString text = wxTextBuffer::Translate(sci2wx(st.s, st.len-1));
+		wxTheClipboard->SetData(new wxTextDataObject(text));
+		wxTheClipboard->Close();
+	}
 #else
 	wxUnusedVar(st);
 #endif // wxUSE_CLIPBOARD
