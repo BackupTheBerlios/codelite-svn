@@ -14,6 +14,8 @@ LexerConf::LexerConf(wxXmlNode *element)
 		wxXmlNode *node = XmlUtils::FindFirstByTagName(element, wxT("KeyWords"));
 		if( node ){
 			m_keyWords = node->GetNodeContent();
+			m_keyWords.Replace(wxT("\n"), wxT(" "));
+			m_keyWords.Replace(wxT("\r"), wxT(" "));
 		}
 
 		// load extensions

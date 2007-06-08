@@ -101,6 +101,28 @@ wxXmlNode *Project::CreateVD(const wxString &vdFullPath)
 	return node;
 }
 
+bool Project::IsFileExist(const wxString &fileName)
+{
+	//find the file under this node
+	// Convert the file path to be relative to 
+	// the project path
+	DirSaver ds;
+
+	::wxSetWorkingDirectory(m_fileName.GetPath());
+	wxFileName tmp(fileName);
+	tmp.MakeRelativeTo(m_fileName.GetPath());
+
+	std::vector<wxFileName> files;
+	GetFiles(files);
+	
+	for(size_t i=0; i<files.size(); i++){
+		if(files.at(i).GetFullPath() == tmp.GetFullPath()){
+			return true;
+		}
+	}
+	return false;
+}
+
 bool Project::AddFile(const wxString &fileName, const wxString &virtualDirPath)
 {
 	wxXmlNode *vd = GetVirtualDir(virtualDirPath);
@@ -116,6 +138,11 @@ bool Project::AddFile(const wxString &fileName, const wxString &virtualDirPath)
 	wxFileName tmp(fileName);
 	tmp.MakeRelativeTo(m_fileName.GetPath());
 	
+	// if we already have a file with the same name, return false
+	if(this->IsFileExist(fileName)){
+		return false;
+	}
+
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("File"));
 	node->AddProperty(wxT("Name"), tmp.GetFullPath());
 	vd->AddChild(node);

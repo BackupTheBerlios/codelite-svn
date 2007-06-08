@@ -53,9 +53,15 @@ bool App::OnInit()
 	// Center the dialog when first shown
 	m_pMainFrame->Centre();
 
-	// Show it and tell the application that it's our main window
-	m_pMainFrame->Show(TRUE);
+	//if the application started with a given file name,
+	//which is not a workspace
+	//hide the output &workspace panes
+	if(wxAppBase::argc > 1){
+		ManagerST::Get()->HideOutputPane();
+		ManagerST::Get()->HideWorkspacePane();
+	}
 
+	m_pMainFrame->Show(TRUE);
 	SetTopWindow(m_pMainFrame);
 
 	for(int i=1; i<wxApp::argc; i++){

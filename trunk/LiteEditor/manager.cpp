@@ -436,17 +436,15 @@ void Manager::RemoveVirtualDirectory(const wxString &virtualDirFullPath)
 		return;
 	}
 
+	// Update symbol tree and database
 	wxString vdPath = virtualDirFullPath.AfterFirst(wxT(':'));
 	wxArrayString files;
 	p->GetFilesByVirtualDir(vdPath, files);
 	for(size_t i=0; i<files.Count(); i++){
-		TagsManagerST::Get()->Delete(TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName(), project, files.Item(i));
+		RemoveFileFromSymbolTree(files.Item(i), p->GetName());
 	}
 
-	// Update 
-	TagTreePtr dummy;
-	Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(dummy );
-
+	//and finally, remove the virtual dir from the workspace
 	bool res = WorkspaceST::Get()->RemoveVirtualDirectory(virtualDirFullPath, errMsg);
 	CHECK_MSGBOX(res);
 }
@@ -456,32 +454,35 @@ void Manager::SaveWorkspace()
 	WorkspaceST::Get()->Save();
 }
 
-void Manager::AddNewFileToProject(const wxString &fileName, const wxString &vdFullPath, bool openIt )
+bool Manager::AddNewFileToProject(const wxString &fileName, const wxString &vdFullPath, bool openIt )
 {
 	wxFile file;
 	if (!file.Create(fileName.GetData(), true))
-		return;
+		return false;
 
 	if(file.IsOpened()){
 		file.Close();
 	}
 
-	AddFileToProject(fileName, vdFullPath, openIt);
+	return AddFileToProject(fileName, vdFullPath, openIt);
 }
 
-void Manager::AddFileToProject(const wxString &fileName, const wxString &vdFullPath, bool openIt )
+bool Manager::AddFileToProject(const wxString &fileName, const wxString &vdFullPath, bool openIt )
 {
 	wxString project;
 	project = vdFullPath.BeforeFirst(wxT(':'));
 
-	if( openIt ){
-		OpenFile(fileName, project);
-	}
-
 	// Add the file to the project
 	wxString errMsg;
 	bool res = WorkspaceST::Get()->AddNewFile(vdFullPath, fileName, errMsg);
-	CHECK_MSGBOX(res);
+	if(!res){
+		//file or virtual dir does not exist
+		return false;
+	}
+
+	if( openIt ){
+		OpenFile(fileName, project);
+	}
 
 	TagTreePtr ttp;
 	if( project.IsEmpty() == false ){
@@ -495,28 +496,30 @@ void Manager::AddFileToProject(const wxString &fileName, const wxString &vdFullP
 		TagsManagerST::Get()->Store(ttp);
 
 		// Update 
-		TagTreePtr dummy;
-		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(dummy );
+		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->AddSymbols(ttp);
 	}
 }
 
-void Manager::AddFilesToProject(const wxArrayString &files, const wxString &vdFullPath)
+void Manager::AddFilesToProject(const wxArrayString &files, const wxString &vdFullPath, wxArrayString &actualAdded)
 {
 	wxString project;
 	project = vdFullPath.BeforeFirst(wxT(':'));
 
-	std::vector<wxFileName> vFiles;
-	size_t i=0;
-	for(i=0; i<files.GetCount(); i++){
-		vFiles.push_back(files.Item(i));
-	}
-
 	// Add the file to the project
 	wxString errMsg;
 	bool res = true;
+	size_t i=0;
 	for(i=0; i<files.GetCount(); i++){
 		res = WorkspaceST::Get()->AddNewFile(vdFullPath, files.Item(i), errMsg);
-		CHECK_MSGBOX(res);
+		if(res){
+			actualAdded.Add(files.Item(i));
+		}
+	}
+
+	//convert wxArrayString to vector for the ctags api
+	std::vector<wxFileName> vFiles;
+	for(i=0; i<actualAdded.GetCount(); i++){
+		vFiles.push_back(actualAdded.Item(i));
 	}
 
 	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(project, errMsg);
@@ -541,8 +544,7 @@ void Manager::AddFilesToProject(const wxArrayString &files, const wxString &vdFu
 		TagsManagerST::Get()->Store(ttp);
 
 		// Update 
-		TagTreePtr dummy;
-		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(dummy );
+		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->AddSymbols(ttp);
 	}
 }
 

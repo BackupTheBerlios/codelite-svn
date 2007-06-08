@@ -68,15 +68,15 @@ public:
 	 * \param fileName file full path (including directories)
 	 * \param vdFullPath path of the virtual directory
 	 */
-	void AddNewFileToProject(const wxString &fileName, const wxString &vdFullPath, bool openIt = true);
+	bool AddNewFileToProject(const wxString &fileName, const wxString &vdFullPath, bool openIt = true);
 
 	/**
 	 * Add an existing file to workspace
 	 * \param fileName file full path (including directories)
 	 * \param vdFullPath path of the virtual directory
 	 */
-	void AddFileToProject(const wxString &fileName, const wxString &vdFullPath, bool openIt = false);
-	void AddFilesToProject(const wxArrayString &files, const wxString &vdFullPath);
+	bool AddFileToProject(const wxString &fileName, const wxString &vdFullPath, bool openIt = false);
+	void AddFilesToProject(const wxArrayString &files, const wxString &vdFullPath, wxArrayString &actualAdded);
 
 	/*!
 	 * \brief

@@ -264,10 +264,27 @@ void Frame::CreateGUIControls(void)
 	
 	GetStatusBar()->SetStatusText(wxT("Ready"));
 
-	// "commit" all changes made to wxAuiManager
+	//load windows perspective
 	wxString pers = EditorConfigST::Get()->LoadPerspective(wxT("Default"));
 	CreateToolbars();
 
+	// load notebooks style
+	long book_style = 0;
+	book_style = EditorConfigST::Get()->LoadNotebookStyle(wxT("Editor"));
+	if(book_style != wxNOT_FOUND){
+		m_notebook->SetWindowStyleFlag(book_style);
+	}
+
+	book_style = EditorConfigST::Get()->LoadNotebookStyle(wxT("OutputPane"));
+	if(book_style != wxNOT_FOUND){
+		m_outputPane->GetNotebook()->SetWindowStyleFlag(book_style);
+	}
+
+	book_style = EditorConfigST::Get()->LoadNotebookStyle(wxT("WorkspacePane"));
+	if(book_style != wxNOT_FOUND){
+		m_workspacePane->GetNotebook()->SetWindowStyleFlag(book_style);
+	}
+	
 	// if we have a perspective, use it, else use the default persprective
 	if( pers.IsEmpty() == false ){
 		m_mgr.LoadPerspective(pers);
@@ -433,6 +450,9 @@ void Frame::OnClose(wxCloseEvent& event)
 	// Stop the search thread
 	SearchThreadST::Get()->StopSearch();
 	EditorConfigST::Get()->SavePerspective(wxT("Default"), m_mgr.SavePerspective());
+	EditorConfigST::Get()->SaveNotebookStyle(wxT("Editor"), m_notebook->GetWindowStyleFlag());
+	EditorConfigST::Get()->SaveNotebookStyle(wxT("OutputPane"), m_outputPane->GetNotebook()->GetWindowStyleFlag());
+	EditorConfigST::Get()->SaveNotebookStyle(wxT("WorkspacePane"), m_workspacePane->GetNotebook()->GetWindowStyleFlag());
 	event.Skip();
 }
 

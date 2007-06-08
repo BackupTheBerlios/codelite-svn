@@ -83,14 +83,14 @@ public:
 	 * \param nbName notebook name
 	 * \return wxNOT_FOUND when notebook not found or style
 	 */
-	long LoadNotebookStyle(wxString &nbName);
+	long LoadNotebookStyle(const wxString &nbName);
 
 	/**
 	 * Save notebook style to configuration
 	 * \param nbName notebook name
 	 * \param style style value to save
 	 */
-	void SaveNotebookStyle(wxString &nbName, long style);
+	void SaveNotebookStyle(const wxString &nbName, long style);
 
 	/**
 	 * Save the perspective to the configuration file

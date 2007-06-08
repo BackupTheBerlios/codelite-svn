@@ -227,6 +227,12 @@ public:
 	 */
 	void SetDependencies(wxArrayString &deps);
 
+
+	/**
+	 * Return true if a file already exist under the project
+	 */
+	bool IsFileExist(const wxString &fileName);
+
 private:
 	// Recursive helper function
 	void RecursiveAdd(wxXmlNode *xmlNode, ProjectTreePtr &ptp, ProjectTreeNode *nodeParent);

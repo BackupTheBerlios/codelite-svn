@@ -78,7 +78,7 @@ void EditorConfig::SavePerspective(const wxString &name, const wxString &pers)
 	m_doc->Save(m_fileName.GetFullPath());
 }
 
-long EditorConfig::LoadNotebookStyle(wxString &nbName)
+long EditorConfig::LoadNotebookStyle(const wxString &nbName)
 {
 	long style = wxNOT_FOUND;
 	wxXmlNode *layoutNode = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("Layout"));
@@ -97,7 +97,7 @@ long EditorConfig::LoadNotebookStyle(wxString &nbName)
 	return style;
 }
 
-void EditorConfig::SaveNotebookStyle(wxString &nbName, long style)
+void EditorConfig::SaveNotebookStyle(const wxString &nbName, long style)
 {
 	wxXmlNode *layoutNode = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("Layout"));
 	if( !layoutNode ){
@@ -111,6 +111,7 @@ void EditorConfig::SaveNotebookStyle(wxString &nbName, long style)
 				wxString strStyle;
 				strStyle << style;
 				XmlUtils::UpdateProperty(child, wxT("Style"), strStyle);
+				m_doc->Save(m_fileName.GetFullPath());
 				return;
 			}
 		}

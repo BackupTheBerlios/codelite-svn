@@ -65,6 +65,7 @@ public:
 
 protected:
 	virtual void OnPopupMenu(wxTreeEvent &event);
+	virtual void OnItemActivated(wxTreeEvent &event);
 	virtual void OnMouseDblClick(wxMouseEvent &event);
 	virtual void OnRemoveProject(wxCommandEvent &event);
 	virtual void OnSetActive(wxCommandEvent &event);
@@ -98,6 +99,10 @@ private:
 	void DoAddVirtualFolder(wxTreeItemId &parent);
 	void DoRemoveVirtualFolder(wxTreeItemId &parent);
 	void DoRemoveItem(wxTreeItemId &item);
+	void DoItemActivated(wxTreeItemId &item, wxEvent &event);
+	wxTreeItemId GetSingleSelection();
+	size_t GetMultiSelection(wxArrayTreeItemIds &arr);
+
 };
 
 #endif // FILE_VIEW_TREE_H
