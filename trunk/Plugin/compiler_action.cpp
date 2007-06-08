@@ -60,7 +60,10 @@ void CompilerAction::PrintOutput()
 	}
 
 	if(!errors.IsEmpty()){
-		AppendLine(errors);
+		wxStringTokenizer tt(errors, wxT("\n"));
+		while(tt.HasMoreTokens()){
+			AppendLine(tt.NextToken() + wxT("\n"));
+		}
 	}
 	data.Clear();
 	errors.Clear();

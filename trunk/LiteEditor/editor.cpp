@@ -58,9 +58,7 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 	ms_bookmarkShapes[wxT("Small Arrow")] = wxSCI_MARK_ARROW;
 	ms_bookmarkShapes[wxT("Circle")] = wxSCI_MARK_CIRCLE;
 
-	m_context = ManagerST::Get()->NewContextByFileName(m_fileName, this);
-	SetProperties();
-
+	RestoreDefaults();
 	m_fileName.MakeAbsolute();
 
 	// If file name is provided, open it
@@ -71,6 +69,17 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 	}
 
 	SetDropTarget(new FileDropTarget());
+}
+
+void LEditor::RestoreDefaults()
+{
+	SetSyntaxHighlight();
+	SetProperties();
+}
+
+void LEditor::SetSyntaxHighlight()
+{
+	m_context = ManagerST::Get()->NewContextByFileName(m_fileName, this);
 }
 
 LEditor::~LEditor()

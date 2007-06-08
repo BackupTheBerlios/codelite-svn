@@ -124,6 +124,18 @@ public:
 	 */
 	void SetSyntaxHighlight(const wxString &lexerName);
 
+	/**
+	 * Change the document's syntax highlight - use the file name to determine lexer name
+	 */
+	void SetSyntaxHighlight();
+
+	/**
+	 * Reset the editor to its default state:
+	 * -# Syntax highlight is set according to file extension
+	 * -# Setproperties() is called
+	 */
+	void RestoreDefaults();
+
 	/** 
 	 * Return the document context object
 	 */

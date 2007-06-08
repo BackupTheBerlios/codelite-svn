@@ -184,7 +184,7 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 	text << wxT("## Startup message \n");
 	text << wxT("##\n");
 	text << wxT("StartMsg:\n");
-	text << wxT("\t@echo ----------Building project: ") << proj->GetName() << wxT("----------\n");
+	text << wxT("\t@echo ----------Building project:[ ") << proj->GetName() << wxT(" ]----------\n");
 	text << wxT("\n\n");
 
 	//create rule per object

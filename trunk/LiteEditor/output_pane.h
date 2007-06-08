@@ -38,12 +38,14 @@ public:
 	wxString m_caption;
 	bool m_canFocus;
 	wxFlatNotebookImageList m_images;
+	wxArrayString m_buildLineInfo;
+	wxString m_project;
 
 private:
 	void CreateGUIControls();
 	wxScintilla *CreateScintillaPage();
 	void OnFindInFilesDClick(const wxString &line);
-	void OnBuildWindowDClick(const wxString &line);
+	void OnBuildWindowDClick(const wxString &line, int lineno);
 
 public:
 	/**

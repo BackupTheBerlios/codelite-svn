@@ -5,6 +5,7 @@
 #include "regex_processor.h"
 #include "build_settings_config.h"
 #include "dirsaver.h"
+#include "macros.h"
 
 #ifndef wxScintillaEventHandler
 #define wxScintillaEventHandler(func) \
@@ -154,6 +155,22 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 		win->EnsureCaretVisible();
 		// enable readonly mode 
 		win->SetReadOnly(true);	
+
+		//keep track about lines added to the 
+		if(winName == OutputPane::BUILD_WIN){
+			if(text.Contains(wxT("Build Started..."))){
+
+				m_buildLineInfo.Clear();
+				m_project = wxEmptyString;
+
+			} else if(text.Contains(wxT("----------Building project:[ "))){
+				//set new project name for the coming lines
+				m_project = text.AfterFirst(wxT('['));
+				m_project = m_project.BeforeFirst(wxT(']'));
+				TrimString(m_project);
+			}
+			m_buildLineInfo.Add(m_project);
+		}
 	}
 }
 
@@ -168,6 +185,13 @@ void OutputPane::Clear()
 		win->SetReadOnly(false);
 		win->ClearAll();
 		win->SetReadOnly(true);
+
+		//incase the clear button was pressed, clear the cached information
+		int buildIndx = CaptionToIndex(OutputPane::BUILD_WIN);
+		if(buildIndx == index){
+			m_buildLineInfo.Clear();
+			m_project = wxEmptyString;
+		}
 	}
 }
 
@@ -204,7 +228,7 @@ void OutputPane::OnMouseDClick(wxScintillaEvent &event)
 		OnFindInFilesDClick(lineText);
 	} else if(buildWinIndex == m_book->GetSelection()){
 		//build window
-		OnBuildWindowDClick(lineText);
+		OnBuildWindowDClick(lineText, line);
 	}
 }
 
@@ -223,7 +247,7 @@ void OutputPane::OnFindInFilesDClick(const wxString &line)
 	ManagerST::Get()->OpenFile(fileName, wxEmptyString, lineNumber - 1 );
 }
 
-void OutputPane::OnBuildWindowDClick(const wxString &line)
+void OutputPane::OnBuildWindowDClick(const wxString &line, int lineno)
 {
 	wxString fileName, strLineNumber;
 	bool match = false;
@@ -260,8 +284,19 @@ void OutputPane::OnBuildWindowDClick(const wxString &line)
 		strLineNumber.ToLong(&lineNumber);
 
 		// open the file in the editor
+		// get the project name that is currently being built
+		wxString projName(wxEmptyString);
+		if(lineno < (int)m_buildLineInfo.GetCount()){
+			projName = m_buildLineInfo.Item(lineno);
+		}
+		
+		// if no project found, dont do anything
+		if(projName.IsEmpty()){
+			return;
+		}
+
 		DirSaver ds;
-		::wxSetWorkingDirectory(ManagerST::Get()->GetProject(ManagerST::Get()->GetActiveProjectName())->GetFileName().GetPath());
+		::wxSetWorkingDirectory(ManagerST::Get()->GetProject(projName)->GetFileName().GetPath());
 
 		ManagerST::Get()->OpenFile(fileName, wxEmptyString, lineNumber - 1 );
 	}
