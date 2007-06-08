@@ -40,10 +40,8 @@ bool RegexProcessor::GetGroup(const wxString &str, int grp, wxString &out)
         return false;
     }
 
-	printf("matches[grp].begin = %ld\n", matches[grp].begin);
-	printf("matches[grp+1].begin = %ld\n", matches[grp+1].begin);
-
 	out = str.SubString(matches[grp].begin, matches[grp+1].begin-1);
+	printf("out=%s\n", out.GetData());
 	delete [] matches;
 	return true;
 }
