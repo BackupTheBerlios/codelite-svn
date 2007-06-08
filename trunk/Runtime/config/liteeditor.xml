@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LiteEditor>
   <Layout>
-    <Perspective Name="Default" Value="layout2|name=Output;caption=Output;state=6293502;dir=3;layer=1;row=0;pos=0;prop=100000;bestw=602;besth=498;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Workspace;caption=Workspace;state=6293502;dir=4;layer=2;row=0;pos=0;prop=100000;bestw=300;besth=400;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-84;floaty=53;floatw=308;floath=424|name=Editor;caption=;state=16640;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=20;besth=20;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Standard Toolbar;caption=Standard;state=2108156;dir=1;layer=10;row=0;pos=0;prop=100000;bestw=692;besth=22;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-5;floaty=64;floatw=709;floath=46|dock_size(1,10,0)=24|dock_size(5,0,0)=20|"/>
+    <Notebook Name="Editor" Style="681629"/>
+    <Notebook Name="OutputPane" Style="672989"/>
+    <Notebook Name="WorkspacePane" Style="672861"/>
+    <Perspective Name="Default" Value="layout2|name=Output;caption=Output;state=6293500;dir=3;layer=1;row=0;pos=0;prop=100000;bestw=602;besth=507;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Workspace;caption=Workspace;state=6293500;dir=2;layer=0;row=0;pos=0;prop=100000;bestw=300;besth=400;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=863;floaty=181;floatw=308;floath=424|name=Editor;caption=;state=256;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=20;besth=20;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Standard Toolbar;caption=Standard;state=2108156;dir=1;layer=10;row=0;pos=0;prop=100000;bestw=782;besth=31;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=250;floaty=166;floatw=799;floath=55|dock_size(5,0,0)=20|dock_size(3,1,0)=269|dock_size(2,0,0)=302|dock_size(1,10,0)=33|"/>
   </Layout>
   <Lexers>
     <Lexer Name="Perl" Id="6">
@@ -9,7 +12,7 @@
       <Extensions>*.pl;*.pm</Extensions>
       <Properties>
         <Property Id="0" Name="Default" Bold="no" Face="Courier New" Colour="medium blue" Size="10"/>
-        <Property Id="1" Name="Perl Error" Bold="no" Face="Courier New" Colour="#004080" Size="10"/>
+        <Property Id="1" Name="Perl Error" Bold="no" Face="Courier 10 Pitch" Colour="#004080" Size="10"/>
         <Property Id="2" Name="Comment" Bold="no" Face="Courier New" Colour="#008080" Size="10"/>
         <Property Id="3" Name="POD" Bold="no" Face="Courier New" Colour="#800080" Size="10"/>
         <Property Id="4" Name="Number" Bold="no" Face="Courier New" Colour="#800080" Size="10"/>

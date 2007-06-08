@@ -1,6 +1,5 @@
 #include "compile_request.h"
 #include "buildmanager.h"
-#include "read_proc_input_request.h"
 #include "wx/process.h"
 
 CompileRequest::CompileRequest(wxEvtHandler *owner, const wxString &projectName)

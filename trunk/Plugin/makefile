@@ -25,7 +25,7 @@ ifeq ($(type), release_unicode)
 WXCFG=--unicode=yes --debug=no
 EXT=u
 OBJ_DIR=Release_gcc_unicode
-OPT=-O3
+OPT=-O3 -DREGEXP_UNICODE
 DEBUG=
 endif
 
@@ -34,6 +34,7 @@ WXCFG=--unicode=yes --debug=yes
 EXT=ud
 OBJ_DIR=Debug_gcc_unicode
 DEBUG= -g 
+OPT=-DREGEXP_UNICODE
 endif
 
 WXVER=26

@@ -15,7 +15,7 @@ CHAR_TYPE* re_ansi_to_unicode(const char* s)
     if(sz == (size_t)-1)
         return NULL;
     
-    data = re_malloc((sz + 1) * sizeof(CHAR_TYPE));
+    data = (CHAR_TYPE*)re_malloc((sz + 1) * sizeof(CHAR_TYPE));
     if(!data)
         return NULL;
     mbstowcs(data, s, sz + 1);
@@ -32,7 +32,7 @@ char* re_unicode_to_ansi(const CHAR_TYPE* s)
     if(sz == (size_t)-1)
         return NULL;
 
-    data = re_malloc((sz + 1) * sizeof(char));
+    data = (char*)re_malloc((sz + 1) * sizeof(char));
     if(!data)
         return NULL;
     wcstombs(data, s, sz + 1);

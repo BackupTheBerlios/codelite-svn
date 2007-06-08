@@ -1,6 +1,5 @@
 #include "clean_request.h"
 #include "buildmanager.h"
-#include "read_proc_input_request.h"
 #include "wx/process.h"
 
 CleanRequest::CleanRequest(wxEvtHandler *owner, const wxString &projectName)
