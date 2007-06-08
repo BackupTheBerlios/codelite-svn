@@ -29,18 +29,17 @@ bool RegexProcessor::GetGroup(const wxString &str, int grp, wxString &out)
 	}
 
 	regmatch* matches = new regmatch[re_nsubexp(m_re)];
-#if wxUSE_UNICODE
-	int retval = re_exec(m_re, str.ToAscii().data(), re_nsubexp(m_re), &matches[0]);
-#else
-	int retval = re_exec(m_re, str.ToAscii(), re_nsubexp(m_re), &matches[0]);
-#endif
-	if(retval < 1)                                              // line G
-    {
+	const wxCharBuffer pline = str.mb_str();
+
+	int retval = re_exec(m_re, pline.data(), re_nsubexp(m_re), &matches[0]);
+	if(retval < 1){
         delete[] matches;
         return false;
     }
+	
+	std::string out_s = std::string(pline.data() + matches[grp].begin, pline.data()+matches[grp].end);
+	out = wxString::FromAscii(out_s.c_str());
 
-	out = str.SubString(matches[grp].begin, matches[grp+1].begin-1);
 	printf("out=%s\n", out.GetData());
 	delete [] matches;
 	return true;
