@@ -38,8 +38,8 @@ ContextCpp::ContextCpp(LEditor *container)
 		wxString face = st.GetFaceName();
 		bool bold = st.IsBold();
 		
-		wxFont font(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
-		font.SetFaceName(face);
+		wxFont font(size, wxFONTFAMILY_TELETYPE, wxNORMAL, bold ? wxBOLD : wxNORMAL);
+		//font.SetFaceName(face);
 
 		rCtrl.StyleSetFont(st.GetId(), font);
 		rCtrl.StyleSetSize(st.GetId(), (*iter).GetFontSize());

@@ -33,8 +33,8 @@ ContextText::ContextText(LEditor *container)
 		wxString face = (*iter).GetFaceName();
 		bool bold = (*iter).IsBold();
 
-		wxFont font(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
-		font.SetFaceName(face);
+		wxFont font(size, wxFONTFAMILY_TELETYPE, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
+		//font.SetFaceName(face);
 
 		rCtrl.StyleSetFont(0, font);
 		rCtrl.StyleSetSize(0, (*iter).GetFontSize());

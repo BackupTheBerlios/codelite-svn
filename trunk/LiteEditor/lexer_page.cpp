@@ -64,9 +64,7 @@ LexerPage::LexerPage( wxWindow* parent, LexerConfPtr lexer, int id, wxPoint pos,
 		int size = p.GetFontSize();
 		wxString face = p.GetFaceName();
 		bool bold = p.IsBold();
-
-		initialFont = wxFont(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
-		initialFont.SetFaceName(face);
+		initialFont = wxFont(size, wxFONTFAMILY_TELETYPE, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
 	}
 
 	m_fontPicker = new wxFontPickerCtrl(this, wxID_ANY, initialFont);
@@ -110,7 +108,7 @@ void LexerPage::OnItemSelected(wxCommandEvent & event)
 			wxString face = p.GetFaceName();
 			bool bold = p.IsBold();
 
-			font = wxFont(size, wxFONTFAMILY_DEFAULT, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
+			font = wxFont(size, wxFONTFAMILY_TELETYPE, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
 			m_fontPicker->SetSelectedFont(font);
 			m_colourPicker->SetColour(colour);
 		}
