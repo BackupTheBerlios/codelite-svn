@@ -132,6 +132,8 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 
 	// Go to tag line number and gives scintilla the focus
 	if( position != wxNOT_FOUND ){
+		int lineno = editor->LineFromPosition(position);
+		editor->GotoLine( lineno );
 		editor->SetCaretAt( position );
 	} else {
 		editor->GotoLine( lineno );
