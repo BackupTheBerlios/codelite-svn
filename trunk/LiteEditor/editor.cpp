@@ -62,12 +62,10 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 	m_fileName.MakeAbsolute();
 
 	// If file name is provided, open it
-	if(	false == m_fileName.GetFullPath().IsEmpty() &&					// valid file name was passed
-		!m_fileName.GetFullPath().StartsWith(wxT("Untitled")))	// file name does not contain 'Untitiled'
-	{
+	wxString tmpFilename(m_fileName.GetName());
+	if(	!tmpFilename.IsEmpty() ){
 		OpenFile(m_fileName.GetFullPath(), m_project);
 	}
-
 	SetDropTarget(new FileDropTarget());
 }
 
