@@ -296,8 +296,11 @@ void OutputPane::OnBuildWindowDClick(const wxString &line, int lineno)
 		}
 
 		DirSaver ds;
-		::wxSetWorkingDirectory(ManagerST::Get()->GetProject(projName)->GetFileName().GetPath());
+		ProjectPtr pro = ManagerST::Get()->GetProject(projName);
+		::wxSetWorkingDirectory(pro->GetFileName().GetPath());
+		wxFileName fn(fileName);
+		fn.MakeAbsolute(pro->GetFileName().GetPath());
 
-		ManagerST::Get()->OpenFile(fileName, wxEmptyString, lineNumber - 1 );
+		ManagerST::Get()->OpenFile(fn.GetFullPath(), wxEmptyString, lineNumber - 1 );
 	}
 }
