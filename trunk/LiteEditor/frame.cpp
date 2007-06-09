@@ -379,7 +379,7 @@ void Frame::CreateToolbars()
 	tb->AddTool(XRCID("execute_no_debug"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("execute")), wxT("Run Active Project"));
 
 	tb->Realize();
-	m_mgr.AddPane(tb, wxAuiPaneInfo().Name(wxT("Standard Toolbar")).Caption(wxT("Standard")).ToolbarPane().Top());
+	m_mgr.AddPane(tb, wxAuiPaneInfo().Name(wxT("Standard Toolbar")).LeftDockable(true).RightDockable(true).Caption(wxT("Standard")).ToolbarPane().Top());
 }
 
 void Frame::OnQuit(wxCommandEvent& WXUNUSED(event))
