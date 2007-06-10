@@ -228,6 +228,7 @@ void OutputPane::OnMouseDClick(wxScintillaEvent &event)
 		OnFindInFilesDClick(lineText);
 	} else if(buildWinIndex == m_book->GetSelection()){
 		//build window
+		lineText.Replace(wxT("\\"), wxT("/"));
 		OnBuildWindowDClick(lineText, line);
 	}
 }
@@ -252,8 +253,24 @@ void OutputPane::OnBuildWindowDClick(const wxString &line, int lineno)
 	wxString fileName, strLineNumber;
 	bool match = false;
 
-	//get the selected compiler
-	BuildConfigPtr bldConf = ManagerST::Get()->GetActiveProjectBuildConf();
+	//get the selected compiler for the current line that was DClicked
+	if(lineno >= m_buildLineInfo.GetCount()){
+		return;
+	}
+
+	//find the project selected build configuration for the workspace selected
+	//configuration
+	wxString projectName = m_buildLineInfo.Item(lineno);
+	BuildMatrixPtr matrix = ManagerST::Get()->GetWorkspaceBuildMatrix();
+	wxString projecBuildConf = matrix->GetProjectSelectedConf(	matrix->GetSelectedConfigurationName(), 
+																projectName	);
+	
+	ProjectSettingsPtr settings = ManagerST::Get()->GetProject(projectName)->GetSettings();
+	if(!settings){
+		return;
+	}
+	
+	BuildConfigPtr  bldConf = settings->GetBuildConfiguration(projecBuildConf);
 	wxString cmpType = bldConf->GetCompilerType();
 	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetCompiler(cmpType);
 
@@ -267,6 +284,7 @@ void OutputPane::OnBuildWindowDClick(const wxString &line, int lineno)
 		re.GetGroup(line, idx, strLineNumber);
 		match = true;
 	}
+
 	//try to match warning pattern
 	if(!match){
 		RegexProcessor re(cmp->GetWarnPattern());

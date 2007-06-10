@@ -179,6 +179,11 @@ void ConfigurationManagerDlg::OnWorkspaceConfigSelected(wxCommandEvent &event)
 {
 	if(event.GetString() == clCMD_NEW){
 		OnButtonNew(event);
+	}else if(event.GetString() == clCMD_DELETE){
+		//popup the delete dialog for configurations
+
+		//once done, restore dialog
+		PopulateConfigurations();
 	}else{
 		LoadWorkspaceConfiguration(event.GetString());
 	}

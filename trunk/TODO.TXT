@@ -21,4 +21,4 @@ TODO List:
 . keyboard should open files when hitting on a tree control
 . typedefs are not handled properly
 . Detect file changes while it was open in the editor
-. Separate lexers to different xml files
+
