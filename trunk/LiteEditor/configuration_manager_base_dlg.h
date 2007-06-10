@@ -27,7 +27,6 @@ class ConfigManagerBaseDlg : public wxDialog
 	protected:
 		wxStaticText* m_staticText2;
 		wxChoice* m_choiceConfigurations;
-		wxButton* m_buttonNewConfiguration;
 		wxStaticLine* m_staticline6;
 		wxStaticText* m_staticText20;
 		wxScrolledWindow* m_scrolledWindow;

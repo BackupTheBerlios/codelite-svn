@@ -85,16 +85,20 @@ void ConfigurationManagerDlg::PopulateConfigurations()
 		m_choiceConfigurations->Append((*iter)->GetName());
 	}
 
+	// append the 'New' & 'Delete' commands
+	m_choiceConfigurations->Append(clCMD_NEW);
+	m_choiceConfigurations->Append(clCMD_DELETE);
+
 	int sel = m_choiceConfigurations->FindString(matrix->GetSelectedConfigurationName());
 	if(sel != wxNOT_FOUND){
 		m_choiceConfigurations->SetSelection(sel);
-	}else if(m_choiceConfigurations->GetCount() > 0){
-		m_choiceConfigurations->SetSelection(0);
+	}else if(m_choiceConfigurations->GetCount() > 2){
+		m_choiceConfigurations->SetSelection(2);
 	}else{
 		m_choiceConfigurations->Append(wxT("Debug"));
-		m_choiceConfigurations->SetSelection(0);
+		m_choiceConfigurations->SetSelection(2);
 	}
-
+	
 	wxArrayString projects;
 	ManagerST::Get()->GetProjectList(projects);
 	
@@ -167,15 +171,18 @@ void ConfigurationManagerDlg::InitDialog()
 {
 	// Connect events
 	ConnectButton(m_buttonOK, ConfigurationManagerDlg::OnButtonOK);
-	ConnectButton(m_buttonNewConfiguration, ConfigurationManagerDlg::OnButtonNew);
 	ConnectButton(m_buttonApply, ConfigurationManagerDlg::OnButtonApply);
-	ConnectChoice(m_choiceConfigurations, ConfigurationManagerDlg::OnWorkspaceConfigSelected)
+	ConnectChoice(m_choiceConfigurations, ConfigurationManagerDlg::OnWorkspaceConfigSelected);
 }
 
 void ConfigurationManagerDlg::OnWorkspaceConfigSelected(wxCommandEvent &event)
 {
-	LoadWorkspaceConfiguration(event.GetString());
-	event.Skip();
+	if(event.GetString() == clCMD_NEW){
+		OnButtonNew(event);
+	}else{
+		LoadWorkspaceConfiguration(event.GetString());
+	}
+	//event.Skip();
 }
 
 void ConfigurationManagerDlg::OnConfigSelected(wxCommandEvent &event)
@@ -211,9 +218,6 @@ void ConfigurationManagerDlg::OnButtonNew(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 	wxTextEntryDialog *dlg = new wxTextEntryDialog(this, wxT("Enter New Configuration Name:"), wxT("New Configuration"));
-	//wxTextValidator validator(wxFILTER_ALPHANUMERIC);
-	//dlg->SetTextValidator(validator);
-
 	if(dlg->ShowModal() == wxID_OK){
 		wxString value = dlg->GetValue();
 		TrimString(value);
@@ -229,10 +233,9 @@ void ConfigurationManagerDlg::OnButtonNew(wxCommandEvent &event)
 			matrix->SetConfiguration(conf);
 			//save changes
 			ManagerST::Get()->SetWorkspaceBuildMatrix(matrix);
-			//Reload dialog 
-			PopulateConfigurations();
 		}
 	}
+	PopulateConfigurations();
 	dlg->Destroy();
 }
 

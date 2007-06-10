@@ -51,6 +51,7 @@
 
 const wxString clCMD_NEW = wxT("<New...>");
 const wxString clCMD_EDIT = wxT("<Edit...>");
+const wxString clCMD_DELETE = wxT("<Delete...>");
 
 #ifdef __WXMSW__
 #define PATH_SEP wxT("\\")
