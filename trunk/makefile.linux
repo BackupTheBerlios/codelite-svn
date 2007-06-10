@@ -19,11 +19,13 @@ WXCFG=--unicode=no --debug=yes
 EXT=d
 OBJ_DIR=Debug_gcc
 DEBUG= -g 
+EXE_NAME=LiteEditorD
 
 ##
 ## Override default settings by typing: make -f makefile.linux type=[release | release_unicode | debug_unicode]
 ##
 ifeq ($(type), release)
+EXE_NAME=LiteEditorR
 WXCFG=--unicode=no  --debug=no
 EXT=
 OBJ_DIR=Release_gcc
@@ -32,6 +34,7 @@ DEBUG=
 endif
 
 ifeq ($(type), release_unicode)
+EXE_NAME=LiteEditorUR
 WXCFG=--unicode=yes --debug=no
 EXT=u
 OBJ_DIR=Release_gcc_unicode
@@ -40,6 +43,7 @@ DEBUG=
 endif
 
 ifeq ($(type), debug_unicode)
+EXE_NAME=LiteEditorUD
 WXCFG=--unicode=yes --debug=yes
 EXT=ud
 OBJ_DIR=Debug_gcc_unicode
@@ -115,7 +119,7 @@ SDK: sdk_msg
 	cd Plugin/ && $(MAKE)
 
 LiteEditor: lite_editor_msg $(precompiled_headers) $(sample_cpp_objects) 
-	$(CMP) -o Runtime/LiteEditor $(sample_cpp_objects) $(LINK_FLAGS)
+	$(CMP) -o Runtime/$(EXE_NAME) $(sample_cpp_objects) $(LINK_FLAGS)
 
 $(OBJ_DIR)/%.o: CodeLite/%.cpp 
 	$(CMP) $(CCFLAGS) $(INCLUDES) -c $< -o $(OBJ_DIR)/$(@F)

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LiteEditor>
   <Layout>
-    <Perspective Name="Default" Value="layout2|name=Output;caption=Output;state=1080035324;dir=3;layer=1;row=0;pos=0;prop=100000;bestw=602;besth=498;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Workspace;caption=Workspace;state=6293500;dir=2;layer=0;row=0;pos=0;prop=100000;bestw=300;besth=400;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=1039;floaty=64;floatw=308;floath=424|name=Editor;caption=;state=256;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=20;besth=20;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Standard Toolbar;caption=Standard;state=2108156;dir=1;layer=10;row=0;pos=0;prop=100000;bestw=692;besth=22;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=525;floaty=65;floatw=709;floath=46|dock_size(5,0,0)=20|dock_size(1,10,0)=24|dock_size(3,1,0)=304|dock_size(2,0,0)=237|"/>
-    <Notebook Name="Editor" Style="747160"/>
-    <Notebook Name="OutputPane" Style="738328"/>
-    <Notebook Name="WorkspacePane" Style="738328"/>
+    <Notebook Name="Editor" Style="747164"/>
+    <Notebook Name="OutputPane" Style="738392"/>
+    <Notebook Name="WorkspacePane" Style="738392"/>
+    <Perspective Name="Default" Value="layout2|name=Output;caption=Output;state=6293500;dir=3;layer=1;row=0;pos=0;prop=100000;bestw=602;besth=507;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Workspace;caption=Workspace;state=6293500;dir=2;layer=0;row=0;pos=0;prop=100000;bestw=300;besth=400;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=10;floaty=86;floatw=308;floath=424|name=Editor;caption=;state=256;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=20;besth=20;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Standard Toolbar;caption=Standard;state=2108156;dir=1;layer=10;row=0;pos=0;prop=100000;bestw=782;besth=31;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=19;floaty=901;floatw=799;floath=55|dock_size(5,0,0)=20|dock_size(1,10,0)=33|dock_size(3,1,0)=277|dock_size(2,0,0)=302|"/>
   </Layout>
   <Lexers>
     <Lexer Name="Perl" Id="6">
@@ -46,8 +46,8 @@
       </Properties>
     </Lexer>
     <Lexer Name="Text" Id="1">
-      <KeyWords/>
-      <Extensions/>
+      <KeyWords></KeyWords>
+      <Extensions></Extensions>
       <Properties>
         <Property Id="0" Name="Default" Bold="no" Face="" Colour="#000000" Size="10"/>
       </Properties>
@@ -99,7 +99,7 @@
       </Properties>
     </Lexer>
     <Lexer Name="XML" Id="5">
-      <KeyWords/>
+      <KeyWords></KeyWords>
       <Extensions>*.xml;*xrc;*.project;*.workspace</Extensions>
       <Properties>
         <Property Id="0" Name="Default" Bold="no" Face="" Colour="#000000" Size="10"/>
@@ -132,5 +132,5 @@
       </Properties>
     </Lexer>
   </Lexers>
-  <Options DisplayFoldMargin="yes" UnderlineFoldedLine="yes" FoldStyle="Flatten Tree Square Headers" DisplayBookmarkMargin="yes" BookmarkShape="Small Rectangle" BookmarkBgColour="#0C85DE" BookmarkFgColour="#42A9F4" HighlightCaretLine="yes" ShowLineNumber="yes" IndentationGuides="yes"/>
+  <Options DisplayFoldMargin="yes" UnderlineFoldedLine="yes" FoldStyle="Simple" DisplayBookmarkMargin="yes" BookmarkShape="Small Rectangle" BookmarkBgColour="#0C85DE" BookmarkFgColour="#42A9F4" HighlightCaretLine="yes" ShowLineNumber="no" IndentationGuides="no"/>
 </LiteEditor>
