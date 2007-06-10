@@ -687,20 +687,16 @@ CtagsOptions Manager::GetWorkspaceCtagsOptions() const
 
 ContextBasePtr Manager::NewContextByFileName(const wxFileName &fileName, LEditor *parent) const
 {
-	EditorConfigCookie cookie;
-
-	LexerConfPtr lexer = EditorConfigST::Get()->GetFirstLexer(cookie);
-	while( lexer ) {
+	EditorConfig::ConstIterator iter = EditorConfigST::Get()->LexerBegin();
+	for(; iter != EditorConfigST::Get()->LexerEnd(); iter++){
+		LexerConfPtr lexer = iter->second;
 		wxString lexExt = lexer->GetFileSpec();
-
 		wxStringTokenizer tkz(lexExt, wxT(";"));
 		while(tkz.HasMoreTokens()){
 			if(wxMatchWild(tkz.NextToken(), fileName.GetFullName())){
 				return ContextManager::Get()->NewContext(parent, lexer->GetName());
 			}
 		}
-		
-		lexer = EditorConfigST::Get()->GetNextLexer(cookie);
 	}
 
 	// return the default context

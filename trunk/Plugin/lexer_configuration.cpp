@@ -2,7 +2,24 @@
 #include "xmlutils.h"
 #include "macros.h"
 
-LexerConf::LexerConf(wxXmlNode *element)
+LexerConf::LexerConf(const wxString &fileName)
+: m_fileName(fileName)
+{
+	m_fileName.MakeAbsolute();
+	m_doc.Load(m_fileName.GetFullPath());
+	if(m_doc.GetRoot()){
+		Parse(m_doc.GetRoot());
+	}
+}
+
+void LexerConf::Save()
+{
+	if(m_doc.IsOk()){
+		m_doc.Save(m_fileName.GetFullPath());
+	}
+}
+
+void LexerConf::Parse(wxXmlNode *element)
 {
 	if( element ){
 		m_lexerId = XmlUtils::ReadLong(element, wxT("Id"), 0);
@@ -53,6 +70,9 @@ LexerConf::LexerConf(wxXmlNode *element)
 
 LexerConf::~LexerConf()
 {
+	if(m_doc.IsOk()){
+		m_doc.Save(m_fileName.GetFullPath());
+	}
 }
 
 wxXmlNode *LexerConf::ToXml() const

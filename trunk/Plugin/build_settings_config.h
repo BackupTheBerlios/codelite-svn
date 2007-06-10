@@ -37,7 +37,7 @@ public:
 	/**
 	 * Load the configuration file
 	 */
-	bool Load(const wxFileName &filename);
+	bool Load();
 
 	/**
 	 * Set or update a given compiler using its name as the index

@@ -7,7 +7,7 @@
 #include "wx/xml/xml.h"
 #include "lexer_configuration.h"
 #include "optionsconfig.h"
-
+#include "map"
 
 // Cookie class for the editor to provide reentrance operations
 // on various methods (such as iteration)
@@ -37,14 +37,17 @@ class EditorConfig
 	friend class Singleton<EditorConfig>;
 	wxXmlDocument* m_doc;
 	wxFileName m_fileName; 
-
+	std::map<wxString, LexerConfPtr> m_lexers;
+	
 public:
+	typedef std::map<wxString, LexerConfPtr>::const_iterator ConstIterator;
+
 	/**
 	 * Load the configuration file
 	 * \param fileName configuration file name
 	 * \return true on success false otherwise
 	 */
-	bool Load(const wxFileName &fileName);
+	bool Load();
 
 	/**
 	 * Find lexer configuration and return a pointer to a LexerConf object
@@ -54,18 +57,14 @@ public:
 	LexerConfPtr GetLexer(const wxString& lexer);
 
 	/**
-	 * Returns the first lexer found.
-	 * For this enumeration function you must pass in a 'cookie' parameter which is opaque for the application but is necessary for the library to make these functions reentrant 
-	 * (i.e. allow more than one enumeration on one and the same object simultaneously).
-	 */
-	LexerConfPtr GetFirstLexer(EditorConfigCookie &cookie);
+	 * Return iterator to the begin of the undelying lexer mapping	 
+ 	 */
+	ConstIterator LexerBegin();
 
 	/**
-	 * Returns the next lexer.
-	 * For this enumeration function you must pass in a 'cookie' parameter which is opaque for the application but is necessary for the library to make these functions reentrant 
-	 * (i.e. allow more than one enumeration on one and the same object simultaneously).
+	 * Return iterator to the end of the undelying lexer mapping
 	 */
-	LexerConfPtr GetNextLexer(EditorConfigCookie &cookie);
+	ConstIterator LexerEnd();
 
 	/**
 	 * Set a lexer to the configuration file

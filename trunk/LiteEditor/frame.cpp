@@ -236,12 +236,9 @@ void Frame::CreateGUIControls(void)
 	m_notebook->Connect(m_notebook->GetId(), wxEVT_COMMAND_FLATNOTEBOOK_PAGE_CLOSED, wxFlatNotebookEventHandler(Frame::OnPageClosed), NULL, this);
 
 	// Initialise editor configuration files
-	wxFileName configFile(wxT("config/liteeditor.xml"));
-	EditorConfigST::Get()->Load(configFile);
+	EditorConfigST::Get()->Load();
 	CreateViewAsSubMenu();
-
-	wxFileName buildCfgFile(wxT("config/build_settings.xml"));
-	BuildSettingsConfigST::Get()->Load(buildCfgFile);
+	BuildSettingsConfigST::Get()->Load();
 
 	//start ctags process
 	TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
@@ -311,14 +308,13 @@ void Frame::CreateViewAsSubMenu()
 
 		//load all lexers
 		// load generic lexers
-		EditorConfigCookie cookie;
-		LexerConfPtr lex = EditorConfigST::Get()->GetFirstLexer(cookie);
-		while(lex){
+		EditorConfig::ConstIterator iter = EditorConfigST::Get()->LexerBegin();
+		for(; iter != EditorConfigST::Get()->LexerEnd(); iter++){
+			LexerConfPtr lex = iter->second;
 			item = new wxMenuItem(submenu, minId, lex->GetName(), wxEmptyString, wxITEM_CHECK);
 			m_viewAsMap[minId] = lex->GetName();
 			minId++;
 			submenu->Append(item);
-			lex = EditorConfigST::Get()->GetNextLexer(cookie);
 		}
 		menu->Append(viewAsSubMenuID, wxT("View As"), submenu);
 	}

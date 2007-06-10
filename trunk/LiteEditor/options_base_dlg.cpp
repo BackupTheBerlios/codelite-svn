@@ -79,12 +79,11 @@ wxPanel *OptionsDlg::CreateSyntaxHighlightPage()
 	m_lexersBook->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
 
 	bool selected = true;
-	EditorConfigCookie cookie;
-	LexerConfPtr lexer = EditorConfigST::Get()->GetFirstLexer(cookie);
-	while( lexer ){
+	EditorConfig::ConstIterator iter = EditorConfigST::Get()->LexerBegin();
+	for(; iter != EditorConfigST::Get()->LexerEnd(); iter++){
+		LexerConfPtr lexer = iter->second;
 		m_lexersBook->AddPage(CreateLexerPage(m_lexersBook, lexer), lexer->GetName(), selected);
 		selected = false;
-		lexer = EditorConfigST::Get()->GetNextLexer(cookie);
 	}
 
 	return page;

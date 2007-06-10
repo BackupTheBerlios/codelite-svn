@@ -1,6 +1,7 @@
 #include "editor_config.h"
 #include <wx/xml/xml.h>
 #include "xmlutils.h"
+#include "dirtraverser.h"
 
 EditorConfig::EditorConfig()
 {
@@ -12,11 +13,27 @@ EditorConfig::~EditorConfig()
 	delete m_doc;
 }
 
-bool EditorConfig::Load(const wxFileName &filename)
+bool EditorConfig::Load()
 {
-	m_fileName = filename;
+	m_fileName = wxFileName(wxT("config/liteeditor.xml"));
 	m_fileName.MakeAbsolute();
-	return m_doc->Load(m_fileName.GetFullPath());
+
+	//load the main configuration file
+	if(!m_doc->Load(m_fileName.GetFullPath())){
+		return false;
+	}
+	//load all lexer configuration files
+	DirTraverser traverser(wxT("*.xml"));
+	wxDir dir(wxT("lexers/"));
+	dir.Traverse(traverser);
+
+	wxArrayString files = traverser.GetFiles();
+	m_lexers.clear();
+	for(size_t i=0; i<files.GetCount(); i++){
+		LexerConfPtr lexer(new LexerConf(files.Item(i)));
+		m_lexers[lexer->GetName()] = lexer;
+	}
+	return true;
 }
 
 wxXmlNode* EditorConfig::GetLexerNode(const wxString& lexerName)
@@ -29,7 +46,11 @@ wxXmlNode* EditorConfig::GetLexerNode(const wxString& lexerName)
 }
 
 LexerConfPtr EditorConfig::GetLexer(const wxString &lexerName) {
-	return new LexerConf(GetLexerNode(lexerName));
+	if(m_lexers.find(lexerName) == m_lexers.end()){
+		return NULL;
+	}
+
+	return m_lexers.find(lexerName)->second;
 }
 
 wxString EditorConfig::LoadPerspective(const wxString &Name) const
@@ -131,59 +152,20 @@ void EditorConfig::SaveNotebookStyle(const wxString &nbName, long style)
 	m_doc->Save(m_fileName.GetFullPath());
 }
 
-LexerConfPtr EditorConfig::GetFirstLexer(EditorConfigCookie &cookie)
+EditorConfig::ConstIterator EditorConfig::LexerEnd()
 {
-	wxXmlNode *lexersNode = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("Lexers"));
-	if( lexersNode ){
-		cookie.parent = lexersNode;
-		cookie.child  = NULL;
-		return GetNextLexer(cookie);
-	}
-	return NULL;
+	return m_lexers.end();
 }
 
-LexerConfPtr EditorConfig::GetNextLexer(EditorConfigCookie &cookie)
+EditorConfig::ConstIterator EditorConfig::LexerBegin()
 {
-	if( cookie.parent == NULL ){
-		return NULL;
-	}
-
-	if( cookie.child == NULL ){
-		cookie.child = cookie.parent->GetChildren();
-	}
-
-	while( cookie.child ){
-		if( cookie.child->GetName() == wxT("Lexer") ){
-			wxXmlNode *n = cookie.child;
-			// advance the child to the next child and bail out
-			cookie.child = cookie.child->GetNext();
-
-			// incase we dont have more childs to iterate
-			// reset the parent as well so the next call to GetNexeLexer() will fail
-			if( cookie.child == NULL ){
-				cookie.parent = NULL;
-			}
-			return new LexerConf(n);
-		}
-		cookie.child = cookie.child->GetNext();
-	}
-	return NULL;
+	return m_lexers.begin();
 }
 
 void EditorConfig::SetLexer(LexerConfPtr lexer)
 {
-	wxXmlNode *lexersNode = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("Lexers"));
-	if( !lexersNode ){
-		return;
-	}
-
-	wxXmlNode *lexerNode = GetLexerNode(lexer->GetName());
-	if( lexerNode ){
-		lexersNode->RemoveChild( lexerNode );
-		delete lexerNode;
-	}
-	lexersNode->AddChild( lexer->ToXml() );
-	m_doc->Save(m_fileName.GetFullPath());
+	m_lexers[lexer->GetName()] = lexer;
+	lexer->Save();
 }
 
 OptionsConfigPtr EditorConfig::GetOptions() const

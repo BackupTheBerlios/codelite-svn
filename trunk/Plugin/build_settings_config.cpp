@@ -11,9 +11,9 @@ BuildSettingsConfig::~BuildSettingsConfig()
 	delete m_doc;
 }
 
-bool BuildSettingsConfig::Load(const wxFileName &filename)
+bool BuildSettingsConfig::Load()
 {
-	m_fileName = filename;
+	m_fileName = wxFileName(wxT("config/build_settings.xml"));
 	m_fileName.MakeAbsolute();
 	return m_doc->Load(m_fileName.GetFullPath());
 }

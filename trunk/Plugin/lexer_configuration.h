@@ -2,20 +2,30 @@
 #define LEXER_CONFIGURATION_H
 
 #include "wx/string.h"
+#include "wx/filename.h"
 #include "attribute_style.h"
 #include "wx/xml/xml.h"
-#include "configuration_object.h"
+#include "smart_ptr.h"
 
-class LexerConf : public ConfObject {
+class LexerConf {
 	StylePropertyList m_properties;
 	int m_lexerId;
 	wxString m_name;
 	wxString m_keyWords;
 	wxString m_extension;
+	wxXmlDocument m_doc;
+	wxFileName m_fileName;
+
+private:
+	// Parse lexer object from xml node
+	void Parse(wxXmlNode *node);
+	
+	// Return an xml representation from this object
+	wxXmlNode *ToXml() const;
 
 public:
-	LexerConf(wxXmlNode *element);
-	wxXmlNode *ToXml() const;
+	void Save();
+	LexerConf(const wxString &fileName);
 	virtual ~LexerConf();
 
 	/**

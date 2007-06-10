@@ -12,15 +12,14 @@ ContextManager::ContextManager()
 	m_contextPool[wxT("Text")] = ContextBasePtr( new ContextText() );
 
 	// load generic lexers
-	EditorConfigCookie cookie;
-	LexerConfPtr lex = EditorConfigST::Get()->GetFirstLexer(cookie);
-	while(lex){
+	EditorConfig::ConstIterator iter = EditorConfigST::Get()->LexerBegin();
+	 for(; iter != EditorConfigST::Get()->LexerEnd(); iter++){
+		LexerConfPtr lex = iter->second;
 		//skip hardcoded lexers
 		if(lex->GetName() != wxT("C++") && lex->GetName() != wxT("Text")){
 			std::pair<wxString, ContextBasePtr> entry(lex->GetName(), new ContextGeneric(lex->GetName()));
 			m_contextPool.insert(entry);
 		}
-		lex = EditorConfigST::Get()->GetNextLexer(cookie);
 	}
 }
 
