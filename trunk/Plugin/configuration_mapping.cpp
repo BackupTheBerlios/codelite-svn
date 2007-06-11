@@ -30,14 +30,25 @@ wxXmlNode *BuildMatrix::ToXml() const {
 }
 
 void BuildMatrix::RemoveConfiguration(const wxString &configName){
+	bool isSelected = false;
 	std::list<WorkspaceConfigurationPtr>::iterator iter = m_configurationList.begin();
 	for(; iter != m_configurationList.end(); iter++){
 		if((*iter)->GetName() == configName){
+			isSelected = (*iter)->IsSelected();
 			m_configurationList.erase(iter);
 			break;
 		}
 	}
+
+	if(isSelected){
+		//the deleted configuration was the selected one,
+		//set the first one as selected
+		if(m_configurationList.empty() == false){
+			(*m_configurationList.begin())->SetSelected(true);
+		}
+	}
 }
+
 void BuildMatrix::SetConfiguration(WorkspaceConfigurationPtr conf){
 	RemoveConfiguration(conf->GetName());
 	m_configurationList.push_back(conf);

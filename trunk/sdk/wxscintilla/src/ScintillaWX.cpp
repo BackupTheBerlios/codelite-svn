@@ -1049,11 +1049,14 @@ void ScintillaWX::DoOnListBox() {
 
 
 void ScintillaWX::DoOnIdle(wxIdleEvent& evt) {
+	wxUnusedVar(evt);
 
-    if ( Idle() )
-        evt.RequestMore();
-    else
-        SetIdle(false);
+	while ( Idle() );
+	SetIdle(false);
+    //if ( Idle() )
+    //    evt.RequestMore();
+    //else
+    //    SetIdle(false);
 }
 
 //----------------------------------------------------------------------

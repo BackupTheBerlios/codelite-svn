@@ -2,6 +2,7 @@
 #include "manager.h"
 #include "new_configuration_dlg.h"
 #include "edit_configuration.h"
+#include "edit_workspace_conf_dlg.h"
 #include "macros.h"
 
 //----------------------------------------------------------------------------
@@ -87,7 +88,7 @@ void ConfigurationManagerDlg::PopulateConfigurations()
 
 	// append the 'New' & 'Delete' commands
 	m_choiceConfigurations->Append(clCMD_NEW);
-	m_choiceConfigurations->Append(clCMD_DELETE);
+	m_choiceConfigurations->Append(clCMD_EDIT);
 
 	int sel = m_choiceConfigurations->FindString(matrix->GetSelectedConfigurationName());
 	if(sel != wxNOT_FOUND){
@@ -179,15 +180,17 @@ void ConfigurationManagerDlg::OnWorkspaceConfigSelected(wxCommandEvent &event)
 {
 	if(event.GetString() == clCMD_NEW){
 		OnButtonNew(event);
-	}else if(event.GetString() == clCMD_DELETE){
+	}else if(event.GetString() == clCMD_EDIT){
 		//popup the delete dialog for configurations
+		EditWorkspaceConfDlg *dlg = new EditWorkspaceConfDlg(this);
+		dlg->ShowModal();
+		dlg->Destroy();
 
 		//once done, restore dialog
 		PopulateConfigurations();
 	}else{
 		LoadWorkspaceConfiguration(event.GetString());
 	}
-	//event.Skip();
 }
 
 void ConfigurationManagerDlg::OnConfigSelected(wxCommandEvent &event)

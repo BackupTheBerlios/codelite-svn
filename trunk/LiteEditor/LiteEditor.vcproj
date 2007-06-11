@@ -401,6 +401,12 @@
 				RelativePath=".\edit_configuration.h">
 			</File>
 			<File
+				RelativePath=".\edit_workspace_conf_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\edit_workspace_conf_dlg.h">
+			</File>
+			<File
 				RelativePath=".\envvar_dlg.cpp">
 			</File>
 			<File

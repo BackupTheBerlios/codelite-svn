@@ -121,7 +121,7 @@ wxWindow *NewDlg::CreateWorkspacePage()
 	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("External Tags Database:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	panelSizer->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
 
-	const wxString WildCard(wxT("Code Lite Tags file (*.tags)|*.tags|")
+	const wxString WildCard(wxT("Lite Editor Tags file (*.tags)|*.tags|")
 							wxT("All Files (*.*)|*.*"));
 
 	m_tagsPicker = new FilePicker(panel, wxID_ANY, wxEmptyString, wxT("Select a file:"), WildCard, wxT("Browse"), wxDefaultPosition, wxDefaultSize, wxFD_OPEN|wxFD_FILE_MUST_EXIST);
