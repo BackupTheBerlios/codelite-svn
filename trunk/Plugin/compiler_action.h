@@ -8,6 +8,7 @@
 
 DECLARE_EVENT_TYPE(wxEVT_BUILD_ADDLINE, wxID_ANY)
 DECLARE_EVENT_TYPE(wxEVT_BUILD_STARTED, wxID_ANY)
+DECLARE_EVENT_TYPE(wxEVT_BUILD_ENDED, wxID_ANY)
 
 class CompilerAction : public wxEvtHandler, public ThreadRequest {
 protected:
@@ -48,5 +49,6 @@ public:
 
 	void AppendLine(const wxString &line);
 	void SendStartMsg();
+	void SendEndMsg();
 };
 #endif 

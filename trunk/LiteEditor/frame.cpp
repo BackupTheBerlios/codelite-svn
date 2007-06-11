@@ -37,6 +37,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHSTARTED, Frame::OnSearchThread)
 	EVT_COMMAND(wxID_ANY, wxEVT_BUILD_ADDLINE, Frame::OnBuildEvent)
 	EVT_COMMAND(wxID_ANY, wxEVT_BUILD_STARTED, Frame::OnBuildEvent)
+	EVT_COMMAND(wxID_ANY, wxEVT_BUILD_ENDED, Frame::OnBuildEvent)
 	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE, Frame::OnNewDlgCreate)
 	EVT_MENU(wxID_EXIT, Frame::OnQuit)
 	EVT_MENU(wxID_SAVE, Frame::OnSave)
@@ -188,7 +189,7 @@ void Frame::CreateGUIControls(void)
 
 	// tell wxAuiManager to manage this frame
 	m_mgr.SetManagedWindow(this);
-	m_mgr.SetFlags(m_mgr.GetFlags());
+	m_mgr.SetFlags(m_mgr.GetFlags() | wxAUI_MGR_ALLOW_ACTIVE_PANE);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_PANE_BORDER_SIZE, 1);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_SASH_SIZE, 2);
@@ -202,14 +203,14 @@ void Frame::CreateGUIControls(void)
 	m_outputPane = new OutputPane(this, wxT("Output"));
 	
 	m_mgr.AddPane(m_outputPane, wxAuiPaneInfo().Name(wxT("Output")).
-		Caption(wxT("Output")).Bottom().Layer(1).Position(1).MaximizeButton(true).CloseButton(true));
+		Caption(wxT("Output")).Bottom().Layer(1).Position(1).CloseButton(true));
 
 	// Add the explorer pane
 	m_workspacePane = new WorkspacePane(this, wxT("Workspace"));
 	m_mgr.AddPane(m_workspacePane, wxAuiPaneInfo().
 		Name(m_workspacePane->GetCaption()).Caption(m_workspacePane->GetCaption()).
 		Left().Layer(1).Position(1).
-		CloseButton(true).MaximizeButton(true));
+		CloseButton(true));
 
 	// Create the notebook for all the files
 	long style = 
@@ -925,9 +926,11 @@ void Frame::OnBuildEvent(wxCommandEvent &event)
 	ManagerST::Get()->ShowOutputPane(OutputPane::BUILD_WIN);
 	if(event.GetEventType() == wxEVT_BUILD_STARTED){
 		m_outputPane->Clear();
-		m_outputPane->AppendText(OutputPane::BUILD_WIN, wxT("Build Started...\n"));
+		m_outputPane->AppendText(OutputPane::BUILD_WIN, BUILD_START_MSG);
 	}else if(event.GetEventType() == wxEVT_BUILD_ADDLINE){
 		m_outputPane->AppendText(OutputPane::BUILD_WIN, event.GetString());
+	}else if(event.GetEventType() == wxEVT_BUILD_ENDED){
+		m_outputPane->AppendText(OutputPane::BUILD_WIN, BUILD_END_MSG);
 	}
 }
 

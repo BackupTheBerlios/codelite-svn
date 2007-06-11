@@ -53,6 +53,10 @@ const wxString clCMD_NEW = wxT("<New...>");
 const wxString clCMD_EDIT = wxT("<Edit...>");
 const wxString clCMD_DELETE = wxT("<Delete...>");
 
+// constant message
+const wxString BUILD_START_MSG = wxT("Build Started...\n");
+const wxString BUILD_END_MSG   = wxT("----------Build Ended----------\n");
+
 #ifdef __WXMSW__
 #define PATH_SEP wxT("\\")
 #else

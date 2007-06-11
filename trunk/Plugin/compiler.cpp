@@ -39,7 +39,7 @@ Compiler::Compiler(wxXmlNode *node)
 	} else {
 		//create a default compiler:
 		//g++
-		m_name = wxT("GNU g++");
+		m_name = wxT("gnu g++");
 		m_switches[wxT("Include")] = wxT("-I");
 		m_switches[wxT("Debug")] = wxT("-g");
 		m_switches[wxT("Preprocessor")] = wxT("-D");

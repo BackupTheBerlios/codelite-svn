@@ -25,7 +25,9 @@ RegexProcessor::RegexProcessor(const wxString &reStr)
 
 RegexProcessor::~RegexProcessor()
 {
-	re_free(m_re);
+	if(m_isOk){
+		re_free(m_re);
+	}
 }
 
 bool RegexProcessor::GetGroup(const wxString &str, int grp, wxString &out)

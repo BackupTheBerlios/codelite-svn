@@ -3,6 +3,7 @@
 
 DEFINE_EVENT_TYPE(wxEVT_BUILD_ADDLINE)
 DEFINE_EVENT_TYPE(wxEVT_BUILD_STARTED)
+DEFINE_EVENT_TYPE(wxEVT_BUILD_ENDED)
 
 void CompilerAction::AppendLine(const wxString &line)
 {
@@ -29,6 +30,15 @@ void CompilerAction::SendStartMsg()
 		return;
 
 	wxCommandEvent event(wxEVT_BUILD_STARTED);
+	m_owner->ProcessEvent(event);
+}
+
+void CompilerAction::SendEndMsg()
+{
+	if( !m_owner)
+		return;
+
+	wxCommandEvent event(wxEVT_BUILD_ENDED);
 	m_owner->ProcessEvent(event);
 }
 
@@ -81,4 +91,6 @@ void CompilerAction::OnProcessEnd(wxProcessEvent& event)
 	m_timer->Stop();
 	m_busy = false;
 	m_stop = false;
+
+	SendEndMsg();
 }
