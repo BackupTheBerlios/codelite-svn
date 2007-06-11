@@ -946,7 +946,7 @@ void Manager::ExecuteNoDebug(const wxString &projectName)
 #else
 	//under GTK, spawn xterm window that will execute our program
 	wxString gtkExecLine(wxT("xterm -T "));
-	gtkExecLine << cmd << wxT(" -e \"") << execLine << wxT(";\"");
+	gtkExecLine << cmd << wxT(" -e 'LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH ") << execLine << wxT("'");
 	wxExecute(gtkExecLine, wxEXEC_ASYNC, NULL);
 #endif
 }
