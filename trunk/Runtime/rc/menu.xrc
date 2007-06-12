@@ -323,6 +323,11 @@
 		</object>
 		
 		<object class="wxMenuItem" name="wxID_SEPARATOR"/>
+		
+		<object class="wxMenuItem" name="retag_project">
+			<label>&amp;Re-Tag Project</label>
+		</object>
+		
 		<object class="wxMenuItem" name="sort_item">
 			<label>&amp;Sort Item</label>
 		</object>
