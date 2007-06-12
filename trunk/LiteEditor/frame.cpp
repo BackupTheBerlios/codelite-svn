@@ -226,7 +226,7 @@ void Frame::CreateGUIControls(void)
 		wxFNB_CUSTOM_DLG;
 
 	m_notebook = new wxFlatNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
-	m_notebook->SetCustomizeOptions(wxFNB_CUSTOM_LOCAL_DRAG | wxFNB_CUSTOM_ORIENTATION | wxFNB_CUSTOM_TAB_LOOK);
+	m_notebook->SetCustomizeOptions(wxFNB_CUSTOM_LOCAL_DRAG | wxFNB_CUSTOM_ORIENTATION | wxFNB_CUSTOM_TAB_LOOK | wxFNB_CUSTOM_CLOSE_BUTTON );
 	
 	m_mgr.AddPane(m_notebook, wxAuiPaneInfo().Name(wxT("Editor")).
                   CenterPane().PaneBorder(false));
