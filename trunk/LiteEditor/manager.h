@@ -392,6 +392,8 @@ public:
 	 */
 	BuildConfigPtr GetActiveProjectBuildConf();
 
+	void SetExternalDatabase(const wxFileName &dbname);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

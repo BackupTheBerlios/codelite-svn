@@ -283,16 +283,14 @@ void Manager::OpenWorkspace(const wxString &path)
 	
 	// update status bar
 	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"), errMsg);
-	wxString exDbfile = WorkspaceST::Get()->GetStringProperty(wxT("ExternalDatabase"), errMsg);
 	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("Workspace DB: '%s'"), dbfile.GetData()), 1);
-	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), exDbfile.GetData()), 2);
 
 	// load ctags options
 	wxBusyCursor cursor;
 	CtagsOptions options = WorkspaceST::Get()->LoadCtagsOptions();
 	TagsManagerST::Get()->SetCtagsOptions( options );
 	TagsManagerST::Get()->ParseComments(options.GetParseComments());
-	
+
 	//initialize some environment variable to be available for this workspace
 	CreateEnvironmentVars(path);
 
@@ -975,4 +973,11 @@ BuildConfigPtr Manager::GetActiveProjectBuildConf()
 	return settings->GetBuildConfiguration(projConf);
 }
 
+void Manager::SetExternalDatabase(const wxFileName &dbname)
+{
+	// build the external database
+	TagsManagerST::Get()->OpenExternalDatabase(dbname);
+	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), dbname.GetFullPath().GetData()), 2);
+	EditorConfigST::Get()->SetTagsDatabase(dbname.GetFullPath());
+}
 

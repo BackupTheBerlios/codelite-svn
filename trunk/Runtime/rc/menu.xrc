@@ -235,16 +235,16 @@
         <object class="wxMenu" name="tags_menu">
             <label>&amp;Tags</label>
             <style>wxMENU_TEAROFF</style>
-            <!--
-            <object class="wxMenuItem" name="parse_comments">
-                <label>&amp;Parse Comments</label>
-                <checkable>1</checkable>
-                <checked>1</checked>
-            </object>
-            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
-            -->
             <object class="wxMenuItem" name="tags_options">
                 <label>&amp;Options...</label>
+            </object>
+            
+            <object class="wxMenuItem" name="create_ext_database">
+                <label>&amp;Create external tags database...</label>
+            </object>
+            
+            <object class="wxMenuItem" name="open_ext_database">
+                <label>&amp;Open external tags database...</label>
             </object>
         </object>
         

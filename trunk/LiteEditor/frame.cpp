@@ -132,10 +132,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("execute_no_debug"), Frame::OnExecuteNoDebug)
 	EVT_UPDATE_UI(XRCID("execute_no_debug"), Frame::OnExecuteNoDebugUI)
 
-	/*
-	EVT_MENU(ID_BUILD_EXTERNAL_DB, Frame::OnBuildExternalDatabase)
-	EVT_MENU(ID_USE_EXTERNAL_DB, Frame::OnUseExternalDatabase)
-	*/
+	EVT_MENU(XRCID("create_ext_database"), Frame::OnBuildExternalDatabase)
+	EVT_MENU(XRCID("open_ext_database"), Frame::OnUseExternalDatabase)
 
 	EVT_CLOSE(Frame::OnClose)
 	EVT_TIMER(wxID_ANY, Frame::OnTimer)
@@ -524,26 +522,32 @@ void Frame::OnCompleteWord(wxCommandEvent& WXUNUSED(event))
 
 void Frame::OnBuildExternalDatabase(wxCommandEvent& WXUNUSED(event))
 {
-	wxDirDialog *dlg = new wxDirDialog(this, wxT("Select the root directory of the include path:"), wxGetCwd());
+	wxDirDialog *dlg = new wxDirDialog(	this, 
+										wxT("Select the root directory of the include path:"), 
+										ManagerST::Get()->GetStarupDirectory());
 	if(dlg->ShowModal() == wxID_OK)
 	{
 		// get output file name from user
-		wxString db = GetStringFromUser(wxT("Insert full path name for the database (example: /home/eran/cpp.db):"));
+		wxString db = GetStringFromUser(wxT("Insert database name:"));
 
 		// Get the dirname
 		wxString path = dlg->GetPath();
-		wxFileName fn(path);
-		wxFileName dbname(db);
+		TrimString(path);
 
-		// set cursor to busy
-		wxBusyCursor busy;
+		if(!path.IsEmpty()){
+			wxFileName fn(path);
+			wxFileName dbname(ManagerST::Get()->GetStarupDirectory() + PATH_SEP + db);
 
-		// build the external database
-		TagsManagerST::Get()->BuildExternalDatabase(fn, dbname, wxEmptyString, this);
+			// set cursor to busy
+			wxBusyCursor busy;
+
+			// build the external database
+			TagsManagerST::Get()->BuildExternalDatabase(fn, dbname, wxEmptyString, this);
+		}
 	}
+
 	dlg->Destroy();
 }
-
 
 void Frame::OnUseExternalDatabase(wxCommandEvent& WXUNUSED(event))
 {
@@ -556,12 +560,7 @@ void Frame::OnUseExternalDatabase(wxCommandEvent& WXUNUSED(event))
 	{
 		// get the path
 		wxFileName dbname(dlg->GetPath());
-
-		// build the external database
-		TagsManagerST::Get()->OpenExternalDatabase(dbname);
-
-		GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), dbname.GetFullPath().GetData()), 2);
-
+		ManagerST::Get()->SetExternalDatabase(dbname);
 	}
 	dlg->Destroy();
 }

@@ -116,7 +116,6 @@ bool Workspace::CreateWorkspace(const wxString &name, const wxString &path, cons
 	m_doc.SetRoot(root);
 	m_doc.GetRoot()->AddProperty(wxT("Name"), name);
 	m_doc.GetRoot()->AddProperty(wxT("Database"), dbFileName.GetFullPath());
-	m_doc.GetRoot()->AddProperty(wxT("ExternalDatabase"), wxEmptyString);
 
 	m_doc.Save(m_fileName.GetFullPath());
 	//create an empty build matrix

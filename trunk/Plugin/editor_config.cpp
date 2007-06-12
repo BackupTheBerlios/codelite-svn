@@ -188,3 +188,25 @@ void EditorConfig::SetOptions(OptionsConfigPtr opts)
 	m_doc->Save(m_fileName.GetFullPath());
 }
 
+void EditorConfig::SetTagsDatabase(const wxString &dbName)
+{
+	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("TagsDatabase"));
+	if( node ){
+		XmlUtils::UpdateProperty(node, wxT("Path"), dbName);
+	} else {
+		//create new node
+		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("TagsDatabase"));
+		node->AddProperty(wxT("Path"), dbName);
+	}
+	m_doc->Save(m_fileName.GetFullPath());
+}
+
+wxString EditorConfig::GetTagsDatabase() const
+{
+	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("TagsDatabase"));
+	if(node){
+		return XmlUtils::ReadString(node, wxT("Path"));
+	}else{
+		return wxEmptyString;
+	}
+}

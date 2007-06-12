@@ -9,18 +9,6 @@
 #include "optionsconfig.h"
 #include "map"
 
-// Cookie class for the editor to provide reentrance operations
-// on various methods (such as iteration)
-class EditorConfigCookie {
-public:
-	wxXmlNode *child;	
-	wxXmlNode *parent;
-
-public:
-	EditorConfigCookie() : child(NULL), parent(NULL) {}
-	~EditorConfigCookie() {}
-};
-
 /**
  * \ingroup LiteEditor
  * \brief EditorConfig a singleton class that manages the liteeditor.xml configuration file
@@ -115,6 +103,18 @@ public:
 	 * Set options to the configuration file, override them if they does not exist
 	 */
 	void SetOptions(OptionsConfigPtr opts);
+
+	/**
+	 * Return the database that should be used by the editor
+	 * \return 
+	 */
+	wxString GetTagsDatabase() const;
+
+	/**
+	 * Set tags database to be use by editor (in addition to the workspace one)
+	 * \param &dbName 
+	 */
+	void SetTagsDatabase(const wxString &dbName);
 
 private:
 	EditorConfig();
