@@ -1,12 +1,11 @@
 TODO List:
 ==========================
-. Add option to delete Workspace build configuration
-. When creating new workspace create a directory with the workspace name and place there the .workspace file
-. When creating new project crreat a directory with the project name and place there the .project file 
 . Build order dialog - add button to move up/down items
 . Add posibility to copy project settings when creating new project
 . Add option to create an external database
 . Add option to re-create the symbols database
+. Add an option to re-build the symbol tree (workspace & prohect levels)
+. When adding existing projects - update the database - so the symbol tree will be updated
 . Add menu option to set external database to workspace
 . When closing the application, prompt if there are unsaved changes
 . Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
@@ -18,7 +17,9 @@ TODO List:
 . When using 'Ctrl+F' (find dialog) or 'Ctrl+Shift+F' (find in files), open the dialog with selected text set in the 'Find What:' field
 . Change 'Find What' & 'Replace With' controls to comboboxs 
 . Allow to rename a file from whithin the editor
-. keyboard should open files when hitting on a tree control
 . typedefs are not handled properly
 . Detect file changes while it was open in the editor
+. Add custom makefile project
+. CodeCompletion unit-testing
+. Brace matching - when cursor is next to open brace - it should be highlighted
 
