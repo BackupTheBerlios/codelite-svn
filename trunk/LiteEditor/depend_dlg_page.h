@@ -30,8 +30,12 @@ protected:
 	wxString m_projectName;
 
 	void Init();
-	
+	void OnUpCommand(wxListBox *list);
+	void OnDownCommand(wxListBox *list);
+
 	virtual void OnCheckListItemToggled(wxCommandEvent &event);
+	virtual void OnMoveUp(wxCommandEvent &event);
+	virtual void OnMoveDown(wxCommandEvent &event);
 
 public:
 	DependenciesPage( wxWindow* parent, const wxString &projName, int id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 500,300 ), int style = wxTAB_TRAVERSAL );

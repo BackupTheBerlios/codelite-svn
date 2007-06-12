@@ -41,16 +41,28 @@ DependenciesPage::DependenciesPage( wxWindow* parent, const wxString &projectNam
 	bSizer3->Add( m_checkListProjectList, 1, wxALL|wxEXPAND, 5 );
 	
 	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Build Order:"), wxDefaultPosition, wxDefaultSize, 0 );
+
+	wxBoxSizer *sz = new wxBoxSizer(wxHORIZONTAL);
 	bSizer3->Add( m_staticText2, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
+	bSizer3->Add(sz, 1, wxALL|wxEXPAND);
+	wxBoxSizer *btnSizer = new wxBoxSizer(wxVERTICAL);
+
 	m_listBoxBuildOrder = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	bSizer3->Add( m_listBoxBuildOrder, 1, wxALL|wxEXPAND, 5 );
+	sz->Add(m_listBoxBuildOrder, 1, wxALL|wxEXPAND, 5);
+	sz->Add(btnSizer, 0, 5, wxALL);
 	
+	wxButton *upBtn = new wxButton(this, wxID_ANY, wxT("Up"));
+	btnSizer->Add(upBtn, 0, 5, wxALL);
+	ConnectButton(upBtn, DependenciesPage::OnMoveUp);
+
+	wxButton *downBtn = new wxButton(this, wxID_ANY, wxT("Down"));
+	btnSizer->Add(downBtn, 0, 5, wxALL);
+	ConnectButton(downBtn, DependenciesPage::OnMoveDown);
+
 	mainSizer->Add( bSizer3, 1, wxEXPAND, 5 );
-	
 	this->SetSizer( mainSizer );
 	this->Layout();
-
 	Init();
 }
 
@@ -110,4 +122,56 @@ void DependenciesPage::Save()
 		depsArr.Add(m_listBoxBuildOrder->GetString((unsigned int)i));
 	}
 	proj->SetDependencies(depsArr);
+}
+
+void DependenciesPage::OnMoveUp(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	OnUpCommand(m_listBoxBuildOrder);
+}
+
+void DependenciesPage::OnMoveDown(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	OnDownCommand(m_listBoxBuildOrder);
+}
+
+void DependenciesPage::OnUpCommand(wxListBox *list)
+{
+	wxString selectedString  = list->GetStringSelection();
+	
+	int sel = list->GetSelection();
+	if(sel == wxNOT_FOUND){
+		return;
+	}
+	
+	sel --;
+	if(sel < 0){
+		return;
+	}
+
+	// sel contains the new position we want to place the selection string
+	list->Delete(sel + 1);
+	list->Insert(selectedString, sel);
+	list->Select(sel);
+}
+
+void DependenciesPage::OnDownCommand(wxListBox *list)
+{
+	int sel = list->GetSelection();
+	if(sel == wxNOT_FOUND){
+		return;
+	}
+
+	sel ++;
+	if(sel >= (int)list->GetCount()){
+		return;
+	}
+
+	// sel contains the new position we want to place the selection string
+	wxString oldStr = list->GetString(sel);
+
+	list->Delete(sel);
+	list->Insert(oldStr, sel - 1);
+	list->Select(sel);
 }
