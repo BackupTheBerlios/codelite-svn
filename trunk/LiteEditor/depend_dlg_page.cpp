@@ -50,14 +50,14 @@ DependenciesPage::DependenciesPage( wxWindow* parent, const wxString &projectNam
 
 	m_listBoxBuildOrder = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	sz->Add(m_listBoxBuildOrder, 1, wxALL|wxEXPAND, 5);
-	sz->Add(btnSizer, 0, 5, wxALL);
+	sz->Add(btnSizer);
 	
 	wxButton *upBtn = new wxButton(this, wxID_ANY, wxT("Up"));
-	btnSizer->Add(upBtn, 0, 5, wxALL);
+	btnSizer->Add(upBtn, 0, wxALL | wxALIGN_TOP, 5);
 	ConnectButton(upBtn, DependenciesPage::OnMoveUp);
 
 	wxButton *downBtn = new wxButton(this, wxID_ANY, wxT("Down"));
-	btnSizer->Add(downBtn, 0, 5, wxALL);
+	btnSizer->Add(downBtn, 0, wxALL, 5);
 	ConnectButton(downBtn, DependenciesPage::OnMoveDown);
 
 	mainSizer->Add( bSizer3, 1, wxEXPAND, 5 );

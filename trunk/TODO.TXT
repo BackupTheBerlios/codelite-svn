@@ -1,6 +1,5 @@
 TODO List:
 ==========================
-. Build order dialog - add button to move up/down items
 . Add option to create an external database
 . Add option to re-create the symbols database
 . Add an option to re-build the symbol tree (workspace & prohect levels)
