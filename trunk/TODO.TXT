@@ -1,7 +1,6 @@
 TODO List:
 ==========================
 . Build order dialog - add button to move up/down items
-. Add posibility to copy project settings when creating new project
 . Add option to create an external database
 . Add option to re-create the symbols database
 . Add an option to re-build the symbol tree (workspace & prohect levels)
@@ -16,6 +15,7 @@ TODO List:
 . Add option to open type in the workspace (eclips's Ctrl+Shift+T)
 . When using 'Ctrl+F' (find dialog) or 'Ctrl+Shift+F' (find in files), open the dialog with selected text set in the 'Find What:' field
 . Change 'Find What' & 'Replace With' controls to comboboxs 
+. Add posibility to copy project settings when creating new project
 . Allow to rename a file from whithin the editor
 . typedefs are not handled properly
 . Detect file changes while it was open in the editor
