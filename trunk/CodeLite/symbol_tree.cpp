@@ -337,9 +337,13 @@ void SymbolTree::UpdateGuiItem(TagEntry& data, const wxString& key)
 
 		// Update Icon if needed
 		int iconIndex = GetItemIconIndex(data.GetKind(), data.GetAccess());
-		int curIconIndex = GetItemImage(node->GetData().GetTreeItemId());
+		int curIconIndex = -1;
+		wxTreeItemId itemId = node->GetData().GetTreeItemId();
+		if(itemId.IsOk()){
+			curIconIndex = GetItemImage(itemId);
+		}
 
-		if(curIconIndex != iconIndex)
+		if(curIconIndex != iconIndex && itemId.IsOk())
 		{
 			// Need to update the image as well
 			SetItemImage(node->GetData().GetTreeItemId(), iconIndex);

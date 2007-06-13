@@ -157,10 +157,13 @@ TagTreePtr TagsManager::ParseTagsFile(const wxFileName& fp, const wxString& proj
 void TagsManager::TagFromLine(const wxString& line, TagEntry& tag, const wxString& project)
 {
 	// Parse ctags line
+	if(line.IsEmpty()){
+		return;
+	}
+
 	static const char TAB = '\t';
 	const wxCharBuffer pline = _C(line);
 	char *p = const_cast<char*>(pline.data());
-	;
 	char *tab = strchr (p, TAB);
 	int fieldsPresent = 0;
 
@@ -179,6 +182,9 @@ void TagsManager::TagFromLine(const wxString& line, TagEntry& tag, const wxStrin
 	{
 		*tab = 0;
 		p = tab + 1;
+		if(!p) {
+			return;
+		}
 
 		// Parse file name
 		fileName = const_cast<char*>(p);
@@ -187,6 +193,10 @@ void TagsManager::TagFromLine(const wxString& line, TagEntry& tag, const wxStrin
 		{
 			*tab = 0;
 			p = tab + 1;
+			if (!p) {
+				return;
+			}
+
 			if (*p == '/'  ||  *p == '?')
 			{
 				/* parse pattern */
@@ -208,9 +218,12 @@ void TagsManager::TagFromLine(const wxString& line, TagEntry& tag, const wxStrin
 			{
 				/* parse line number */
 				pattern = const_cast<char*>(p);
+				if (!p) return;
+
 				lineNumber = atol (p);
-				while (isdigit ((int) *(unsigned char*) p))
+				while (p && isdigit ((int) *(unsigned char*) p)){
 					++p;
+				}
 			}
 			else
 			{
