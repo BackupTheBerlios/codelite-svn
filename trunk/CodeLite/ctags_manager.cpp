@@ -380,7 +380,13 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 
 	cmd << wxT("\"") << m_ctagsPath.GetFullPath() << wxT("\"") << ctagsCmd 
 		<< wxT(" -f ") << outputFileName							// send output to stdout
-		<< wxT(" -L") << wxT("'") << fn.GetFullPath() << wxT("'"); //read input files from temp file
+
+#ifdef __WXMSW__
+		//ON windows, we need to enclose the file name with quatation marks
+		<< wxT(" -L") << wxT("\"") << fn.GetFullPath() << wxT("\""); //read input files from temp file
+#else
+		<< wxT(" -L") << wxT(" ") << fn.GetFullPath() ; //read input files from temp file
+#endif 
 
 	//run ctags in sync mode
 	wxArrayString stdoutArr, stderrArr;
