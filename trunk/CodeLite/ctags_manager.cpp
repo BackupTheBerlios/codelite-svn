@@ -130,7 +130,7 @@ TagTreePtr TagsManager::ParseTagsFile(const wxFileName& fp, const wxString& proj
 
 
 	tagFileInfo info;
-    tagEntry entry;
+	tagEntry entry;
 	wxString tagFileName = fp.GetFullPath();
 	const wxCharBuffer fileName = _C(tagFileName);
 
@@ -143,7 +143,7 @@ TagTreePtr TagsManager::ParseTagsFile(const wxFileName& fp, const wxString& proj
 	// Load the records and build a language tree
 	TagEntry root;
 	root.SetName(wxT("<ROOT>"));
-	
+
 	TagTreePtr tree( new TagTree(wxT("<ROOT>"), root) );
 	while (tagsNext (file, &entry) == TagSuccess)
 	{
@@ -161,9 +161,11 @@ void TagsManager::TagFromLine(const wxString& line, TagEntry& tag, const wxStrin
 		return;
 	}
 
+
 	static const char TAB = '\t';
 	const wxCharBuffer pline = _C(line);
 	char *p = const_cast<char*>(pline.data());
+
 	char *tab = strchr (p, TAB);
 	int fieldsPresent = 0;
 
@@ -229,8 +231,13 @@ void TagsManager::TagFromLine(const wxString& line, TagEntry& tag, const wxStrin
 			{
 				/* invalid pattern */
 			}
-			fieldsPresent = (strncmp (p, ";\"", 2) == 0);
-			*p = '\0';
+
+			fieldsPresent = 0;
+			if (p) {
+				fieldsPresent = (strncmp (p, ";\"", 2) == 0);
+				*p = '\0';
+			}
+			
 			if (fieldsPresent)
 			{
 				p = p + 2;
@@ -269,7 +276,6 @@ void TagsManager::TagFromLine(const wxString& line, TagEntry& tag, const wxStrin
 			}
 		}
 	}
-
 	tag.Create(fileName, name, lineNumber, pattern, kind, extFields, project);
 }
 
