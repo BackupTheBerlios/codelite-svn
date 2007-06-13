@@ -3,8 +3,9 @@
   <Layout>
     <Notebook Name="Editor" Style="747164"/>
     <Notebook Name="OutputPane" Style="738392"/>
-    <Notebook Name="WorkspacePane" Style="738392"/>
-    <Perspective Name="Default" Value="layout2|name=Output;caption=Output;state=2099196;dir=3;layer=1;row=0;pos=0;prop=100000;bestw=602;besth=507;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Workspace;caption=Workspace;state=2115580;dir=4;layer=1;row=0;pos=0;prop=100000;bestw=300;besth=400;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Editor;caption=;state=256;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=20;besth=20;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Standard Toolbar;caption=Standard;state=2108156;dir=1;layer=10;row=0;pos=0;prop=100000;bestw=782;besth=31;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(3,1,0)=164|dock_size(4,1,0)=239|dock_size(5,0,0)=20|dock_size(1,10,0)=33|"/>
+    <Notebook Name="WorkspacePane" Style="738328"/>
+    <Perspective Name="Default" Value="layout2|name=Output;caption=Output;state=2099198;dir=3;layer=1;row=0;pos=0;prop=100000;bestw=602;besth=505;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Workspace;caption=Workspace;state=2099198;dir=2;layer=0;row=0;pos=0;prop=100000;bestw=300;besth=400;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=14;floaty=96;floatw=308;floath=424|name=Editor;caption=;state=16640;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=20;besth=20;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=Standard Toolbar;caption=Standard;state=2108156;dir=1;layer=10;row=0;pos=0;prop=100000;bestw=696;besth=32;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=20|dock_size(1,10,0)=34|"/>
   </Layout>
   <Options DisplayFoldMargin="yes" UnderlineFoldedLine="yes" FoldStyle="Simple" DisplayBookmarkMargin="yes" BookmarkShape="Small Rectangle" BookmarkBgColour="#0C85DE" BookmarkFgColour="#42A9F4" HighlightCaretLine="yes" ShowLineNumber="no" IndentationGuides="no"/>
+  <TagsDatabase Path="/home/eran/Development/CodeLite/trunk/Runtime/c++.db"/>
 </LiteEditor>
