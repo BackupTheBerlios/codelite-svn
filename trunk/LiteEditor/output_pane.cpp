@@ -254,7 +254,7 @@ void OutputPane::OnBuildWindowDClick(const wxString &line, int lineno)
 	bool match = false;
 
 	//get the selected compiler for the current line that was DClicked
-	if(lineno >= m_buildLineInfo.GetCount()){
+	if(lineno >= (int)m_buildLineInfo.GetCount()){
 		return;
 	}
 

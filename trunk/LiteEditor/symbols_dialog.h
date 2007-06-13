@@ -16,6 +16,7 @@ class SymbolsDialog : public SymbolsDialogBase
 {
 	long m_line;
 	wxString m_file;
+	wxString m_project;
 
 public:
 	/** Constructor */
@@ -43,6 +44,7 @@ public:
 	//---------------------------------------------
 	const wxString &GetFile() const { return m_file; }
 	long GetLine() const { return m_line; }
+	const wxString &GetProject() const { return m_project; }
 
 private:
 	void UpdateFileAndLine(wxListEvent &event);

@@ -392,7 +392,21 @@ public:
 	 */
 	BuildConfigPtr GetActiveProjectBuildConf();
 
+	/** 
+	 * use an external database
+	 */
 	void SetExternalDatabase(const wxFileName &dbname);
+
+	/** 
+	 * return list of files that are part of the workspace
+	 */
+	void GetWorkspaceFiles(std::vector<wxFileName> &files);
+
+	/**
+	 * check if a file is part of the workspace
+	 * \param fileName the file name in absolute path
+	 */
+	bool IsFileInWorkspace(const wxString &fileName);
 
 protected:
 	Manager(void);

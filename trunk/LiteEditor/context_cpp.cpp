@@ -387,6 +387,9 @@ void ContextCpp::GotoDefinition()
 	TagEntry tag;
 	tag.SetLine(rCtrl.LineFromPosition(rCtrl.GetCurrentPos())+1 /** scintilla counts from zero, while tagentry from 1**/);
 	tag.SetFile(rCtrl.GetFileName().GetFullPath());
+
+	//if the file is part of the workspace set the project name
+	//else, open it with empty project
 	tag.SetProject(rCtrl.GetProject());
 	tag.SetPosition(rCtrl.GetCurrentPos());
 
@@ -405,7 +408,7 @@ void ContextCpp::GotoDefinition()
 		SymbolsDialog *dlg = new SymbolsDialog(&GetCtrl());
 		dlg->AddSymbols( tags, 0 );
 		if(dlg->ShowModal() == wxID_OK){
-			ManagerST::Get()->OpenFile(dlg->GetFile(), rCtrl.GetProject(), dlg->GetLine()-1);
+			ManagerST::Get()->OpenFile(dlg->GetFile(), dlg->GetProject(), dlg->GetLine()-1);
 		}
 		dlg->Destroy();
 	}

@@ -10,6 +10,7 @@ SymbolsDialog::SymbolsDialog( wxWindow* parent )
 	m_results->InsertColumn(1, wxT("Kind"));
 	m_results->InsertColumn(2, wxT("File"));
 	m_results->InsertColumn(3, wxT("Line"));
+	m_results->InsertColumn(4, wxT("Project"));
 }
 
 void SymbolsDialog::AddSymbol(const TagEntry &tag, bool sel)
@@ -53,6 +54,13 @@ void SymbolsDialog::AddSymbol(const TagEntry &tag, bool sel)
 	info.SetText(line);
 	info.SetState(0);
 	m_results->SetItem(info); 
+
+	// set the project name
+	info.SetColumn(4);
+	info.SetId(item);
+	info.SetText(tag.GetProject());
+	info.SetState(0);
+	m_results->SetItem(info); 
 }
 
 void SymbolsDialog::AddSymbols(const std::vector<TagEntry> &tags, size_t sel)
@@ -62,6 +70,7 @@ void SymbolsDialog::AddSymbols(const std::vector<TagEntry> &tags, size_t sel)
 	m_results->SetColumnWidth(1, wxLIST_AUTOSIZE);
 	m_results->SetColumnWidth(2, wxLIST_AUTOSIZE);
 	m_results->SetColumnWidth(3, wxLIST_AUTOSIZE);
+	m_results->SetColumnWidth(4, wxLIST_AUTOSIZE);
 }
 
 void SymbolsDialog::UpdateFileAndLine(wxListEvent &event)
@@ -78,6 +87,11 @@ void SymbolsDialog::UpdateFileAndLine(wxListEvent &event)
 	info.m_col = 3;
 	if( m_results->GetItem(info) && !info.m_text.IsEmpty()){
 		info.m_text.ToLong( &m_line );
+	}
+
+	info.m_col = 4;
+	if( m_results->GetItem(info) ){
+		m_project = info.m_text;
 	}
 }
 

@@ -26,6 +26,7 @@
 #include "build_settings_config.h"
 #include "dirsaver.h"
 #include "editor_creator.h"
+#include "algorithm"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -981,3 +982,23 @@ void Manager::SetExternalDatabase(const wxFileName &dbname)
 	EditorConfigST::Get()->SetTagsDatabase(dbname.GetFullPath());
 }
 
+void Manager::GetWorkspaceFiles(std::vector<wxFileName> &files)
+{
+	wxArrayString projects;
+	GetProjectList(projects);
+	for(size_t i=0; i<projects.GetCount(); i++)
+	{
+		ProjectPtr p = GetProject(projects.Item(i));
+		p->GetFiles(files);
+	}
+}
+
+bool Manager::IsFileInWorkspace(const wxString &fileName)
+{
+	wxFileName findme(fileName);
+	std::vector<wxFileName> files;
+
+	GetWorkspaceFiles(files);
+	std::vector<wxFileName>::const_iterator iter = std::find(files.begin(), files.end(), findme);
+	return iter != files.end();
+}

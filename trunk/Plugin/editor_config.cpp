@@ -197,6 +197,7 @@ void EditorConfig::SetTagsDatabase(const wxString &dbName)
 		//create new node
 		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("TagsDatabase"));
 		node->AddProperty(wxT("Path"), dbName);
+		m_doc->GetRoot()->AddChild(node);
 	}
 	m_doc->Save(m_fileName.GetFullPath());
 }
