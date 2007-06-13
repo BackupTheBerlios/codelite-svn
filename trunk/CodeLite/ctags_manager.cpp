@@ -350,8 +350,7 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 	wxCriticalSectionLocker locker(m_cs);
 	wxString tags;
 	
-	wxString tmpFileName = wxFileName::CreateTempFileName(wxT("CtagsInputFile"));
-	wxFileName fn(tmpFileName);
+	wxFileName fn(wxGetCwd(), wxT("CtagsInputFile"));
 	fn.MakeAbsolute();
 	size_t i=0;
 
@@ -381,11 +380,16 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 
 	cmd << wxT("\"") << m_ctagsPath.GetFullPath() << wxT("\"") << ctagsCmd 
 		<< wxT(" -f ") << outputFileName							// send output to stdout
-		<< wxT(" -L") << wxT("\"") << fn.GetFullPath() << wxT("\""); //read input files from temp file
+		<< wxT(" -L") << wxT("'") << fn.GetFullPath() << wxT("'"); //read input files from temp file
 
 	//run ctags in sync mode
-	wxArrayString stdoutArr;
-	wxExecute(cmd, stdoutArr);
+	wxArrayString stdoutArr, stderrArr;
+	wxExecute(cmd, stdoutArr, stderrArr);
+
+	for(i=0; i<stderrArr.GetCount(); i++){
+		printf("%s\n", stderrArr.Item(i).GetData());
+	}
+	printf("-----------------\n");
 	
 	//parse comments
 	for(i=0; i<fpArr.size(); i++){
@@ -400,7 +404,7 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 	
 	//remove the temp file created by ctags
 	wxRemoveFile(outputFileName);
-
+	wxRemoveFile(fn.GetFullPath());
 	return ttp;
 }
 
