@@ -10,6 +10,8 @@
 #include "wx/filename.h"
 #include <wx/wfstream.h>
 #include <wx/txtstrm.h>
+#include "progress_dialog.h"
+#include "fileutils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -373,27 +375,33 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 	ctagsCmd << m_options.ToString() << wxT(" --fields=aKmSsnit --c-kinds=+p --C++-kinds=+p ");
 	
 	// build the command, we surround ctags name with double quatations
+	wxString outputFileName = wxGetCwd();
+	outputFileName += wxT("/");
+	outputFileName += wxT("ctags_tmp_output_file");
+
 	cmd << wxT("\"") << m_ctagsPath.GetFullPath() << wxT("\"") << ctagsCmd 
-		<< wxT(" -f -") // send output to stdout
+		<< wxT(" -f ") << outputFileName							// send output to stdout
 		<< wxT(" -L") << wxT("\"") << fn.GetFullPath() << wxT("\""); //read input files from temp file
 
 	//run ctags in sync mode
 	wxArrayString stdoutArr;
 	wxExecute(cmd, stdoutArr);
-
-	for(i=0; i<stdoutArr.GetCount(); i++){
-		tags += stdoutArr.Item(i);
-		tags += wxT("\n");
-	}
-
+	
+	//parse comments
 	for(i=0; i<fpArr.size(); i++){
 		if( comments && m_parseComments ){
 			// parse comments
 			LanguageST::Get()->ParseComments( fpArr[i], comments );
 		}
 	}
+
+	//process terminated, read the output file
+	TagTreePtr ttp = ParseTagsFile(outputFileName, project);
 	
-	return TagTreePtr( TreeFromTags(tags, project) );
+	//remove the temp file created by ctags
+	wxRemoveFile(outputFileName);
+
+	return ttp;
 }
 
 std::vector<TagEntry>* TagsManager::ParseLocals(const wxString& scope)
@@ -1080,54 +1088,43 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 	dir.Traverse(traverser);
 
 	// Create a progress dialog
-	if( updateDlgParent )
-	{
-		prgDlg = new wxProgressDialog (wxT("Building tags database ..."), wxEmptyString, static_cast<int>(traverser.GetFiles().size())+10, updateDlgParent, wxPD_APP_MODAL |	wxPD_SMOOTH | wxPD_AUTO_HIDE);
-		prgDlg->SetSize(wxSize(800, -1));
-		prgDlg->Layout();
-		prgDlg->Centre();
+	if( updateDlgParent ){
+		prgDlg = new ProgressDialog (wxT("Building tags database ..."), wxEmptyString, 100, NULL);
+		prgDlg->Center();
 	}
 	
-	int maxVal = static_cast<int>(traverser.GetFiles().size());
 	int i = 0;
-	for(i=0; i<maxVal; i++)
-	{
-		// Parse all source file, and concatenate them into one big string
-		wxString fileTags;
-		wxFileName curFile((traverser.GetFiles())[i]);
-		
-		// update the progress bar
-		if( prgDlg ){
-			wxString msg;
-			msg << wxT("File:\n") << curFile.GetFullPath();
-			prgDlg->Update(i, msg);
-		}
-
-		SourceToTags(curFile, tags, m_ctags);
-		tags << fileTags;
-	}
-
-	std::vector<TagEntry>* vec = VectorFromTags(tags, false);
 	
-	if( prgDlg )
-	{
-		wxString msg;
-		msg << wxT("Updating database this can take a while ...");
-		prgDlg->Update(maxVal, msg);
+	//create input file for the ctags
+	//convert wxArrayString to vector for the ctags api
+	prgDlg->Update(5, wxT("Retrieving file list..."));
+	std::vector<wxFileName> vFiles;
+	for(i=0; i<(int)traverser.GetFiles().GetCount(); i++){
+		vFiles.push_back(traverser.GetFiles().Item(i));
 	}
+	
+	std::vector<DbRecordPtr> comments;
+	if(prgDlg) prgDlg->Update(20, wxT("Parsing source files..."));
+	TagTreePtr ttp;
+
+	if(TagsManagerST::Get()->GetParseComments()){
+		ttp = TagsManagerST::Get()->ParseSourceFiles(vFiles, wxEmptyString, &comments);
+		TagsManagerST::Get()->StoreComments(comments);
+	}else{
+		ttp = TagsManagerST::Get()->ParseSourceFiles(vFiles, wxEmptyString);
+	}
+	
+	if(prgDlg) prgDlg->Update(65, wxT("Updating database..."));
+	
 
 	// create a trasaction and insert all info into the database
 	// we dont use m_pExternalDb since it is on memory only, so 
 	// we use a temproary database
 	TagsDatabase db;
-	db.Store(*vec, dbName);
-	delete vec;
+	db.Store(ttp, dbName);
 
-	if( prgDlg )
-	{
-		wxString msg;
-		msg << wxT("Done");
-		prgDlg->Update(maxVal+10, msg);
+	if( prgDlg ){
+		prgDlg->Update(100, wxT("Done"));
 		prgDlg->Destroy();
 	}
 }

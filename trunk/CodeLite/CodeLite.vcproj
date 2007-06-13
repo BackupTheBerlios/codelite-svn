@@ -210,6 +210,9 @@
 				RelativePath=".\entry.cpp">
 			</File>
 			<File
+				RelativePath=".\fileutils.cpp">
+			</File>
+			<File
 				RelativePath=".\language.cpp">
 			</File>
 			<File
@@ -220,6 +223,9 @@
 			</File>
 			<File
 				RelativePath=".\procutils.cpp">
+			</File>
+			<File
+				RelativePath=".\progress_dialog.cpp">
 			</File>
 			<File
 				RelativePath=".\readtags.cpp">
@@ -272,6 +278,9 @@
 				RelativePath=".\entry.h">
 			</File>
 			<File
+				RelativePath=".\fileutils.h">
+			</File>
+			<File
 				RelativePath=".\FlexLexer.h">
 			</File>
 			<File
@@ -285,6 +294,9 @@
 			</File>
 			<File
 				RelativePath=".\procutils.h">
+			</File>
+			<File
+				RelativePath=".\progress_dialog.h">
 			</File>
 			<File
 				RelativePath=".\readtags.h">

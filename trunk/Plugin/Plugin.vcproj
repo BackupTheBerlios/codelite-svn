@@ -204,12 +204,6 @@
 		<Filter
 			Name="Common">
 			<File
-				RelativePath=".\fileutils.cpp">
-			</File>
-			<File
-				RelativePath=".\fileutils.h">
-			</File>
-			<File
 				RelativePath=".\macros.h">
 			</File>
 			<File
