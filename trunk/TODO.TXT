@@ -19,3 +19,22 @@ TODO List:
 . CodeCompletion unit-testing
 . Brace matching - when cursor is next to open brace - it should be highlighted
 
+-----------------------------------------------------
+Bug report:
+after a call to printf it doesn't do CC anymore
+no wait
+it's a call to atoi
+hahaha
+even more silly
+if(argc > 1)
+printf("test");
+it doesn't work
+now.. if I change that to
+if(argc > 1)
+{
+printf("test");
+}
+it does work [grin]
+BUG! [grin]
+non-braced ifs crash your parser
+-----------------------------------------------------

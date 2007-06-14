@@ -711,7 +711,7 @@ static tagResult findNext (tagFile *const file, tagEntry *const entry)
 extern tagFile *tagsOpen (const char *const filePath, tagFileInfo *const info)
 {
 	return initialize (filePath, info);
-}
+} 
 
 extern tagResult tagsSetSortType (tagFile *const file, const sortType type)
 {

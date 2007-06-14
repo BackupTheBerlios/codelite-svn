@@ -349,10 +349,6 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 	wxArrayString stdoutArr, stderrArr;
 	wxExecute(cmd, stdoutArr, stderrArr);
 	
-	for(i=0; i<stderrArr.GetCount(); i++){
-		printf("%s\n", stderrArr.Item(i).GetData());
-	}
-
 	for(i=0; i<stdoutArr.GetCount(); i++){
 		tags += stdoutArr.Item(i);
 		tags += wxT("\n");

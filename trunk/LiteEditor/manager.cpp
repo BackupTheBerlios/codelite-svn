@@ -1033,13 +1033,8 @@ void Manager::DoRetagProject(const wxString &projectName, bool updateUItree)
 
 		proj->GetFiles(files);
 
-		for(size_t i=0; i<files.size(); i++){
-			printf("%s\n", files[i].GetFullPath().GetData());
-		}
-
 		bool parseComments = TagsManagerST::Get()->GetParseComments();
 		ttp = TagsManagerST::Get()->ParseSourceFiles(files, projectName, parseComments ? &comments : NULL);
-		ttp->Print();
 
 		TagsManagerST::Get()->Store(ttp);
 		if(parseComments){
@@ -1065,3 +1060,4 @@ void Manager::RetagWorkspace()
 	TagTreePtr tree;
 	Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(tree);
 }
+
