@@ -425,6 +425,8 @@ protected:
 	virtual ~Manager(void);
 
 private:
+	void DoRetagProject(const wxString &projectName, bool updateUItree);
+
 	/**
 	 * Update the symbol & file tress
 	 */

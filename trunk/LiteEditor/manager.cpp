@@ -1005,6 +1005,11 @@ bool Manager::IsFileInWorkspace(const wxString &fileName)
 
 void Manager::RetagProject(const wxString &projectName)
 {
+	DoRetagProject(projectName, true);	
+}
+
+void Manager::DoRetagProject(const wxString &projectName, bool updateUItree)
+{
 	//remove project from database
 	TagsManagerST::Get()->DeleteProject(projectName);
 
@@ -1037,7 +1042,9 @@ void Manager::RetagProject(const wxString &projectName)
 		}
 
 		//update gui tree
-		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->AddSymbols(ttp);
+		if(updateUItree){
+			Frame::Get()->GetWorkspacePane()->GetSymbolTree()->AddSymbols(ttp);
+		}
 	}
 }
 
@@ -1046,8 +1053,10 @@ void Manager::RetagWorkspace()
 	wxArrayString projects;
 	GetProjectList(projects);
 
-	for(size_t i=0; i<projects.GetCount(); i++)
-	{
-		RetagProject(projects.Item(i));
+	for(size_t i=0; i<projects.GetCount(); i++){
+		DoRetagProject(projects.Item(i), false);
 	}
+
+	TagTreePtr tree;
+	Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(tree);
 }
