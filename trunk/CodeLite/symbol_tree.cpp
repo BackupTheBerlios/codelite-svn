@@ -46,61 +46,61 @@ void SymbolTree::InitialiseSymbolMap()
 	// Initialise the images map (kind:icon_index)
 	//--------------------------------------------------------
 
-	m_imagesMap[_T("project")] = 0;
-	m_imagesMap[_T("namespace")] = 1;
-	m_imagesMap[_T("globals")] = 2;
-	m_imagesMap[_T("class")] = 3;
-	m_imagesMap[_T("interface")] = 3;
-	m_imagesMap[_T("interface_private")] = 3;
-	m_imagesMap[_T("interface_protected")] = 3;
-	m_imagesMap[_T("class_private")] = 3;
-	m_imagesMap[_T("class_public")] = 3;
-	m_imagesMap[_T("class_protected")] = 3;
+	m_imagesMap[wxT("project")] = 0;
+	m_imagesMap[wxT("namespace")] = 1;
+	m_imagesMap[wxT("globals")] = 2;
+	m_imagesMap[wxT("class")] = 3;
+	m_imagesMap[wxT("interface")] = 3;
+	m_imagesMap[wxT("interface_private")] = 3;
+	m_imagesMap[wxT("interface_protected")] = 3;
+	m_imagesMap[wxT("class_private")] = 3;
+	m_imagesMap[wxT("class_public")] = 3;
+	m_imagesMap[wxT("class_protected")] = 3;
 
-	m_imagesMap[_T("struct")] = 4;
-	m_imagesMap[_T("struct_private")] = 4;
-	m_imagesMap[_T("struct_public")] = 4;
-	m_imagesMap[_T("struct_protected")] = 4;
+	m_imagesMap[wxT("struct")] = 4;
+	m_imagesMap[wxT("struct_private")] = 4;
+	m_imagesMap[wxT("struct_public")] = 4;
+	m_imagesMap[wxT("struct_protected")] = 4;
 
-	m_imagesMap[_T("function")] = 5;
-	m_imagesMap[_T("prototype")] = 5;
-	m_imagesMap[_T("function_public")] = 5;
-	m_imagesMap[_T("prototype_public")] = 5;
+	m_imagesMap[wxT("function")] = 5;
+	m_imagesMap[wxT("prototype")] = 5;
+	m_imagesMap[wxT("function_public")] = 5;
+	m_imagesMap[wxT("prototype_public")] = 5;
 
-	m_imagesMap[_T("function_protected")] = 6;
-	m_imagesMap[_T("prototype_protected")] = 6;
-	m_imagesMap[_T("function_private")] = 7;
-	m_imagesMap[_T("prototype_private")] = 7;
-	m_imagesMap[_T("variable")] = 8;
-	m_imagesMap[_T("member_public")] = 8;
-	m_imagesMap[_T("member_protected")] = 9;
-	m_imagesMap[_T("member_private")] = 10;
-	m_imagesMap[_T("typedef")] = 11;
-	m_imagesMap[_T("typedef_public")] = 11;
-	m_imagesMap[_T("typedef_private")] = 11;
-	m_imagesMap[_T("typedef_protected")] = 11;
-	m_imagesMap[_T("macro")] = 12;
-	m_imagesMap[_T("macro_private")] = 12;
-	m_imagesMap[_T("macro_protected")] = 12;
-	m_imagesMap[_T("macro_public")] = 12;
-	m_imagesMap[_T("enum")] = 13;
-	m_imagesMap[_T("enum_private")] = 13;
-	m_imagesMap[_T("enum_public")] = 13;
-	m_imagesMap[_T("enum_protected")] = 13;
+	m_imagesMap[wxT("function_protected")] = 6;
+	m_imagesMap[wxT("prototype_protected")] = 6;
+	m_imagesMap[wxT("function_private")] = 7;
+	m_imagesMap[wxT("prototype_private")] = 7;
+	m_imagesMap[wxT("variable")] = 8;
+	m_imagesMap[wxT("member_public")] = 8;
+	m_imagesMap[wxT("member_protected")] = 9;
+	m_imagesMap[wxT("member_private")] = 10;
+	m_imagesMap[wxT("typedef")] = 11;
+	m_imagesMap[wxT("typedef_public")] = 11;
+	m_imagesMap[wxT("typedef_private")] = 11;
+	m_imagesMap[wxT("typedef_protected")] = 11;
+	m_imagesMap[wxT("macro")] = 12;
+	m_imagesMap[wxT("macro_private")] = 12;
+	m_imagesMap[wxT("macro_protected")] = 12;
+	m_imagesMap[wxT("macro_public")] = 12;
+	m_imagesMap[wxT("enum")] = 13;
+	m_imagesMap[wxT("enum_private")] = 13;
+	m_imagesMap[wxT("enum_public")] = 13;
+	m_imagesMap[wxT("enum_protected")] = 13;
 
-	m_imagesMap[_T("method")] = 5;
-	m_imagesMap[_T("method_public")] = 5;
-	m_imagesMap[_T("method_protected")] = 6;
-	m_imagesMap[_T("method_private")] = 7;
+	m_imagesMap[wxT("method")] = 5;
+	m_imagesMap[wxT("method_public")] = 5;
+	m_imagesMap[wxT("method_protected")] = 6;
+	m_imagesMap[wxT("method_private")] = 7;
 
 	//-----------------------------------------------------------
 	// Populate globals kind
 	//-----------------------------------------------------------
 
-	m_globalsKind[_T("<global>")] = true;
-	m_globalsKind[_T("function")] = true;
-	m_globalsKind[_T("prototype")] = true;
-	m_globalsKind[_T("variable")] = true;
+	m_globalsKind[wxT("<global>")] = true;
+	m_globalsKind[wxT("function")] = true;
+	m_globalsKind[wxT("prototype")] = true;
+	m_globalsKind[wxT("variable")] = true;
 }
 
 void SymbolTree::Create(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -136,7 +136,7 @@ void SymbolTree::BuildTree( TagTreePtr& tree )
 		m_tree = tree;
 
 	// Add invisible root node
-	wxTreeItemId root = AddRoot(_("Workspace"), 0, 0); // Workspace icon;
+	wxTreeItemId root = AddRoot(wxT("Workspace"), 0, 0); // Workspace icon;
 	m_tree->GetRoot()->GetData().SetTreeItemId( root );
 
 	TreeWalker<wxString, TagEntry> walker(m_tree->GetRoot());
@@ -179,16 +179,17 @@ void SymbolTree::AddItem(TagNode* node)
 	//-------------------------------------------------------------------------------
 	// We gather globals together under special node
 	//-------------------------------------------------------------------------------
-
-	if( (nodeData.GetParent() == _T("<global>")) && m_globalsKind.find(nodeData.GetKind()) != m_globalsKind.end() )
+	if( (nodeData.GetParent() == wxT("<global>")) &&					// parent is global scope
+		m_globalsKind.find(nodeData.GetKind()) != m_globalsKind.end() ) //the node kind is one of function, prototype or variable
 	{
+		//search for the global node for this project
 		std::map<wxString, wxTreeItemId>::iterator iter = m_globalsMap.find(node->GetData().GetProject());
 		if(iter == m_globalsMap.end())
 		{
-			// First time, add a node under the root
+			// First time, add a node under the project node
 			parentHti = AppendItem(node->GetParent()->GetData().GetTreeItemId(),
-						_("Global Functions and Variables"),
-						2, 2, new MyTreeItemData(_("Global Functions and Variables")));
+						wxT("Global Functions and Variables"),
+						2, 2, new MyTreeItemData(wxT("Global Functions and Variables")));
 			m_globalsMap[nodeData.GetProject()] = parentHti;
 		}
 		else
@@ -200,8 +201,7 @@ void SymbolTree::AddItem(TagNode* node)
 	//---------------------------------------------------------------------------------
 	// make prototypes function as child of a special node in the tree
 	//---------------------------------------------------------------------------------
-
-	if(nodeData.GetKind() == _T("prototype"))
+	if(nodeData.GetKind() == wxT("prototype"))
 	{
 		std::map<wxString, wxTreeItemId>::iterator iter = m_prototypesMap.find(node->GetParent()->GetData().GetPath());
 		if(iter != m_prototypesMap.end())
@@ -215,7 +215,6 @@ void SymbolTree::AddItem(TagNode* node)
 	//---------------------------------------------------------------------------------
 	// Macros are gathered under the 'Macros' node
 	//---------------------------------------------------------------------------------
-
 	if(nodeData.GetKind() == wxT("macro"))
 	{
 		std::map<wxString, wxTreeItemId>::iterator iter = m_macrosMap.find(node->GetData().GetProject());
@@ -227,11 +226,15 @@ void SymbolTree::AddItem(TagNode* node)
 			return;
 	}
 
-	wxTreeItemId hti = AppendItem(	parentHti,				// parent
-									displayName,			// display name
-									iconIndex,				// item image index
-									iconIndex,				// selected item image
-									new MyTreeItemData(node->GetKey()));
+	//only if parent is valid, we add item to the tree
+	wxTreeItemId hti;
+	if(parentHti.IsOk()){
+		hti = AppendItem(parentHti,				// parent
+						displayName,			// display name
+						iconIndex,				// item image index
+						iconIndex,				// selected item image
+						new MyTreeItemData(node->GetKey()));
+	}
 
 	node->GetData().SetTreeItemId( hti );
 
@@ -241,16 +244,16 @@ void SymbolTree::AddItem(TagNode* node)
 		{
 			// add the prototype node under it
 			m_prototypesMap[nodeData.GetPath()] = AppendItem(node->GetData().GetTreeItemId(),
-				_T("Functions Prototypes"),
-				2, 2, new MyTreeItemData(_T("Functions Prototypes")));
+				wxT("Functions Prototypes"),
+				2, 2, new MyTreeItemData(wxT("Functions Prototypes")));
 		}
 
 		// are we a project?
-		if(nodeData.GetKind() == _T("project"))
+		if(nodeData.GetKind() == wxT("project"))
 		{
 			// First time, add a 'global' node under the root
-			m_globalsMap[nodeData.GetName()] = AppendItem(hti, _("Global Functions and Variables"), 2, 2, new MyTreeItemData(_("Global Functions and Variables")));
-			m_macrosMap[nodeData.GetName()] = AppendItem(hti, _("Macros"), 2, 2, new MyTreeItemData(_("Macros")));
+			m_globalsMap[nodeData.GetName()] = AppendItem(hti, wxT("Global Functions and Variables"), 2, 2, new MyTreeItemData(wxT("Global Functions and Variables")));
+			m_macrosMap[nodeData.GetName()] = AppendItem(hti, wxT("Macros"), 2, 2, new MyTreeItemData(wxT("Macros")));
 		}
 	}
 
@@ -294,7 +297,7 @@ int SymbolTree::GetItemIconIndex(const wxString &kind, const wxString &access)
 	int index(4);       // structs will be the default icon index
 
 	if( !access.IsEmpty() )
-		key += _T("_") + access;
+		key += wxT("_") + access;
 
 	std::map<wxString, int>::iterator iter = m_imagesMap.find(key);
 	if(iter != m_imagesMap.end())
@@ -328,7 +331,7 @@ void SymbolTree::UpdateGuiItem(TagEntry& data, const wxString& key)
 	{
 		// If the update the was made on a prototype entry and we already have a 'function' entry in the 
 		// tree, we dont update the GUI tree
-		if( data.GetKind() == _T("prototype") && node->GetData().GetKind() == _T("function"))
+		if( data.GetKind() == wxT("prototype") && node->GetData().GetKind() == wxT("function"))
 			return;
 
 		// Update the new data with the gui tree item id
@@ -368,7 +371,7 @@ void SymbolTree::OnDeleteSymbols(SymbolTreeEvent& event)
 		if( node )
 		{
 			// Project nodes are never removed from here
-			if(node->GetData().GetKind() == _T("project"))
+			if(node->GetData().GetKind() == wxT("project"))
 				continue;
 
 			// Remove the node from the GUI tree
@@ -385,7 +388,7 @@ void SymbolTree::OnDeleteSymbols(SymbolTreeEvent& event)
 
 			// If this node is a project, remove its 'Global' node as well from the 
 			// globals map
-			if(node->GetData().GetKind() == _T("project"))
+			if(node->GetData().GetKind() == wxT("project"))
 			{
 				std::map<wxString, wxTreeItemId>::iterator it = m_globalsMap.find(node->GetData().GetName());
 				if(it != m_globalsMap.end())

@@ -156,126 +156,74 @@ TagTreePtr TagsManager::ParseTagsFile(const wxFileName& fp, const wxString& proj
 
 void TagsManager::TagFromLine(const wxString& line, TagEntry& tag, const wxString& project)
 {
-	// Parse ctags line
-	if(line.IsEmpty()){
+	wxString pattern, kind;
+	wxString strLine = line;
+	long lineNumber = wxNOT_FOUND;
+	std::map<wxString, wxString> extFields;
+
+	//get the token name
+	wxString name = strLine.BeforeFirst(wxT('\t'));
+	strLine	= strLine.AfterFirst(wxT('\t'));
+
+	//get the file name
+	wxString fileName = strLine.BeforeFirst(wxT('\t'));
+	strLine	= strLine.AfterFirst(wxT('\t'));
+
+	//here we can get two options:
+	//pattern followed by ;"
+	//or
+	//line number followed by ;"
+	int end = strLine.Find(wxT(";\""));
+	if(end == wxNOT_FOUND){
+		//invalid pattern found
 		return;
 	}
 
-
-	static const char TAB = '\t';
-	const wxCharBuffer pline = _C(line);
-	char *p = const_cast<char*>(pline.data());
-
-	char *tab = strchr (p, TAB);
-	int fieldsPresent = 0;
-
-	// Extract the following fields from the tag
-	char *fileName = NULL;
-	char *name = NULL;
-	int lineNumber = 0;
-	char *pattern = NULL;
-	char *kind = NULL;
-	int fileScope = 0;
-	std::map<wxString, wxString> extFields;
-
-	// Parse tag name
-	name = p;
-	if( tab )
+	if(strLine.StartsWith(wxT("/^"))){
+		//regular expression pattern found
+		pattern = strLine.Mid(0, end);
+		strLine	= strLine.Right(strLine.Length() - (end + 2));
+	}
+	else
 	{
-		*tab = 0;
-		p = tab + 1;
-		if(!p) {
-			return;
-		}
+		//line number pattern found, this is usually the case when
+		//dealing with macros in C++
+		pattern = strLine.Mid(0, end);
+		strLine	= strLine.Right(strLine.Length() - (end + 2));
 
-		// Parse file name
-		fileName = const_cast<char*>(p);
-		tab = strchr (p, TAB);
-		if( tab )
+		pattern = pattern.Trim();
+		pattern = pattern.Trim(false);
+		pattern.ToLong(&lineNumber);
+	}
+
+	//next is the kind of the token
+	if(strLine.StartsWith(wxT("\t"))){
+		strLine	= strLine.AfterFirst(wxT('\t'));
+	}
+
+	kind = strLine.BeforeFirst(wxT('\t'));
+	strLine	= strLine.AfterFirst(wxT('\t'));
+
+	if(strLine.IsEmpty() == false)
+	{
+		wxStringTokenizer tkz(strLine, wxT('\t'));
+		while(tkz.HasMoreTokens())
 		{
-			*tab = 0;
-			p = tab + 1;
-			if (!p) {
-				return;
-			}
+			wxString token = tkz.NextToken();
+			wxString key = token.BeforeFirst(wxT(':'));
+			wxString val = token.AfterFirst(wxT(':'));
 
-			if (*p == '/'  ||  *p == '?')
+			if(key == wxT("line") && !val.IsEmpty())
 			{
-				/* parse pattern */
-				int delimiter = *(unsigned char*) p;
-				lineNumber = 0;
-				pattern = const_cast<char*>(p);
-				do
-				{
-					p = strchr (p + 1, delimiter);
-				} while (p != NULL  &&  *(p - 1) == '\\');
-				if (p == NULL)
-				{
-					/* invalid pattern */
-				}
-				else
-					++p;
-			}
-			else if (isdigit ((int) *(unsigned char*) p))
-			{
-				/* parse line number */
-				pattern = const_cast<char*>(p);
-				if (!p) return;
-
-				lineNumber = atol (p);
-				while (p && isdigit ((int) *(unsigned char*) p)){
-					++p;
-				}
+				val.ToLong(&lineNumber);
 			}
 			else
 			{
-				/* invalid pattern */
-			}
-
-			fieldsPresent = 0;
-			if (p) {
-				fieldsPresent = (strncmp (p, ";\"", 2) == 0);
-				*p = '\0';
-			}
-			
-			if (fieldsPresent)
-			{
-				p = p + 2;
-				while (p != NULL  &&  *p != '\0')
-				{
-					while (*p == TAB)
-						*p++ = '\0';
-					if (*p != '\0')
-					{
-						char *colon;
-						char *field = p;
-						p = strchr (p, TAB);
-						if (p != NULL)
-							*p++ = '\0';
-						colon = strchr (field, ':');
-						if (colon == NULL)
-							kind = field;
-						else
-						{
-							char *key = field;
-							char *value = colon + 1;
-							*colon = '\0';
-							if (strcmp (key, "kind") == 0)
-								kind = value;
-							else if (strcmp (key, "file") == 0)
-								fileScope = 1;
-							else if (strcmp (key, "line") == 0)
-								lineNumber = atol (value);
-							else
-							{
-								extFields[_U(key)] = _U(value);
-							}
-						}
-					}
-				}
+				extFields[key] = val;
 			}
 		}
 	}
+
 	tag.Create(fileName, name, lineNumber, pattern, kind, extFields, project);
 }
 

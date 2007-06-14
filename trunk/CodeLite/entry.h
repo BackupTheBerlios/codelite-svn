@@ -95,13 +95,13 @@ public:
 	 * \param extFields Map of extenstion fields (key:value)
 	 * \param project Project name
 	 */
-	void Create(const char *fileName, 
-				const char *name, 
+	void Create(const wxString &fileName, 
+				const wxString &name, 
 				int lineNumber, 
-				const char *pattern, 
-				const char *kind, 
+				const wxString &pattern, 
+				const wxString &kind, 
 				std::map<wxString, wxString>& extFields, 
-				const wxString& project	);
+				const wxString& project);
 
 	/**
 	 * Test if this entry has been initialised.
