@@ -256,6 +256,33 @@ void LEditor::SetProperties()
 
 	// Indentation guidelines
 	SetIndentationGuides(options->GetShowIndentationGuidelines());
+
+    // clear wrong default keys
+#if !defined(__WXGTK__)
+    CmdKeyClear (wxSCI_KEY_TAB, 0);
+    CmdKeyClear (wxSCI_KEY_TAB, wxSCI_SCMOD_SHIFT);
+#endif
+    CmdKeyClear ('A', wxSCI_SCMOD_CTRL);
+#if !defined(__WXGTK__)
+    CmdKeyClear ('C', wxSCI_SCMOD_CTRL);
+#endif
+    CmdKeyClear ('D', wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('D', wxSCI_SCMOD_SHIFT | wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('F', wxSCI_SCMOD_ALT | wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('L', wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('L', wxSCI_SCMOD_SHIFT | wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('T', wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('T', wxSCI_SCMOD_SHIFT | wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('U', wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('U', wxSCI_SCMOD_SHIFT | wxSCI_SCMOD_CTRL);
+#if !defined(__WXGTK__)
+    CmdKeyClear ('V', wxSCI_SCMOD_CTRL);
+    CmdKeyClear ('X', wxSCI_SCMOD_CTRL);
+#endif
+    CmdKeyClear ('Y', wxSCI_SCMOD_CTRL);
+#if !defined(__WXGTK__)
+    CmdKeyClear ('Z', wxSCI_SCMOD_CTRL);
+#endif
 }
 
 void LEditor::SetDirty(bool dirty)
