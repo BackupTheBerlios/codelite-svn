@@ -1002,3 +1002,52 @@ bool Manager::IsFileInWorkspace(const wxString &fileName)
 	std::vector<wxFileName>::const_iterator iter = std::find(files.begin(), files.end(), findme);
 	return iter != files.end();
 }
+
+void Manager::RetagProject(const wxString &projectName)
+{
+	//remove project from database
+	TagsManagerST::Get()->DeleteProject(projectName);
+
+	//update tree - tell it to remove the project
+	SymbolTreeEvent evt(projectName, wxEVT_COMMAND_SYMBOL_TREE_DELETE_PROJECT);
+	Frame::Get()->GetWorkspacePane()->GetSymbolTree()->ProcessEvent(evt);
+
+	//now rebuild the project
+	ProjectPtr proj = GetProject(projectName);
+	if( proj ){
+		//set cursor to busy
+		wxBusyCursor cursor;
+
+		std::vector<wxFileName> files;
+		std::vector<DbRecordPtr> comments;
+		TagTreePtr ttp;
+
+		//change the directory to the project dir
+		DirSaver ds;
+		::wxSetWorkingDirectory(proj->GetFileName().GetPath());
+
+		proj->GetFiles(files);
+
+		bool parseComments = TagsManagerST::Get()->GetParseComments();
+		ttp = TagsManagerST::Get()->ParseSourceFiles(files, projectName, parseComments ? &comments : NULL);
+		
+		TagsManagerST::Get()->Store(ttp);
+		if(parseComments){
+			TagsManagerST::Get()->StoreComments(comments);
+		}
+
+		//update gui tree
+		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->AddSymbols(ttp);
+	}
+}
+
+void Manager::RetagWorkspace()
+{
+	wxArrayString projects;
+	GetProjectList(projects);
+
+	for(size_t i=0; i<projects.GetCount(); i++)
+	{
+		RetagProject(projects.Item(i));
+	}
+}

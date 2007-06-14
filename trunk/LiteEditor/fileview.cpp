@@ -31,6 +31,8 @@ void FileViewTree::ConnectEvents()
 	Connect(XRCID("clean_project"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnClean), NULL, this);
 	Connect(XRCID("build_project"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnBuild), NULL, this);
 	Connect(XRCID("stop_build"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnStopBuild), NULL, this);
+	Connect(XRCID("retag_project"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnRetagProject), NULL, this);
+	Connect(XRCID("retag_workspace"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnRetagWorkspace), NULL, this);
 }
 
 FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
@@ -645,4 +647,20 @@ size_t FileViewTree::GetMultiSelection(wxArrayTreeItemIds &arr)
 		arr.Add(GetSelection());
 		return 1;
 	}
+}
+
+void FileViewTree::OnRetagProject(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	wxTreeItemId item = GetSingleSelection();
+	if(item.IsOk()){
+		wxString projectName = GetItemText(item);
+		ManagerST::Get()->RetagProject(projectName);
+	}
+}
+
+void FileViewTree::OnRetagWorkspace(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	ManagerST::Get()->RetagWorkspace();
 }

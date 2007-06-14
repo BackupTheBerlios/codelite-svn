@@ -361,6 +361,10 @@
             <label>&amp;Add an &amp;Existing Project\tCtrl+Shift+A</label>
             <help>Add an existing project to the current workspace</help>
         </object>            
+        <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+		<object class="wxMenuItem" name="retag_workspace">
+            <label>Retag Workspace</label>
+        </object>
         
         <object class="wxMenuItem" name="wxID_SEPARATOR"/>
         <object class="wxMenuItem" name="add_envvar">

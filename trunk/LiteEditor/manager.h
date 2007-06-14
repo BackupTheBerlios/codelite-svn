@@ -408,6 +408,18 @@ public:
 	 */
 	bool IsFileInWorkspace(const wxString &fileName);
 
+	/**
+	 * Rebuild the database by removing all entries from the database
+	 * that belongs to a given project, and then re-index all files 
+	 * \param projectName project to re-tag
+	 */
+	void RetagProject(const wxString &projectName);
+
+	/**
+	 * retag workspace
+	 */
+	void RetagWorkspace();
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

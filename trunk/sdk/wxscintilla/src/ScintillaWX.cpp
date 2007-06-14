@@ -494,49 +494,27 @@ void ScintillaWX::Paste() {
 
 #if wxUSE_DATAOBJ
     wxTextDataObject data;
-    wxString textString;
-
-    wxWX2MBbuf buf;
-    int   len  = 0;
-    bool  rectangular = false;
+    bool gotData = false;
 
     if (wxTheClipboard->Open()) {
         wxTheClipboard->UsePrimarySelection(false);
-        wxCustomDataObject selData(wxDF_PRIVATE);
-        bool gotRectData = wxTheClipboard->GetData(selData);
-
-        if (gotRectData && selData.GetSize()>1) {
-            const char* rectBuf = (const char*)selData.GetData();
-            rectangular = rectBuf[0] == (char)1;
-            len = selData.GetDataSize()-1;
-            char* buffer = new char[len];
-            memcpy (buffer, rectBuf+1, len);
-            textString = sci2wx(buffer, len);
-            delete buffer;
-        } else {
-            bool gotData = wxTheClipboard->GetData(data);
-            if (gotData) {
-                textString = wxTextBuffer::Translate (data.GetText(),
-                                                      wxConvertEOLMode(pdoc->eolMode));
-            }
-        }
-        data.SetText(wxEmptyString); // free the data object content
+        gotData = wxTheClipboard->GetData(data);
         wxTheClipboard->Close();
     }
+    if (gotData) {
+        wxString   text = wxTextBuffer::Translate(data.GetText(),
+                                                  wxConvertEOLMode(pdoc->eolMode));
+        wxWX2MBbuf buf = (wxWX2MBbuf)wx2sci(text);
 
-    buf = (wxWX2MBbuf)wx2sci(textString);
-    len  = strlen(buf);
-    int newPos = 0;
-    if (rectangular) {
-        int newLine = pdoc->LineFromPosition (currentPos) + wxCountLines (buf, pdoc->eolMode);
-        int newCol = pdoc->GetColumn(currentPos);
-        PasteRectangular (currentPos, buf, len);
-        newPos = pdoc->FindColumn (newLine, newCol);
-    } else {
-        pdoc->InsertString (currentPos, buf, len);
-        newPos = currentPos + len;
+#if wxUSE_UNICODE
+        // free up the old character buffer in case the text is real big
+        data.SetText(wxEmptyString); 
+        text = wxEmptyString;
+#endif
+        int len = strlen(buf);
+        pdoc->InsertString(currentPos, buf, len);
+        SetEmptySelection(currentPos + len);
     }
-    SetEmptySelection (newPos);
 #endif // wxUSE_DATAOBJ
 
     pdoc->EndUndoAction();

@@ -134,7 +134,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 
 	EVT_MENU(XRCID("create_ext_database"), Frame::OnBuildExternalDatabase)
 	EVT_MENU(XRCID("open_ext_database"), Frame::OnUseExternalDatabase)
-
 	EVT_CLOSE(Frame::OnClose)
 	EVT_TIMER(wxID_ANY, Frame::OnTimer)
 
@@ -997,4 +996,3 @@ void Frame::OnTimer(wxTimerEvent &event)
 	}
 	event.Skip();
 }
-

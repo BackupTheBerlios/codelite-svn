@@ -82,7 +82,8 @@ protected:
 	virtual void OnClean(wxCommandEvent &event);
 	virtual void OnBuild(wxCommandEvent &event);
 	virtual void OnStopBuild(wxCommandEvent &event);
-
+	virtual void OnRetagProject(wxCommandEvent &event);
+	virtual void OnRetagWorkspace(wxCommandEvent &event);
 
 	// Tree sorting
 	virtual int OnCompareItems(const wxTreeItemId& item1, const wxTreeItemId& item2);

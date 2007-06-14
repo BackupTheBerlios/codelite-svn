@@ -1,10 +1,7 @@
 TODO List:
 ==========================
-. Add option to create an external database
-. Add option to re-create the symbols database
-. Add an option to re-build the symbol tree (workspace & prohect levels)
 . When adding existing projects - update the database - so the symbol tree will be updated
-. Add menu option to set external database to workspace
+. ctags does not handle files with no extension
 . When closing the application, prompt if there are unsaved changes
 . Add option to search for single symbol in a file(eclips's Ctrl+Shift+O)
 . Add option to open resource in the workspace (eclips's Ctrl+Shift+R)
