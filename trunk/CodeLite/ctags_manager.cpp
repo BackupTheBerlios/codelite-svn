@@ -348,7 +348,15 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 	//run ctags in sync mode
 	wxArrayString stdoutArr, stderrArr;
 	wxExecute(cmd, stdoutArr, stderrArr);
+
+	//print to stderr the errors received from ctags
+	wxFFileOutputStream output( stderr );
+	wxTextOutputStream cout( output );
 	
+	for(i=0; i<stderrArr.GetCount(); i++){
+		cout << stderrArr.Item(i);
+	}
+
 	for(i=0; i<stdoutArr.GetCount(); i++){
 		tags += stdoutArr.Item(i);
 		tags += wxT("\n");
