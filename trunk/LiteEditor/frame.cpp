@@ -26,6 +26,7 @@
 #include "macros.h"
 #include "editor_creator.h"
 #include "async_executable_cmd.h"
+#include "close_all_dlg.h"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -44,6 +45,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_COMMAND(wxID_ANY, wxEVT_ASYNC_PROC_ENDED, Frame::OnOutputWindowEvent)
 
 	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE, Frame::OnNewDlgCreate)
+	EVT_MENU(wxID_CLOSE_ALL, Frame::OnFileCloseAll)
 	EVT_MENU(wxID_EXIT, Frame::OnQuit)
 	EVT_MENU(wxID_SAVE, Frame::OnSave)
 	EVT_MENU(wxID_SAVEAS, Frame::OnSaveAs)
@@ -81,6 +83,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CLOSE, Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(wxID_CLOSE_ALL, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_REFRESH, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(XRCID("save_all"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CUT, Frame::DispatchUpdateUIEvent)
@@ -1027,4 +1030,44 @@ void Frame::OnTimer(wxTimerEvent &event)
 		EditorCreatorST::Get()->Add(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true)); 
 	}
 	event.Skip();
+}
+
+void Frame::OnFileCloseAll(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	CloseAllDialog *dlg = new CloseAllDialog(this);
+	switch(dlg->ShowModal())
+	{
+	case CLOSEALL_SAVEALL:
+		{
+			ManagerST::Get()->SaveAll();
+			//and now close them all
+			m_notebook->DeleteAllPages();
+		}
+		break;
+	case CLOSEALL_DISCARDALL:
+		{
+			m_notebook->DeleteAllPages();
+		}
+		break;
+	case CLOSEALL_ASKFOREACHFILE:
+		{
+			int count = m_notebook->GetPageCount();
+			for(int i=0; i<count; i++)
+			{
+				LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetPage((size_t)i));
+				if( !editor )
+					continue;
+
+				bool veto;
+				ClosePage(editor, false, m_notebook->GetSelection(), true, veto);
+			}
+			//once all files have been prompted if needed, remove them all
+			m_notebook->DeleteAllPages();
+		}
+		break;
+	default:
+		break;
+	}
+	dlg->Destroy();
 }

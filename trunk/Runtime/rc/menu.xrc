@@ -48,6 +48,11 @@
                 <help>Close Current File</help>
             </object> 
             
+            <object class="wxMenuItem" name="wxID_CLOSE_ALL">
+                <label>Close All</label>
+                <help>Close All Files</help>
+            </object> 
+            
             <object class="wxMenuItem" name="wxID_SEPARATOR"/>            
             <!-- we use wxID_EXIT name here to get the default menu item stock icon -->
             <object class="wxMenuItem" name="wxID_EXIT">
@@ -271,6 +276,9 @@
     <object class="wxMenu" name="editor_tab_right_click">
 		<object class="wxMenuItem" name="wxID_CLOSE">
             <label>Close</label>
+        </object>
+		<object class="wxMenuItem" name="wxID_CLOSE_ALL">
+            <label>Close All</label>
         </object>
         <object class="wxMenuItem" name="wxID_SEPARATOR"/>
 		<object class="wxMenuItem" name="wxID_REFRESH">

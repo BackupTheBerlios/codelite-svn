@@ -359,6 +359,12 @@
 				RelativePath=".\build_page.h">
 			</File>
 			<File
+				RelativePath=".\close_all_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\close_all_dlg.h">
+			</File>
+			<File
 				RelativePath=".\compiler_page.cpp">
 			</File>
 			<File
