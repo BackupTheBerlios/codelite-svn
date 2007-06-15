@@ -59,6 +59,7 @@ CloseAllDialog::CloseAllDialog( wxWindow* parent, int id, wxString title, wxPoin
 	m_staticMsg->SetLabel(wxT("Some of the files are modified, what action should Lite Editor take?"));
 	this->SetSizer( mainSizer );
 	this->Layout();
+	mainSizer->Fit(this);
 
 	ConnectButton(m_buttonDiscardChangesForAllFiles, CloseAllDialog::OnDiscardAllClicked);
 	ConnectButton(m_buttonSaveAllFiles, CloseAllDialog::OnSaveAll);

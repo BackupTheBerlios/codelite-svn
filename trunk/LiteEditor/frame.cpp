@@ -1043,11 +1043,13 @@ void Frame::OnFileCloseAll(wxCommandEvent &event)
 			ManagerST::Get()->SaveAll();
 			//and now close them all
 			m_notebook->DeleteAllPages();
+			m_notebook->Refresh();
 		}
 		break;
 	case CLOSEALL_DISCARDALL:
 		{
 			m_notebook->DeleteAllPages();
+			m_notebook->Refresh();
 		}
 		break;
 	case CLOSEALL_ASKFOREACHFILE:
@@ -1064,6 +1066,7 @@ void Frame::OnFileCloseAll(wxCommandEvent &event)
 			}
 			//once all files have been prompted if needed, remove them all
 			m_notebook->DeleteAllPages();
+			m_notebook->Refresh();
 		}
 		break;
 	default:
