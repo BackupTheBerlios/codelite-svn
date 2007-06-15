@@ -50,8 +50,8 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 : wxScintilla(parent, id, wxDefaultPosition, size)
 , m_fileName(fileName)
 , m_project(project)
-, m_lastMatchPos(0)
 , m_rightClickMenu(NULL)
+, m_lastMatchPos(0)
 {
 	Show(!hidden);
 
