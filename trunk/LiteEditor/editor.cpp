@@ -29,6 +29,7 @@ EVT_SCI_CALLTIP_CLICK(wxID_ANY, LEditor::OnCallTipClick)
 EVT_SCI_DWELLEND(wxID_ANY, LEditor::OnDwellEnd)
 EVT_SCI_MODIFIED(wxID_ANY, LEditor::OnModified)
 EVT_SCI_UPDATEUI(wxID_ANY, LEditor::OnSciUpdateUI)
+EVT_CONTEXT_MENU(LEditor::OnContextMenu)
 
 // Find and replace dialog
 EVT_COMMAND(wxID_ANY, wxEVT_FRD_FIND_NEXT, LEditor::OnFindDialog)
@@ -50,6 +51,7 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 , m_fileName(fileName)
 , m_project(project)
 , m_lastMatchPos(0)
+, m_rightClickMenu(NULL)
 {
 	Show(!hidden);
 
@@ -82,11 +84,18 @@ void LEditor::SetSyntaxHighlight()
 
 LEditor::~LEditor()
 {
+	if(m_rightClickMenu)
+		delete m_rightClickMenu;
 }
 
 /// Setup some scintilla properties
 void LEditor::SetProperties()
 {
+	//load menu
+	if(m_rightClickMenu)
+		delete m_rightClickMenu;
+	m_rightClickMenu = wxXmlResource::Get()->LoadMenu(wxT("editor_right_click"));
+
 	OptionsConfigPtr options = EditorConfigST::Get()->GetOptions();
 
 	SetMouseDwellTime(200);
@@ -1095,4 +1104,20 @@ void LEditor::ReloadFile()
 	FileUtils::ReadFileUTF8(m_fileName, text);
 	SetText( text );
 	SetDirty(false);
+}
+
+void LEditor::OnContextMenu(wxContextMenuEvent &event)
+{
+	wxUnusedVar(event);
+	PopupMenu(m_rightClickMenu);
+}
+
+bool LEditor::IsSwapFilesEnabled() const
+{
+	return m_context->IsSwapFilesEnabled();
+}
+
+void LEditor::SwapFiles()
+{
+	m_context->SwapFiles(m_fileName);
 }

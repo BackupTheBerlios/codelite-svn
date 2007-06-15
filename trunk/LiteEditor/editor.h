@@ -10,6 +10,7 @@
 #include "findreplacedlg.h"
 #include <wx/wxFlatNotebook/wxFlatNotebook.h>
 #include "context_base.h"
+#include "wx/menu.h"
 
 class wxFindReplaceDialog;
 
@@ -38,6 +39,7 @@ class LEditor : public wxScintilla
 	wxString m_project;
 	wxStopWatch m_watch;
 	ContextBasePtr m_context;
+	wxMenu *m_rightClickMenu;
 
 	// static cache among editors to keep track of jumping between editors
 	static std::stack<TagEntry> m_history;
@@ -141,6 +143,16 @@ public:
 	 */
 	ContextBasePtr GetContext() const { return m_context; }
 
+	/**
+	 * Swap header / impl files
+	 */
+	void SwapFiles();
+
+	/**
+	 * is swap functionaliy available
+	 */
+	bool IsSwapFilesEnabled() const;
+
 	// Bookmark API
 	//-----------------------------------------
 
@@ -227,6 +239,7 @@ private:
 	void OnModified(wxScintillaEvent& event);
 	void OnSciUpdateUI(wxScintillaEvent &event);
 	void OnFindDialog(wxCommandEvent &event);
+	void OnContextMenu(wxContextMenuEvent &event);
 };
 
 #endif // LITEEDITOR_EDITOR_H

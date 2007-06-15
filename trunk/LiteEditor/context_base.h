@@ -4,6 +4,7 @@
 #include "wx/string.h"
 #include "wx/wxscintilla.h"
 #include "smart_ptr.h"
+#include "wx/filename.h"
 
 class LEditor;
 
@@ -56,6 +57,8 @@ public:
 	virtual void OnDwellEnd(wxScintillaEvent & WXUNUSED(event)) = 0;
 	virtual void OnCallTipClick(wxScintillaEvent& WXUNUSED(event)) = 0;
 	virtual void OnDwellStart(wxScintillaEvent & WXUNUSED(event)) = 0;
+	virtual void SwapFiles(const wxFileName & WXUNUSED(fileName)){};
+	virtual bool IsSwapFilesEnabled() const { return false; }
 };
 typedef SmartPtr<ContextBase> ContextBasePtr;
 

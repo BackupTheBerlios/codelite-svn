@@ -12,6 +12,7 @@ MenuManager::MenuManager(void)
 	PushHandler(new EditHandler(wxID_REDO));
 	PushHandler(new EditHandler(wxID_SELECTALL));
 	PushHandler(new EditHandler(wxID_DUPLICATE));
+	PushHandler(new EditHandler(XRCID("swap_files")));
 	PushHandler(new BraceMatchHandler(XRCID("select_to_brace")));
 	PushHandler(new BraceMatchHandler(XRCID("match_brace")));
 	PushHandler(new FindReplaceHandler(wxID_FIND));

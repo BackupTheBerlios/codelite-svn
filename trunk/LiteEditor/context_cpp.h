@@ -24,6 +24,8 @@ class ContextCpp : public ContextBase {
 	};
 
 	TipKind m_tipKind;
+private:
+	bool TryOpenFile(const wxFileName &fileName);
 
 public:
 	ContextCpp(LEditor *container);
@@ -38,6 +40,10 @@ public:
 	virtual void AutoIndent(const wxChar&);
 	virtual void CallTipCancel();
 	virtual	bool IsCommentOrString(long pos);
+
+	//override swapfiles features
+	virtual bool IsSwapFilesEnabled() const {return true;}
+	virtual void SwapFiles(const wxFileName &fileName);
 
 	//Event handlers
 	virtual void OnDwellEnd(wxScintillaEvent &event);

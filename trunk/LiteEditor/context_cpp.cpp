@@ -4,6 +4,7 @@
 #include "manager.h"
 #include "symbols_dialog.h"
 #include "editor_config.h"
+#include "macros.h"
 
 ContextCpp::ContextCpp(LEditor *container)
 : ContextBase(container)
@@ -88,7 +89,7 @@ void ContextCpp::CodeComplete()
 	case ':':
 		// Check previous character if is ':'
 		// We open drop box as well
-		if(rCtrl.PreviousChar(pos1, pos2) == _T(':'))
+		if(rCtrl.PreviousChar(pos1, pos2) == wxT(':'))
 		{
 			rCtrl.PreviousChar(pos2, end);
 			break;
@@ -105,8 +106,8 @@ void ContextCpp::CodeComplete()
 	// to the Language parser
 	// We define an expression, by reading from pos and up until we find
 	// the first '{' or ';' or SOT
-	int semiColPos = rCtrl.FindString(_T(";"), 0, false, rCtrl.GetCurrentPos());
-	int lcurlyPos  = rCtrl.FindString(_T("{"), 0, false, rCtrl.GetCurrentPos());
+	int semiColPos = rCtrl.FindString(wxT(";"), 0, false, rCtrl.GetCurrentPos());
+	int lcurlyPos  = rCtrl.FindString(wxT("{"), 0, false, rCtrl.GetCurrentPos());
 	int start;
 	TagEntry tag;
 	int line = 1;
@@ -149,7 +150,7 @@ void ContextCpp::CodeComplete()
 			wxString list;
 			size_t i=0;
 			for(; i<candidates.size()-1; i++)
-				list.Append(candidates[i].GetName() + _T("@"));
+				list.Append(candidates[i].GetName() + wxT("@"));
 			list.Append(candidates[i].GetName());
 			GetCtrl().AutoCompShow(0, list);
 		}
@@ -264,7 +265,7 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 	// try to guess whether we are "standing" over a function
 	int foundPos = wxNOT_FOUND;
 	wxChar nextchar = rCtrl.NextChar( end, foundPos );
-	bool isFunc = nextchar == _T('(') ? true : false;
+	bool isFunc = nextchar == wxT('(') ? true : false;
 
 	// get the expression we are standing on it
 	if( IsCommentOrString( pos ) )
@@ -276,8 +277,8 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 	// Get a full expression
 	// We define an expression, by reading from pos and up until we find
 	// the first '{' , ';' or SOT
-	int semiColPos = rCtrl.FindString(_T(";"), 0, false, end);
-	int lcurlyPos  = rCtrl.FindString(_T("{"), 0, false, end);
+	int semiColPos = rCtrl.FindString(wxT(";"), 0, false, end);
+	int lcurlyPos  = rCtrl.FindString(wxT("{"), 0, false, end);
 	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
 
 	//---------------------------------
@@ -311,7 +312,7 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 	{
 		tooltip << tips[0];
 		for( size_t i=1; i<tips.size(); i++ )
-			tooltip << _T("\n\n") << tips[i];
+			tooltip << wxT("\n\n") << tips[i];
 
 		// cancel any old calltip and display the new one
 		rCtrl.CallTipCancel();
@@ -453,8 +454,46 @@ void ContextCpp::CompleteWord()
 	if( tags.empty() == false )
 	{
 		for(; i<tags.size()-1; i++)
-			list.Append(tags[i].GetName() + _T("@"));
+			list.Append(tags[i].GetName() + wxT("@"));
 		list.Append(tags[i].GetName());
 		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
 	}
+}
+
+void ContextCpp::SwapFiles(const wxFileName &fileName)
+{
+	wxFileName otherFile(fileName);
+	wxString ext = fileName.GetExt();
+	wxArrayString exts;
+
+	//replace the file extension
+	if(IsSourceFile(ext)){
+		//try to find a header file
+		exts.Add(wxT("h"));
+		exts.Add(wxT("hpp"));
+		exts.Add(wxT("hxx"));
+	}else{
+		//try to find a implementation file
+		exts.Add(wxT("cpp"));
+		exts.Add(wxT("cxx"));
+		exts.Add(wxT("cc"));
+		exts.Add(wxT("c"));
+	}
+
+	for(size_t i=0; i<exts.GetCount(); i++){
+		otherFile.SetExt(exts.Item(i));
+		if(TryOpenFile(otherFile)){
+			return;
+		}
+	}	
+}
+
+bool ContextCpp::TryOpenFile(const wxFileName &fileName)
+{
+	if(fileName.FileExists()){
+		//we got a match
+		ManagerST::Get()->OpenFile(fileName.GetFullPath(), wxEmptyString);
+		return true;
+	}
+	return false;
 }

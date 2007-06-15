@@ -961,18 +961,11 @@ void Manager::ExecuteNoDebug(const wxString &projectName)
 	DebugMessage(wxT("Setting working directory to: ") + wd + wxT("\n"));
 	
 	//execute the command line
-//#ifdef __WXMSW__
 	//the async command is a one time executable object,
 	m_asyncExeCmd = new AsyncExeCmd(GetMainFrame());
 	m_asyncExeCmd->Execute(execLine);
 	if(m_asyncExeCmd->GetProcess())
 		m_asyncExeCmd->GetProcess()->Connect(wxEVT_END_PROCESS, wxProcessEventHandler(Manager::OnProcessEnd), NULL, this);
-//#else
-	//under GTK, spawn xterm window that will execute our program
-//	wxString gtkExecLine(wxT("xterm -T "));
-//	gtkExecLine << cmd << wxT(" -e \"") << execLine << wxT(";\"");
-//	wxExecute(gtkExecLine, wxEXEC_ASYNC, NULL);
-//#endif
 }
 
 void Manager::OnProcessEnd(wxProcessEvent &event)
