@@ -928,6 +928,11 @@ bool Manager::IsProgramRunning() const
 	return (m_asyncExeCmd && m_asyncExeCmd->IsBusy());
 }
 
+void Manager::DebugMessage(wxString msg)
+{
+	Frame::Get()->GetOutputPane()->AppendText(OutputPane::OUTPUT_DEBUG, msg);
+}
+
 void Manager::ExecuteNoDebug(const wxString &projectName)
 {
 	//an instance is already running
@@ -945,10 +950,16 @@ void Manager::ExecuteNoDebug(const wxString &projectName)
 	//change directory to the working directory
 	DirSaver ds;
 
+	ProjectPtr proj = GetProject(projectName);
+	//print the current directory
+	::wxSetWorkingDirectory(proj->GetFileName().GetPath());
+	DebugMessage(wxT("Setting working directory to: ") + proj->GetFileName().GetPath() + wxT("\n"));
+
 	//now set the working directory according to working directory field from the 
 	//project settings
 	::wxSetWorkingDirectory(wd);
-
+	DebugMessage(wxT("Setting working directory to: ") + wd + wxT("\n"));
+	
 	//execute the command line
 //#ifdef __WXMSW__
 	//the async command is a one time executable object,

@@ -439,6 +439,12 @@ public:
 	 */
 	void RetagWorkspace();
 
+	/**
+	 * Add debug message
+	 * \param msg 
+	 */
+	void DebugMessage(wxString msg);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

@@ -49,4 +49,5 @@
 	<object class="wxBitmap" name="find_and_replace">res/find.png</object>
 	<object class="wxBitmap" name="word_wrap">res/wrap_arrow.png</object>
 	<object class="wxBitmap" name="output_win">res/output_win.png</object>
+	<object class="wxBitmap" name="debug_window">res/debug_windows.png</object>
 </resource>

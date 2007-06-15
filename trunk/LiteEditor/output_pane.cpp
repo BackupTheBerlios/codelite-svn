@@ -16,6 +16,7 @@
 const wxString OutputPane::FIND_IN_FILES_WIN = wxT("Find Results");
 const wxString OutputPane::BUILD_WIN         = wxT("Build");
 const wxString OutputPane::OUTPUT_WIN        = wxT("Output");
+const wxString OutputPane::OUTPUT_DEBUG       = wxT("Debug");
 
 OutputPane::OutputPane(wxWindow *parent, const wxString &caption)
 : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 300))
@@ -69,16 +70,19 @@ void OutputPane::CreateGUIControls()
 	m_images.Add(wxXmlResource::Get()->LoadBitmap(wxT("find_results")));
 	m_images.Add(wxXmlResource::Get()->LoadBitmap(wxT("build")));
 	m_images.Add(wxXmlResource::Get()->LoadBitmap(wxT("output_win")));
+	m_images.Add(wxXmlResource::Get()->LoadBitmap(wxT("debug_window")));
 	m_book->SetImageList( &m_images );
 
 	// Create the 'Find In Files Window'
 	wxScintilla *findInFilesWin = CreateScintillaPage();
 	wxScintilla *buildWin = CreateScintillaPage();
+	wxScintilla *outputDebug = CreateScintillaPage();
 	m_outputWind = new ShellWindow(m_book);
 
 	m_book->AddPage(findInFilesWin, FIND_IN_FILES_WIN, true, 0);
 	m_book->AddPage(buildWin, BUILD_WIN, false, 1);
 	m_book->AddPage(m_outputWind, OUTPUT_WIN, false, 2);
+	m_book->AddPage(outputDebug, OUTPUT_DEBUG, false, 3);
 	
 	mainSizer->Fit(this);
 	mainSizer->Layout();

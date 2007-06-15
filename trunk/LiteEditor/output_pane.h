@@ -35,6 +35,7 @@ public:
 	static const wxString FIND_IN_FILES_WIN;
 	static const wxString BUILD_WIN;
 	static const wxString OUTPUT_WIN;
+	static const wxString OUTPUT_DEBUG;
 
 	wxFlatNotebook *m_book;
 	wxString m_caption;
