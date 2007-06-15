@@ -95,7 +95,7 @@ void LEditor::SetProperties()
 	if(m_rightClickMenu)
 		delete m_rightClickMenu;
 	m_rightClickMenu = wxXmlResource::Get()->LoadMenu(wxT("editor_right_click"));
-
+	
 	OptionsConfigPtr options = EditorConfigST::Get()->GetOptions();
 
 	SetMouseDwellTime(200);

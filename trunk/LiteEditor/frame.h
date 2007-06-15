@@ -40,8 +40,9 @@ class Frame : public wxFrame
 	wxChoice *m_workspaceConfig;
 	wxTimer *m_timer;
 	std::map<int, wxString> m_viewAsMap;
+	wxMenu *m_tabRightClickMenu;
 
-public:
+public:	
 	// the access method to the singleton frame is by using the Get method
 	static Frame* Get();
 	virtual ~Frame(void);

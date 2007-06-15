@@ -292,6 +292,10 @@ void Frame::CreateGUIControls(void)
 		m_mgr.LoadPerspective(pers);
 	} 
 
+	//load the tab right click menu
+	m_tabRightClickMenu = wxXmlResource::Get()->LoadMenu(wxT("editor_tab_right_click"));
+	m_notebook->SetRightClickMenu(m_tabRightClickMenu);
+
 	m_mgr.Update();
 	SetAutoLayout (true);
 	Layout();

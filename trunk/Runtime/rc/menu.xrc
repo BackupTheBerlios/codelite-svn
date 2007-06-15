@@ -268,6 +268,23 @@
      |
     -->
     
+    <object class="wxMenu" name="editor_tab_right_click">
+		<object class="wxMenuItem" name="wxID_CLOSE">
+            <label>Close</label>
+        </object>
+        <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+		<object class="wxMenuItem" name="wxID_REFRESH">
+            <label>Reload</label>
+        </object>
+        <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+		<object class="wxMenuItem" name="wxID_SAVE">
+            <label>Save</label>
+        </object>
+        <object class="wxMenuItem" name="wxID_SAVEAS">
+            <label>Save As</label>
+        </object>
+    </object>
+    
     <object class="wxMenu" name="editor_right_click">
 		<object class="wxMenuItem" name="swap_files">
             <label>Swap .h &lt;-&gt; .cpp</label>
