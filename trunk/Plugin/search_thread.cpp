@@ -7,6 +7,8 @@
 #include <wx/dir.h>
 #include <wx/log.h>
 #include "dirtraverser.h"
+#include "macros.h"
+#include "workspace.h"
 
 #define ADJUST_LINE_AND_CONT(modLine, pos, findString)	\
 {														\
@@ -90,6 +92,50 @@ void SearchThread::ProcessRequest(ThreadRequest *req)
 	SendEvent(wxEVT_SEARCH_THREAD_SEARCHEND);
 }
 
+void SearchThread::GetFiles(const SearchData *data, wxArrayString &files)
+{
+	if(data->GetRootDir() == SEARCH_IN_WORKSPACE)
+	{
+		wxArrayString projects;
+		std::vector<wxFileName> fileNames;
+
+		WorkspaceST::Get()->GetProjectList(projects);
+		for(size_t i=0; i<projects.GetCount(); i++)
+		{
+			wxString errMsg;
+			ProjectPtr p = WorkspaceST::Get()->FindProjectByName(projects.Item(i), errMsg);
+			p->GetFiles(fileNames);
+		}
+
+		//convert std::vector to wxArrayString
+		for(std::vector<wxFileName>::iterator it = fileNames.begin(); it != fileNames.end(); it ++)
+		{
+			files.Add((*it).GetFullPath());
+		}
+	}
+	else if(data->GetRootDir() == SEARCH_IN_PROJECT)
+	{
+		std::vector<wxFileName> fileNames;
+		wxString actPro = WorkspaceST::Get()->GetActiveProjectName();
+		wxString errMsg;
+		ProjectPtr p = WorkspaceST::Get()->FindProjectByName(actPro, errMsg);
+		p->GetFiles(fileNames);
+
+		//convert std::vector to wxArrayString
+		for(std::vector<wxFileName>::iterator it = fileNames.begin(); it != fileNames.end(); it ++)
+		{
+			files.Add((*it).GetFullPath());
+		}
+	}
+	else
+	{
+		DirTraverser traverser(data->GetExtensions());
+		wxDir dir(data->GetRootDir());
+		dir.Traverse(traverser);
+		files = traverser.GetFiles();
+	}
+}
+
 void SearchThread::DoSearchFiles(ThreadRequest *req)
 {
 	SearchData *data = static_cast<SearchData*>(req);
@@ -102,12 +148,7 @@ void SearchThread::DoSearchFiles(ThreadRequest *req)
 
 	StopSearch(false);
 	wxArrayString fileList;
-
-	DirTraverser traverser(data->GetExtensions());
-	wxDir dir(data->GetRootDir());
-	dir.Traverse(traverser);
-
-	fileList = traverser.GetFiles();
+	GetFiles(data, fileList);
 
 	// Send startup message to main thread
 	if( m_notifiedWindow ){

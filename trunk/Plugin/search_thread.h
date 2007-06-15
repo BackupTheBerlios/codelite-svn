@@ -243,6 +243,14 @@ public:
 	void SetWordChars(const wxString &chars);
 
 private:
+
+	/**
+	 * Return files to search 
+	 * \param files output
+	 * \param data search data
+	 */
+	void GetFiles(const SearchData *data, wxArrayString &files);
+
 	/**
 	 * Index the word chars from the array into a map
 	 */

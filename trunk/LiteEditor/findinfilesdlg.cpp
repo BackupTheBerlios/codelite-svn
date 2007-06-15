@@ -9,6 +9,7 @@
 #include <wx/combobox.h>
 #include "dirpicker.h"
 #include "wx/sizer.h"
+#include "macros.h"
 
 DEFINE_EVENT_TYPE(wxEVT_FIF_FIND)
 DEFINE_EVENT_TYPE(wxEVT_FIF_STOP)
@@ -79,8 +80,12 @@ void FindInFilesDialog::CreateGUIControls()
 	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Look In:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	mainSizer->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
 
-	m_dirPicker = new DirPicker(this, wxID_ANY, wxT("Browse"));
+	m_dirPicker = new DirPicker(this, wxID_ANY, wxT("Browse"), wxT("Select a folder:"), wxDefaultPosition, wxDefaultSize, wxDP_USE_COMBOBOX);
 	mainSizer->Add(m_dirPicker, 0, wxEXPAND | wxALL, 5);
+	wxArrayString choices;
+	choices.Add(SEARCH_IN_WORKSPACE);
+	choices.Add(SEARCH_IN_PROJECT);
+	m_dirPicker->SetValues(choices, 0);
 
 	// Add the options
 	wxStaticBoxSizer *sz = new wxStaticBoxSizer(wxVERTICAL, this, wxT("Options:"));
