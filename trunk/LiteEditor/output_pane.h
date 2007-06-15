@@ -7,6 +7,7 @@
 #include "wx/wxFlatNotebook/wxFlatNotebook.h"
 
 class OutputPane;
+class ShellWindow;
 
 /**
  * \ingroup LiteEditor
@@ -33,6 +34,7 @@ class OutputPane : public wxPanel
 public:
 	static const wxString FIND_IN_FILES_WIN;
 	static const wxString BUILD_WIN;
+	static const wxString OUTPUT_WIN;
 
 	wxFlatNotebook *m_book;
 	wxString m_caption;
@@ -40,6 +42,7 @@ public:
 	wxFlatNotebookImageList m_images;
 	wxArrayString m_buildLineInfo;
 	wxString m_project;
+	ShellWindow *m_outputWind;
 
 private:
 	void CreateGUIControls();

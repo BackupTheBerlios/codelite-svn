@@ -6,6 +6,7 @@
 #include "build_settings_config.h"
 #include "dirsaver.h"
 #include "macros.h"
+#include "shell_window.h"
 
 #ifndef wxScintillaEventHandler
 #define wxScintillaEventHandler(func) \
@@ -13,7 +14,8 @@
 #endif
 
 const wxString OutputPane::FIND_IN_FILES_WIN = wxT("Find Results");
-const wxString OutputPane::BUILD_WIN = wxT("Build");
+const wxString OutputPane::BUILD_WIN         = wxT("Build");
+const wxString OutputPane::OUTPUT_WIN        = wxT("Output");
 
 OutputPane::OutputPane(wxWindow *parent, const wxString &caption)
 : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 300))
@@ -66,15 +68,18 @@ void OutputPane::CreateGUIControls()
 
 	m_images.Add(wxXmlResource::Get()->LoadBitmap(wxT("find_results")));
 	m_images.Add(wxXmlResource::Get()->LoadBitmap(wxT("build")));
+	m_images.Add(wxXmlResource::Get()->LoadBitmap(wxT("output_win")));
 	m_book->SetImageList( &m_images );
 
 	// Create the 'Find In Files Window'
 	wxScintilla *findInFilesWin = CreateScintillaPage();
 	wxScintilla *buildWin = CreateScintillaPage();
+	m_outputWind = new ShellWindow(m_book);
 
 	m_book->AddPage(findInFilesWin, FIND_IN_FILES_WIN, true, 0);
 	m_book->AddPage(buildWin, BUILD_WIN, false, 1);
-
+	m_book->AddPage(m_outputWind, OUTPUT_WIN, false, 2);
+	
 	mainSizer->Fit(this);
 	mainSizer->Layout();
 }
@@ -143,6 +148,11 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 
 	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage((size_t)index));
 	if( win ){
+		if(win == m_outputWind){
+			m_outputWind->AppendLine(text);
+			return;
+		}
+
 		// enable writing
 		win->SetReadOnly(false);					
 		// add the text
@@ -153,6 +163,7 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 		win->SetSelectionStart(win->GetLength());
 		win->SetCurrentPos(win->GetLength());
 		win->EnsureCaretVisible();
+
 		// enable readonly mode 
 		win->SetReadOnly(true);	
 
@@ -182,10 +193,15 @@ void OutputPane::Clear()
 
 	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage((size_t)index));
 	if(win){
+		if(win == m_outputWind){
+			m_outputWind->Clear();
+			return;
+		}
+
 		win->SetReadOnly(false);
 		win->ClearAll();
 		win->SetReadOnly(true);
-
+		
 		//incase the clear button was pressed, clear the cached information
 		int buildIndx = CaptionToIndex(OutputPane::BUILD_WIN);
 		if(buildIndx == index){
@@ -223,10 +239,13 @@ void OutputPane::OnMouseDClick(wxScintillaEvent &event)
 	//remove selection
 	win->SetSelectionStart(pos);
 	win->SetSelectionEnd(pos);
-	if( fifWinIndex == m_book->GetSelection() ){
+	if( fifWinIndex == m_book->GetSelection() )
+	{
 		//Find in files
 		OnFindInFilesDClick(lineText);
-	} else if(buildWinIndex == m_book->GetSelection()){
+	}
+	else if(buildWinIndex == m_book->GetSelection())
+	{
 		//build window
 		lineText.Replace(wxT("\\"), wxT("/"));
 		OnBuildWindowDClick(lineText, line);
@@ -322,3 +341,4 @@ void OutputPane::OnBuildWindowDClick(const wxString &line, int lineno)
 		ManagerST::Get()->OpenFile(fn.GetFullPath(), wxEmptyString, lineNumber - 1 );
 	}
 }
+

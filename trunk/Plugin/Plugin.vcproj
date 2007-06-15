@@ -204,6 +204,12 @@
 		<Filter
 			Name="Common">
 			<File
+				RelativePath=".\async_executable_cmd.cpp">
+			</File>
+			<File
+				RelativePath=".\async_executable_cmd.h">
+			</File>
+			<File
 				RelativePath=".\macros.h">
 			</File>
 			<File

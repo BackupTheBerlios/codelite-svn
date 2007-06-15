@@ -162,7 +162,8 @@ protected:
 	void OnExecuteNoDebugUI(wxUpdateUIEvent &event);
 	void OnWorkspaceConfigChanged(wxCommandEvent &event);
 	void OnTimer(wxTimerEvent &event);
-	
+	void OnOutputWindowEvent(wxCommandEvent &event);
+
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);
 	void OnPageChanged(wxFlatNotebookEvent &event);

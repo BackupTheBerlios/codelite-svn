@@ -25,6 +25,7 @@
 #include "list"
 #include "macros.h"
 #include "editor_creator.h"
+#include "async_executable_cmd.h"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -38,6 +39,10 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_COMMAND(wxID_ANY, wxEVT_BUILD_ADDLINE, Frame::OnBuildEvent)
 	EVT_COMMAND(wxID_ANY, wxEVT_BUILD_STARTED, Frame::OnBuildEvent)
 	EVT_COMMAND(wxID_ANY, wxEVT_BUILD_ENDED, Frame::OnBuildEvent)
+	EVT_COMMAND(wxID_ANY, wxEVT_ASYNC_PROC_ADDLINE, Frame::OnOutputWindowEvent)
+	EVT_COMMAND(wxID_ANY, wxEVT_ASYNC_PROC_STARTED, Frame::OnOutputWindowEvent)
+	EVT_COMMAND(wxID_ANY, wxEVT_ASYNC_PROC_ENDED, Frame::OnOutputWindowEvent)
+
 	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE, Frame::OnNewDlgCreate)
 	EVT_MENU(wxID_EXIT, Frame::OnQuit)
 	EVT_MENU(wxID_SAVE, Frame::OnSave)
@@ -932,6 +937,22 @@ void Frame::OnBuildEvent(wxCommandEvent &event)
 	}
 }
 
+void Frame::OnOutputWindowEvent(wxCommandEvent &event)
+{
+	// make sure that the output pane is visible and selection
+	// is set to the 'Find In Files' tab
+	m_outputPane->CanFocus(true);
+	ManagerST::Get()->ShowOutputPane(OutputPane::OUTPUT_WIN);
+	if(event.GetEventType() == wxEVT_ASYNC_PROC_STARTED){
+		m_outputPane->Clear();
+		m_outputPane->AppendText(OutputPane::OUTPUT_WIN, event.GetString());
+	}else if(event.GetEventType() == wxEVT_ASYNC_PROC_ADDLINE){
+		m_outputPane->AppendText(OutputPane::OUTPUT_WIN, event.GetString());
+	}else if(event.GetEventType() == wxEVT_ASYNC_PROC_ENDED){
+		m_outputPane->AppendText(OutputPane::OUTPUT_WIN, event.GetString());
+	}
+}
+
 // Build operations
 void Frame::OnBuildProject(wxCommandEvent &event)
 {
@@ -977,7 +998,11 @@ void Frame::OnExecuteNoDebug(wxCommandEvent &event)
 
 void Frame::OnExecuteNoDebugUI(wxUpdateUIEvent &event)
 {
-	event.Enable(ManagerST::Get()->GetActiveProjectName().IsEmpty() == false);
+	event.Enable(
+				ManagerST::Get()->GetActiveProjectName().IsEmpty() == false
+				&&
+				!ManagerST::Get()->IsProgramRunning()
+				);
 }
 
 void Frame::OnWorkspaceConfigChanged(wxCommandEvent &event)

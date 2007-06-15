@@ -52,7 +52,7 @@ public:
 	 * Start the process
 	 * \return the process id
 	 */
-	long Start();
+	long Start(bool hide = true);
 
 	int GetUid() { return m_uid; }
 	void SetType(int type) { m_type = type; }

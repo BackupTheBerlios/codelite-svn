@@ -17,21 +17,24 @@
 #include "list"
 #include "compile_request.h"
 #include "clean_request.h"
+#include "wx/event.h"
 
 class wxFrame;
 class LEditor;
+class AsyncExeCmd;
 
 /*!
  * \brief
  * Manager class, a global class that provides access to many 
  * commands of CodeLite
  */
-class Manager 
+class Manager : public wxEvtHandler
 {
 	friend class Singleton<Manager>;
 	wxString  m_startupDir;
 	CleanRequest *m_cleanRequest;
 	CompileRequest *m_compileRequest;
+	AsyncExeCmd *m_asyncExeCmd;
 
 public:
 	/*!
@@ -371,6 +374,17 @@ public:
 	 * return true if a compilation is in process (either clean or build)
 	 */
 	bool IsBuildInProgress() const;
+
+	/**
+	 * return true a child program is running
+	 */
+	bool IsProgramRunning() const;
+
+	/**
+	 * Write line to child program
+	 * \param line 
+	 */
+	void WriteProgram(const wxString &line);
 
 	/** 
 	 * Execute the project with no debugger

@@ -43,10 +43,15 @@ void clProcess::Terminate()
 	wxMilliSleep( 20 );
 }
 
-long clProcess::Start()
+long clProcess::Start(bool hide)
 {
 	Redirect();
-	m_pid = wxExecute(m_cmd, wxEXEC_ASYNC, this);
+	long flags = wxEXEC_ASYNC;
+	if( !hide ){
+		flags |= wxEXEC_NOHIDE;
+	}
+
+	m_pid = wxExecute(m_cmd, flags, this);
 	return m_pid;
 }
 

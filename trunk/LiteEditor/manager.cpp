@@ -3,6 +3,7 @@
  * 
  * Copyright (c) 2007 by Eran Ifrah <eran.ifrah@gmail.com>
  */
+#include "precompiled_header.h"
 #include "manager.h"
 #include "ctags_manager.h"
 #include "frame.h"
@@ -27,6 +28,7 @@
 #include "dirsaver.h"
 #include "editor_creator.h"
 #include "algorithm"
+#include "async_executable_cmd.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -45,6 +47,7 @@ if( !res )													\
 Manager::Manager(void)
 : m_cleanRequest(NULL)
 , m_compileRequest(NULL)
+, m_asyncExeCmd(NULL)
 {
 }
 
@@ -59,7 +62,10 @@ Manager::~Manager(void)
 		delete m_compileRequest;
 		m_compileRequest = NULL;
 	}
-	
+	if(m_asyncExeCmd){
+		delete m_asyncExeCmd;
+		m_asyncExeCmd = NULL;
+	}
 }
 
 wxFrame *Manager::GetMainFrame()
@@ -918,8 +924,21 @@ bool Manager::IsBuildInProgress() const
 	return (m_cleanRequest && m_cleanRequest->IsBusy()) || (m_compileRequest && m_compileRequest->IsBusy());
 }
 
+bool Manager::IsProgramRunning() const
+{
+	return (m_asyncExeCmd && m_asyncExeCmd->IsBusy());
+}
+
 void Manager::ExecuteNoDebug(const wxString &projectName)
 {
+	if(m_asyncExeCmd && m_asyncExeCmd->IsBusy()){
+		return;
+	}
+
+	if( m_asyncExeCmd ){
+		delete m_asyncExeCmd;
+	}
+
 	BuildConfigPtr bldConf = WorkspaceST::Get()->GetProjSelBuildConf(projectName);
 	wxString cmd = bldConf->GetCommand();
 	wxString cmdArgs = bldConf->GetCommandArguments();
@@ -940,14 +959,16 @@ void Manager::ExecuteNoDebug(const wxString &projectName)
 	::wxSetWorkingDirectory(wd);
 
 	//execute the command line
-#ifdef __WXMSW__
-	wxExecute(execLine, wxEXEC_ASYNC, NULL);
-#else
+//#ifdef __WXMSW__
+	m_asyncExeCmd = new AsyncExeCmd(GetMainFrame());
+	m_asyncExeCmd->Execute(execLine);
+
+//#else
 	//under GTK, spawn xterm window that will execute our program
-	wxString gtkExecLine(wxT("xterm -T "));
-	gtkExecLine << cmd << wxT(" -e \"") << execLine << wxT(";\"");
-	wxExecute(gtkExecLine, wxEXEC_ASYNC, NULL);
-#endif
+//	wxString gtkExecLine(wxT("xterm -T "));
+//	gtkExecLine << cmd << wxT(" -e \"") << execLine << wxT(";\"");
+//	wxExecute(gtkExecLine, wxEXEC_ASYNC, NULL);
+//#endif
 }
 
 void Manager::SetWorkspaceConfigurationName(const wxString &name)
@@ -1061,3 +1082,18 @@ void Manager::RetagWorkspace()
 	Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(tree);
 }
 
+void Manager::WriteProgram(const wxString &line)
+{
+	if(!IsProgramRunning())
+		return;
+
+	wxOutputStream *out = m_asyncExeCmd->GetOutputStream();
+	if( out ) 
+	{
+		wxString cmd(line);
+		cmd += wxT("\n");
+
+		const wxCharBuffer pWriteData = _C(cmd);
+		out->Write(pWriteData.data(), cmd.Length());
+	}
+}

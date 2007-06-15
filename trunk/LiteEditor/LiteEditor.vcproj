@@ -515,6 +515,12 @@
 				RelativePath=".\output_pane.h">
 			</File>
 			<File
+				RelativePath=".\shell_window.cpp">
+			</File>
+			<File
+				RelativePath=".\shell_window.h">
+			</File>
+			<File
 				RelativePath=".\workspace_pane.cpp">
 			</File>
 			<File
