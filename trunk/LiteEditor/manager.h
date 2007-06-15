@@ -381,6 +381,11 @@ public:
 	bool IsProgramRunning() const;
 
 	/**
+	 * Kill child program which is running
+	 */
+	void KillProgram();
+
+	/**
 	 * Write line to child program
 	 * \param line 
 	 */
@@ -437,6 +442,7 @@ public:
 protected:
 	Manager(void);
 	virtual ~Manager(void);
+	void OnProcessEnd(wxProcessEvent &event);
 
 private:
 	void DoRetagProject(const wxString &projectName, bool updateUItree);

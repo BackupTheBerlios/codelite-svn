@@ -5,6 +5,16 @@ DEFINE_EVENT_TYPE(wxEVT_ASYNC_PROC_ADDLINE)
 DEFINE_EVENT_TYPE(wxEVT_ASYNC_PROC_STARTED)
 DEFINE_EVENT_TYPE(wxEVT_ASYNC_PROC_ENDED)
 
+AsyncExeCmd::~AsyncExeCmd()
+{
+	delete m_timer;
+	m_timer = NULL;
+	if(m_proc) {
+		delete m_proc;
+		m_proc = NULL;
+	}
+};
+
 void AsyncExeCmd::AppendLine(const wxString &line)
 {
 	if( !m_owner)
@@ -80,10 +90,8 @@ void AsyncExeCmd::PrintOutput()
 	errors.Clear();
 }
 
-void AsyncExeCmd::OnProcessEnd(wxProcessEvent& event)
+void AsyncExeCmd::ProcessEnd(wxProcessEvent& event)
 {
-	wxUnusedVar(event);
-	
 	//read all input before stopping the timer
 	if( !m_stop ){
 		PrintOutput();
@@ -105,12 +113,18 @@ void AsyncExeCmd::Execute(const wxString &cmdLine)
 	m_proc = new clProcess(wxNewId(), m_cmdLine);
 	if(m_proc){
 		if(m_proc->Start(false) == 0){
+			delete m_proc;
+			m_proc = NULL;
 			SetBusy(false);
-			return;
+		}else{
+			Connect(wxEVT_TIMER, wxTimerEventHandler(AsyncExeCmd::OnTimer), NULL, this);
+			m_timer->Start(10);
 		}
-		Connect(wxEVT_TIMER, wxTimerEventHandler(AsyncExeCmd::OnTimer), NULL, this);
-		m_proc->Connect(wxEVT_END_PROCESS, wxProcessEventHandler(AsyncExeCmd::OnProcessEnd), NULL, this);
-		m_timer->Start(10);
 	}
+}
+
+void AsyncExeCmd::Terminate()
+{
+	m_proc->Terminate();
 }
 

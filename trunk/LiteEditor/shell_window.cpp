@@ -65,5 +65,7 @@ void ShellWindow::OnCharAdded(wxScintillaEvent &event)
 	default:
 		break;
 	}
+
+
 	event.Skip();
 }

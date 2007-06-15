@@ -17,16 +17,17 @@ protected:
 	bool m_busy;
 	bool m_stop;
 	wxString m_cmdLine;
-	
+
 protected:
 	virtual void OnTimer(wxTimerEvent &event);
-	virtual void OnProcessEnd(wxProcessEvent& event);
 	virtual void PrintOutput();
 
 public:
 	bool IsBusy() const { return m_busy; }
 	void SetBusy(bool busy) { m_busy = busy; }
 	void Stop();
+	void ProcessEnd(wxProcessEvent& event);
+	clProcess *GetProcess() { return m_proc; }
 
 public:
 	//construct a compiler action 
@@ -40,12 +41,7 @@ public:
 		m_timer = new wxTimer(this);
 	};
 	
-	virtual ~AsyncExeCmd()
-	{
-		delete m_timer;
-		if(m_proc) delete m_proc;
-	};
-	
+	virtual ~AsyncExeCmd();
 	virtual void Execute(const wxString &cmdLine);
 
 	wxOutputStream *GetOutputStream() { 
@@ -58,6 +54,7 @@ public:
 	void AppendLine(const wxString &line);
 	void SendStartMsg();
 	void SendEndMsg(int exitCode);
+	void Terminate();
 };
 
 #endif // ASYNC_EXECUTABLE_CMD_H
