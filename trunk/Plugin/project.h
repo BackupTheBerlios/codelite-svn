@@ -200,7 +200,7 @@ public:
 	 * Return list of files in this project
 	 * \param files 
 	 */
-	void GetFiles(std::vector<wxFileName> &files);
+	void GetFiles(std::vector<wxFileName> &files, bool absPath = false);
 
 	/**
 	 * Return the project build settings object by name
@@ -244,7 +244,7 @@ private:
 	// Create virtual dir and return its xml node
 	wxXmlNode *CreateVD(const wxString &vdFullPath);
 
-	void GetFiles(wxXmlNode *parent, std::vector<wxFileName> &files);
+	void GetFiles(wxXmlNode *parent, std::vector<wxFileName> &files, bool absPath = false);
 };
 
 typedef SmartPtr<Project> ProjectPtr;

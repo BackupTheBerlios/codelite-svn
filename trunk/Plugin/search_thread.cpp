@@ -104,7 +104,7 @@ void SearchThread::GetFiles(const SearchData *data, wxArrayString &files)
 		{
 			wxString errMsg;
 			ProjectPtr p = WorkspaceST::Get()->FindProjectByName(projects.Item(i), errMsg);
-			p->GetFiles(fileNames);
+			p->GetFiles(fileNames, true);
 		}
 
 		//convert std::vector to wxArrayString
@@ -119,7 +119,7 @@ void SearchThread::GetFiles(const SearchData *data, wxArrayString &files)
 		wxString actPro = WorkspaceST::Get()->GetActiveProjectName();
 		wxString errMsg;
 		ProjectPtr p = WorkspaceST::Get()->FindProjectByName(actPro, errMsg);
-		p->GetFiles(fileNames);
+		p->GetFiles(fileNames, true);
 
 		//convert std::vector to wxArrayString
 		for(std::vector<wxFileName>::iterator it = fileNames.begin(); it != fileNames.end(); it ++)
