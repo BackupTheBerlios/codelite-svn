@@ -63,8 +63,9 @@ wxString DirPicker::GetPath() const
 {
 	if(m_style & wxDP_USE_TEXTCTRL)
 		return m_path->GetValue();
-	else
-		return m_combo->GetValue();
+	else{
+		return m_combo->GetStringSelection();
+	}
 }
 
 void DirPicker::SetPath(const wxString &path)
