@@ -51,10 +51,7 @@ void DirPicker::OnButtonClicked(wxCommandEvent &event)
 	{
 		// Get the dirname
 		wxString path = dlg->GetPath();
-		if(m_style & wxDP_USE_TEXTCTRL)
-			m_path->SetValue(path);
-		else
-			m_combo->SetValue(path);
+		SetPath(path);
 	}
 	dlg->Destroy();
 }
@@ -71,9 +68,20 @@ wxString DirPicker::GetPath() const
 void DirPicker::SetPath(const wxString &path)
 {
 	if(m_style & wxDP_USE_TEXTCTRL)
-		return m_path->SetValue(path);
+		m_path->SetValue(path);
 	else
-		return m_combo->SetValue(path);
+	{
+		int where = m_combo->FindString(path);
+		if(where != wxNOT_FOUND)
+		{
+			m_combo->SetSelection(where);
+		}
+		else
+		{
+			where = m_combo->Append(path);
+			m_combo->SetSelection(where);
+		}
+	}
 }
 
 void DirPicker::SetValues(const wxArrayString &values, int sel)
