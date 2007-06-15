@@ -447,6 +447,7 @@ void Frame::OnAbout(wxCommandEvent& WXUNUSED(event))
 void Frame::OnClose(wxCloseEvent& event)
 {
 	// Stop the search thread
+	ManagerST::Get()->KillProgram();
 	SearchThreadST::Get()->StopSearch();
 	EditorConfigST::Get()->SavePerspective(wxT("Default"), m_mgr.SavePerspective());
 	EditorConfigST::Get()->SaveNotebookStyle(wxT("Editor"), m_notebook->GetWindowStyleFlag());

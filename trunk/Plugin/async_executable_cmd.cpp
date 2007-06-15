@@ -9,6 +9,7 @@ AsyncExeCmd::~AsyncExeCmd()
 {
 	delete m_timer;
 	m_timer = NULL;
+
 	if(m_proc) {
 		delete m_proc;
 		m_proc = NULL;
@@ -40,7 +41,7 @@ void AsyncExeCmd::SendStartMsg()
 		return;
 
 	wxCommandEvent event(wxEVT_ASYNC_PROC_STARTED);
-	event.SetString(m_cmdLine + wxT("\n"));
+	event.SetString(wxT("Running program: ") + m_cmdLine + wxT("\n"));
 	m_owner->ProcessEvent(event);
 }
 

@@ -2,9 +2,10 @@
 #include "manager.h"
 #include "macros.h"
 
-BEGIN_EVENT_TABLE(ShellWindow, wxScintilla)
-EVT_SCI_CHARADDED(wxID_ANY, ShellWindow::OnCharAdded)
-END_EVENT_TABLE()
+#ifndef wxScintillaEventHandler
+#define wxScintillaEventHandler(func) \
+	(wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxScintillaEventFunction, &func)
+#endif
 
 ShellWindow::ShellWindow(wxWindow *parent)
 : wxScintilla(parent)
@@ -29,11 +30,19 @@ ShellWindow::ShellWindow(wxWindow *parent)
 
 	wxFont font(8, wxFONTFAMILY_TELETYPE, wxNORMAL, wxNORMAL);
 	StyleSetFont(wxSCI_STYLE_DEFAULT, font);
+
+	ConnectEvents();
 }
 
 ShellWindow::~ShellWindow()
 {
 
+}
+
+void ShellWindow::ConnectEvents()
+{
+	// Connect events
+	ConnectKeyDown(this, ShellWindow::OnKeyDown);
 }
 
 void ShellWindow::AppendLine(const wxString &text)
@@ -52,11 +61,12 @@ void ShellWindow::Clear()
 	ClearAll();
 }
 
-void ShellWindow::OnCharAdded(wxScintillaEvent &event)
+void ShellWindow::OnKeyDown(wxKeyEvent &event)
 {
-	switch(event.GetKey())
+	switch(event.GetKeyCode())
 	{
-	case wxT('\n'):
+	case WXK_RETURN:
+	case WXK_NUMPAD_ENTER:
 		{
 			wxString line = GetCurLine();
 			ManagerST::Get()->WriteProgram(line);
@@ -65,7 +75,5 @@ void ShellWindow::OnCharAdded(wxScintillaEvent &event)
 	default:
 		break;
 	}
-
-
 	event.Skip();
 }

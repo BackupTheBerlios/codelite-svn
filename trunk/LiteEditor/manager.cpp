@@ -945,11 +945,6 @@ void Manager::ExecuteNoDebug(const wxString &projectName)
 	//change directory to the working directory
 	DirSaver ds;
 
-	//when executing a project, the we first set the working directory to the 
-	//project directory
-	ProjectPtr proj = GetProject(projectName);
-	::wxSetWorkingDirectory(proj->GetFileName().GetPath());
-	
 	//now set the working directory according to working directory field from the 
 	//project settings
 	::wxSetWorkingDirectory(wd);
@@ -961,7 +956,6 @@ void Manager::ExecuteNoDebug(const wxString &projectName)
 	m_asyncExeCmd->Execute(execLine);
 	if(m_asyncExeCmd->GetProcess())
 		m_asyncExeCmd->GetProcess()->Connect(wxEVT_END_PROCESS, wxProcessEventHandler(Manager::OnProcessEnd), NULL, this);
-
 #else
 	//under GTK, spawn xterm window that will execute our program
 	wxString gtkExecLine(wxT("xterm -T "));
@@ -973,7 +967,7 @@ void Manager::ExecuteNoDebug(const wxString &projectName)
 void Manager::OnProcessEnd(wxProcessEvent &event)
 {
 	m_asyncExeCmd->ProcessEnd(event);
-	m_asyncExeCmd->Disconnect(wxEVT_END_PROCESS, wxProcessEventHandler(Manager::OnProcessEnd), NULL, this);
+	m_asyncExeCmd->GetProcess()->Disconnect(wxEVT_END_PROCESS, wxProcessEventHandler(Manager::OnProcessEnd), NULL, this);
 	delete m_asyncExeCmd;
 	m_asyncExeCmd = NULL;
 }

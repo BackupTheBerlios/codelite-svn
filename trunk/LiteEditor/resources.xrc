@@ -20,7 +20,7 @@
 	<object class="wxBitmap" name="page_white_h">res/page_white_h.png</object>
 	<object class="wxBitmap" name="page_white_text">res/page_white_text.png</object>
     <object class="wxBitmap" name="cross">res/cross.png</object>
-    <object class="wxBitmap" name="document_delete">res/document_delete.png</object>
+    <object class="wxBitmap" name="document_delete">res/clean.png</object>
     <object class="wxBitmap" name="build">res/cog.png</object>
     <object class="wxBitmap" name="find_results">res/page_find.png</object>
     <object class="wxBitmap" name="file_view">res/folder_table.png</object>
@@ -44,7 +44,7 @@
 	<object class="wxBitmap" name="build_active_project">res/hammer.png</object>
 	<object class="wxBitmap" name="stop_build">res/stop.png</object>
 	<object class="wxBitmap" name="execute">res/execute.png</object>
-	<object class="wxBitmap" name="clean">res/clean.png</object>
+	<object class="wxBitmap" name="clean">res/garbage.png</object>
 	<object class="wxBitmap" name="find_in_files">res/folder_find.png</object>
 	<object class="wxBitmap" name="find_and_replace">res/find.png</object>
 	<object class="wxBitmap" name="word_wrap">res/wrap_arrow.png</object>

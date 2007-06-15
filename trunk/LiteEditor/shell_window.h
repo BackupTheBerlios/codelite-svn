@@ -5,13 +5,15 @@
 
 class ShellWindow : public wxScintilla 
 {
-	DECLARE_EVENT_TABLE()
+protected:
+	void ConnectEvents();
+
 public:
 	ShellWindow(wxWindow *parent);
 	virtual ~ShellWindow();
 
 	void AppendLine(const wxString &text);
 	void Clear();
-	void OnCharAdded(wxScintillaEvent& event);
+	void OnKeyDown(wxKeyEvent &event);
 };
 #endif // SHELL_WINDOW_H
