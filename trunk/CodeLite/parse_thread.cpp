@@ -2,7 +2,7 @@
 
 #include "parse_thread.h"
 #include "ctags_manager.h"
-#include "tags_database.h"
+#include "tags_database.h" 
 #include <wx/stopwatch.h>
 
 #ifdef __VISUALC__

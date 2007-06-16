@@ -4,7 +4,15 @@
 #include "FlexLexer.h"
 #include "smart_ptr.h"
 
-class CppScanner : public flex::yyFlexLexer
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // WXMAKINGDLL_CODELITE
+
+class WXDLLIMPEXP_CL CppScanner : public flex::yyFlexLexer
 {
 public:
 	CppScanner();

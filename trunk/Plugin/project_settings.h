@@ -5,6 +5,14 @@
 #include "wx/string.h"
 #include <map>
 
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
+
 /**
  * \ingroup SDK
  * A cookie class to allow the enumration operation to be reentrants by multiple threads
@@ -17,7 +25,7 @@
  * \author Eran
  *
  */
-class ProjectSettingsCookie {
+class WXDLLIMPEXP_LE_SDK ProjectSettingsCookie {
 public:
 	std::map<wxString, BuildConfigPtr>::const_iterator iter;
 };
@@ -34,7 +42,7 @@ public:
  * \author Eran
  *
  */
-class ProjectSettings : public ConfObject {
+class WXDLLIMPEXP_LE_SDK ProjectSettings : public ConfObject {
 	std::map<wxString, BuildConfigPtr> m_configs;
 	wxString m_projectType;
 

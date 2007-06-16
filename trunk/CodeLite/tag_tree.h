@@ -7,6 +7,14 @@
 
 typedef TreeNode<wxString, TagEntry> TagNode;
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif
+
 /**
  * Tree representation of tags. 
  * This is basically a data structure representing the GUI symbol tree.
@@ -15,7 +23,7 @@ typedef TreeNode<wxString, TagEntry> TagNode;
  * \author eran
  *
  */
-class TagTree : public Tree<wxString, TagEntry>
+class WXDLLIMPEXP_CL TagTree : public Tree<wxString, TagEntry>
 {
 public:
 	/**

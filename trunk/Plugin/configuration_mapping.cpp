@@ -9,7 +9,7 @@ BuildMatrix::BuildMatrix(wxXmlNode *node){
 			if(config->GetName() == wxT("WorkspaceConfiguration")){
 				m_configurationList.push_back(new WorkspaceConfiguration(config));
 			}
-			config = config->GetNext();
+			config = config->GetNext(); 
 		}
 	}else{
 		//construct default empty mapping with a default build configuration

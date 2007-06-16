@@ -6,11 +6,19 @@
 #include "cl_process.h"
 #include "wx/timer.h"
 
-DECLARE_EVENT_TYPE(wxEVT_BUILD_ADDLINE, wxID_ANY)
-DECLARE_EVENT_TYPE(wxEVT_BUILD_STARTED, wxID_ANY)
-DECLARE_EVENT_TYPE(wxEVT_BUILD_ENDED, wxID_ANY)
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
 
-class CompilerAction : public wxEvtHandler, public ThreadRequest {
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE_SDK, wxEVT_BUILD_ADDLINE, wxID_ANY)
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE_SDK, wxEVT_BUILD_STARTED, wxID_ANY)
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE_SDK, wxEVT_BUILD_ENDED, wxID_ANY)
+
+class WXDLLIMPEXP_LE_SDK CompilerAction : public wxEvtHandler, public ThreadRequest {
 protected:
 	clProcess *m_proc;
 	wxEvtHandler *m_owner;

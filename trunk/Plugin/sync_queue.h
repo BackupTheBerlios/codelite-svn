@@ -4,10 +4,19 @@
 #include "wx/thread.h"
 #include <deque>
 
+
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
+
 /**
  * A thread safe queue implementation
  */
-template <class T> class SyncQueue {
+template <class T> class WXDLLIMPEXP_LE_SDK SyncQueue {
 	std::deque<T> m_queue;
 	wxCriticalSection m_cs;
 public:

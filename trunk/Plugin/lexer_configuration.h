@@ -7,7 +7,16 @@
 #include "wx/xml/xml.h"
 #include "smart_ptr.h"
 
-class LexerConf {
+
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
+
+class WXDLLIMPEXP_LE_SDK LexerConf {
 	StylePropertyList m_properties;
 	int m_lexerId;
 	wxString m_name;

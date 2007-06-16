@@ -1,9 +1,17 @@
 #ifndef CODELITE_TREE_H
 #define CODELITE_TREE_H
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif
+
 #include "tree_node.h"
 template <typename TKey, typename TData>
-class Tree
+class WXDLLIMPEXP_CL Tree
 {
 	std::map<TKey, TreeNode<TKey, TData>*> m_nodes;
 	TreeNode<TKey, TData>* m_root;

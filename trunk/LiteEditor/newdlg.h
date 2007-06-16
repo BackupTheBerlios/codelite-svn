@@ -6,8 +6,6 @@
 #include "ctags_manager.h"
 #include "project.h"
 
-DECLARE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE, -1)
-
 #define NEW_DLG_PROJECT   0
 #define NEW_DLG_WORKSPACE 1
 
@@ -91,6 +89,10 @@ protected:
 
 	wxWindow *CreateProjectPage();
 	wxWindow *CreateWorkspacePage();
+	DECLARE_EVENT_TABLE()
 };
+
+DECLARE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE, -1)
+
 #endif // NEW_DLG_H
 

@@ -2,8 +2,15 @@
 #define CLEAN_REQUEST_H
 #include "compiler_action.h"
 
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
 
-class CleanRequest : public CompilerAction {
+class WXDLLIMPEXP_LE_SDK CleanRequest : public CompilerAction {
 	wxString m_project;
 
 public:

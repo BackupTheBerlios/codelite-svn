@@ -10,6 +10,14 @@
 #include <wx/filename.h>
 #include "db_record.h"
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif
+
 /**
  * Language, a helper class that parses (currently) C/C++ code. 
  * It conatains all the parsing of small fragments of code, in places where 
@@ -22,7 +30,7 @@
  * \date 09-02-2006
  * \author Eran
  */
-class Language  
+class WXDLLIMPEXP_CL Language  
 {
 	friend class Singleton<Language>;
 

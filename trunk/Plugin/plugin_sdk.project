@@ -64,7 +64,6 @@
     <File Name="workspace.h"/>
     <File Name="xmlutils.h"/>
   </VirtualDirectory>
-  <Dependencies/>
   <Settings Type="Dynamic Library">
     <Configuration Name="DebugUnicode" CompilerType="gnu g++">
       <General OutputFile="..\lib\gcc\libplugin_sdkud.dll" IntermediateDirectory=".\Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
@@ -74,7 +73,7 @@
         <IncludePath Value="..\CodeLite"/>
         <IncludePath Value="..\sdk\wxsqlite3\include"/>
         <Preprocessor Value="__WX__"/>
-        <Preprocessor Value="WXMAKINGDLL_LESDK"/>
+        <Preprocessor Value="WXMAKINGDLL_LE_SDK"/>
         <Preprocessor Value="WXUSINGDLL_CODELITE"/>
       </Compiler>
       <Linker Required="yes" Options="-O0 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --enable-debug --wxcfg=gcc_dll\mswud)">
@@ -102,4 +101,7 @@
       <PostBuild/>
     </Configuration>
   </Settings>
+  <Dependencies>
+    <Project Name="CodeLite"/>
+  </Dependencies>
 </CodeLite_Project>

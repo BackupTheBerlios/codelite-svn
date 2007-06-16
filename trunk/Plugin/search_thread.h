@@ -20,11 +20,18 @@ enum {
 
 class wxEvtHandler;
 
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
 //----------------------------------------------------------
 // The searched data class to be passed to the search thread
 //----------------------------------------------------------
 
-class SearchData : public ThreadRequest
+class WXDLLIMPEXP_LE_SDK SearchData : public ThreadRequest
 {
 	wxString m_rootDir;
 	wxString m_findString;
@@ -97,7 +104,7 @@ public:
 //------------------------------------------
 // class containing the search result
 //------------------------------------------
-class SearchResult : public wxObject {
+class WXDLLIMPEXP_LE_SDK SearchResult : public wxObject {
 	wxString m_pattern;
 	int m_lineNumber;
 	int m_column;
@@ -151,7 +158,7 @@ public:
 typedef std::list<SearchResult> SearchResultList;
 
 
-class SearchSummary : public wxObject {
+class WXDLLIMPEXP_LE_SDK SearchSummary : public wxObject {
 	int m_fileScanned;
 	int m_matchesFound;
 
@@ -192,7 +199,7 @@ public:
 // The search thread 
 //----------------------------------------------------------
 
-class SearchThread : public WorkerThread
+class WXDLLIMPEXP_LE_SDK SearchThread : public WorkerThread
 {
 	friend class Singleton<SearchThread>;
 	wxString m_wordChars;
@@ -287,10 +294,12 @@ private:
 
 typedef Singleton<SearchThread> SearchThreadST;
 
-DECLARE_EVENT_TYPE(wxEVT_SEARCH_THREAD_MATCHFOUND, wxID_ANY)
-DECLARE_EVENT_TYPE(wxEVT_SEARCH_THREAD_SEARCHEND, wxID_ANY)
-DECLARE_EVENT_TYPE(wxEVT_SEARCH_THREAD_SEARCHCANCELED, wxID_ANY)
-DECLARE_EVENT_TYPE(wxEVT_SEARCH_THREAD_SEARCHSTARTED, wxID_ANY)
+BEGIN_DECLARE_EVENT_TYPES()
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE_SDK, wxEVT_SEARCH_THREAD_MATCHFOUND, wxID_ANY)
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE_SDK, wxEVT_SEARCH_THREAD_SEARCHEND, wxID_ANY)
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE_SDK, wxEVT_SEARCH_THREAD_SEARCHCANCELED, wxID_ANY)
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE_SDK, wxEVT_SEARCH_THREAD_SEARCHSTARTED, wxID_ANY)
+END_DECLARE_EVENT_TYPES()
 
 #endif // SEARCH_THREAD_H
 

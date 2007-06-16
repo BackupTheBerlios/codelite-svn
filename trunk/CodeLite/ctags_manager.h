@@ -53,7 +53,7 @@ enum SearchFlags
  * \author Eran
  *
  */
-class CtagsOptions{
+class WXDLLIMPEXP_CL CtagsOptions{
 	wxString forceLanguage;
 	wxString fileSpec;
 	wxString ignoreMacros;

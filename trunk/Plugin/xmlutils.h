@@ -3,8 +3,16 @@
 
 #include "wx/xml/xml.h"
 
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
+
 /// A collection of XML utils
-class XmlUtils {
+class WXDLLIMPEXP_LE_SDK XmlUtils {
 public:
 	/// Find a child node by name by iterating the parent children. NULL if no childs exist
 	/// \param parent  the parent node whom to be searched

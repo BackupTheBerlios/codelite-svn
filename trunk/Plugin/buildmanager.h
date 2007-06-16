@@ -7,6 +7,14 @@
 #include "singleton.h"
 #include "builder.h"
 
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
+
 //class BuildManager;
 
 /**
@@ -25,7 +33,7 @@
  * \author Eran
  *
  */
-class BuildManager {
+class WXDLLIMPEXP_LE_SDK BuildManager {
 
 	friend class Singleton<BuildManager>;
 	std::map<wxString, BuilderPtr> m_builders;

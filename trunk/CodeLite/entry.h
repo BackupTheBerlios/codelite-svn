@@ -7,6 +7,14 @@
 #include <wx/string.h>
 #include <map>
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // 
+
 /**
  * TagEntry is a persistent object which is capable of storing and loading itself from 
  * various inputs:
@@ -22,7 +30,7 @@
  * \date 11-11-2006
  * \author Eran
  */
-class TagEntry : public DbRecord
+class WXDLLIMPEXP_CL TagEntry : public DbRecord
 {
 	wxString m_project;		///< Project this tag is belong to
 	wxString m_path;		///< Tag full path

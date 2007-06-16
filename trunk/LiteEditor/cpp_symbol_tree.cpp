@@ -5,6 +5,8 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/imaglist.h>
 
+IMPLEMENT_DYNAMIC_CLASS(CppSymbolTree, SymbolTree)
+
 //----------------------------------------------------------------
 // accessory function
 //----------------------------------------------------------------
@@ -41,6 +43,10 @@ wxImageList* CreateSymbolTreeImages()
 	images->Add(bmp);
 
 	return images;
+}
+
+CppSymbolTree::CppSymbolTree()
+{
 }
 
 CppSymbolTree::CppSymbolTree(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size, long style)

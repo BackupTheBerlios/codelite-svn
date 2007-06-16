@@ -51,7 +51,6 @@
     <File Name="unistd.h"/>
     <File Name="worker_thread.h"/>
   </VirtualDirectory>
-  <Dependencies/>
   <Settings Type="Dynamic Library">
     <Configuration Name="DebugUnicode" CompilerType="gnu g++">
       <General OutputFile="..\lib\gcc\libCodeLiteud.dll" IntermediateDirectory=".\Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
@@ -87,4 +86,5 @@
       <PostBuild/>
     </Configuration>
   </Settings>
+  <Dependencies/>
 </CodeLite_Project>

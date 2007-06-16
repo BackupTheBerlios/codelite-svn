@@ -3,12 +3,12 @@
 #include <wx/checkbox.h>
 #include <wx/button.h>
 #include <wx/stattext.h>
-#include "filepicker.h"
-#include "dirpicker.h"
-#include <wx/statline.h>
+#include "filepicker.h" 
+#include "dirpicker.h" 
+#include <wx/statline.h> 
 #include <wx/msgdlg.h>
-#include <wx/wxFlatNotebook/wxFlatNotebook.h>
-#include <wx/listbox.h>
+#include <wx/wxFlatNotebook/wxFlatNotebook.h> 
+#include <wx/listbox.h>  
 #include "project.h"
 #include <map>
 #include "manager.h"
@@ -17,6 +17,9 @@
 #include "build_settings_config.h"
 
 DEFINE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE)
+
+BEGIN_EVENT_TABLE(NewDlg, wxDialog)
+END_EVENT_TABLE()
 
 NewDlg::NewDlg() 
 : wxDialog()

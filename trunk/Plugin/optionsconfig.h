@@ -5,8 +5,15 @@
 #include "wx/xml/xml.h"
 #include "wx/colour.h"
 #include "configuration_object.h"
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
 
-class OptionsConfig : public ConfObject
+class WXDLLIMPEXP_LE_SDK OptionsConfig : public ConfObject
 {
 	bool m_displayFoldMargin;
 	bool m_underlineFoldLine;

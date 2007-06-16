@@ -11,7 +11,7 @@
 #    define WXDLLIMPEXP_CL WXIMPORT
 #else /* not making nor using FNB as DLL */
 #    define WXDLLIMPEXP_CL
-#endif // WXMAKINGDLL_FNB
+#endif // 
 
 /**
  * A helper class that help us recurse into sub-directories.

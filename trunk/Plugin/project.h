@@ -12,12 +12,12 @@
 
 //incase we are using DLL build of wxWdigets, we need to make this class to export its 
 //classes 
-#ifdef WXMAKINGDLL_LESDK
-#    define WXDLLIMPEXP_LESDK WXEXPORT
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
 #elif defined(WXUSINGGDLL_LESDK)
-#    define WXDLLIMPEXP_LESDK WXIMPORT
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
 #else /* not making nor using FNB as DLL */
-#    define WXDLLIMPEXP_LESDK
+#    define WXDLLIMPEXP_LE_SDK
 #endif // WXMAKINGDLL_FNB
 
 
@@ -29,7 +29,7 @@
  *
  * \author Eran
  */
-class WXDLLIMPEXP_LESDK ProjectItem
+class WXDLLIMPEXP_LE_SDK ProjectItem
 {
 public:
 	// The visible items
@@ -121,7 +121,7 @@ typedef TreeNode<wxString, ProjectItem> ProjectTreeNode;
  * \bug 
  *
  */
-class WXDLLIMPEXP_LESDK Project 
+class WXDLLIMPEXP_LE_SDK Project 
 {
 public:
 	static const wxString STATIC_LIBRARY;

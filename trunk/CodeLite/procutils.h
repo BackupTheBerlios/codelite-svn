@@ -1,6 +1,14 @@
 #ifndef PROCUTILS_H
 #define PROCUTILS_H
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else
+#    define WXDLLIMPEXP_CL
+#endif
+
 #include "map"
 
 #ifdef __WXMSW__
@@ -8,7 +16,6 @@
 #include <SetupAPI.h>
 #include <Psapi.h>
 #include <tlhelp32.h>
-//#include <vdmdbg.h>
 
 // ToolHelp Function Pointers.
 typedef HANDLE (WINAPI *CreateToolhelp32Snapshot_t)(DWORD,DWORD);

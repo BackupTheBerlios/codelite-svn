@@ -17,7 +17,7 @@ Workspace::~Workspace()
 }
 
 wxString Workspace::GetName() const
-{
+{ 
 	if(m_doc.IsOk()){
 		return XmlUtils::ReadString(m_doc.GetRoot(), wxT("Name"));
 	}

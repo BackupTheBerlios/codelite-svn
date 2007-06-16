@@ -8,9 +8,17 @@
 #include "wx/filename.h"
 #include "build_system.h"
 
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
+
 // Cookie class for the editor to provide reentrance operations
 // on various methods (such as iteration)
-class BuildSettingsConfigCookie {
+class WXDLLIMPEXP_LE_SDK BuildSettingsConfigCookie {
 public:
 	wxXmlNode *child;	
 	wxXmlNode *parent;
@@ -23,7 +31,7 @@ public:
 /**
  * \class BuildSettingsConfig the build system configuration
  */
-class BuildSettingsConfig 
+class WXDLLIMPEXP_LE_SDK BuildSettingsConfig 
 {
 	wxXmlDocument *m_doc;
 	wxFileName m_fileName;

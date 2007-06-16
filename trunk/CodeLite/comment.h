@@ -3,7 +3,16 @@
 
 #include "db_record.h"
 
-class Comment : public DbRecord
+
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // WXMAKINGDLL_CODELITE
+
+class WXDLLIMPEXP_CL Comment : public DbRecord
 {
 	wxString m_comment;
 	wxString m_file;

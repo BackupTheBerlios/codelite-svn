@@ -10,8 +10,8 @@
   <Project Name="CodeLite" Path="CodeLite\CodeLite.project" Active="No"/>
   <Project Name="wxflatnotebook" Path="sdk\wxflatnotebook\wxflatnotebook.project"/>
   <Project Name="wxscintilla" Path="sdk\wxscintilla\wxscintilla.project"/>
-  <Project Name="plugin_sdk" Path="Plugin\plugin_sdk.project" Active="Yes"/>
-  <Project Name="LiteEditor" Path="LiteEditor\LiteEditor.project" Active="No"/>
+  <Project Name="plugin_sdk" Path="Plugin\plugin_sdk.project" Active="No"/>
+  <Project Name="LiteEditor" Path="LiteEditor\LiteEditor.project" Active="Yes"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="DebugUnicode" Selected="yes">
       <Project Name="wxsqlite3" ConfigName="Debug"/>

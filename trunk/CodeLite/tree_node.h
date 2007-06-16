@@ -6,8 +6,16 @@
 #include <vector>
 #include <wx/wx.h>
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif 
+
 template <class TKey, class TData>
-class TreeNode
+class WXDLLIMPEXP_CL TreeNode
 {
 	TKey  m_key;
 	TData m_data;

@@ -9,19 +9,17 @@
 #include <wx/stopwatch.h>
 #include "worker_thread.h"
 
-#ifndef WXDLLIMPEXP_SYM_TREE
-    #ifdef WXMAKINGDLL_SYM
-    #    define WXDLLIMPEXP_SYM_TREE WXEXPORT
-    #elif defined(WXUSINGDLL_SYM)
-    #    define WXDLLIMPEXP_SYM_TREE WXIMPORT
-    #else /* not making nor using FNB as DLL */
-    #    define WXDLLIMPEXP_SYM_TREE
-    #endif // WXMAKINGDLL_FNB
-#endif
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // WXMAKINGDLL_CODELITE
 
 class TagsDatabase;
 
-class WXDLLIMPEXP_SYM_TREE ParseRequest : public ThreadRequest 
+class WXDLLIMPEXP_CL ParseRequest : public ThreadRequest 
 {
 public:
 	wxString file;
@@ -29,7 +27,7 @@ public:
 	wxString dbfile;
 };
 
-class ParseThread : public WorkerThread
+class WXDLLIMPEXP_CL ParseThread : public WorkerThread
 {
 	friend class Singleton<ParseThread>;
 	std::auto_ptr<TagsDatabase> m_pDb;
@@ -71,7 +69,7 @@ typedef Singleton<ParseThread> ParseThreadST;
 /**
  * Holds information about events associated with SymbolTree object.
  */
-class SymbolTreeEvent : public wxNotifyEvent
+class WXDLLIMPEXP_CL SymbolTreeEvent : public wxNotifyEvent
 {
 	DECLARE_DYNAMIC_CLASS(SymbolTreeEvent)
 	std::vector<std::pair<wxString, TagEntry> >  m_items;
@@ -130,10 +128,10 @@ public:
 
 
 BEGIN_DECLARE_EVENT_TYPES()
-DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_SYM_TREE, wxEVT_COMMAND_SYMBOL_TREE_UPDATE_ITEM, 50300)
-DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_SYM_TREE, wxEVT_COMMAND_SYMBOL_TREE_DELETE_ITEM, 50301)
-DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_SYM_TREE, wxEVT_COMMAND_SYMBOL_TREE_ADD_ITEM, 50302)
-DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_SYM_TREE, wxEVT_COMMAND_SYMBOL_TREE_DELETE_PROJECT, 50303)
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CL, wxEVT_COMMAND_SYMBOL_TREE_UPDATE_ITEM, 50300)
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CL, wxEVT_COMMAND_SYMBOL_TREE_DELETE_ITEM, 50301)
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CL, wxEVT_COMMAND_SYMBOL_TREE_ADD_ITEM, 50302)
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CL, wxEVT_COMMAND_SYMBOL_TREE_DELETE_PROJECT, 50303)
 END_DECLARE_EVENT_TYPES()
 
 typedef void (wxEvtHandler::*SymbolTreeEventFunction)(SymbolTreeEvent&);

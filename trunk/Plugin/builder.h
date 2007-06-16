@@ -5,6 +5,14 @@
 #include "smart_ptr.h"
 #include "wx/event.h"
 
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
+
 /**
  * \ingroup SDK
  * this class defines the interface of a build system
@@ -16,7 +24,7 @@
  *
  * \author Eran
  */
-class Builder {
+class WXDLLIMPEXP_LE_SDK Builder {
 protected:
 	wxString m_name;
 	wxString m_buildTool;

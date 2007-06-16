@@ -4,6 +4,14 @@
 #include "ctags_manager.h"
 #include "parse_thread.h"
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // WXMAKINGDLL_CODELITE
+
 /**
  * Class MyTreeItemData, a user defined class which keeps the full name of a tree item.
  * This will allow us to quickly search the TagTree for entries using the full name as the key.
@@ -12,7 +20,7 @@
  * \author Eran
  *
  */
-class MyTreeItemData : public wxTreeItemData
+class WXDLLIMPEXP_CL MyTreeItemData : public wxTreeItemData
 {
 public:
     /**
@@ -37,7 +45,7 @@ private:
  * \author Eran
  *
  */
-class SymbolTree : public wxTreeCtrl
+class WXDLLIMPEXP_CL SymbolTree : public wxTreeCtrl
 {
 protected:
 	std::map<wxString, int> m_imagesMap;

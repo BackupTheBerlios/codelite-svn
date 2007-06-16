@@ -113,6 +113,7 @@
         <Preprocessor Value="WXUSINGDLL_FNB"/>
         <Preprocessor Value="WXUSINGDLL_WXSQLITE3"/>
         <Preprocessor Value="WXUSINGDLL_SCI"/>
+        <Preprocessor Value="WXUSINGDLL_CODELITE"/>
       </Compiler>
       <Linker Required="yes" Options="-O0 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --enable-debug --wxcfg=gcc_dll\mswud)">
         <LibraryPath Value="."/>
@@ -140,5 +141,8 @@
       <PostBuild/>
     </Configuration>
   </Settings>
-  <Dependencies/>
+  <Dependencies>
+    <Project Name="CodeLite"/>
+    <Project Name="plugin_sdk"/>
+  </Dependencies>
 </CodeLite_Project>

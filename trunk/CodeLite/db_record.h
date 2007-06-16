@@ -4,6 +4,14 @@
 #include <wx/wxsqlite3.h>
 #include "smart_ptr.h"
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // WXMAKINGDLL_CODELITE
+
 enum
 {
 	TagOk = 0,
@@ -21,7 +29,7 @@ enum
  * \author Eran
  * Base class for any database record
  */
-class DbRecord
+class WXDLLIMPEXP_CL DbRecord
 {
 public:
 	DbRecord(){}

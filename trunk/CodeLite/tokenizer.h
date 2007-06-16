@@ -9,6 +9,14 @@
 #include <vector>
 #include <wx/arrstr.h>
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif
+
 /**
  * StringTokenizer helps you to break a string up into a number of tokens. 
  * It replaces the standard C function strtok() and also extends it in a number of ways.
@@ -52,7 +60,7 @@
  * \date 09-02-2006
  * \author Eran
  */
-class StringTokenizer  
+class WXDLLIMPEXP_CL StringTokenizer  
 {
 	std::vector<wxString> m_tokensArr;
 	int m_nCurr;

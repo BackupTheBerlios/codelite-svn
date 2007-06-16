@@ -5,7 +5,7 @@
 #include <iostream>
 #include <wx/tokenzr.h>
 #include <wx/dir.h>
-#include <wx/log.h>
+#include <wx/log.h> 
 #include "dirtraverser.h"
 #include "macros.h"
 #include "workspace.h"

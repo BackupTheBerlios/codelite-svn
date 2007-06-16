@@ -5,6 +5,14 @@
 #include "smart_ptr.h"
 #include "map"
 
+#ifdef WXMAKINGDLL_LE_SDK
+#    define WXDLLIMPEXP_LE_SDK WXEXPORT
+#elif defined(WXUSINGDLL_LE_SDK)
+#    define WXDLLIMPEXP_LE_SDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LE_SDK
+#endif // WXMAKINGDLL_LE_SDK
+
 /**
  * \ingroup LiteEditor
  * This class represenets a compiler entry in the configuration file
@@ -16,7 +24,7 @@
  *
  * \author Eran
  */
-class Compiler : public ConfObject {
+class WXDLLIMPEXP_LE_SDK Compiler : public ConfObject {
 	wxString m_name;
 	std::map<wxString, wxString> m_switches;
 	wxString m_objectSuffix;

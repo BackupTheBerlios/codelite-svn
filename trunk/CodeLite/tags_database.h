@@ -8,6 +8,14 @@
 
 const wxString gTagsDatabaseVersion(_T("CodeLite version 0.3 Alpha"));
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif
+
 /**
 TagsDatabase is a wrapper around wxSQLite3 database with tags specific functions. 
 It allows caller to query and populate the SQLite database for tags with a set of convinient functions.
@@ -50,7 +58,7 @@ Table Name: TAGS_VERSION
 \author Eran
 \ingroup CodeLite
 */
-class TagsDatabase
+class WXDLLIMPEXP_CL TagsDatabase
 {
 	wxSQLite3Database *m_db;
 	wxFileName m_fileName;
