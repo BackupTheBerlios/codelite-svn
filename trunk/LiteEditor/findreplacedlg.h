@@ -122,6 +122,7 @@ public:
 
 	// Set the replacements message
 	void SetReplacementsMessage(const wxString &msg);
+	void SetFindReplaceData(const FindReplaceData& data);
 
 protected:
 	void CreateGUIControls();

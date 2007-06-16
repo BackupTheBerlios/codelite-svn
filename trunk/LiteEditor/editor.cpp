@@ -794,6 +794,12 @@ void LEditor::DoFindAndReplace()
 
 	// the search always starts from the current line
 	m_lastMatchPos = GetCurrentPos();
+	//if there is a selection, set it
+	if(GetSelectedText().IsEmpty() == false)
+	{
+		m_findReplaceData.SetFindString(GetSelectedText());
+		m_findReplaceDlg->SetFindReplaceData(m_findReplaceData);
+	}
 	m_findReplaceDlg->Show();
 }
 
@@ -833,14 +839,20 @@ void LEditor::OnFindDialog(wxCommandEvent& event)
 void LEditor::FindNext(const FindReplaceData &data)
 {
 	bool dirDown = ! (data.GetFlags() & wxFRD_SEARCHUP ? true : false);
-	if( !FindAndSelect(data) ) {
+	if( !FindAndSelect(data) ) 
+	{
 		wxWindow *parent = m_findReplaceDlg->IsShown() ? m_findReplaceDlg : NULL;
-		if(dirDown){
-			if( wxMessageBox(wxT("Lite Editor reached the end of the document, Search again from the start?"), wxT("Lite Editor"), wxYES_NO, parent) == wxYES){
+		if(dirDown)
+		{
+			if( wxMessageBox(wxT("Lite Editor reached the end of the document, Search again from the start?"), wxT("Lite Editor"), wxYES_NO, parent) == wxYES)
+			{
 				FindAndSelect(data);
 			} 
-		} else {
-			if( wxMessageBox(wxT("Lite Editor reached the start of the document, Search again from the end?"), wxT("Lite Editor"), wxYES_NO, parent) == wxYES){
+		} 
+		else 
+		{
+			if( wxMessageBox(wxT("Lite Editor reached the start of the document, Search again from the end?"), wxT("Lite Editor"), wxYES_NO, parent) == wxYES)
+			{
 				FindAndSelect(data);
 			}
 		}

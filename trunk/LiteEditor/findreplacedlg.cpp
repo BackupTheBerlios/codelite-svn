@@ -73,13 +73,13 @@ void FindReplaceDialog::CreateGUIControls()
 	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Find What:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	gbSizer->Add(itemStaticText, wxGBPosition(0, 0), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
-	m_findString = new wxTextCtrl( this, wxID_ANY, m_data.GetFindString(), wxDefaultPosition, wxSize(200, -1), wxTE_PROCESS_ENTER);
+	m_findString = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), wxTE_PROCESS_ENTER);
 	gbSizer->Add(m_findString, wxGBPosition(0, 1), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
 	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Replace With:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	gbSizer->Add(itemStaticText, wxGBPosition(1, 0), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
-	m_replaceString = new wxTextCtrl(this, wxID_ANY, m_data.GetReplaceString(), wxDefaultPosition, wxSize(200, -1), wxTE_PROCESS_ENTER);
+	m_replaceString = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), wxTE_PROCESS_ENTER);
 	gbSizer->Add(m_replaceString, wxGBPosition(1, 1), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
 	wxStaticBoxSizer *sz = new wxStaticBoxSizer(wxVERTICAL, this, wxT("Options"));
@@ -90,23 +90,18 @@ void FindReplaceDialog::CreateGUIControls()
 	SetReplacementsMessage(wxT("Replacements: 0"));
 
 	m_matchCase = new wxCheckBox(this, wxID_ANY, wxT("&Match case"));
-	m_matchCase->SetValue(m_data.GetFlags() & wxFRD_MATCHCASE ? true : false);
 	sz->Add(m_matchCase, 1, wxALL | wxEXPAND, 5 );
 
 	m_matchWholeWord = new wxCheckBox(this, wxID_ANY, wxT("Match &whole word"));
-	m_matchWholeWord->SetValue(m_data.GetFlags() & wxFRD_MATCHWHOLEWORD ? true : false);
 	sz->Add(m_matchWholeWord, 1, wxALL | wxEXPAND, 5 );
 
 	m_regualrExpression = new wxCheckBox(this, wxID_ANY, wxT("Regular &expression"));
-	m_regualrExpression->SetValue(m_data.GetFlags() & wxFRD_REGULAREXPRESSION ? true : false);
 	sz->Add(m_regualrExpression, 1, wxALL | wxEXPAND, 5 );
 
 	m_wrapsearch = new wxCheckBox(this, wxID_ANY, wxT("Wrap around"));
-	m_wrapsearch->SetValue(m_data.GetFlags() & wxFRD_WRAPSEARCH ? true : false);
 	sz->Add(m_wrapsearch, 1, wxALL | wxEXPAND, 5 );
 
 	m_searchUp = new wxCheckBox(this, wxID_ANY, wxT("Search &up"));
-	m_searchUp->SetValue(m_data.GetFlags() & wxFRD_SEARCHUP ? true : false);
 	sz->Add(m_searchUp, 1, wxALL | wxEXPAND, 5 ); 
 	
 	// Add the buttons
@@ -125,6 +120,20 @@ void FindReplaceDialog::CreateGUIControls()
 
 	m_cancel = new wxButton(this, wxID_ANY, wxT("Cancel"));
 	btnSizer->Add(m_cancel, 1, wxALL | wxEXPAND, 5 ); 
+
+	//set values
+	SetFindReplaceData(m_data);
+}
+
+void FindReplaceDialog::SetFindReplaceData(const FindReplaceData &data)
+{
+	m_findString->SetValue(data.GetFindString());
+	m_replaceString->SetValue(data.GetReplaceString());
+	m_matchCase->SetValue(data.GetFlags() & wxFRD_MATCHCASE ? true : false);
+	m_matchWholeWord->SetValue(data.GetFlags() & wxFRD_MATCHWHOLEWORD ? true : false);
+	m_regualrExpression->SetValue(data.GetFlags() & wxFRD_REGULAREXPRESSION ? true : false);
+	m_wrapsearch->SetValue(data.GetFlags() & wxFRD_WRAPSEARCH ? true : false);
+	m_searchUp->SetValue(data.GetFlags() & wxFRD_SEARCHUP ? true : false);
 }
 
 void FindReplaceDialog::OnClick(wxCommandEvent &event)
