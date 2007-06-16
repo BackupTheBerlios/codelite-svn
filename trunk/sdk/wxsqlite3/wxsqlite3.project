@@ -9,6 +9,7 @@
     <File Name="include\wx\wxsqlite3def.h"/>
     <File Name="include\wx\wxsqlite3dyn.h"/>
   </VirtualDirectory>
+  <Dependencies/>
   <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="gnu g++">
       <General OutputFile="..\..\lib\gcc\libwxsqlite3ud.dll" IntermediateDirectory=".\Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
@@ -24,7 +25,7 @@
         <LibraryPath Value="$(WXSTABLE)\lib\gcc_dll"/>
         <LibraryPath Value=".\sqlite3\lib"/>
         <Library Value="wxmsw28ud_gcc_custom.dll"/>
-        <Library Value="sqlite3_mingw.dll"/>
+        <Library Value="sqlite3.al"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>
@@ -49,5 +50,4 @@
       <PostBuild/>
     </Configuration>
   </Settings>
-  <Dependencies/>
 </CodeLite_Project>

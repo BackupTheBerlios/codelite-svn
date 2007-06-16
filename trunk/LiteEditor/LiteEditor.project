@@ -142,7 +142,10 @@
     </Configuration>
   </Settings>
   <Dependencies>
+    <Project Name="wxsqlite3"/>
     <Project Name="CodeLite"/>
+    <Project Name="wxflatnotebook"/>
+    <Project Name="wxscintilla"/>
     <Project Name="plugin_sdk"/>
   </Dependencies>
 </CodeLite_Project>
