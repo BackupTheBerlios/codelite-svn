@@ -199,7 +199,7 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 		wxString objectName = files[i].GetName() << wxT("$(ObjectSuffix)");
 		wxString fileName   = files[i].GetFullPath();
 		text << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(": ") << fileName << wxT("\n");
-		text << wxT("\t") << wxT("$(CompilerName) $(CmpOptions) $(SourceSwitch) ") << fileName << wxT(" $(OutputSwitch) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(" $(IncludePath) \n\n");
+		text << wxT("\t") << wxT("$(CompilerName) $(SourceSwitch) ") << fileName << wxT(" $(CmpOptions)  ") << wxT(" $(OutputSwitch) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(" $(IncludePath) \n\n");
 	}
 
 	//add clean target
