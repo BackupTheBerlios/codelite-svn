@@ -99,9 +99,16 @@
     <File Name="symbols_dialog.h"/>
     <File Name="symbols_dialog_base.h"/>
   </VirtualDirectory>
+  <Dependencies>
+    <Project Name="wxsqlite3"/>
+    <Project Name="CodeLite"/>
+    <Project Name="wxflatnotebook"/>
+    <Project Name="wxscintilla"/>
+    <Project Name="plugin_sdk"/>
+  </Dependencies>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu g++">
-      <General OutputFile="..\Runtime\LiteEditor" IntermediateDirectory=".\Debug_unicode_gcc" Command="LiteEditor" CommandArguments="" WorkingDirectory="..\Runtime"/>
+      <General OutputFile="..\lib\gcc\LiteEditor" IntermediateDirectory=".\Debug_unicode_gcc" Command="LiteEditor" CommandArguments="" WorkingDirectory="..\Runtime"/>
       <Compiler Required="yes" Options="-g  $(shell wx-config --cxxflags --enable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll\mswud)">
         <IncludePath Value="."/>
         <IncludePath Value="..\CodeLite"/>
@@ -115,7 +122,7 @@
         <Preprocessor Value="WXUSINGDLL_SCI"/>
         <Preprocessor Value="WXUSINGDLL_CODELITE"/>
       </Compiler>
-      <Linker Required="yes" Options="-O0 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --enable-debug --wxcfg=gcc_dll\mswud)">
+      <Linker Required="yes" Options="-O0 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --enable-debug --wxcfg=gcc_dll\mswud)  $(IntermediateDirectory)/code_parser.o">
         <LibraryPath Value="."/>
         <LibraryPath Value=".\Debug"/>
         <LibraryPath Value="..\lib\gcc"/>
@@ -125,7 +132,9 @@
         <Library Value="libwxflatnotebookud.dll"/>
         <Library Value="wxmsw28ud_gcc_custom.dll"/>
       </Linker>
-      <PreBuild/>
+      <PreBuild>
+        <Command Enabled="yes">windres -i code_parser.rc -I$(WXSTABLE)/include  -o $(IntermediateDirectory)/code_parser.o</Command>
+      </PreBuild>
       <PostBuild/>
     </Configuration>
     <Configuration Name="Release" CompilerType="GNU g++">
@@ -141,11 +150,4 @@
       <PostBuild/>
     </Configuration>
   </Settings>
-  <Dependencies>
-    <Project Name="wxsqlite3"/>
-    <Project Name="CodeLite"/>
-    <Project Name="wxflatnotebook"/>
-    <Project Name="wxscintilla"/>
-    <Project Name="plugin_sdk"/>
-  </Dependencies>
 </CodeLite_Project>

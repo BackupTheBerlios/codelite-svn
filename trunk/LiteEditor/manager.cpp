@@ -71,7 +71,7 @@ wxFrame *Manager::GetMainFrame()
 
 bool Manager::IsWorkspaceOpen() const 
 {
-	return TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName().IsOk();
+	return WorkspaceST::Get()->GetName().IsEmpty() == false;
 }
 
 void Manager::OpenFile(const wxString &file_name, const wxString &projectName, int lineno, long position)
