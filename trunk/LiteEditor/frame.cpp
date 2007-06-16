@@ -1035,42 +1035,70 @@ void Frame::OnTimer(wxTimerEvent &event)
 void Frame::OnFileCloseAll(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	CloseAllDialog *dlg = new CloseAllDialog(this);
-	switch(dlg->ShowModal())
-	{
-	case CLOSEALL_SAVEALL:
-		{
-			ManagerST::Get()->SaveAll();
-			//and now close them all
-			m_notebook->DeleteAllPages();
-			m_notebook->Refresh();
-		}
-		break;
-	case CLOSEALL_DISCARDALL:
-		{
-			m_notebook->DeleteAllPages();
-			m_notebook->Refresh();
-		}
-		break;
-	case CLOSEALL_ASKFOREACHFILE:
-		{
-			int count = m_notebook->GetPageCount();
-			for(int i=0; i<count; i++)
-			{
-				LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetPage((size_t)i));
-				if( !editor )
-					continue;
+	bool modifyDetected = false;
 
-				bool veto;
-				ClosePage(editor, false, m_notebook->GetSelection(), true, veto);
+	//check if any of the files is modified
+	for(int i=0; i<m_notebook->GetPageCount(); i++)
+	{
+		LEditor *editor = dynamic_cast<LEditor*>(m_notebook->GetPage((size_t)i));
+		if(editor)
+		{
+			if(editor->GetModify())
+			{
+				modifyDetected = true;
+				break;
 			}
-			//once all files have been prompted if needed, remove them all
-			m_notebook->DeleteAllPages();
-			m_notebook->Refresh();
 		}
-		break;
-	default:
-		break;
 	}
-	dlg->Destroy();
+
+	int retCode(CLOSEALL_DISCARDALL);
+	CloseAllDialog *dlg(NULL);
+
+	if(modifyDetected)
+	{
+		dlg = new CloseAllDialog(this);
+		retCode = dlg->ShowModal();
+	}
+
+	switch(retCode)
+	{
+		case CLOSEALL_SAVEALL:
+			{
+				ManagerST::Get()->SaveAll();
+				//and now close them all
+				m_notebook->DeleteAllPages();
+				m_notebook->Refresh();
+			}
+			break;
+		case CLOSEALL_DISCARDALL:
+			{
+				m_notebook->DeleteAllPages();
+				m_notebook->Refresh();
+			}
+			break;
+		case CLOSEALL_ASKFOREACHFILE:
+			{
+				int count = m_notebook->GetPageCount();
+				for(int i=0; i<count; i++)
+				{
+					LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetPage((size_t)i));
+					if( !editor )
+						continue;
+
+					bool veto;
+					ClosePage(editor, false, m_notebook->GetSelection(), true, veto);
+				}
+				//once all files have been prompted if needed, remove them all
+				m_notebook->DeleteAllPages();
+				m_notebook->Refresh();
+			}
+			break;
+		default:
+			break;
+	}
+	
+	if(dlg)
+	{
+		dlg->Destroy();	
+	}
 }

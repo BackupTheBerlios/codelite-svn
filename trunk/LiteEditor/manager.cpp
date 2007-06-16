@@ -117,17 +117,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 		notebook ->Freeze();
 		// create new instance from pool
 		editor = EditorCreatorST::Get()->NewInstance();
-		// set the file name
-		editor->SetFileName(fileName);
-		// set the project name
-		editor->SetProject(projectName);
-		// let the editor choose the syntax highlight to use according to file extension
-		// and set the editor properties to default
-		editor->RestoreDefaults();
-		// reload the file from disk
-		editor->ReloadFile();
-		// mark this editor as non-modified to avoid non-needed confirm dialogs
-		editor->SetSavePoint();
+		editor->Create(fileName, projectName);
 
 		notebook ->AddPage(editor, fileName.GetFullName(), true);
 		notebook ->Thaw();

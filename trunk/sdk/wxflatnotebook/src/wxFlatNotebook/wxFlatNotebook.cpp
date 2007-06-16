@@ -290,7 +290,11 @@ void wxFlatNotebook::SetSelection(size_t page)
 
 	m_windows[page]->Show();
 	Thaw();
-	m_mainSizer->Layout();
+
+	//incase changing the layout of the tabs, a Layout() call is needed
+	if(m_windowStyle & wxFNB_BOTTOM){
+		m_mainSizer->Layout();
+	}
 
 	if( page != (size_t)m_pages->m_iActivePage )
 		//there is a real poge changing
@@ -886,20 +890,25 @@ void wxPageContainer::OnRightDown(wxMouseEvent& event)
 				break;
 
 			// Set the current tab to be active
-			SetSelection((size_t)tabIdx);
- 			// If the owner has defined a context menu for the tabs,
-                	// popup the right click menu
-                if (m_pRightClickMenu)
-                        PopupMenu(m_pRightClickMenu);
-                else
-                {
-                        // send a message to popup a custom menu
-                        wxFlatNotebookEvent event(wxEVT_COMMAND_FLATNOTEBOOK_CONTEXT_MENU, GetParent()->GetId());
-                        event.SetSelection((int)tabIdx);
-                        event.SetOldSelection((int)m_iActivePage);
-                        event.SetEventObject(GetParent());
-                        GetParent()->GetEventHandler()->ProcessEvent(event);
-                }
+			// if needed
+			if(tabIdx != GetSelection())
+			{
+				SetSelection((size_t)tabIdx);
+			}
+
+			// If the owner has defined a context menu for the tabs,
+			// popup the right click menu
+			if (m_pRightClickMenu)
+				PopupMenu(m_pRightClickMenu);
+			else
+			{
+				// send a message to popup a custom menu
+				wxFlatNotebookEvent event(wxEVT_COMMAND_FLATNOTEBOOK_CONTEXT_MENU, GetParent()->GetId());
+				event.SetSelection((int)tabIdx);
+				event.SetOldSelection((int)m_iActivePage);
+				event.SetEventObject(GetParent());
+				GetParent()->GetEventHandler()->ProcessEvent(event);
+			}
 
 		}
 		break;

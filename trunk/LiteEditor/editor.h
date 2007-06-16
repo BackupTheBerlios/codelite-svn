@@ -214,6 +214,11 @@ public:
 	void ReloadFile();
 
 	/**
+	 * Open file and clear the undo buffer
+	 */
+	void Create(const wxFileName &fileName, const wxString &project);
+
+	/**
 	 * Return the current LEditor history stack
 	 */
 	static std::stack<TagEntry> &GetHistory() { return m_history; }

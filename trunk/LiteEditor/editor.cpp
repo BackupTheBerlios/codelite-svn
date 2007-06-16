@@ -1079,6 +1079,22 @@ void LEditor::ReloadFile()
 	SetDirty(false);
 }
 
+void LEditor::Create(const wxFileName &fileName, const wxString &project)
+{
+	// set the file name
+	SetFileName(fileName);
+	// set the project name
+	SetProject(project);
+	// let the editor choose the syntax highlight to use according to file extension
+	// and set the editor properties to default
+	RestoreDefaults();
+	// reload the file from disk
+	ReloadFile();
+	// mark this editor as non-modified to avoid non-needed confirm dialogs
+	SetSavePoint();
+	EmptyUndoBuffer();
+}
+
 void LEditor::OnContextMenu(wxContextMenuEvent &event)
 {
 	wxUnusedVar(event);
