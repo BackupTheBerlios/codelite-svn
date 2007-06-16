@@ -133,7 +133,7 @@
         <Library Value="wxmsw28ud_gcc_custom.dll"/>
       </Linker>
       <PreBuild>
-        <Command Enabled="yes">windres -i code_parser.rc -I$(WXSTABLE)/include  -o $(IntermediateDirectory)/code_parser.o</Command>
+        <Command Enabled="no">windres -i code_parser.rc -I$(WXSTABLE)/include  -o $(IntermediateDirectory)/code_parser.o</Command>
       </PreBuild>
       <PostBuild/>
     </Configuration>
