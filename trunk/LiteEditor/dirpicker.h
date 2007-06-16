@@ -22,6 +22,7 @@ class DirPicker : public wxPanel {
 	wxString m_buttonCaption;
 	wxString m_dlgCaption;
 	long m_style;
+	wxString m_defaultPos;
 
 private:
 	void CreateControls();
@@ -39,6 +40,7 @@ public:
 	DirPicker(	wxWindow *parent, 
 				wxWindowID id = wxID_ANY, 
 				const wxString &buttonCaption = wxT("Browse"), 
+				const wxString &defaultPos = wxEmptyString,
 				const wxString &message = wxT("Select a folder:"), 
 				const wxPoint& pos = wxDefaultPosition, 
 				const wxSize& size = wxDefaultSize,

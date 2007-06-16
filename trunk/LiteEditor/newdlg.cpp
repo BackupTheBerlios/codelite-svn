@@ -81,9 +81,12 @@ void NewDlg::CreateGUIControls()
 	m_book->AddPage(CreateWorkspacePage(), wxT("Workspace"), m_selection == NEW_DLG_WORKSPACE);
 	mainSizer->Add(m_book, 1, wxEXPAND | wxALL, 5);
 	
-	if( m_selection == NEW_DLG_PROJECT ){
+	if( m_selection == NEW_DLG_PROJECT )
+	{
 		m_projName->SetFocus();
-	} else {
+	} 
+	else 
+	{
 		m_name->SetFocus();
 	}
 
@@ -117,15 +120,6 @@ wxWindow *NewDlg::CreateWorkspacePage()
 
 	m_pathPicker = new DirPicker(panel);
 	panelSizer->Add(m_pathPicker, 0, wxEXPAND | wxALL, 5);
-
-	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("External Tags Database:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
-	panelSizer->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
-
-	const wxString WildCard(wxT("Lite Editor Tags file (*.tags)|*.tags|")
-							wxT("All Files (*.*)|*.*"));
-
-	m_tagsPicker = new FilePicker(panel, wxID_ANY, wxEmptyString, wxT("Select a file:"), WildCard, wxT("Browse"), wxDefaultPosition, wxDefaultSize, wxFD_OPEN|wxFD_FILE_MUST_EXIST);
-	panelSizer->Add(m_tagsPicker, 0, wxEXPAND | wxALL, 5);
 	
 	wxStaticBoxSizer *vSz = new wxStaticBoxSizer( new wxStaticBox( panel, -1, wxT("CTags:") ), wxHORIZONTAL );
 	panelSizer->Add(vSz, 0, wxEXPAND | wxALL, 5);
@@ -154,12 +148,14 @@ wxWindow *NewDlg::CreateProjectPage()
 	ManagerST::Get()->GetProjectTemplateList(m_list);
 
 	std::list<ProjectPtr>::iterator iter = m_list.begin();
-	for(; iter != m_list.end(); iter++){
+	for(; iter != m_list.end(); iter++)
+	{
 		m_projTypes->Append((*iter)->GetName());
 	}
 
 	iter = m_list.begin();
-	if( iter != m_list.end() ){
+	if( iter != m_list.end() )
+	{
 		m_projTypes->SetStringSelection((*iter)->GetName());
 		m_projectData.m_srcProject = (*iter);
 	}
@@ -172,8 +168,10 @@ wxWindow *NewDlg::CreateProjectPage()
 
 	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("Project Path:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	panelSizer->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
-
+	//by default set here the workspace path
 	m_projPathPicker = new DirPicker(panel);
+	m_projPathPicker->SetPath(wxGetCwd());
+
 	panelSizer->Add(m_projPathPicker, 0, wxEXPAND | wxALL, 5);
 	
 	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("Project Compiler:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
@@ -183,7 +181,8 @@ wxWindow *NewDlg::CreateProjectPage()
 	//get list of compilers from configuration file
 	BuildSettingsConfigCookie cookie;
 	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetFirstCompiler(cookie);
-	while(cmp){
+	while(cmp)
+	{
 		choices.Add(cmp->GetName());
 		cmp = BuildSettingsConfigST::Get()->GetNextCompiler(cookie);
 	}
@@ -191,7 +190,8 @@ wxWindow *NewDlg::CreateProjectPage()
 	m_choiceCmpType = new wxChoice(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, choices);
 	panelSizer->Add(m_choiceCmpType, 0, wxEXPAND | wxALL, 5);
 	
-	if(m_choiceCmpType->GetCount() > 0){
+	if(m_choiceCmpType->GetCount() > 0)
+	{
 		m_choiceCmpType->SetSelection(0);
 	}
 
@@ -203,25 +203,31 @@ wxWindow *NewDlg::CreateProjectPage()
 void NewDlg::OnClick(wxCommandEvent & event)
 {
 	// pass data from controls to the m_data
-	if( m_book->GetSelection() == NEW_DLG_WORKSPACE ){
-		if( event.GetEventObject() == m_ctagsOptions ){
+	if( m_book->GetSelection() == NEW_DLG_WORKSPACE )
+	{
+		if( event.GetEventObject() == m_ctagsOptions )
+		{
 			CtagsOptionsDlg *dlg = new CtagsOptionsDlg(this);
-			if(dlg->ShowModal() == wxID_OK){
+			if(dlg->ShowModal() == wxID_OK)
+			{
 				m_ctagsOptionsData = dlg->GetCtagsOptions();
 			}
 			dlg->Destroy();
 			return;
-		}else{
+		}
+		else
+		{
 			m_workspaceData.m_path = m_pathPicker->GetPath();
-			m_workspaceData.m_externalTagsDB = m_tagsPicker->GetPath();
 			m_workspaceData.m_name = m_name->GetValue();
 
-			if( m_workspaceData.m_name.Trim().IsEmpty() ){
+			if( m_workspaceData.m_name.Trim().IsEmpty() )
+			{
 				wxMessageBox(wxT("Invalid workspace name"), wxT("Error"), wxOK | wxICON_HAND);
 				return;
 			}
 
-			if( !wxDirExists(m_workspaceData.m_path) ){
+			if( !wxDirExists(m_workspaceData.m_path) )
+			{
 				wxMessageBox(wxT("Invalid path"), wxT("Error"), wxOK | wxICON_HAND);
 				return;
 			}
@@ -230,7 +236,9 @@ void NewDlg::OnClick(wxCommandEvent & event)
 			event.SetEventObject(this);
 			::wxPostEvent(GetParent()->GetEventHandler(), event);
 		}
-	} else if( m_book->GetSelection() == NEW_DLG_PROJECT ){
+	} 
+	else if( m_book->GetSelection() == NEW_DLG_PROJECT )
+	{
 		m_projectData.m_name = m_projName->GetValue();
 		m_projectData.m_path = m_projPathPicker->GetPath();
 		m_projectData.m_cmpType = m_choiceCmpType->GetStringSelection();
@@ -238,12 +246,14 @@ void NewDlg::OnClick(wxCommandEvent & event)
 		//the project type is determined according to the selected project name
 		m_projectData.m_srcProject = FindProject(m_projTypes->GetStringSelection());
 
-		if( m_projectData.m_name.Trim().IsEmpty() ){
+		if( m_projectData.m_name.Trim().IsEmpty() )
+		{
 			wxMessageBox(wxT("Invalid project name"), wxT("Error"), wxOK | wxICON_HAND);
 			return;
 		}
 
-		if( !wxDirExists(m_projectData.m_path) ){
+		if( !wxDirExists(m_projectData.m_path) )
+		{
 			wxMessageBox(wxT("Invalid path"), wxT("Error"), wxOK | wxICON_HAND);
 			return;
 		}
@@ -270,12 +280,12 @@ void NewDlg::ConnectEvents()
 ProjectPtr NewDlg::FindProject(const wxString &name)
 {
 	std::list<ProjectPtr>::iterator iter = m_list.begin();
-	for(; iter != m_list.end(); iter++){
-		if((*iter)->GetName() == name){
+	for(; iter != m_list.end(); iter++)
+	{
+		if((*iter)->GetName() == name)
+		{
 			return (*iter);
 		}
 	}
 	return NULL;
 }
-
-

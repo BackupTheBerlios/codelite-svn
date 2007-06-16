@@ -3,13 +3,14 @@
 #include "macros.h"
 #include <wx/dirdlg.h>
 
-DirPicker::DirPicker(wxWindow *parent, wxWindowID id, const wxString &buttonCaption, const wxString &message, const wxPoint& pos, const wxSize& size, long style)
+DirPicker::DirPicker(wxWindow *parent, wxWindowID id, const wxString &buttonCaption, const wxString &defaultPos, const wxString &message, const wxPoint& pos, const wxSize& size, long style)
 : wxPanel(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER)
 , m_path(NULL)
 , m_combo(NULL)
 , m_buttonCaption(buttonCaption)
 , m_dlgCaption(message)
 , m_style(style)
+, m_defaultPos(defaultPos)
 {
 	CreateControls();
 	ConnectEvents();
@@ -46,7 +47,13 @@ void DirPicker::ConnectEvents()
 void DirPicker::OnButtonClicked(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	wxDirDialog *dlg = new wxDirDialog(this, m_dlgCaption, wxGetCwd());
+
+	if(m_defaultPos.IsEmpty())
+	{
+		m_defaultPos = wxGetCwd();
+	}
+
+	wxDirDialog *dlg = new wxDirDialog(this, m_dlgCaption, m_defaultPos);
 	if(dlg->ShowModal() == wxID_OK)
 	{
 		// Get the dirname

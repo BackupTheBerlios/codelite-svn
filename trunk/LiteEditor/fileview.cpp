@@ -313,7 +313,8 @@ void FileViewTree::OnSortItem(wxCommandEvent &WXUNUSED( event))
 void FileViewTree::OnAddExistingItem(wxCommandEvent & WXUNUSED(event))
 {
 	wxTreeItemId item = GetSingleSelection();
-	if(!item.IsOk()){
+	if(!item.IsOk())
+	{
 		return;
 	}
 
@@ -321,12 +322,13 @@ void FileViewTree::OnAddExistingItem(wxCommandEvent & WXUNUSED(event))
 						wxT("C/C++ Source Files (*.c;*.cpp;*.cxx;*.cc)|*.c;*.cpp;*.cxx;*.cc|")
 						wxT("C/C++ Header Files (*.h;*.hpp;*.hxx;*.hh;*.inl;*.inc)|*.h;*.hpp;*.hxx;*.hh;*.inl;*.inc"));
 	wxString vdPath = GetItemPath(item);
+	wxString project;
+	project = vdPath.BeforeFirst(wxT(':'));
 
-	wxFileDialog *dlg = new wxFileDialog(this, wxT("Add Existing Item"), wxEmptyString, wxEmptyString, ALL, wxFD_MULTIPLE | wxOPEN | wxFILE_MUST_EXIST , wxDefaultPosition);
-	if (dlg->ShowModal() == wxID_OK){
-		wxString project;
-		project = vdPath.BeforeFirst(wxT(':'));
-
+	ProjectPtr proj = ManagerST::Get()->GetProject(project);
+	wxFileDialog *dlg = new wxFileDialog(this, wxT("Add Existing Item"), proj->GetFileName().GetPath(), wxEmptyString, ALL, wxFD_MULTIPLE | wxOPEN | wxFILE_MUST_EXIST , wxDefaultPosition);
+	if (dlg->ShowModal() == wxID_OK)
+	{
 		wxArrayString paths, actualAdded;
 		dlg->GetPaths( paths );
 		ManagerST::Get()->AddFilesToProject(paths, vdPath, actualAdded);

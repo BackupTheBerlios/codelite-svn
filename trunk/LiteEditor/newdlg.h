@@ -26,10 +26,7 @@ class WorkspaceData {
 public:
 	wxString m_name;			//< Workspace name
 	wxString m_path;			//< Workspace directoy
-	wxString m_externalTagsDB;	//< External tags database to use 
 };
-
-
 
 // Workspace dialog
 class NewDlg : public wxDialog
@@ -40,8 +37,7 @@ class NewDlg : public wxDialog
 	// Options
 	wxTextCtrl *m_name;
 	DirPicker *m_pathPicker;
-	FilePicker *m_tagsPicker;
-
+	
 	wxTextCtrl *m_projName;
 	DirPicker *m_projPathPicker;
 	wxListBox *m_projTypes;
