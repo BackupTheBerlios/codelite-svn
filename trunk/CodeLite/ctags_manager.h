@@ -13,6 +13,15 @@
 #include "comment.h"
 
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // WXMAKINGDLL_CODELITE
+
+
 #ifdef USE_TRACE
 #include <wx/stopwatch.h>
 #endif
@@ -130,7 +139,7 @@ public:
  * \author Eran
  *
  */
-class TagsManager : public wxEvtHandler 
+class WXDLLIMPEXP_CL TagsManager : public wxEvtHandler 
 {
 	// Members
 	friend class Singleton<TagsManager>;

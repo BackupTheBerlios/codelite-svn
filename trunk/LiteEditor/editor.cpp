@@ -19,7 +19,7 @@
 #ifdef EVT_SCI_CALLTIP_CLICK
 #undef EVT_SCI_CALLTIP_CLICK
 #define EVT_SCI_CALLTIP_CLICK(id, fn)          DECLARE_EVENT_TABLE_ENTRY (wxEVT_SCI_CALLTIP_CLICK,          id, wxID_ANY, (wxObjectEventFunction) (wxEventFunction)  wxStaticCastEvent( wxScintillaEventFunction, & fn ), (wxObject *) NULL),
-#endif
+#endif 
 
 BEGIN_EVENT_TABLE(LEditor, wxScintilla)
 EVT_SCI_CHARADDED(wxID_ANY, LEditor::OnCharAdded)

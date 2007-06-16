@@ -5,10 +5,20 @@
 #include "wx/thread.h"
 #include "wx/event.h"
 
+
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // WXMAKINGDLL_CODELITE
+
+
 /**
  * Base class for thread requests,
  */
-class ThreadRequest{
+class WXDLLIMPEXP_CL ThreadRequest{
 public:
 	ThreadRequest(){};
 	virtual ~ThreadRequest(){};
@@ -18,7 +28,7 @@ public:
  * Worker Thread class
  * usually user should define the ProcessRequest method
  */
-class WorkerThread : public wxThread
+class WXDLLIMPEXP_CL WorkerThread : public wxThread
 {
 protected:
 	wxCriticalSection m_cs;

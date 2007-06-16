@@ -10,6 +10,17 @@
 #include <list>
 #include "project_settings.h"
 
+//incase we are using DLL build of wxWdigets, we need to make this class to export its 
+//classes 
+#ifdef WXMAKINGDLL_LESDK
+#    define WXDLLIMPEXP_LESDK WXEXPORT
+#elif defined(WXUSINGGDLL_LESDK)
+#    define WXDLLIMPEXP_LESDK WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_LESDK
+#endif // WXMAKINGDLL_FNB
+
+
 /**
  * \class ProjectItem
  * a node item that represents a displayable project item
@@ -18,7 +29,7 @@
  *
  * \author Eran
  */
-class ProjectItem
+class WXDLLIMPEXP_LESDK ProjectItem
 {
 public:
 	// The visible items
@@ -110,7 +121,7 @@ typedef TreeNode<wxString, ProjectItem> ProjectTreeNode;
  * \bug 
  *
  */
-class Project 
+class WXDLLIMPEXP_LESDK Project 
 {
 public:
 	static const wxString STATIC_LIBRARY;

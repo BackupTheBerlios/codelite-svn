@@ -1,11 +1,11 @@
 #include "findreplacedlg.h"
 #include <wx/gbsizer.h>
-#include <wx/textctrl.h>
+#include <wx/textctrl.h> 
 #include <wx/checkbox.h>
-#include <wx/button.h>
+#include <wx/button.h> 
 #include <wx/stattext.h>
 #include "macros.h"
-
+ 
 DEFINE_EVENT_TYPE(wxEVT_FRD_FIND_NEXT)
 DEFINE_EVENT_TYPE(wxEVT_FRD_CLOSE)
 DEFINE_EVENT_TYPE(wxEVT_FRD_REPLACE)

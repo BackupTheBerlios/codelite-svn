@@ -5,6 +5,14 @@
 #include <wx/arrstr.h>
 #include <map>
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // WXMAKINGDLL_FNB
+
 /**
  * A helper class that help us recurse into sub-directories.
  * For each found directory, sink.OnDir() is called and sink.OnFile() is called for every file. 
@@ -16,7 +24,7 @@
  * \date 11-08-2006
  * \author Eran
  */
-class DirTraverser : public wxDirTraverser
+class WXDLLIMPEXP_CL DirTraverser : public wxDirTraverser
 {
 	wxArrayString m_files;
 	wxString m_filespec;

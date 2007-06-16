@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="CodeLite">
+  <VirtualDirectory Name="Source Files">
+    <File Name="calltip.cpp"/>
+    <File Name="worker_thread.cpp"/>
+    <File Name="tokenizer.cpp"/>
+    <File Name="tags_database.cpp"/>
+    <File Name="tag_tree.cpp"/>
+    <File Name="symbol_tree.cpp"/>
+    <File Name="readtags.cpp"/>
+    <File Name="progress_dialog.cpp"/>
+    <File Name="procutils.cpp"/>
+    <File Name="parse_thread.cpp"/>
+    <File Name="lex.yy.cpp"/>
+    <File Name="language.cpp"/>
+    <File Name="fileutils.cpp"/>
+    <File Name="entry.cpp"/>
+    <File Name="dirtraverser.cpp"/>
+    <File Name="ctags_manager.cpp"/>
+    <File Name="cpp_scanner.cpp"/>
+    <File Name="comment.cpp"/>
+    <File Name="cl_process.cpp"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="Header Files">
+    <File Name="y.tab.h"/>
+    <File Name="calltip.h"/>
+    <File Name="cl_process.h"/>
+    <File Name="comment.h"/>
+    <File Name="cpp_scanner.h"/>
+    <File Name="ctags_manager.h"/>
+    <File Name="db_record.h"/>
+    <File Name="dirsaver.h"/>
+    <File Name="dirtraverser.h"/>
+    <File Name="entry.h"/>
+    <File Name="fileutils.h"/>
+    <File Name="FlexLexer.h"/>
+    <File Name="language.h"/>
+    <File Name="parse_thread.h"/>
+    <File Name="precompiled_header.h"/>
+    <File Name="procutils.h"/>
+    <File Name="progress_dialog.h"/>
+    <File Name="readtags.h"/>
+    <File Name="singleton.h"/>
+    <File Name="smart_ptr.h"/>
+    <File Name="symbol_tree.h"/>
+    <File Name="tag_tree.h"/>
+    <File Name="tags_database.h"/>
+    <File Name="tokenizer.h"/>
+    <File Name="tree.h"/>
+    <File Name="tree_node.h"/>
+    <File Name="unistd.h"/>
+    <File Name="worker_thread.h"/>
+  </VirtualDirectory>
+  <Dependencies/>
+  <Settings Type="Dynamic Library">
+    <Configuration Name="DebugUnicode" CompilerType="gnu g++">
+      <General OutputFile="..\lib\gcc\libCodeLiteud.dll" IntermediateDirectory=".\Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="-g $(shell wx-config --cxxflags --enable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll\mswud)">
+        <IncludePath Value="."/>
+        <IncludePath Value=".\include"/>
+        <IncludePath Value="..\sdk\wxsqlite3\include"/>
+        <Preprocessor Value="__WX__"/>
+        <Preprocessor Value="WXMAKINGDLL_CODELITE"/>
+      </Compiler>
+      <Linker Required="yes" Options="-O0 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --enable-debug --wxcfg=gcc_dll\mswud)">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="$(IntermediateDirectory)"/>
+        <LibraryPath Value="..\lib\gcc"/>
+        <Library Value="wxmsw28ud_gcc_custom.dll"/>
+        <Library Value="wxsqlite3ud.dll"/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
+    <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
+      <General OutputFile="..\..\lib\gcc\CodeLitelu.dll" IntermediateDirectory=".\Release_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="-O2 $(shell wx-config --cxxflags --disable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll\mswu)">
+        <IncludePath Value="."/>
+        <IncludePath Value=".\include"/>
+        <Preprocessor Value="__WX__"/>
+      </Compiler>
+      <Linker Required="yes" Options="-O2 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --disable-debug)">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="$(IntermediateDirectory)"/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
+  </Settings>
+</CodeLite_Project>

@@ -4,6 +4,14 @@
 #include "tokenizer.h"
 #include "smart_ptr.h"
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // WXMAKINGDLL_CODELITE
+
 /**
  * A call tip function that wraps a tip strings for function prototypes.
  *
@@ -14,7 +22,7 @@
  * \date 09-18-2006
  * \author Eran
  */
-class CallTip
+class WXDLLIMPEXP_CL CallTip
 {
 	std::vector<wxString> m_tips;
 	std::vector<wxString>::size_type m_curr;

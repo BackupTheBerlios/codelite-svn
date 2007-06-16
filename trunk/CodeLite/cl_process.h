@@ -4,6 +4,14 @@
 #include "wx/process.h"
 #include "wx/string.h"
 
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // WXMAKINGDLL_CODELITE
+
 /**
  * \ingroup CodeLite
  * \brief this class represents a cross platform process
@@ -15,7 +23,7 @@
  *
  * \author Eran
  */
-class clProcess : public wxProcess
+class WXDLLIMPEXP_CL clProcess : public wxProcess
 {
 	long m_pid;
 	int m_uid;

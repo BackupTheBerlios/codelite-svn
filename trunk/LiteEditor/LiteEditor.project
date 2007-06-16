@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="LiteEditor">
+  <VirtualDirectory Name="Source Files">
+    <File Name="workspace_pane.cpp"/>
+    <File Name="add_option_dialog.cpp"/>
+    <File Name="advanced_settings.cpp"/>
+    <File Name="app.cpp"/>
+    <File Name="build_page.cpp"/>
+    <File Name="close_all_dlg.cpp"/>
+    <File Name="compiler_page.cpp"/>
+    <File Name="configuration_manager_base_dlg.cpp"/>
+    <File Name="configuration_manager_dlg.cpp"/>
+    <File Name="context_base.cpp"/>
+    <File Name="context_cpp.cpp"/>
+    <File Name="context_manager.cpp"/>
+    <File Name="context_text.cpp"/>
+    <File Name="cpp_symbol_tree.cpp"/>
+    <File Name="ctags_dialog.cpp"/>
+    <File Name="depend_dlg_page.cpp"/>
+    <File Name="depends_dlg.cpp"/>
+    <File Name="dirpicker.cpp"/>
+    <File Name="edit_configuration.cpp"/>
+    <File Name="edit_workspace_conf_dlg.cpp"/>
+    <File Name="editor.cpp"/>
+    <File Name="editor_creator.cpp"/>
+    <File Name="envvar_dlg.cpp"/>
+    <File Name="envvar_table.cpp"/>
+    <File Name="filedroptarget.cpp"/>
+    <File Name="filepicker.cpp"/>
+    <File Name="fileview.cpp"/>
+    <File Name="findinfilesdlg.cpp"/>
+    <File Name="findreplacedlg.cpp"/>
+    <File Name="frame.cpp"/>
+    <File Name="free_text_dialog.cpp"/>
+    <File Name="generic_context.cpp"/>
+    <File Name="lexer_page.cpp"/>
+    <File Name="manager.cpp"/>
+    <File Name="menu_event_handlers.cpp"/>
+    <File Name="menumanager.cpp"/>
+    <File Name="new_configuration_dlg.cpp"/>
+    <File Name="new_item_dlg.cpp"/>
+    <File Name="newdlg.cpp"/>
+    <File Name="options_base_dlg.cpp"/>
+    <File Name="output_pane.cpp"/>
+    <File Name="project_settings_base_dlg.cpp"/>
+    <File Name="project_settings_dlg.cpp"/>
+    <File Name="resources.cpp"/>
+    <File Name="shell_window.cpp"/>
+    <File Name="symbols_dialog.cpp"/>
+    <File Name="symbols_dialog_base.cpp"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="Header Files">
+    <File Name="workspace_pane.h"/>
+    <File Name="add_option_dialog.h"/>
+    <File Name="advanced_settings.h"/>
+    <File Name="app.h"/>
+    <File Name="build_page.h"/>
+    <File Name="close_all_dlg.h"/>
+    <File Name="compiler_page.h"/>
+    <File Name="configuration_manager_base_dlg.h"/>
+    <File Name="configuration_manager_dlg.h"/>
+    <File Name="context_base.h"/>
+    <File Name="context_cpp.h"/>
+    <File Name="context_manager.h"/>
+    <File Name="context_text.h"/>
+    <File Name="cpp_symbol_tree.h"/>
+    <File Name="ctags_dialog.h"/>
+    <File Name="depend_dlg_page.h"/>
+    <File Name="depends_dlg.h"/>
+    <File Name="dirpicker.h"/>
+    <File Name="edit_configuration.h"/>
+    <File Name="edit_workspace_conf_dlg.h"/>
+    <File Name="editor.h"/>
+    <File Name="editor_creator.h"/>
+    <File Name="envvar_dlg.h"/>
+    <File Name="envvar_table.h"/>
+    <File Name="filedroptarget.h"/>
+    <File Name="filepicker.h"/>
+    <File Name="fileview.h"/>
+    <File Name="findinfilesdlg.h"/>
+    <File Name="findreplacedlg.h"/>
+    <File Name="frame.h"/>
+    <File Name="free_text_dialog.h"/>
+    <File Name="generic_context.h"/>
+    <File Name="lexer_page.h"/>
+    <File Name="manager.h"/>
+    <File Name="menu_event_handlers.h"/>
+    <File Name="menumanager.h"/>
+    <File Name="new_configuration_dlg.h"/>
+    <File Name="new_item_dlg.h"/>
+    <File Name="newdlg.h"/>
+    <File Name="options_base_dlg.h"/>
+    <File Name="output_pane.h"/>
+    <File Name="project_settings_base_dlg.h"/>
+    <File Name="project_settings_dlg.h"/>
+    <File Name="resource.h"/>
+    <File Name="shell_window.h"/>
+    <File Name="stdwx.h"/>
+    <File Name="symbols_dialog.h"/>
+    <File Name="symbols_dialog_base.h"/>
+  </VirtualDirectory>
+  <Settings Type="Executable">
+    <Configuration Name="Debug" CompilerType="gnu g++">
+      <General OutputFile="..\Runtime\LiteEditor" IntermediateDirectory=".\Debug_unicode_gcc" Command="LiteEditor" CommandArguments="" WorkingDirectory="..\Runtime"/>
+      <Compiler Required="yes" Options="-g  $(shell wx-config --cxxflags --enable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll\mswud)">
+        <IncludePath Value="."/>
+        <IncludePath Value="..\CodeLite"/>
+        <IncludePath Value="..\sdk\wxsqlite3\include"/>
+        <IncludePath Value="..\sdk\wxflatnotebook\include"/>
+        <IncludePath Value="..\sdk\wxscintilla\include"/>
+        <IncludePath Value="..\Plugin"/>
+        <Preprocessor Value="__WX__"/>
+        <Preprocessor Value="WXUSINGDLL_FNB"/>
+        <Preprocessor Value="WXUSINGDLL_WXSQLITE3"/>
+        <Preprocessor Value="WXUSINGDLL_SCI"/>
+      </Compiler>
+      <Linker Required="yes" Options="-O0 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --enable-debug --wxcfg=gcc_dll\mswud)">
+        <LibraryPath Value="."/>
+        <LibraryPath Value=".\Debug"/>
+        <LibraryPath Value="..\lib\gcc"/>
+        <Library Value="libCodeLiteud.dll"/>
+        <Library Value="libplugin_sdkud.dll"/>
+        <Library Value="libwxscintillaud.dll"/>
+        <Library Value="libwxflatnotebookud.dll"/>
+        <Library Value="wxmsw28ud_gcc_custom.dll"/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="GNU g++">
+      <General OutputFile="./Release/HelloWorld" IntermediateDirectory="./Release" Command="HelloWorld" CommandArguments="" WorkingDirectory="./Release"/>
+      <Compiler Required="yes" Options="-O2">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Required="yes" Options="-O2">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="./Release"/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
+  </Settings>
+  <Dependencies/>
+</CodeLite_Project>

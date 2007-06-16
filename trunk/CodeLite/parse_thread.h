@@ -21,7 +21,7 @@
 
 class TagsDatabase;
 
-class ParseRequest : public ThreadRequest 
+class WXDLLIMPEXP_SYM_TREE ParseRequest : public ThreadRequest 
 {
 public:
 	wxString file;

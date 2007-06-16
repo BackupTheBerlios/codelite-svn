@@ -8,7 +8,7 @@
 #include <SetupAPI.h>
 #include <Psapi.h>
 #include <tlhelp32.h>
-#include <vdmdbg.h>
+//#include <vdmdbg.h>
 
 // ToolHelp Function Pointers.
 typedef HANDLE (WINAPI *CreateToolhelp32Snapshot_t)(DWORD,DWORD);

@@ -14,6 +14,18 @@
 
 class wxFindReplaceDialog;
 
+//incase we are using DLL build of wxWdigets, we need to make this class to export its 
+//classes 
+#ifndef WXDLLIMPEXP_LE
+	#ifdef WXMAKINGDLL
+	#    define WXDLLIMPEXP_LE WXEXPORT
+	#elif defined(WXUSINGDLL)
+	#    define WXDLLIMPEXP_LE WXIMPORT
+	#else 
+	#    define WXDLLIMPEXP_LE
+	#endif // WXDLLIMPEXP_LE
+#endif
+
 /**
  * \ingroup LiteEditor
  * LEditor Lite Editor editing component based on Scintilla
@@ -33,7 +45,7 @@ class wxFindReplaceDialog;
  * \author Eran
  *
  */
-class LEditor : public wxScintilla
+class WXDLLIMPEXP_LE LEditor : public wxScintilla
 {
 	wxFileName m_fileName;
 	wxString m_project;

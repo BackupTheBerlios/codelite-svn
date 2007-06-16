@@ -7,6 +7,7 @@
 
 #ifndef SCINTILLABASE_H
 #define SCINTILLABASE_H
+#include "SString.h"
 
 /**
  */

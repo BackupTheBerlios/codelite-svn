@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="wxflatnotebook">
+  <VirtualDirectory Name="Source Files">
+    <File Name="src\wxFlatNotebook\xh_fnb.cpp"/>
+    <File Name="src\wxFlatNotebook\fnb_customize_dlg.cpp"/>
+    <File Name="src\wxFlatNotebook\fnb_resources.cpp"/>
+    <File Name="src\wxFlatNotebook\popup_dlg.cpp"/>
+    <File Name="src\wxFlatNotebook\renderer.cpp"/>
+    <File Name="src\wxFlatNotebook\wxFlatNotebook.cpp"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="Header Files">
+    <File Name="include\wx\wxFlatNotebook\xh_fnb.h"/>
+    <File Name="include\wx\wxFlatNotebook\fnb_customize_dlg.h"/>
+    <File Name="include\wx\wxFlatNotebook\fnb_resources.h"/>
+    <File Name="include\wx\wxFlatNotebook\fnb_singleton.h"/>
+    <File Name="include\wx\wxFlatNotebook\fnb_smart_ptr.h"/>
+    <File Name="include\wx\wxFlatNotebook\popup_dlg.h"/>
+    <File Name="include\wx\wxFlatNotebook\renderer.h"/>
+    <File Name="include\wx\wxFlatNotebook\wxFlatNotebook.h"/>
+    <File Name="include\wx\wxFlatNotebook\wxFNBDropTarget.h"/>
+  </VirtualDirectory>
+  <Settings Type="Dynamic Library">
+    <Configuration Name="DebugUnicode" CompilerType="gnu g++">
+      <General OutputFile="..\..\lib\gcc\libwxflatnotebookud.dll" IntermediateDirectory=".\Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="-g $(shell wx-config --cxxflags --enable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll\mswud)">
+        <IncludePath Value="."/>
+        <IncludePath Value=".\include"/>
+        <Preprocessor Value="__WX__"/>
+        <Preprocessor Value="WXMAKINGDLL_FNB"/>
+      </Compiler>
+      <Linker Required="yes" Options="-O0 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --enable-debug --wxcfg=gcc_dll\mswud)">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="$(IntermediateDirectory)"/>
+        <Library Value="wxmsw28ud_gcc_custom.dll"/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
+    <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
+      <General OutputFile="..\..\lib\gcc\libDynamicDllu.dll" IntermediateDirectory=".\Release_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="-O2 $(shell wx-config --cxxflags --disable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll\mswu)">
+        <IncludePath Value="."/>
+        <IncludePath Value=".\include"/>
+        <Preprocessor Value="__WX__"/>
+      </Compiler>
+      <Linker Required="yes" Options="-O2 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --disable-debug)">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="$(IntermediateDirectory)"/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
+  </Settings>
+  <Dependencies/>
+</CodeLite_Project>

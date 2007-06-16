@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="wxsqlite3">
+  <VirtualDirectory Name="Source Files">
+    <File Name="src\wxsqlite3.cpp"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="Header Files">
+    <File Name="include\wx\wxsqlite3opt.h"/>
+    <File Name="include\wx\wxsqlite3.h"/>
+    <File Name="include\wx\wxsqlite3def.h"/>
+    <File Name="include\wx\wxsqlite3dyn.h"/>
+  </VirtualDirectory>
+  <Settings Type="Dynamic Library">
+    <Configuration Name="Debug" CompilerType="gnu g++">
+      <General OutputFile="..\..\lib\gcc\libwxsqlite3ud.dll" IntermediateDirectory=".\Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="-g $(shell wx-config --cxxflags --enable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll\mswud)">
+        <IncludePath Value="."/>
+        <IncludePath Value=".\include"/>
+        <IncludePath Value=".\sqlite3\include"/>
+        <Preprocessor Value="__WX__"/>
+      </Compiler>
+      <Linker Required="yes" Options="-O0">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="$(IntermediateDirectory)"/>
+        <LibraryPath Value="$(WXSTABLE)\lib\gcc_dll"/>
+        <LibraryPath Value=".\sqlite3\lib"/>
+        <Library Value="wxmsw28ud_gcc_custom.dll"/>
+        <Library Value="sqlite3_mingw.dll"/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu g++">
+      <General OutputFile="..\..\lib\gcc\libwxsqlite3u.dll" IntermediateDirectory=".\Release_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="-O2 $(shell wx-config --cxxflags --disable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll\mswu)">
+        <IncludePath Value="."/>
+        <IncludePath Value=".\include"/>
+        <IncludePath Value=".\sqlite3\include"/>
+        <Preprocessor Value="__WX__"/>
+      </Compiler>
+      <Linker Required="yes" Options="-O2">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="$(IntermediateDirectory)"/>
+        <LibraryPath Value="$(WXSTABLE)\lib\gcc_dll"/>
+        <LibraryPath Value=".\sqlite3\lib"/>
+        <Library Value="wxmsw28u_gcc_custom.dll"/>
+        <Library Value="sqlite3_mingw.dll"/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
+  </Settings>
+  <Dependencies/>
+</CodeLite_Project>

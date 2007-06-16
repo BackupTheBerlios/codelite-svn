@@ -6,6 +6,7 @@
 #include "regexp_int.h"
 #include "regexp_custom.h"
 #include "regmagic.h"
+#include <ctype.h>
 
 /* FORWARDING FUNCTIONS for macros in ctype */
 static int isalnum_f(CHAR_TYPE c)
@@ -20,7 +21,7 @@ static int isalpha_f(CHAR_TYPE c)
 
 static int isblank_f(CHAR_TYPE c)
 {
-    return cisblank(c);
+    return c == ' '  ||  c == '\t';
 }
 
 static int iscntrl_f(CHAR_TYPE c)
