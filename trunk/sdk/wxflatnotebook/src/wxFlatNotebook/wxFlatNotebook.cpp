@@ -289,12 +289,8 @@ void wxFlatNotebook::SetSelection(size_t page)
 	}
 
 	m_windows[page]->Show();
+	m_mainSizer->Layout();
 	Thaw();
-
-	//incase changing the layout of the tabs, a Layout() call is needed
-	if(m_windowStyle & wxFNB_BOTTOM){
-		m_mainSizer->Layout();
-	}
 
 	if( page != (size_t)m_pages->m_iActivePage )
 		//there is a real poge changing
