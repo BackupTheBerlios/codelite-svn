@@ -108,7 +108,7 @@
   </Dependencies>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu g++">
-      <General OutputFile="..\lib\gcc\LiteEditor" IntermediateDirectory=".\Debug_unicode_gcc" Command="LiteEditor" CommandArguments="" WorkingDirectory="..\Runtime"/>
+      <General OutputFile="..\lib\gcc\LiteEditor" IntermediateDirectory=".\Debug_unicode_gcc" Command="LiteEditor" CommandArguments="" WorkingDirectory="..\lib\gcc"/>
       <Compiler Required="yes" Options="-g  $(shell wx-config --cxxflags --enable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll\mswud)">
         <IncludePath Value="."/>
         <IncludePath Value="..\CodeLite"/>
@@ -133,7 +133,7 @@
         <Library Value="wxmsw28ud_gcc_custom.dll"/>
       </Linker>
       <PreBuild>
-        <Command Enabled="no">windres -i code_parser.rc -I$(WXSTABLE)/include  -o $(IntermediateDirectory)/code_parser.o</Command>
+        <Command Enabled="yes">windres -i code_parser.rc -I$(WXSTABLE)/include  -o $(IntermediateDirectory)/code_parser.o</Command>
       </PreBuild>
       <PostBuild/>
     </Configuration>
