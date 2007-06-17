@@ -47,13 +47,15 @@ void ShellWindow::ConnectEvents()
 
 void ShellWindow::AppendLine(const wxString &text)
 {
-	AddText( text );						
 	// the next 4 lines make sure that the caret is at last line
-	// and is visible
+	// and is visible. This is done before adding the data
 	SetSelectionEnd(GetLength());
 	SetSelectionStart(GetLength());
 	SetCurrentPos(GetLength());
 	EnsureCaretVisible();
+	
+	// add the text to the control
+	AddText( text );						
 }
 
 void ShellWindow::Clear()

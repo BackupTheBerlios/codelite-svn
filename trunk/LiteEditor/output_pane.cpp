@@ -151,16 +151,17 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 	}
 
 	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage((size_t)index));
-	if( win ){
-		if(win == m_outputWind){
+	if( win )
+	{
+		if(win == m_outputWind)
+		{
 			m_outputWind->AppendLine(text);
 			return;
 		}
 
 		// enable writing
 		win->SetReadOnly(false);					
-		// add the text
-		win->AddText( text );						
+		
 		// the next 4 lines make sure that the caret is at last line
 		// and is visible
 		win->SetSelectionEnd(win->GetLength());
@@ -168,17 +169,24 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 		win->SetCurrentPos(win->GetLength());
 		win->EnsureCaretVisible();
 
+		// add the text
+		win->AddText( text );						
+
 		// enable readonly mode 
-		win->SetReadOnly(true);	
+		win->SetReadOnly(true);
 
 		//keep track about lines added to the 
-		if(winName == OutputPane::BUILD_WIN){
-			if(text.Contains(wxT("Build Started..."))){
+		if(winName == OutputPane::BUILD_WIN)
+		{
+			if(text.Contains(wxT("Build Started...")))
+			{
 
 				m_buildLineInfo.Clear();
 				m_project = wxEmptyString;
 
-			} else if(text.Contains(wxT("----------Building project:[ "))){
+			} 
+			else if(text.Contains(wxT("----------Building project:[ ")))
+			{
 				//set new project name for the coming lines
 				m_project = text.AfterFirst(wxT('['));
 				m_project = m_project.BeforeFirst(wxT(']'));
@@ -284,24 +292,38 @@ void OutputPane::OnBuildWindowDClick(const wxString &line, int lineno)
 	//find the project selected build configuration for the workspace selected
 	//configuration
 	wxString projectName = m_buildLineInfo.Item(lineno);
-	BuildMatrixPtr matrix = ManagerST::Get()->GetWorkspaceBuildMatrix();
-	wxString projecBuildConf = matrix->GetProjectSelectedConf(	matrix->GetSelectedConfigurationName(), 
-																projectName	);
 	
+	if(projectName.IsEmpty())
+		return;
+		
+	BuildMatrixPtr matrix = ManagerST::Get()->GetWorkspaceBuildMatrix();
+	wxString projecBuildConf = matrix->GetProjectSelectedConf(matrix->GetSelectedConfigurationName(), 
+																				 projectName	);
 	ProjectSettingsPtr settings = ManagerST::Get()->GetProject(projectName)->GetSettings();
-	if(!settings){
+	if(!settings)
+	{
 		return;
 	}
 	
 	BuildConfigPtr  bldConf = settings->GetBuildConfiguration(projecBuildConf);
+	if( !bldConf )
+	{
+		return;
+	}
+	
 	wxString cmpType = bldConf->GetCompilerType();
 	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetCompiler(cmpType);
-
+	if( !cmp )
+	{
+		return;
+	}
+	
 	long idx;
 	//try to match an error pattern to the line
 	RegexProcessor re(cmp->GetErrPattern());
 	cmp->GetErrFileNameIndex().ToLong(&idx);
-	if(re.GetGroup(line, idx, fileName)){
+	if(re.GetGroup(line, idx, fileName))
+	{
 		//we found the file name, get the line number
 		cmp->GetErrLineNumberIndex().ToLong(&idx);
 		re.GetGroup(line, idx, strLineNumber);
@@ -309,10 +331,12 @@ void OutputPane::OnBuildWindowDClick(const wxString &line, int lineno)
 	}
 
 	//try to match warning pattern
-	if(!match){
+	if(!match)
+	{
 		RegexProcessor re(cmp->GetWarnPattern());
 		cmp->GetWarnFileNameIndex().ToLong(&idx);
-		if(re.GetGroup(line, idx, fileName)){
+		if(re.GetGroup(line, idx, fileName))
+		{
 			//we found the file name, get the line number
 			cmp->GetWarnLineNumberIndex().ToLong(&idx);
 			re.GetGroup(line, idx, strLineNumber);
@@ -320,19 +344,22 @@ void OutputPane::OnBuildWindowDClick(const wxString &line, int lineno)
 		}
 	}
 
-	if(match){
+	if(match)
+	{
 		long lineNumber = -1;
 		strLineNumber.ToLong(&lineNumber);
 
 		// open the file in the editor
 		// get the project name that is currently being built
 		wxString projName(wxEmptyString);
-		if(lineno < (int)m_buildLineInfo.GetCount()){
+		if(lineno < (int)m_buildLineInfo.GetCount())
+		{
 			projName = m_buildLineInfo.Item(lineno);
 		}
 		
 		// if no project found, dont do anything
-		if(projName.IsEmpty()){
+		if(projName.IsEmpty())
+		{
 			return;
 		}
 
