@@ -98,8 +98,8 @@ void ProcUtils::GetProcTree(std::map<unsigned long, bool> &parentsMap, long pid)
 	CloseHandle (hProcessSnap);
 }
 #else
-void ProcUtils::GetProcTree(std::map<unsigned long, bool> &, long )
+void ProcUtils::GetProcTree(std::map<unsigned long, bool> &tree, long pid)
 {
-	//dont do nothing on other platforms
+	tree[pid] = true;
 }
 #endif
