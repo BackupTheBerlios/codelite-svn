@@ -251,9 +251,9 @@ void LEditor::SetProperties()
 
 	AutoCompSetSeparator(static_cast<int>('@'));	// set the separator to be non valid language wxChar
 	AutoCompSetChooseSingle(true);					// If only one match, insert it automatically
-	AutoCompSetIgnoreCase(true);
-	AutoCompSetMaxWidth(0);
-	//AutoCompSetFillUps(wxT(":.(- "));
+	AutoCompSetIgnoreCase(false);
+	AutoCompSetCancelAtStart(false);
+	AutoCompSetDropRestOfWord(false);
 
 	SetTabWidth(8);
 	SetIndent(8);

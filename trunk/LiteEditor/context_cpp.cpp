@@ -237,13 +237,13 @@ wxString ContextCpp::GetImageString(const TagEntry &entry)
 	if(entry.GetKind() == wxT("member") && entry.GetAccess() == wxT("protected"))
 		return wxT("?8");
 
-	if(entry.GetKind() == wxT("function") && entry.GetAccess() == wxT("private"))
+	if((entry.GetKind() == wxT("function") || entry.GetKind() == wxT("prototype")) && entry.GetAccess() == wxT("private"))
 		return wxT("?9");
 
-	if(entry.GetKind() == wxT("function") && entry.GetAccess() == wxT("public"))
+	if((entry.GetKind() == wxT("function") || entry.GetKind() == wxT("prototype")) && (entry.GetAccess() == wxT("public") || entry.GetAccess().IsEmpty()))
 		return wxT("?10");
 
-	if(entry.GetKind() == wxT("function") && entry.GetAccess() == wxT("protected"))
+	if((entry.GetKind() == wxT("function") || entry.GetKind() == wxT("prototype")) && entry.GetAccess() == wxT("protected"))
 		return wxT("?11");
 
 	if(entry.GetKind() == wxT("macro"))
