@@ -1023,7 +1023,7 @@ void Manager::RetagProject(const wxString &projectName)
 {
 	DoRetagProject(projectName, true);	
 }
-
+ 
 void Manager::DoRetagProject(const wxString &projectName, bool updateUItree)
 {
 	//remove project from database
