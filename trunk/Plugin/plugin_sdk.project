@@ -64,33 +64,28 @@
     <File Name="workspace.h"/>
     <File Name="xmlutils.h"/>
   </VirtualDirectory>
-  <Settings Type="Dynamic Library">
+  <Settings Type="Static Library">
     <Configuration Name="DebugUnicode" CompilerType="gnu g++">
-      <General OutputFile="..\lib\gcc\libplugin_sdkud.dll" IntermediateDirectory=".\Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
-      <Compiler Required="yes" Options="-g $(shell wx-config --cxxflags --enable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll\mswud)">
+      <General OutputFile="../lib/gcc/libplugin_sdkud.a" IntermediateDirectory="./Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="-g -g $(shell wx-config --cxxflags --debug=yes --unicode=yes)">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <IncludePath Value="..\CodeLite"/>
-        <IncludePath Value="..\sdk\wxsqlite3\include"/>
+        <IncludePath Value="./include"/>
+        <IncludePath Value="../CodeLite"/>
+        <IncludePath Value="../sdk/wxsqlite3/include"/>
         <Preprocessor Value="__WX__"/>
-        <Preprocessor Value="WXMAKINGDLL_LE_SDK"/>
-        <Preprocessor Value="WXUSINGDLL_CODELITE"/>
       </Compiler>
-      <Linker Required="yes" Options="-O0 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --enable-debug --wxcfg=gcc_dll\mswud)">
+      <Linker Required="yes" Options="-O0">
         <LibraryPath Value="."/>
-        <LibraryPath Value="$(IntermediateDirectory)"/>
-        <LibraryPath Value="..\lib\gcc"/>
-        <Library Value="libCodeLiteud.dll"/>
-        <Library Value="wxmsw28ud_gcc_custom.dll"/>
+        <Library Value="libCodeLiteud.a"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc\libDynamicDllu.dll" IntermediateDirectory=".\Release_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
-      <Compiler Required="yes" Options="-O2 $(shell wx-config --cxxflags --disable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll\mswu)">
+      <General OutputFile="../../lib/gcc/libDynamicDllu.so" IntermediateDirectory="./Release_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="-O2 $(shell wx-config --cxxflags --disable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll/mswu)">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
+        <IncludePath Value="./include"/>
         <Preprocessor Value="__WX__"/>
       </Compiler>
       <Linker Required="yes" Options="-O2 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --disable-debug)">

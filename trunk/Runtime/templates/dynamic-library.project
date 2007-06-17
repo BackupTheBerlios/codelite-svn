@@ -4,7 +4,7 @@
   <VirtualDirectory Name="Header Files"/>
   <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="GNU g++">
-      <General OutputFile="./Debug/libDynamicLibray.dll" IntermediateDirectory="./Debug" Command="" CommandArguments="" WorkingDirectory="./Debug"/>
+      <General OutputFile="./Debug/libDynamicLibray.so" IntermediateDirectory="./Debug" Command="" CommandArguments="" WorkingDirectory="./Debug"/>
       <Compiler Required="yes" Options="-g">
         <IncludePath Value="."/>
       </Compiler>
@@ -17,7 +17,7 @@
     </Configuration>
 
 	<Configuration Name="Release" CompilerType="GNU g++">
-      <General OutputFile="./Release/libDynamicLibray.dll" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory="./Release"/>
+      <General OutputFile="./Release/libDynamicLibray.so" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory="./Release"/>
       <Compiler Required="yes" Options="-O2">
         <IncludePath Value="."/>
       </Compiler>
