@@ -4,7 +4,6 @@
 #include "context_base.h"
 #include "calltip.h"
 #include <map>
-#include "cc_images.h"
 #include "entry.h"
 
 class ContextCpp : public ContextBase {
