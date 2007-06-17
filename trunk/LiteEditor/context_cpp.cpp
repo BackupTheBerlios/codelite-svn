@@ -5,6 +5,22 @@
 #include "symbols_dialog.h"
 #include "editor_config.h"
 #include "macros.h"
+#include "wx/xrc/xmlres.h"
+
+//Images initialization
+wxBitmap ContextCpp::m_classBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_structBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_namespaceBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_variableBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_tpyedefBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_memberPrivateBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_memberPublicBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_memberProtectedeBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_functionPrivateBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_functionPublicBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_functionProtectedeBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_macroBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_enumBmp = wxNullBitmap;
 
 ContextCpp::ContextCpp(LEditor *container)
 : ContextBase(container)
@@ -46,6 +62,41 @@ ContextCpp::ContextCpp(LEditor *container)
 		rCtrl.StyleSetSize(st.GetId(), (*iter).GetFontSize());
 		rCtrl.StyleSetForeground(st.GetId(), (*iter).GetFgColour());
 	}
+
+	//create all images used by the cpp context
+	wxImage img;
+	if(m_classBmp.IsOk() == false)
+	{
+		m_classBmp = wxXmlResource::Get()->LoadBitmap(wxT("class"));
+		m_structBmp = wxXmlResource::Get()->LoadBitmap(wxT("struct"));
+		m_namespaceBmp = wxXmlResource::Get()->LoadBitmap(wxT("namespace"));
+		m_variableBmp = wxXmlResource::Get()->LoadBitmap(wxT("member_public"));
+		m_tpyedefBmp = wxXmlResource::Get()->LoadBitmap(wxT("typedef"));
+		m_memberPrivateBmp = wxXmlResource::Get()->LoadBitmap(wxT("member_private"));
+		m_memberPublicBmp = wxXmlResource::Get()->LoadBitmap(wxT("member_public"));
+		m_memberProtectedeBmp = wxXmlResource::Get()->LoadBitmap(wxT("member_protected"));
+		m_functionPrivateBmp = wxXmlResource::Get()->LoadBitmap(wxT("func_private"));
+		m_functionPublicBmp = wxXmlResource::Get()->LoadBitmap(wxT("func_public"));
+		m_functionProtectedeBmp = wxXmlResource::Get()->LoadBitmap(wxT("func_protected"));
+		m_macroBmp = wxXmlResource::Get()->LoadBitmap(wxT("typedef"));
+		m_enumBmp = wxXmlResource::Get()->LoadBitmap(wxT("enum"));
+	}
+
+	//register the images
+	rCtrl.ClearRegisteredImages();
+	rCtrl.RegisterImage(1, m_classBmp);
+	rCtrl.RegisterImage(2, m_structBmp);
+	rCtrl.RegisterImage(3, m_namespaceBmp);
+	rCtrl.RegisterImage(4, m_variableBmp);
+	rCtrl.RegisterImage(5, m_tpyedefBmp);
+	rCtrl.RegisterImage(6, m_memberPrivateBmp);
+	rCtrl.RegisterImage(7, m_memberPublicBmp);
+	rCtrl.RegisterImage(8, m_memberProtectedeBmp);
+	rCtrl.RegisterImage(9, m_functionPrivateBmp);
+	rCtrl.RegisterImage(10, m_functionPublicBmp);
+	rCtrl.RegisterImage(11, m_functionProtectedeBmp);
+	rCtrl.RegisterImage(12, m_macroBmp);
+	rCtrl.RegisterImage(13, m_enumBmp);
 }
 
 ContextCpp::~ContextCpp()
@@ -150,12 +201,57 @@ void ContextCpp::CodeComplete()
 			wxString list;
 			size_t i=0;
 			for(; i<candidates.size()-1; i++)
-				list.Append(candidates[i].GetName() + wxT("@"));
-			list.Append(candidates[i].GetName());
+			{
+				list.Append(candidates.at(i).GetName() + GetImageString(candidates.at(i)) + wxT("@"));
+			}
+
+			list.Append(candidates.at(i).GetName() + GetImageString(candidates.at(i)));
 			GetCtrl().AutoCompShow(0, list);
 		}
 	}
 }
+
+wxString ContextCpp::GetImageString(const TagEntry &entry)
+{
+	if(entry.GetKind() == wxT("class"))
+		return wxT("?1");
+
+	if(entry.GetKind() == wxT("struct"))
+		return wxT("?2");
+
+	if(entry.GetKind() == wxT("namespace"))
+		return wxT("?3");
+
+	if(entry.GetKind() == wxT("variable"))
+		return wxT("?4");
+
+	if(entry.GetKind() == wxT("typedef"))
+		return wxT("?5");
+
+	if(entry.GetKind() == wxT("member") && entry.GetAccess() == wxT("private"))
+		return wxT("?6");
+
+	if(entry.GetKind() == wxT("member") && entry.GetAccess() == wxT("public"))
+		return wxT("?7");
+
+	if(entry.GetKind() == wxT("member") && entry.GetAccess() == wxT("protected"))
+		return wxT("?8");
+
+	if(entry.GetKind() == wxT("function") && entry.GetAccess() == wxT("private"))
+		return wxT("?9");
+
+	if(entry.GetKind() == wxT("function") && entry.GetAccess() == wxT("public"))
+		return wxT("?10");
+
+	if(entry.GetKind() == wxT("function") && entry.GetAccess() == wxT("protected"))
+		return wxT("?11");
+
+	if(entry.GetKind() == wxT("macro"))
+		return wxT("?12");
+
+	return wxEmptyString;
+}
+
 void ContextCpp::AutoIndent(const wxChar &nChar)
 {
 	LEditor &rCtrl = GetCtrl();
@@ -312,7 +408,7 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 	{
 		tooltip << tips[0];
 		for( size_t i=1; i<tips.size(); i++ )
-			tooltip << wxT("\n\n") << tips[i];
+			tooltip << wxT("\n") << tips[i];
 
 		// cancel any old calltip and display the new one
 		rCtrl.CallTipCancel();
@@ -454,8 +550,8 @@ void ContextCpp::CompleteWord()
 	if( tags.empty() == false )
 	{
 		for(; i<tags.size()-1; i++)
-			list.Append(tags[i].GetName() + wxT("@"));
-		list.Append(tags[i].GetName());
+			list.Append(tags[i].GetName() + GetImageString(tags[i]) + wxT("@"));
+		list.Append(tags[i].GetName() + GetImageString(tags[i]));
 		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
 	}
 }
