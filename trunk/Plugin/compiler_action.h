@@ -30,6 +30,7 @@ protected:
 	virtual void OnTimer(wxTimerEvent &event);
 	virtual void OnProcessEnd(wxProcessEvent& event);
 	virtual void PrintOutput();
+	void CleanUp();
 
 public:
 	bool IsBusy() const { return m_busy; }

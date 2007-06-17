@@ -21,6 +21,7 @@ void CompilerAction::Stop()
 	//kill the build process
 	if(m_proc){
 		m_proc->Terminate();
+		CleanUp();
 	}
 }
 
@@ -86,11 +87,14 @@ void CompilerAction::OnProcessEnd(wxProcessEvent& event)
 	//read all input before stopping the timer
 	if( !m_stop ){
 		PrintOutput();
+		CleanUp();
 	}
-	
+}
+
+void CompilerAction::CleanUp()
+{
 	m_timer->Stop();
 	m_busy = false;
 	m_stop = false;
-
 	SendEndMsg();
 }
