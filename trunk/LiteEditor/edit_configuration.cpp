@@ -117,8 +117,8 @@ void EditConfigurationDialog::OnItemDclick(wxCommandEvent &event)
 {
 	wxString oldName = event.GetString();
 	wxTextEntryDialog *dlg = new wxTextEntryDialog(this, wxT("Enter New Name:"), wxT("Rename"), oldName);
-	wxTextValidator validator(wxFILTER_ALPHANUMERIC);
-	dlg->SetTextValidator(validator);
+	dlg->SetTextValidator(wxFILTER_ALPHANUMERIC);
+
 	if(dlg->ShowModal() == wxID_OK){
 		wxString newName = dlg->GetValue();
 		RenameConfiguration(oldName, newName);
@@ -139,8 +139,7 @@ void EditConfigurationDialog::OnButtonRename(wxCommandEvent &event)
 		return;
 	}
 	wxTextEntryDialog *dlg = new wxTextEntryDialog(this, wxT("Enter New Name:"), wxT("Rename"), oldName);
-	wxTextValidator validator(wxFILTER_ALPHANUMERIC);
-	dlg->SetTextValidator(validator);
+	dlg->SetTextValidator(wxFILTER_ALPHANUMERIC);
 
 	if(dlg->ShowModal() == wxID_OK){
 		wxString newName = dlg->GetValue();

@@ -140,6 +140,8 @@ void GotoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 	while( 1 ) 
 	{
 		wxTextEntryDialog dlg(editor, msg, wxT("Go To Line"));
+		dlg.SetTextValidator(wxFILTER_NUMERIC);
+
 		if(dlg.ShowModal() == wxID_OK)
 		{
 			wxString val = dlg.GetValue();
