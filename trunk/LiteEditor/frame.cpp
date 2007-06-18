@@ -1111,6 +1111,14 @@ void Frame::OnFindResource(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
 	OpenResourceDlg *dlg = new OpenResourceDlg(this);
-	dlg->ShowModal();
+	if(dlg->ShowModal() == wxID_OK)
+	{
+		wxString fileName = dlg->GetFileName();
+		if(fileName.IsEmpty() == false)
+		{
+			wxString projectName = ManagerST::Get()->GetProjectNameByFile(fileName);
+			ManagerST::Get()->OpenFile(fileName, projectName);
+		}
+	}
 	dlg->Destroy();
 }

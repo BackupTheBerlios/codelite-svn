@@ -16,6 +16,7 @@
 #include "vector"
 #include "wx/filename.h"
 #include "wx/timer.h"
+#include <wx/textctrl.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -27,21 +28,21 @@ class OpenResourceDlg : public wxDialog
 {
 	std::vector<wxFileName> m_files;
 	wxTimer *m_timer;
+	wxString m_fileName;
 
 protected:
 	void OnButtonOK(wxCommandEvent &event);
 	void OnButtonCancel(wxCommandEvent &event);
 	void OnItemActivated(wxCommandEvent &event);
 	void ConnectEvents();
-	bool DoOpenFile();
+	bool UpdateFileName();
 	void OnTimer(wxTimerEvent &event);
-	void GetFilesAsWxArray(wxArrayString &files);
-	void OnComboEnter(wxCommandEvent &event);
+	void OnEnterHit(wxCommandEvent &event);
 
 protected:
 	wxPanel* mainPanel;
 	wxStaticText* m_staticTitle;
-	wxComboBox* m_comboResourceName;
+	wxTextCtrl* m_textResourceName;
 	wxListBox* m_listShortNames;
 	wxStaticLine* m_staticline1;
 	wxButton* m_btnOk;
@@ -50,7 +51,7 @@ protected:
 public:
 	OpenResourceDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Open Resource:"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 653,393 ), int style = wxDEFAULT_DIALOG_STYLE );
 	virtual ~OpenResourceDlg();
-
+	const wxString& GetFileName() const { return m_fileName; }
 };
 
 #endif //__open_resouce_dlg__

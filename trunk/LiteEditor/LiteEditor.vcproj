@@ -555,12 +555,6 @@
 			Name="Controls"
 			Filter="">
 			<File
-				RelativePath=".\autocombobox.cpp">
-			</File>
-			<File
-				RelativePath=".\autocombobox.h">
-			</File>
-			<File
 				RelativePath=".\dirpicker.cpp">
 			</File>
 			<File
