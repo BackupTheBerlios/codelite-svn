@@ -55,7 +55,7 @@ class SymbolsDialogBase : public wxDialog
 		
 	
 	public:
-		SymbolsDialogBase( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Resolve Ambiguity"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 541,269 ), int style = wxDEFAULT_DIALOG_STYLE );
+		SymbolsDialogBase( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Resolve Ambiguity"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 600,300 ), int style = wxDEFAULT_DIALOG_STYLE );
 	
 };
 

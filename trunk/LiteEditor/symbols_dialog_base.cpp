@@ -19,7 +19,7 @@
 
 ///////////////////////////////////////////////////////////////////////////
 BEGIN_EVENT_TABLE( SymbolsDialogBase, wxDialog )
-	EVT_LIST_ITEM_ACTIVATED( wxID_OK, SymbolsDialogBase::_wxFB_OnItemActivated )
+	EVT_LIST_ITEM_ACTIVATED( wxID_ANY, SymbolsDialogBase::_wxFB_OnItemActivated )
 	EVT_LIST_ITEM_SELECTED( wxID_ANY, SymbolsDialogBase::_wxFB_OnItemSelected )
 	EVT_BUTTON( wxID_OK, SymbolsDialogBase::_wxFB_OnButtonOK )
 	EVT_BUTTON( wxID_CANCEL, SymbolsDialogBase::_wxFB_OnButtonCancel )

@@ -72,6 +72,8 @@ ContextCpp::ContextCpp(LEditor *container)
 		m_namespaceBmp = wxXmlResource::Get()->LoadBitmap(wxT("namespace"));
 		m_variableBmp = wxXmlResource::Get()->LoadBitmap(wxT("member_public"));
 		m_tpyedefBmp = wxXmlResource::Get()->LoadBitmap(wxT("typedef"));
+		m_tpyedefBmp.SetMask(new wxMask(m_tpyedefBmp, wxColor(0, 128, 128)));
+
 		m_memberPrivateBmp = wxXmlResource::Get()->LoadBitmap(wxT("member_private"));
 		m_memberPublicBmp = wxXmlResource::Get()->LoadBitmap(wxT("member_public"));
 		m_memberProtectedeBmp = wxXmlResource::Get()->LoadBitmap(wxT("member_protected"));
@@ -79,7 +81,10 @@ ContextCpp::ContextCpp(LEditor *container)
 		m_functionPublicBmp = wxXmlResource::Get()->LoadBitmap(wxT("func_public"));
 		m_functionProtectedeBmp = wxXmlResource::Get()->LoadBitmap(wxT("func_protected"));
 		m_macroBmp = wxXmlResource::Get()->LoadBitmap(wxT("typedef"));
+		m_macroBmp.SetMask(new wxMask(m_macroBmp, wxColor(0, 128, 128)));
+
 		m_enumBmp = wxXmlResource::Get()->LoadBitmap(wxT("enum"));
+		m_enumBmp.SetMask(new wxMask(m_enumBmp, wxColor(0, 128, 128)));
 	}
 
 	//register the images
