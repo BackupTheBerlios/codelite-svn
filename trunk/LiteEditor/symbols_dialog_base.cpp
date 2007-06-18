@@ -19,10 +19,10 @@
 
 ///////////////////////////////////////////////////////////////////////////
 BEGIN_EVENT_TABLE( SymbolsDialogBase, wxDialog )
-	EVT_LIST_ITEM_ACTIVATED( wxID_ANY, SymbolsDialogBase::_wxFB_OnItemActivated )
+	EVT_LIST_ITEM_ACTIVATED( wxID_OK, SymbolsDialogBase::_wxFB_OnItemActivated )
 	EVT_LIST_ITEM_SELECTED( wxID_ANY, SymbolsDialogBase::_wxFB_OnItemSelected )
-	EVT_BUTTON( wxID_ANY, SymbolsDialogBase::_wxFB_OnButtonOK )
-	EVT_BUTTON( wxID_ANY, SymbolsDialogBase::_wxFB_OnButtonCancel )
+	EVT_BUTTON( wxID_OK, SymbolsDialogBase::_wxFB_OnButtonOK )
+	EVT_BUTTON( wxID_CANCEL, SymbolsDialogBase::_wxFB_OnButtonCancel )
 END_EVENT_TABLE()
 
 SymbolsDialogBase::SymbolsDialogBase( wxWindow* parent, int id, wxString title, wxPoint pos, wxSize size, int style ) : wxDialog( parent, id, title, pos, size, style )
@@ -41,10 +41,10 @@ SymbolsDialogBase::SymbolsDialogBase( wxWindow* parent, int id, wxString title, 
 	wxBoxSizer* btnSizer;
 	btnSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_okButton = new wxButton( this, wxID_ANY, wxT("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_okButton = new wxButton( this, wxID_OK, wxT("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnSizer->Add( m_okButton, 0, wxALIGN_RIGHT|wxALL, 5 );
 	
-	m_cancel = new wxButton( this, wxID_ANY, wxT("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_cancel = new wxButton( this, wxID_CANCEL, wxT("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnSizer->Add( m_cancel, 0, wxALIGN_RIGHT|wxALL, 5 );
 	
 	mainSizer->Add( btnSizer, 0, wxALIGN_RIGHT, 5 );
