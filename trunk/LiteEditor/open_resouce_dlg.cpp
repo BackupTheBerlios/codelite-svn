@@ -19,7 +19,6 @@
 
 #include "open_resouce_dlg.h"
 #include "macros.h"
-#include "autocombobox.h"
 #include "manager.h"
 
 ///////////////////////////////////////////////////////////////////////////
