@@ -93,7 +93,7 @@ wxString CtagsOptions::ToString() const
 //------------------------------------------------------------------------------
 
 TagsManager::TagsManager() : wxEvtHandler()
-, m_ctagsPath(wxT("ctags-le"))
+, m_ctagsPath(wxT("bin/ctags-le"))
 , m_ctags(NULL)
 , m_localCtags(NULL)
 , m_parseComments(false)
@@ -516,13 +516,6 @@ clProcess *TagsManager::StartCtagsProcess(int kind)
 	wxString ctagsCmd;
 	ctagsCmd << m_options.ToString() << wxT(" ") << iter->second;
 	
-	if(m_ctagsPath.FileExists() == false)
-	{
-		printf("LiteEditor: Cant find ctags executable (ctags-le)\n");
-		kind == TagsGlobal ? m_ctags = NULL : m_localCtags = NULL;
-		return NULL;
-	}
-
 	// build the command, we surround ctags name with double quatations
 	cmd << wxT("\"") << m_ctagsPath.GetFullPath() << wxT("\"") << ctagsCmd;
 	clProcess* process;
@@ -569,7 +562,7 @@ void TagsManager::SetCtagsPath(const wxString& path)
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
 
-	m_ctagsPath = wxFileName(path, wxT("ctags-le"));
+	m_ctagsPath = wxFileName(path, wxT("bin/ctags-le"));
 }
 
 void TagsManager::OnCtagsEnd(wxProcessEvent& event)
