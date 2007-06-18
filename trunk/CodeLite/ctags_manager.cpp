@@ -93,7 +93,7 @@ wxString CtagsOptions::ToString() const
 //------------------------------------------------------------------------------
 
 TagsManager::TagsManager() : wxEvtHandler()
-, m_ctagsPath(wxT("bin/ctags-le"))
+, m_ctagsPath(wxT("ctags-le"))
 , m_ctags(NULL)
 , m_localCtags(NULL)
 , m_parseComments(false)
@@ -562,7 +562,7 @@ void TagsManager::SetCtagsPath(const wxString& path)
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
 
-	m_ctagsPath = wxFileName(path, wxT("bin/ctags-le"));
+	m_ctagsPath = wxFileName(path, wxT("ctags-le"));
 }
 
 void TagsManager::OnCtagsEnd(wxProcessEvent& event)
