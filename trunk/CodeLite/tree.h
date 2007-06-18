@@ -157,6 +157,10 @@ void Tree<TKey, TData>::ToVector(std::vector<std::pair<TKey, TData> >& vec)
 template <typename TKey, typename TData>
 void Tree<TKey, TData>::Compare(Tree* targetTree, std::vector<std::pair<TKey, TData> >& deletedItems, std::vector<std::pair<TKey, TData> >& modifiedItems, std::vector<std::pair<TKey, TData> >& newItems, TreeNode<TKey, TData>* fromNode)
 {
+	if(!targetTree){
+		return;
+	}
+
 	deletedItems.clear(); newItems.clear(); modifiedItems.clear();
 
 	TreeNode<TKey, TData>* node;

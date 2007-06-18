@@ -93,7 +93,7 @@ wxString CtagsOptions::ToString() const
 //------------------------------------------------------------------------------
 
 TagsManager::TagsManager() : wxEvtHandler()
-, m_ctagsPath(wxT("ctags"))
+, m_ctagsPath(wxT("ctags-le"))
 , m_ctags(NULL)
 , m_localCtags(NULL)
 , m_parseComments(false)
@@ -111,12 +111,12 @@ TagsManager::~TagsManager()
 	delete m_pDb;
 	delete m_pExternalDb;
 
-	m_ctags->Disconnect(m_ctags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
-	m_localCtags->Disconnect(m_localCtags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+	if(m_ctags)	m_ctags->Disconnect(m_ctags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+	if(m_localCtags) m_localCtags->Disconnect(m_localCtags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
 
 	// terminate ctags processes
-	m_localCtags->Terminate();
-	m_ctags->Terminate();
+	if(m_localCtags) m_localCtags->Terminate();
+	if(m_ctags) m_ctags->Terminate();
 }
 
 void TagsManager::OpenDatabase(const wxFileName& fileName){
@@ -516,6 +516,13 @@ clProcess *TagsManager::StartCtagsProcess(int kind)
 	wxString ctagsCmd;
 	ctagsCmd << m_options.ToString() << wxT(" ") << iter->second;
 	
+	if(m_ctagsPath.FileExists() == false)
+	{
+		printf("LiteEditor: Cant find ctags executable (ctags-le)\n");
+		kind == TagsGlobal ? m_ctags = NULL : m_localCtags = NULL;
+		return NULL;
+	}
+
 	// build the command, we surround ctags name with double quatations
 	cmd << wxT("\"") << m_ctagsPath.GetFullPath() << wxT("\"") << ctagsCmd;
 	clProcess* process;
@@ -529,6 +536,7 @@ clProcess *TagsManager::StartCtagsProcess(int kind)
 	m_processes[process->GetPid()] = process;
 
 	if( process->GetPid() <= 0 ){
+		kind == TagsGlobal ? m_ctags = NULL : m_localCtags = NULL;
 		return NULL;
 	}
 
@@ -561,7 +569,7 @@ void TagsManager::SetCtagsPath(const wxString& path)
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
 
-	m_ctagsPath = wxFileName(path, wxT("ctags"));
+	m_ctagsPath = wxFileName(path, wxT("ctags-le"));
 }
 
 void TagsManager::OnCtagsEnd(wxProcessEvent& event)
@@ -728,7 +736,11 @@ void TagsManager::GetTags(const wxString& name, const wxString& scopeName, std::
 		// row scope
 		wxString visibleScope = LanguageST::Get()->GetScope(scope, wxEmptyString);
 		localTags = TagsManagerST::Get()->ParseLocals(visibleScope);
-		
+		if( !localTags )
+		{
+			return;
+		}
+
 		// filter all non qualified names from the local scope,
 		// consider flags (PartialMatch or ExactMatch)
 		FilterResults(*localTags, name, tags, flags, &tmpMap);

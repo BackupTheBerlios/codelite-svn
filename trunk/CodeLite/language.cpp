@@ -992,6 +992,9 @@ wxString Language::GetWordQualifier( const wxString & word, const wxString & sco
 		// row scope
 		wxString visibleScope = GetScope( scope, wxEmptyString );
 		localTags = TagsManagerST::Get()->ParseLocals( visibleScope );
+		if( !localTags){
+			return wxEmptyString;
+		}
 
 		// filter all non qualified names from the local scope,
 		// consider flags (PartialMatch or ExactMatch)
