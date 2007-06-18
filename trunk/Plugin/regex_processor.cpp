@@ -4,7 +4,7 @@
 
 RegexProcessor::RegexProcessor(const wxString &reStr)
 {
-	m_re = new wxRegEx(reStr, wxRE_ADVANCED);
+	m_re = new wxRegEx(reStr);//, wxRE_ADVANCED);
 }
 
 RegexProcessor::~RegexProcessor()

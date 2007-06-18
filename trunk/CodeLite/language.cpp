@@ -1038,6 +1038,10 @@ void Language::GetHoverTip(const wxString & token, const wxString & scope, const
 		// row scope
 		wxString visibleScope = LanguageST::Get()->GetScope(scope, wxEmptyString);
 		localTags = TagsManagerST::Get()->ParseLocals(visibleScope);
+		if(!localTags){
+			return;
+		}
+
 		// filter all non qualified names from the local scope,
 		FilterResults(*localTags, isFunc, token, tags2);
 
