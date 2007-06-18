@@ -464,6 +464,12 @@
 				RelativePath=".\newdlg.h">
 			</File>
 			<File
+				RelativePath=".\open_resouce_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\open_resouce_dlg.h">
+			</File>
+			<File
 				RelativePath=".\options_base_dlg.cpp">
 			</File>
 			<File
@@ -548,6 +554,12 @@
 		<Filter
 			Name="Controls"
 			Filter="">
+			<File
+				RelativePath=".\autocombobox.cpp">
+			</File>
+			<File
+				RelativePath=".\autocombobox.h">
+			</File>
 			<File
 				RelativePath=".\dirpicker.cpp">
 			</File>

@@ -27,6 +27,7 @@
 #include "editor_creator.h"
 #include "async_executable_cmd.h"
 #include "close_all_dlg.h"
+#include "open_resouce_dlg.h"
 
 //----------------------------------------------------------------
 // Our main frame
@@ -143,6 +144,9 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 
 	EVT_MENU(XRCID("create_ext_database"), Frame::OnBuildExternalDatabase)
 	EVT_MENU(XRCID("open_ext_database"), Frame::OnUseExternalDatabase)
+	EVT_MENU(XRCID("find_resource"), Frame::OnFindResource)
+	EVT_UPDATE_UI(XRCID("find_resource"), Frame::OnWorkspaceOpen)
+
 	EVT_CLOSE(Frame::OnClose)
 	EVT_TIMER(wxID_ANY, Frame::OnTimer)
 
@@ -1100,4 +1104,13 @@ void Frame::OnFileCloseAll(wxCommandEvent &event)
 	{
 		dlg->Destroy();	
 	}
+}
+
+
+void Frame::OnFindResource(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	OpenResourceDlg *dlg = new OpenResourceDlg(this);
+	dlg->ShowModal();
+	dlg->Destroy();
 }

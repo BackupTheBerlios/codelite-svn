@@ -165,6 +165,7 @@ protected:
 	void OnTimer(wxTimerEvent &event);
 	void OnOutputWindowEvent(wxCommandEvent &event);
 	void OnFileCloseAll(wxCommandEvent &event);
+	void OnFindResource(wxCommandEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

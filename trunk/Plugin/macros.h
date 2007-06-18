@@ -29,8 +29,14 @@
 #define ConnectCharEvent(ctrl, fn)\
 	ctrl->Connect(ctrl->GetId(), wxEVT_CHAR, wxKeyEventHandler(fn), NULL, this);
 
-#define ConnectCmd(ctrl, fn)\
+#define ConnectCmdTextEntered(ctrl, fn)\
 	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(fn), NULL, this);
+
+#define ConnectCmdTextUpdated(ctrl, fn)\
+	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(fn), NULL, this);
+
+#define ConnectCombo(ctrl, fn)\
+	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler(fn), NULL, this);
 
 #define ConnectCheckList(ctrl, fn)\
 	ctrl->Connect(ctrl->GetId(), wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, wxCommandEventHandler(fn), NULL, this);

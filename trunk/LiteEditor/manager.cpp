@@ -998,14 +998,14 @@ void Manager::SetExternalDatabase(const wxFileName &dbname)
 	EditorConfigST::Get()->SetTagsDatabase(dbname.GetFullPath());
 }
 
-void Manager::GetWorkspaceFiles(std::vector<wxFileName> &files)
+void Manager::GetWorkspaceFiles(std::vector<wxFileName> &files, bool absPath)
 {
 	wxArrayString projects;
 	GetProjectList(projects);
 	for(size_t i=0; i<projects.GetCount(); i++)
 	{
 		ProjectPtr p = GetProject(projects.Item(i));
-		p->GetFiles(files);
+		p->GetFiles(files, absPath);
 	}
 }
 
@@ -1100,4 +1100,28 @@ void Manager::KillProgram()
 
 	m_asyncExeCmd->Terminate();
 }
+
+wxString Manager::GetProjectNameByFile(const wxString &fullPathFileName)
+{
+	wxArrayString projects;
+	GetProjectList(projects);
+
+	std::vector<wxFileName> files;
+	for(size_t i=0; i<projects.GetCount(); i++){
+		files.clear();
+		ProjectPtr proj = GetProject(projects.Item(i));
+		proj->GetFiles(files, true);
+
+		for(size_t xx=0; xx<files.size(); xx++)
+		{
+			if(files.at(xx).GetFullPath() == fullPathFileName)
+			{
+				return proj->GetName();
+			}
+		}
+	}
+
+	return wxEmptyString;
+}
+
 

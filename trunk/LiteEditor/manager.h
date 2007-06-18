@@ -419,7 +419,7 @@ public:
 	/** 
 	 * return list of files that are part of the workspace
 	 */
-	void GetWorkspaceFiles(std::vector<wxFileName> &files);
+	void GetWorkspaceFiles(std::vector<wxFileName> &files, bool absPath = false);
 
 	/**
 	 * check if a file is part of the workspace
@@ -444,6 +444,13 @@ public:
 	 * \param msg 
 	 */
 	void DebugMessage(wxString msg);
+
+
+	/**
+	 * return the project name that 'fullPathFileName' belogs to. if 2 matches were found, return
+	 * the first one, or empty string if no match was found
+	 */
+	wxString GetProjectNameByFile(const wxString &fullPathFileName);
 
 protected:
 	Manager(void);
