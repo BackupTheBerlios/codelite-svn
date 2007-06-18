@@ -19,9 +19,25 @@ static int isalpha_f(CHAR_TYPE c)
     return cisalpha(c);
 }
 
+#ifndef isblank
+int iswblank(wint_t wc)
+{
+    /* cheap implementation */
+    return wc == L'\t' || wc == L' ';
+}
+#endif
+
+#ifndef isblank
+int isblank(int c)
+{
+    return c == '\t' || c == ' ';
+}
+#endif
+
+
 static int isblank_f(CHAR_TYPE c)
 {
-    return c == ' '  ||  c == '\t';
+    return cisblank(c);
 }
 
 static int iscntrl_f(CHAR_TYPE c)
