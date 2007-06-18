@@ -134,6 +134,10 @@ void FindReplaceDialog::SetFindReplaceData(const FindReplaceData &data)
 	m_regualrExpression->SetValue(data.GetFlags() & wxFRD_REGULAREXPRESSION ? true : false);
 	m_wrapsearch->SetValue(data.GetFlags() & wxFRD_WRAPSEARCH ? true : false);
 	m_searchUp->SetValue(data.GetFlags() & wxFRD_SEARCHUP ? true : false);
+
+	//set the focus to the find string text control
+	m_findString->SetSelection(-1, -1); // select all
+	m_findString->SetFocus();
 }
 
 void FindReplaceDialog::OnClick(wxCommandEvent &event)

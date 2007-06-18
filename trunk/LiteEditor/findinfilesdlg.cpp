@@ -129,6 +129,9 @@ void FindInFilesDialog::CreateGUIControls()
 
 	mainSizer->Add(new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL), 0, wxEXPAND );
 	mainSizer->Add(btnSizer, 0, wxEXPAND|wxALL, 5);
+
+	m_findString->SetSelection(-1, -1); // select all
+	m_findString->SetFocus();
 }
 
 void FindInFilesDialog::OnClick(wxCommandEvent &event)
