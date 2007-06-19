@@ -20,7 +20,11 @@ void CompilerAction::Stop()
 	m_stop = true;
 	//kill the build process
 	if(m_proc){
+#ifdef __WXGTK__
+		wxExecute(wxT("pkill make"));
+#else
 		m_proc->Terminate();
+#endif 
 		CleanUp();
 	}
 }
@@ -83,11 +87,6 @@ void CompilerAction::PrintOutput()
 void CompilerAction::OnProcessEnd(wxProcessEvent& event)
 {
 	wxUnusedVar(event);
-
-#ifndef __WXMSW__
-	printf("Process terminated: %ld\n", event.GetPid());
-#endif
-
 	//read all input before stopping the timer
 	if( !m_stop ){
 		PrintOutput();
