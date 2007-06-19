@@ -93,6 +93,7 @@ void CompilerAction::OnProcessEnd(wxProcessEvent& event)
 		PrintOutput();
 		CleanUp();
 	}
+	event.Skip();
 }
 
 void CompilerAction::CleanUp()

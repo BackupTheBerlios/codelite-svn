@@ -10,13 +10,7 @@ CompileRequest::CompileRequest(wxEvtHandler *owner, const wxString &projectName)
 
 CompileRequest::~CompileRequest()
 {
-	if( m_proc ){
-#ifndef __WXMSW__
-		printf("Process deleted: %ld\n", m_proc->GetPid());
-#endif
-		delete m_proc;
-		m_proc = NULL;
-	}
+	//no need to delete the process, it will be deleted by the wx library
 }
 
 //do the actual cleanup
