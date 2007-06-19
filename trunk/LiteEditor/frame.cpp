@@ -380,10 +380,10 @@ void Frame::CreateToolbars()
 	m_workspaceConfig = new wxComboBox(tb, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, choices, wxCB_READONLY);
 	m_workspaceConfig->Enable(false);
 	tb->AddControl(m_workspaceConfig);
-
+	
 	// Connect an event to handle changes in the choice control
 	ConnectChoice(m_workspaceConfig, Frame::OnWorkspaceConfigChanged);
-
+	
 	tb->AddTool(XRCID("build_active_project"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("build_active_project")), wxT("Build Active Project (Ctrl+B)"));
 	tb->AddTool(XRCID("clean_active_project"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("clean")), wxT("Clean Active Project"));
 	tb->AddTool(XRCID("stop_active_project_build"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("stop_build")), wxT("Stop Current Build"));
