@@ -27,24 +27,24 @@ void clProcess::SetPid(long pid)
 
 void clProcess::Terminate()
 {
+	wxKillError rc;
 #ifdef __WXMSW__
 	std::map<unsigned long, bool> tree;
 	ProcUtils pu;
 	pu.GetProcTree(tree, GetPid());
 
-	wxKillError rc;
 	std::map<unsigned long, bool>::iterator iter = tree.begin();
 	for(; iter != tree.end(); iter++){
 		wxKill(iter->first, wxSIGKILL, &rc);
 	}
 #else
-	wxKill(GetPid(), wxSIGKILL);
+	wxKill(GetPid(), wxSIGKILL, &rc, wxKILL_CHILDREN);
 #endif 
 
 	// Sleep for 20 ms to allow the process to be killed and 
 	// the main frame to handle the event or else we can get 
 	// memory leak
-	wxMilliSleep( 20 );
+	wxMilliSleep( 150 );
 }
 
 long clProcess::Start(bool hide)
