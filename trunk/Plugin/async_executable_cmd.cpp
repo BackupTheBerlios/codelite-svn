@@ -126,7 +126,6 @@ void AsyncExeCmd::Execute(const wxString &cmdLine)
 
 void AsyncExeCmd::Terminate()
 {
-	m_proc->Detach();
 	m_proc->Terminate();
 }
 
