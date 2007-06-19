@@ -169,6 +169,10 @@ void ContextCpp::CodeComplete()
 	int line = 1;
 
 	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
+	if(start < 0){
+		start = 0;
+	}
+
 	wxString expr = rCtrl.GetTextRange(start, pos);
 
 	// Get the closest function to the current caret position, this will give us a
