@@ -496,12 +496,19 @@ void ScintillaWX::Paste() {
 
 void ScintillaWX::CopyToClipboard (const SelectionText& st) {
 #if wxUSE_CLIPBOARD
-	if (wxTheClipboard->Open()) { 
-		wxTheClipboard->UsePrimarySelection(false);
-		wxString text = wxTextBuffer::Translate(sci2wx(st.s, st.len-1));
-		wxTheClipboard->SetData(new wxTextDataObject(text));
-		wxTheClipboard->Close();
+	if(!wxTheClipboard->IsOpened()){
+		//open the clipboard
+		if(!wxTheClipboard->Open()){
+			//failed to open it ...
+			return;
+		}
 	}
+	//clipboard is open
+	wxTheClipboard->UsePrimarySelection(false);
+	wxString text = wxTextBuffer::Translate(sci2wx(st.s, st.len-1));
+	wxTheClipboard->SetData(new wxTextDataObject(text));
+	wxTheClipboard->Close();
+
 #else
 	wxUnusedVar(st);
 #endif // wxUSE_CLIPBOARD
