@@ -13,8 +13,7 @@
 #include <wx/choice.h>
 #include <wx/button.h>
 #include <wx/statline.h>
-#include "filepicker.h"
-#include "dirpicker.h"
+#include <wx/filepicker.h>
 #include <wx/panel.h>
 #include <wx/gbsizer.h>
 #include <wx/checklst.h>
@@ -42,9 +41,9 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxStaticText* m_staticText191;
 		wxChoice* m_choiceCompilerType;
 		wxStaticText* m_staticText15;
-		FilePicker* m_outputFilePicker;
+		wxFilePickerCtrl* m_outputFilePicker;
 		wxStaticText* m_staticText16;
-		DirPicker* m_intermediateDirPicker;
+		wxDirPickerCtrl* m_intermediateDirPicker;
 		wxStaticText* m_staticText17;
 		wxStaticLine* m_staticline5;
 		wxStaticText* m_staticText18;
@@ -52,7 +51,7 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxStaticText* m_staticText19;
 		wxTextCtrl* m_textCommandArguments;
 		wxStaticText* m_staticText20;
-		DirPicker* m_workingDirPicker;
+		wxDirPickerCtrl* m_workingDirPicker;
 		wxPanel* m_compilerPage;
 		wxCheckBox* m_checkCompilerNeeded;
 		wxStaticLine* m_staticline7;
@@ -64,6 +63,7 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxStaticText* m_staticText171;
 		wxTextCtrl* m_textPreprocessor;
 		wxButton* m_buttonAddPreprocessor;
+		wxButton* m_buttonCompilerOptions;
 		wxPanel* m_linkerPage;
 		wxCheckBox* m_checkLinkerNeeded;
 		wxStaticLine* m_staticline8;
@@ -75,6 +75,7 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxStaticText* m_staticText8;
 		wxTextCtrl* m_textLibraries;
 		wxButton* m_buttonLibraryPath;
+		wxButton* m_buttonLinkerOptions;
 		wxPanel* m_preBuildPage;
 		wxStaticText* m_staticText11;
 		wxStaticLine* m_staticline2;
@@ -99,7 +100,7 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxButton* m_buttonApply;
 	
 	public:
-		ProjectSettingsBaseDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Project Settings"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 576, 500), int style = wxDEFAULT_DIALOG_STYLE );
+		ProjectSettingsBaseDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Project Settings"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 576,415 ), int style = wxDEFAULT_DIALOG_STYLE );
 	
 };
 

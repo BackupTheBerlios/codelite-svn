@@ -218,6 +218,8 @@ void ProjectSettingsDlg::ConnectEvents()
 	ConnectButton(m_buttonApply, ProjectSettingsDlg::OnButtonApply);
 	ConnectButton(m_buttonConfigManager, ProjectSettingsDlg::OnButtonConfigurationManager);
 	ConnectButton(m_buttonAddPreprocessor, ProjectSettingsDlg::OnButtonAddPreprocessor);
+	ConnectButton(m_buttonLinkerOptions, ProjectSettingsDlg::OnButtonAddLinkerOptions);
+	ConnectButton(m_buttonCompilerOptions, ProjectSettingsDlg::OnButtonAddCompilerOptions);
 }
 
 void ProjectSettingsDlg::OnButtonAddPreprocessor(wxCommandEvent &event)
@@ -402,4 +404,16 @@ void ProjectSettingsDlg::OnDeleteCommand(wxCheckListBox *list)
 	} else if(sel - 1 < (int)list->GetCount()){
 		list->Select(sel -1);
 	}
+}
+
+void ProjectSettingsDlg::OnButtonAddCompilerOptions(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	PopupAddOptionDlg(m_textCompilerOptions);
+}
+
+void ProjectSettingsDlg::OnButtonAddLinkerOptions(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	PopupAddOptionDlg(m_textLinkerOptions);
 }

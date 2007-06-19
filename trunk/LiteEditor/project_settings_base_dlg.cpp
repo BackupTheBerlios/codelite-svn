@@ -75,13 +75,13 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_staticText15 = new wxStaticText( m_generalPage, wxID_ANY, wxT("Output File:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_staticText15, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_outputFilePicker = new FilePicker(m_generalPage);
+	m_outputFilePicker = new wxFilePickerCtrl( m_generalPage, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_USE_TEXTCTRL );
 	fgSizer3->Add( m_outputFilePicker, 1, wxALL|wxEXPAND, 5 );
 	
 	m_staticText16 = new wxStaticText( m_generalPage, wxID_ANY, wxT("Intermediate Directory:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer3->Add( m_staticText16, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_intermediateDirPicker = new DirPicker(m_generalPage);
+	m_intermediateDirPicker = new wxDirPickerCtrl( m_generalPage, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_USE_TEXTCTRL );
 	fgSizer3->Add( m_intermediateDirPicker, 0, wxALL|wxEXPAND, 5 );
 	
 	bSizer19->Add( fgSizer3, 0, wxEXPAND, 5 );
@@ -118,7 +118,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	m_staticText20 = new wxStaticText( m_generalPage, wxID_ANY, wxT("Working Directory:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer6->Add( m_staticText20, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_workingDirPicker = new DirPicker(m_generalPage);
+	m_workingDirPicker = new wxDirPickerCtrl( m_generalPage, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_USE_TEXTCTRL );
 	fgSizer6->Add( m_workingDirPicker, 1, wxALL|wxEXPAND, 5 );
 	
 	bSizer19->Add( fgSizer6, 1, wxEXPAND, 5 );
@@ -148,7 +148,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	gbSizer1->Add( m_staticText6, wxGBPosition( 0, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_textCompilerOptions = new wxTextCtrl( m_compilerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer1->Add( m_textCompilerOptions, wxGBPosition( 0, 1 ), wxGBSpan( 1, 2 ), wxALL|wxEXPAND, 5 );
+	gbSizer1->Add( m_textCompilerOptions, wxGBPosition( 0, 1 ), wxGBSpan( 1, 1 ), wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
 	m_staticText4 = new wxStaticText( m_compilerPage, wxID_ANY, wxT("Additional Search Path:"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( m_staticText4, wxGBPosition( 1, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -167,6 +167,9 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	
 	m_buttonAddPreprocessor = new wxButton( m_compilerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer1->Add( m_buttonAddPreprocessor, wxGBPosition( 2, 2 ), wxGBSpan( 1, 1 ), wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	
+	m_buttonCompilerOptions = new wxButton( m_compilerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer1->Add( m_buttonCompilerOptions, wxGBPosition( 0, 2 ), wxGBSpan( 1, 1 ), wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
 	compilerPageSizer->Add( gbSizer1, 1, wxEXPAND, 5 );
 	
@@ -195,7 +198,7 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	gbSizer2->Add( m_staticText10, wxGBPosition( 0, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_textLinkerOptions = new wxTextCtrl( m_linkerPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( m_textLinkerOptions, wxGBPosition( 0, 1 ), wxGBSpan( 1, 2 ), wxALL|wxEXPAND, 5 );
+	gbSizer2->Add( m_textLinkerOptions, wxGBPosition( 0, 1 ), wxGBSpan( 1, 1 ), wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
 	m_staticText7 = new wxStaticText( m_linkerPage, wxID_ANY, wxT("Library Path:"), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer2->Add( m_staticText7, wxGBPosition( 1, 0 ), wxGBSpan( 1, 1 ), wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -214,6 +217,9 @@ ProjectSettingsBaseDlg::ProjectSettingsBaseDlg( wxWindow* parent, int id, wxStri
 	
 	m_buttonLibraryPath = new wxButton( m_linkerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
 	gbSizer2->Add( m_buttonLibraryPath, wxGBPosition( 1, 2 ), wxGBSpan( 1, 1 ), wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	
+	m_buttonLinkerOptions = new wxButton( m_linkerPage, wxID_ANY, wxT("Add..."), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( m_buttonLinkerOptions, wxGBPosition( 0, 2 ), wxGBSpan( 1, 1 ), wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
 	linkerPageSizer->Add( gbSizer2, 1, wxEXPAND, 5 );
 	

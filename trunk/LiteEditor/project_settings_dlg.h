@@ -78,7 +78,8 @@ public:
 	virtual void OnButtonApply(wxCommandEvent &event);
 	virtual void OnButtonConfigurationManager(wxCommandEvent &event);
 	virtual void OnButtonAddPreprocessor(wxCommandEvent &event);
-
+	virtual void OnButtonAddLinkerOptions(wxCommandEvent &event);
+	virtual void OnButtonAddCompilerOptions(wxCommandEvent &event);
 };
 
 #endif // __project_settings_dlg__
