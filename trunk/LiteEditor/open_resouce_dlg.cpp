@@ -41,7 +41,7 @@ OpenResourceDlg::OpenResourceDlg( wxWindow* parent, int id, wxString title, wxPo
 	wxBoxSizer* panelSizer;
 	panelSizer = new wxBoxSizer( wxVERTICAL );
 	
-	m_staticTitle = new wxStaticText( mainPanel, wxID_ANY, wxT("Find Resource:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTitle = new wxStaticText( mainPanel, wxID_ANY, wxT("Find Resource (wildcards are allowed):"), wxDefaultPosition, wxDefaultSize, 0 );
 	panelSizer->Add( m_staticTitle, 0, wxALL, 5 );
 	
 	m_textResourceName = new wxTextCtrl(mainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
@@ -102,8 +102,8 @@ void OpenResourceDlg::OnTimer(wxTimerEvent &event)
 	{
 		for(size_t i=0; i<m_files.size(); i++)
 		{
-			if(m_files[i].GetFullName() == curSel)
-			{
+			//test for wild crads as well
+			if(wxMatchWild(curSel, m_files[i].GetFullName())){
 				tmpArr.Add(m_files[i].GetFullPath());
 			}
 		}
