@@ -20,6 +20,7 @@ void CompilerAction::Stop()
 	m_stop = true;
 	//kill the build process
 	if(m_proc){
+		m_proc->Detach();
 		m_proc->Terminate();
 		CleanUp();
 	}
