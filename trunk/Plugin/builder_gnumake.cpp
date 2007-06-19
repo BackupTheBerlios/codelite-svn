@@ -332,7 +332,10 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 	text << wxT("OutputFile") << wxT("=") << bldConf->GetOutputFileName() << wxT("\n");
 	text << wxT("IntermediateDirectory") << wxT("=") << bldConf->GetIntermediateDirectory() << wxT("\n");
 	text << wxT("Preprocessors=") << ParsePreprocessor(bldConf->GetPreprocessor()) << wxT("\n");
-	text << wxT("CmpOptions") << wxT("=") << bldConf->GetCompileOptions() << wxT(" $(Preprocessors)") << wxT("\n");
+
+	wxString buildOpts = bldConf->GetCompileOptions();
+	buildOpts.Replace(wxT(";"), wxT(" "));
+	text << wxT("CmpOptions") << wxT("=") << buildOpts << wxT(" $(Preprocessors)") << wxT("\n");
 
 	wxString linkOpt = bldConf->GetLinkOptions();
 	linkOpt.Replace(wxT(";"), wxT(" "));
