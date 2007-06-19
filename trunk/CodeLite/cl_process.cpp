@@ -34,8 +34,14 @@ void clProcess::Terminate()
 	wxKillError rc;
 	std::map<unsigned long, bool>::iterator iter = tree.begin();
 	for(; iter != tree.end(); iter++){
-		wxKill(iter->first, wxSIGKILL, &rc);
+		wxKill(iter->first, wxSIGKILL,
+			&rc
+#ifndef __WXMSW__
+			, wxKILL_CHILDREN
+#endif
+			);
 	}
+
 
 	// Sleep for 20 ms to allow the process to be killed and 
 	// the main frame to handle the event or else we can get 
