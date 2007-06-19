@@ -234,16 +234,7 @@ void Manager::CreateWorkspace(const wxString &name, const wxString &path, const 
 	bool res = WorkspaceST::Get()->CreateWorkspace(name, path, options, errMsg);
 	CHECK_MSGBOX(res);
 
-	//initialize some environment variable to be available for this workspace
-	CreateEnvironmentVars(path);
-
-	//build the gui tree
-	TagTreePtr dummy;
-	Frame::Get()->GetWorkspacePane()->BuildFileTree();
-	Frame::Get()->GetWorkspacePane()->BuildSymbolTree(dummy);
-	
-	//Update the configuration choice on the toolbar
-	DoUpdateConfigChoiceControl();
+	OpenWorkspace(path);
 }
 
 void Manager::CreateProject(ProjectData &data)
