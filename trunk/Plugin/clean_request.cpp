@@ -11,13 +11,7 @@ CleanRequest::CleanRequest(wxEvtHandler *owner, const wxString &projectName)
 
 CleanRequest::~CleanRequest()
 {
-	if( m_proc ){
-#ifndef __WXMSW__
-		printf("Process deleted: %ld\n", m_proc->GetPid());
-#endif
-		delete m_proc;
-		m_proc = NULL;
-	}
+	//no need to delete the process, it will be deleted by the wx library
 }
 
 
