@@ -66,7 +66,8 @@ class WXDLLIMPEXP_LE_SDK BuildConfig : public ConfObject {
 private:
 	void FillFromSmiColonString(wxArrayString &arr, const wxString &str);
 	wxString ArrayToSmiColonString(const wxArrayString &array) const;
-	
+	void StripSemiColons(wxString &str);
+
 	wxString NormalizePath(const wxString &path) const;
 
 public:

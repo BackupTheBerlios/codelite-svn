@@ -237,6 +237,11 @@ wxString BuildConfig::ArrayToSmiColonString(const wxArrayString &array) const{
 	return result.BeforeLast(wxT(';'));
 }
 
+void BuildConfig::StripSemiColons(wxString &str)
+{
+	str.Replace(wxT(";"), wxT(" "));
+}
+
 wxString BuildConfig::GetLibPath() const 
 {
 	return ArrayToSmiColonString(m_libPath);

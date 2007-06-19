@@ -254,10 +254,10 @@ void BuilderGnuMake::CreateTargets(const wxString &type, BuildConfigPtr bldConf,
 		text << wxT("\t") << wxT("$(ArchiveTool) $(OutputFile) $(Objects)\n");
 	}else if(type == Project::DYNAMIC_LIBRARY){
 		//create a shared library
-		text << wxT("\t") << wxT("$(SharedObjectLinkerName) $(LinkOptions) $(OutputSwitch) $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
+		text << wxT("\t") << wxT("$(SharedObjectLinkerName) $(OutputSwitch) $(OutputFile) $(LinkOptions) $(Objects) $(LibPath) $(Libs)\n");
 	}else if(type == Project::EXECUTABLE){
 		//create an executable
-		text << wxT("\t") << wxT("$(LinkerName) $(LinkOptions) $(OutputSwitch) $(OutputFile) $(Objects) $(LibPath) $(Libs)\n");
+		text << wxT("\t") << wxT("$(LinkerName) $(OutputSwitch) $(OutputFile) $(LinkOptions) $(Objects) $(LibPath) $(Libs)\n");
 	}
 	text << wxT("\n\n");
 }
@@ -333,7 +333,12 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 	text << wxT("IntermediateDirectory") << wxT("=") << bldConf->GetIntermediateDirectory() << wxT("\n");
 	text << wxT("Preprocessors=") << ParsePreprocessor(bldConf->GetPreprocessor()) << wxT("\n");
 	text << wxT("CmpOptions") << wxT("=") << bldConf->GetCompileOptions() << wxT(" $(Preprocessors)") << wxT("\n");
-	text << wxT("LinkOptions") << wxT("=") << bldConf->GetLinkOptions() << wxT("\n");
+
+	wxString linkOpt = bldConf->GetLinkOptions();
+	linkOpt.Replace(wxT(";"), wxT(" "));
+
+	//link options are kept with semi-colons, strip them
+	text << wxT("LinkOptions") << wxT("=") << linkOpt << wxT("\n");
 	text << wxT("IncludePath=") << ParseIncludePath(bldConf->GetIncludePath()) << wxT("\n");
 	text << wxT("Libs=") << ParseLibs(bldConf->GetLibraries()) << wxT("\n");
 	text << wxT("LibPath=") << ParseLibPath(bldConf->GetLibPath()) << wxT("\n");
