@@ -369,7 +369,7 @@ void OutputPane::OnBuildWindowDClick(const wxString &line, int lineno)
 		wxFileName fn(fileName);
 		fn.MakeAbsolute(pro->GetFileName().GetPath());
 
-		ManagerST::Get()->OpenFile(fn.GetFullPath(), wxEmptyString, lineNumber - 1 );
+		ManagerST::Get()->OpenFile(fn.GetFullPath(), projName, lineNumber - 1 );
 	}
 }
 
