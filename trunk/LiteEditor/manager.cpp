@@ -298,7 +298,7 @@ void Manager::OpenWorkspace(const wxString &path)
 void Manager::DoUpdateConfigChoiceControl()
 {
 	BuildMatrixPtr matrix = WorkspaceST::Get()->GetBuildMatrix();
-	wxChoice *choice = Frame::Get()->GetConfigChoice();
+	wxComboBox *choice = Frame::Get()->GetConfigChoice();
 	
 	choice->Enable(true);
 	choice->Freeze();

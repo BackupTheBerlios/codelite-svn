@@ -377,7 +377,7 @@ void Frame::CreateToolbars()
 	tb->AddSeparator();
 
 	wxArrayString choices;
-	m_workspaceConfig = new wxChoice(tb, wxID_ANY, wxDefaultPosition, wxDefaultSize, choices);
+	m_workspaceConfig = new wxComboBox(tb, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, choices, wxCB_READONLY);
 	m_workspaceConfig->Enable(false);
 	tb->AddControl(m_workspaceConfig);
 

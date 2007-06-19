@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Project Name="plugin_sdk">
   <VirtualDirectory Name="Source Files">
-    <File Name="widechar.c"/>
-    <File Name="frontend.c"/>
-    <File Name="memory.c"/>
-    <File Name="regerror.c"/>
-    <File Name="regexp.c"/>
-    <File Name="regsub.c"/>
-    <File Name="report.c"/>
     <File Name="xmlutils.cpp"/>
     <File Name="async_executable_cmd.cpp"/>
     <File Name="build_config.cpp"/>
@@ -55,10 +48,6 @@
     <File Name="project.h"/>
     <File Name="project_settings.h"/>
     <File Name="regex_processor.h"/>
-    <File Name="regexp.h"/>
-    <File Name="regexp_custom.h"/>
-    <File Name="regexp_int.h"/>
-    <File Name="regmagic.h"/>
     <File Name="search_thread.h"/>
     <File Name="sync_queue.h"/>
     <File Name="workspace.h"/>

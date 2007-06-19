@@ -37,7 +37,7 @@ class Frame : public wxFrame
 	FindReplaceData m_data;
 	WorkspacePane *m_workspacePane;
 	wxArrayString m_files;
-	wxChoice *m_workspaceConfig;
+	wxComboBox *m_workspaceConfig;
 	wxTimer *m_timer;
 	std::map<int, wxString> m_viewAsMap;
 	wxMenu *m_tabRightClickMenu;
@@ -61,7 +61,7 @@ public:
 	/**
 	 * Return the workspace configuration choice control
 	 */
-	wxChoice *GetConfigChoice() { return m_workspaceConfig; }
+	wxComboBox *GetConfigChoice() { return m_workspaceConfig; }
 
 	/**
 	 * Close the current file

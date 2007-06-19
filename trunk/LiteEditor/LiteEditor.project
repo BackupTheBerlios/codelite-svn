@@ -48,6 +48,7 @@
     <File Name="shell_window.cpp"/>
     <File Name="symbols_dialog.cpp"/>
     <File Name="symbols_dialog_base.cpp"/>
+    <File Name="open_resouce_dlg.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Header Files">
     <File Name="workspace_pane.h"/>
@@ -98,6 +99,7 @@
     <File Name="stdwx.h"/>
     <File Name="symbols_dialog.h"/>
     <File Name="symbols_dialog_base.h"/>
+    <File Name="open_resouce_dlg.h"/>
   </VirtualDirectory>
   <Dependencies>
     <Project Name="wxsqlite3"/>
@@ -108,7 +110,7 @@
   </Dependencies>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu g++">
-      <General OutputFile="../Runtime/LiteEditor" IntermediateDirectory="./Debug_unicode_gcc" Command="LiteEditor_ud" CommandArguments="" WorkingDirectory="../Runtime"/>
+      <General OutputFile="../Runtime/LiteEditor" IntermediateDirectory="./Debug_unicode_gcc" Command="LiteEditor" CommandArguments="" WorkingDirectory="../Runtime"/>
       <Compiler Required="yes" Options="-g  $(shell wx-config --cxxflags --debug=yes --unicode=yes)">
         <IncludePath Value="."/>
         <IncludePath Value="../CodeLite"/>
