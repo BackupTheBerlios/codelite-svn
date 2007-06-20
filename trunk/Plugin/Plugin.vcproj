@@ -342,6 +342,37 @@
 				RelativePath=".\compiler_action.h">
 			</File>
 		</Filter>
+		<Filter
+			Name="MakefileImporter"
+			Filter="">
+			<File
+				RelativePath=".\LineTypes.h">
+			</File>
+			<File
+				RelativePath=".\MakefileParser.cpp">
+			</File>
+			<File
+				RelativePath=".\MakefileParser.h">
+			</File>
+			<File
+				RelativePath=".\Target.cpp">
+			</File>
+			<File
+				RelativePath=".\Target.h">
+			</File>
+			<File
+				RelativePath=".\TargetLexer.cpp">
+			</File>
+			<File
+				RelativePath=".\TargetLexer.h">
+			</File>
+			<File
+				RelativePath=".\VariableLexer.cpp">
+			</File>
+			<File
+				RelativePath=".\VariableLexer.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

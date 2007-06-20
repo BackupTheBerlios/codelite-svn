@@ -29,6 +29,10 @@
 #include "editor_creator.h"
 #include "algorithm"
 #include "async_executable_cmd.h"
+#include "fileutils.h"
+#include "VariableLexer.h"
+#include "MakefileParser.h"
+#include "TargetLexer.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -1113,6 +1117,67 @@ wxString Manager::GetProjectNameByFile(const wxString &fullPathFileName)
 	}
 
 	return wxEmptyString;
+}
+
+void Manager::ImportFromMakefile(const wxString &path)
+{
+	DebugMessage(path);
+	
+	wxString file;
+	FileUtils::ReadFileUTF8(path, file);
+	
+	StringTokenizer tokenizer(file, wxT("\n"));
+	wxArrayString fileContents;
+	for(int i = 0; i < tokenizer.Count(); i++)
+	{
+		fileContents.Add(tokenizer[i]);
+	}
+	
+	VariableLexer expander(fileContents);
+	wxArrayString expanded = expander.getResult();
+	
+	MakefileParser parser(expanded);
+	TypedStrings parsed = parser.getResult();
+	
+	TargetLexer lexer(parsed);
+	Targets lexed = lexer.getResult();
+	
+	/*for(int i=0; i< parsed.size(); i++)
+	{	
+		wxString msg;
+		msg << parsed[i].type << wxT(": ") << parsed[i].line << wxT("\n");
+		DebugMessage(msg);
+	}*/
+	
+	wxString msg;
+	msg << wxT("Displaying results:\n\n");
+
+	for (int i = 0; i < (int)lexed.size(); i++)
+	{
+		Target current = lexed[i];
+
+		wxString name = current.getName();
+		wxArrayString deps = current.getDeps();
+		wxArrayString actions = current.getActions();
+
+		msg << wxT("Target ") << name << wxT(":\n");
+		msg << wxT("Depends on ") << (int)deps.size() << wxT(" things:\n");
+		for(int j = 0; j < (int)deps.size(); j++)
+			msg << wxT("- '") << deps[j] << wxT("'\n");
+
+		msg << wxT("And has ") << (int)actions.size() << wxT(" build rules:\n");
+		for(int j = 0; j < (int)actions.size(); j++)
+			msg << wxT("- '") << actions[j] << wxT("'\n");
+
+		msg << wxT("\n");
+	}
+	
+	msg << wxT("Done.\n");
+	
+	DebugMessage(msg);
+
+	
+	return;
 }
 
 

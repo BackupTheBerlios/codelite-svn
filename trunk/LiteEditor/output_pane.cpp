@@ -22,6 +22,7 @@ OutputPane::OutputPane(wxWindow *parent, const wxString &caption)
 : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 300))
 , m_caption(caption)
 , m_canFocus(true)
+, m_logTargetOld(NULL)
 {
 	CreateGUIControls();	
 }
@@ -33,7 +34,7 @@ void OutputPane::OnPaint(wxPaintEvent &event){
 
 OutputPane::~OutputPane()
 {
-
+	delete wxLog::SetActiveTarget(m_logTargetOld);
 }
 
 void OutputPane::CreateGUIControls()
@@ -83,7 +84,11 @@ void OutputPane::CreateGUIControls()
 	m_book->AddPage(buildWin, BUILD_WIN, false, 1);
 	m_book->AddPage(m_outputWind, OUTPUT_WIN, false, 2);
 	m_book->AddPage(outputDebug, OUTPUT_DEBUG, false, 3);
+	wxTextCtrl *text = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY);
+	m_logTargetOld = wxLog::SetActiveTarget( new wxLogTextCtrl(text) );
 	
+	m_book->AddPage(text, wxT("Trace"), false, 3);
+
 	mainSizer->Fit(this);
 	mainSizer->Layout();
 }

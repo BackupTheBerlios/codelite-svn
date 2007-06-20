@@ -196,6 +196,10 @@
                 <label>&amp;Switch to Workspace...</label>
                 <help>Switch to an existing workspace</help>
             </object>
+			<object class="wxMenuItem" name="import_from_makefile">
+	    		<label>&amp;Import workspace from makefile...</label>
+				<help>Import a workspace from a custom makefile</help>
+			</object>
             <object class="wxMenuItem" name="wxID_SEPARATOR"/>
 
             <object class="wxMenuItem" name="new_project">

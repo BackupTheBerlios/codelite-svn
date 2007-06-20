@@ -44,6 +44,7 @@ public:
 	wxArrayString m_buildLineInfo;
 	wxString m_project;
 	ShellWindow *m_outputWind;
+	wxLog *m_logTargetOld;
 
 private:
 	void CreateGUIControls();

@@ -41,6 +41,7 @@ class Frame : public wxFrame
 	wxTimer *m_timer;
 	std::map<int, wxString> m_viewAsMap;
 	wxMenu *m_tabRightClickMenu;
+	
 
 public:	
 	// the access method to the singleton frame is by using the Get method
@@ -166,6 +167,7 @@ protected:
 	void OnOutputWindowEvent(wxCommandEvent &event);
 	void OnFileCloseAll(wxCommandEvent &event);
 	void OnFindResource(wxCommandEvent &event);
+	void OnImportMakefile(wxCommandEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

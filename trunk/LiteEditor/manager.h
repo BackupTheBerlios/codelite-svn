@@ -452,6 +452,11 @@ public:
 	 */
 	wxString GetProjectNameByFile(const wxString &fullPathFileName);
 
+	/** 
+	* Import a workspace from a makefile
+	*/ 	
+	void ImportFromMakefile(const wxString &path);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

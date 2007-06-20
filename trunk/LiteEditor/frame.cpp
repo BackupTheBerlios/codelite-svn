@@ -147,6 +147,9 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("find_resource"), Frame::OnFindResource)
 	EVT_UPDATE_UI(XRCID("find_resource"), Frame::OnWorkspaceOpen)
 
+	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
+	EVT_MENU(XRCID("import_from_makefile"), Frame::OnImportMakefile)
+
 	EVT_CLOSE(Frame::OnClose)
 	EVT_TIMER(wxID_ANY, Frame::OnTimer)
 
@@ -157,6 +160,7 @@ Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPo
 : wxFrame(pParent, id, title, pos, size, style, name)
 , m_restartCtags(true)
 , m_findInFilesDlg(NULL)
+
 {
 	CreateGUIControls();
 	ManagerST::Get();	// Dummy call
@@ -1120,6 +1124,19 @@ void Frame::OnFindResource(wxCommandEvent &event)
 			wxString projectName = ManagerST::Get()->GetProjectNameByFile(fileName);
 			ManagerST::Get()->OpenFile(fileName, projectName);
 		}
+	}
+	dlg->Destroy();
+}
+
+
+void Frame::OnImportMakefile(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	const wxString ALL(wxT("Import makefile files (Makefile) |Makefile|")
+					   wxT("All Files (*.*)|*.*"));
+	wxFileDialog *dlg = new wxFileDialog(this, wxT("Open Makefile"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , wxDefaultPosition);
+	if (dlg->ShowModal() == wxID_OK){
+		ManagerST::Get()->ImportFromMakefile(dlg->GetPath());
 	}
 	dlg->Destroy();
 }
