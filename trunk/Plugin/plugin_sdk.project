@@ -24,6 +24,10 @@
     <File Name="search_thread.cpp"/>
     <File Name="sync_queue.cpp"/>
     <File Name="workspace.cpp"/>
+    <File Name="MakefileParser.cpp"/>
+    <File Name="Target.cpp"/>
+    <File Name="TargetLexer.cpp"/>
+    <File Name="VariableLexer.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Header Files">
     <File Name="async_executable_cmd.h"/>
@@ -52,6 +56,10 @@
     <File Name="sync_queue.h"/>
     <File Name="workspace.h"/>
     <File Name="xmlutils.h"/>
+    <File Name="LineTypes.h"/>
+    <File Name="MakefileParser.h"/>
+    <File Name="TargetLexer.h"/>
+    <File Name="VariableLexer.h"/>
   </VirtualDirectory>
   <Settings Type="Static Library">
     <Configuration Name="DebugUnicode" CompilerType="gnu g++">
