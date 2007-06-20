@@ -20,11 +20,11 @@ void CompilerAction::Stop()
 	m_stop = true;
 	//kill the build process
 	if(m_proc){
-#ifdef __WXGTK__
-		wxExecute(wxT("pkill make"));
-#else
+//#ifdef __WXGTK__
+//		wxExecute(wxT("pkill make"));
+//#else
 		m_proc->Terminate();
-#endif 
+//#endif 
 		CleanUp();
 	}
 }

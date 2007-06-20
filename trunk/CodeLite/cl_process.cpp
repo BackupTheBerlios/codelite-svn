@@ -50,7 +50,7 @@ void clProcess::Terminate()
 long clProcess::Start(bool hide)
 {
 	Redirect();
-	long flags = wxEXEC_ASYNC;
+	long flags = wxEXEC_ASYNC | wxEXEC_MAKE_GROUP_LEADER ;
 	if( !hide ){
 		flags |= wxEXEC_NOHIDE;
 	}
