@@ -143,5 +143,5 @@ void LexerPage::SaveSettings()
 {
 	m_lexer->SetProperties( m_propertyList );
 	m_lexer->SetFileSpec( m_fileSpec->GetValue() );
-	EditorConfigST::Get()->SetLexer( m_lexer );
+	m_lexer->Save();
 }

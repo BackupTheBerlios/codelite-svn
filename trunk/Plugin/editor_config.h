@@ -124,6 +124,11 @@ public:
 	 */
 	void SetTagsDatabase(const wxString &dbName);
 
+	/**
+	 * save lexers settings
+	 */
+	void SaveLexers();
+
 private:
 	EditorConfig();
 	virtual ~EditorConfig();

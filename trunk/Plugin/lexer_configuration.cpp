@@ -14,6 +14,9 @@ LexerConf::LexerConf(const wxString &fileName)
 
 void LexerConf::Save()
 {
+	//replace the root node with the new xml representation for this object
+	m_doc.SetRoot(ToXml());
+
 	if(m_doc.IsOk()){
 		m_doc.Save(m_fileName.GetFullPath());
 	}

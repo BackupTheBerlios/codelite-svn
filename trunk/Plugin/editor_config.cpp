@@ -36,6 +36,15 @@ bool EditorConfig::Load()
 	return true;
 }
 
+void EditorConfig::SaveLexers()
+{
+	std::map<wxString, LexerConfPtr>::iterator iter = m_lexers.begin();
+	for(; iter != m_lexers.end(); iter++)
+	{
+		iter->second->Save();
+	}
+}
+
 wxXmlNode* EditorConfig::GetLexerNode(const wxString& lexerName)
 {
 	wxXmlNode *lexersNode = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("Lexers"));

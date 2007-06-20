@@ -465,6 +465,7 @@ void Frame::OnClose(wxCloseEvent& event)
 	EditorConfigST::Get()->SaveNotebookStyle(wxT("Editor"), m_notebook->GetWindowStyleFlag());
 	EditorConfigST::Get()->SaveNotebookStyle(wxT("OutputPane"), m_outputPane->GetNotebook()->GetWindowStyleFlag());
 	EditorConfigST::Get()->SaveNotebookStyle(wxT("WorkspacePane"), m_workspacePane->GetNotebook()->GetWindowStyleFlag());
+	EditorConfigST::Get()->SaveLexers();
 	event.Skip();
 }
 
