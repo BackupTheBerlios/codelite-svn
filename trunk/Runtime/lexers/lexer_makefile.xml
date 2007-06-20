@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Lexer Name="Makefile" Id="11">
+  <KeyWords></KeyWords>
+  <Extensions>*.mk;makefile;Makefile;*.mak</Extensions>
+  <Properties>
+    <Property Id="0" Name="Default" Bold="no" Face="" Colour="black" Size="10"/>
+    <Property Id="1" Name="Comment" Bold="no" Face="" Colour="#008000" Size="10"/>
+    <Property Id="2" Name="Preprocessor" Bold="no" Face="" Colour="#804040" Size="10"/>
+    <Property Id="3" Name="Identifier" Bold="no" Face="" Colour="#0000A0" Size="10"/>
+    <Property Id="4" Name="Operator" Bold="no" Face="" Colour="#FF0000" Size="10"/>
+    <Property Id="5" Name="Target" Bold="no" Face="" Colour="#FF0000" Size="10"/>
+    <Property Id="6" Name="ID End Of Line" Bold="no" Face="" Colour="#FF0000" Size="10"/>
+  </Properties>
+</Lexer>
