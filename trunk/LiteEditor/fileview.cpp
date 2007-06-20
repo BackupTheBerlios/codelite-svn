@@ -33,6 +33,28 @@ void FileViewTree::ConnectEvents()
 	Connect(XRCID("stop_build"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnStopBuild), NULL, this);
 	Connect(XRCID("retag_project"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnRetagProject), NULL, this);
 	Connect(XRCID("retag_workspace"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(FileViewTree::OnRetagWorkspace), NULL, this);
+
+	Connect(XRCID("remove_project"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("set_as_active"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("new_item"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("add_existing_item"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("new_virtual_folder"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("remove_virtual_folder"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("project_properties"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("sort_item"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("remove_item"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("export_makefile"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("save_as_template"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("build_order"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("clean_project"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("build_project"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("retag_project"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+	Connect(XRCID("retag_workspace"), wxEVT_UPDATE_UI, wxUpdateUIEventHandler(FileViewTree::OnBuildInProgress), NULL, this);
+}
+
+void FileViewTree::OnBuildInProgress(wxUpdateUIEvent &event)
+{
+	event.Enable(!ManagerST::Get()->IsBuildInProgress());
 }
 
 FileViewTree::FileViewTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)

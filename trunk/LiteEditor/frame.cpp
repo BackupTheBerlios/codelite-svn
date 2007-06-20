@@ -1012,11 +1012,11 @@ void Frame::OnExecuteNoDebug(wxCommandEvent &event)
 
 void Frame::OnExecuteNoDebugUI(wxUpdateUIEvent &event)
 {
-	event.Enable(
-				ManagerST::Get()->GetActiveProjectName().IsEmpty() == false
+	event.Enable(ManagerST::Get()->GetActiveProjectName().IsEmpty() == false
 				&&
-				!ManagerST::Get()->IsProgramRunning()
-				);
+				!ManagerST::Get()->IsBuildInProgress()
+				&&
+				!ManagerST::Get()->IsProgramRunning());
 }
 
 void Frame::OnWorkspaceConfigChanged(wxCommandEvent &event)
