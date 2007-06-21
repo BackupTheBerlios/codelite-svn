@@ -48,8 +48,8 @@ bool VariableLexer::ReadVariables()
 		wxString current = m_lines[m_current];
 		//printf("Current line: '%s'\n", current.mb_str());
 			
-		size_t from = -1;
-		size_t to = -1;
+		size_t from = (size_t)-1;
+		size_t to = (size_t)-1;
 		size_t equals = current.Find('=');
 		size_t colonequals = current.Find(wxT(":="));
 		size_t space = current.Find(' ');
@@ -132,13 +132,13 @@ bool VariableLexer::ExpandVariables()
 		if(end == (size_t)-1 || end < pos)
 		{
 			wxString error;
-			error << wxT("Pos is ") << pos << wxT(", End at ") << end << wxT(", line '") << current << wxT("'.\n");
+			error << wxT("Pos is ") << (int)pos << wxT(", End at ") << (int)end << wxT(", line '") << current << wxT("'.\n");
 			error << wxT("Invalid Line Expansion!\n");
 			wxMessageBox(error, wxT("Lite Editor"), wxICON_HAND | wxOK);
 			return false;
 		}
 		
-		int skip = end - pos - 2;
+		int skip = (int)(end - pos - 2);
 		
 		wxString name = current.substr(pos+2, skip);
 		wxString value = m_tokens[name];

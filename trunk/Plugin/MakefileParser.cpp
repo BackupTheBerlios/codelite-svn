@@ -47,9 +47,9 @@ LINETYPES::LineType MakefileParser::Deduct()
 	if(current.size() == 0)
 		return LINETYPES::LINE_EMPTY;
 	
-	int colon = current.find(':');
-	int tab = current.find('\t');
-	int pound = current.find('#');
+	int colon = (int)current.find(':');
+	int tab = (int)current.find('\t');
+	int pound = (int)current.find('#');
 	
 	if(pound == 0)
 		return LINETYPES::LINE_COMMENT;
