@@ -238,7 +238,7 @@ void Manager::CreateWorkspace(const wxString &name, const wxString &path, const 
 	bool res = WorkspaceST::Get()->CreateWorkspace(name, path, options, errMsg);
 	CHECK_MSGBOX(res);
 
-	OpenWorkspace(path);
+	OpenWorkspace(path + PATH_SEP + name + wxT(".workspace"));
 }
 
 void Manager::CreateProject(ProjectData &data)
