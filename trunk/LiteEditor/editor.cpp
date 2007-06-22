@@ -798,8 +798,9 @@ void LEditor::DoFindAndReplace()
 	if(GetSelectedText().IsEmpty() == false)
 	{
 		m_findReplaceData.SetFindString(GetSelectedText());
-		m_findReplaceDlg->SetFindReplaceData(m_findReplaceData);
 	}
+
+	m_findReplaceDlg->SetFindReplaceData(m_findReplaceData);
 	m_findReplaceDlg->Show();
 }
 
@@ -1015,7 +1016,7 @@ bool LEditor::ReplaceAll()
 	int occur = 0;
 	wxString findWhat = m_findReplaceDlg->GetData().GetFindString();
 	wxString replaceWith = m_findReplaceDlg->GetData().GetReplaceString();
-	int flags = (int)m_findReplaceDlg->GetData().GetFlags();
+	int flags = GetSciSearchFlag(m_findReplaceDlg->GetData());
 
 	if (findWhat.IsEmpty()) {
         return false;
