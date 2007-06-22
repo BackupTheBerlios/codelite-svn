@@ -1053,7 +1053,7 @@ bool LEditor::MarkAll()
 	long pos = wxSCI_INVALID_POSITION;
 	long savedPos = GetCurrentPos();
 	wxString findWhat = m_findReplaceDlg->GetData().GetFindString();
-	int flags = (int)m_findReplaceDlg->GetData().GetFlags();
+	int flags = GetSciSearchFlag(m_findReplaceDlg->GetData());
 
 	if(findWhat.IsEmpty())
 		return false;
