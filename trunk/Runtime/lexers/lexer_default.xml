@@ -3,6 +3,6 @@
   <KeyWords></KeyWords>
   <Extensions></Extensions>
   <Properties>
-    <Property Id="0" Name="Default" Bold="no" Face="" Colour="#000000" Size="10"/>
+    <Property Id="0" Name="Default" Bold="no" Face="Courier New" Colour="#000000" Size="9"/>
   </Properties>
 </Lexer>

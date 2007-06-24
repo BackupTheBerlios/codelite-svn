@@ -3,22 +3,22 @@
   <KeyWords>and and_eq asm auto bitand bitor bool break case catch char class compl const const_cast continue default delete        do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace        new not not_eq operator or or_eq private protected public register reinterpret_cast return short signed Sizeof static        static_cast struct switch template this throw true try typedef typeid typename union unsigned using virtual void volatile        wchar_t while xor xor_eq</KeyWords>
   <Extensions>*.cxx;*.hpp;*.cc;*.h;*.c;*.cpp;*.l;*.y</Extensions>
   <Properties>
-    <Property Id="0" Name="Default" Bold="no" Face="" Colour="medium blue" Size="10"/>
-    <Property Id="1" Name="Comment" Bold="no" Face="" Colour="#FF8000" Size="10"/>
-    <Property Id="2" Name="C++ comment" Bold="no" Face="" Colour="#008000" Size="10"/>
-    <Property Id="3" Name="C style comment" Bold="no" Face="" Colour="#FF8000" Size="10"/>
-    <Property Id="4" Name="Number" Bold="no" Face="" Colour="#0000FF" Size="10"/>
-    <Property Id="5" Name="C++ keyword" Bold="no" Face="Courier New" Colour="#0000FF" Size="10"/>
-    <Property Id="6" Name="String" Bold="no" Face="" Colour="#800000" Size="10"/>
-    <Property Id="7" Name="Character" Bold="no" Face="" Colour="#000000" Size="10"/>
-    <Property Id="8" Name="Uuid" Bold="no" Face="" Colour="medium blue" Size="10"/>
-    <Property Id="9" Name="Preprocessor" Bold="no" Face="" Colour="#0000FF" Size="10"/>
-    <Property Id="10" Name="Operator" Bold="no" Face="" Colour="#000000" Size="10"/>
-    <Property Id="11" Name="Identifier" Bold="no" Face="" Colour="black" Size="10"/>
-    <Property Id="12" Name="Open string" Bold="no" Face="" Colour="#800000" Size="10"/>
-    <Property Id="15" Name="Doxygen C++ comment" Bold="no" Face="" Colour="FOREST GREEN" Size="10"/>
-    <Property Id="17" Name="Doxygen keyword" Bold="no" Face="" Colour="blue" Size="10"/>
-    <Property Id="18" Name="Doxygen keyword error" Bold="no" Face="" Colour="rgb(255,0,0)" Size="10"/>
-    <Property Id="19" Name="Global class" Bold="no" Face="" Colour="medium blue" Size="10"/>
+    <Property Id="0" Name="Default" Bold="no" Face="Courier New" Colour="medium blue" Size="9"/>
+    <Property Id="1" Name="Comment" Bold="no" Face="" Colour="#FF8000" Size="9"/>
+    <Property Id="2" Name="C++ comment" Bold="no" Face="" Colour="#008000" Size="9"/>
+    <Property Id="3" Name="C style comment" Bold="no" Face="" Colour="#FF8000" Size="9"/>
+    <Property Id="4" Name="Number" Bold="no" Face="" Colour="#0000FF" Size="9"/>
+    <Property Id="5" Name="C++ keyword" Bold="no" Face="Courier New" Colour="#0000FF" Size="9"/>
+    <Property Id="6" Name="String" Bold="no" Face="" Colour="#800000" Size="9"/>
+    <Property Id="7" Name="Character" Bold="no" Face="" Colour="#800000" Size="9"/>
+    <Property Id="8" Name="Uuid" Bold="no" Face="" Colour="medium blue" Size="9"/>
+    <Property Id="9" Name="Preprocessor" Bold="no" Face="" Colour="#0000FF" Size="9"/>
+    <Property Id="10" Name="Operator" Bold="no" Face="" Colour="#000000" Size="9"/>
+    <Property Id="11" Name="Identifier" Bold="no" Face="" Colour="black" Size="9"/>
+    <Property Id="12" Name="Open string" Bold="no" Face="" Colour="#800000" Size="9"/>
+    <Property Id="15" Name="Doxygen C++ comment" Bold="no" Face="" Colour="FOREST GREEN" Size="9"/>
+    <Property Id="17" Name="Doxygen keyword" Bold="no" Face="" Colour="blue" Size="9"/>
+    <Property Id="18" Name="Doxygen keyword error" Bold="no" Face="" Colour="rgb(255,0,0)" Size="9"/>
+    <Property Id="19" Name="Global class" Bold="no" Face="" Colour="medium blue" Size="9"/>
   </Properties>
 </Lexer>

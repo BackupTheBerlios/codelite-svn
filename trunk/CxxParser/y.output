@@ -1,0 +1,613 @@
+   0  $accept : translation_unit $end
+
+   1  basic_type_name : LE_INT
+   2                  | LE_CHAR
+   3                  | LE_SHORT
+   4                  | LE_LONG
+   5                  | LE_FLOAT
+   6                  | LE_DOUBLE
+   7                  | LE_SIGNED
+   8                  | LE_UNSIGNED
+   9                  | LE_VOID
+
+  10  translation_unit :
+  11                   | translation_unit external_decl
+
+  12  external_decl : class_decl
+  13                | function_decl
+  14                | scope_reducer
+  15                | scope_increaer
+  16                | error
+
+  17  template_arg :
+  18               | template_specifiter LE_IDENTIFIER
+
+  19  template_arg_list : template_arg
+  20                    | template_arg_list ',' template_arg
+
+  21  template_specifiter : LE_CLASS
+  22                      | LE_TYPENAME
+
+  23  opt_class_qualifier :
+  24                      | LE_TYPEDEFname
+
+  25  opt_template_qualifier :
+  26                         | LE_TEMPLATE '<' template_arg_list '>'
+
+  27  class_decl : opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';'
+  28             | opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{'
+
+  29  scope_reducer : '}'
+
+  30  scope_increaer : '{'
+
+  31  class_keyword : LE_CLASS
+  32                | LE_STRUCT
+
+  33  function_decl : function_prefix func_ret_value special_star_amp func_name '(' ')' const_spec pure_virtual_spec ';'
+
+  34  func_name : nested_scope_specifier LE_IDENTIFIER
+
+  35  nested_scope_specifier : scope_specifier
+  36                         | nested_scope_specifier scope_specifier
+
+  37  scope_specifier :
+  38                  | LE_TYPEDEFname LE_CLCL
+
+  39  func_ret_value : basic_type_name
+  40                 | LE_TYPEDEFname
+
+  41  function_prefix : virtual_spec const_spec
+
+  42  pure_virtual_spec :
+  43                    | '=' LE_OCTALconstant
+
+  44  virtual_spec :
+  45               | LE_VIRTUAL
+
+  46  const_spec :
+  47             | LE_CONST
+
+  48  amp_item :
+  49           | '&'
+
+  50  star_list :
+  51            | star_list '*'
+
+  52  special_star_amp : star_list amp_item
+
+state 0
+	$accept : . translation_unit $end  (0)
+	translation_unit : .  (10)
+
+	.  reduce 10
+
+	translation_unit  goto 1
+
+
+state 1
+	$accept : translation_unit . $end  (0)
+	translation_unit : translation_unit . external_decl  (11)
+	opt_template_qualifier : .  (25)
+	virtual_spec : .  (44)
+
+	$end  accept
+	error  shift 2
+	LE_VIRTUAL  shift 3
+	LE_TEMPLATE  shift 4
+	'{'  shift 5
+	'}'  shift 6
+	LE_DOUBLE  reduce 44
+	LE_INT  reduce 44
+	LE_STRUCT  reduce 25
+	LE_LONG  reduce 44
+	LE_CHAR  reduce 44
+	LE_CONST  reduce 44
+	LE_FLOAT  reduce 44
+	LE_SHORT  reduce 44
+	LE_UNSIGNED  reduce 44
+	LE_SIGNED  reduce 44
+	LE_VOID  reduce 44
+	LE_CLASS  reduce 25
+	LE_TYPEDEFname  reduce 44
+
+	external_decl  goto 7
+	class_decl  goto 8
+	function_decl  goto 9
+	scope_reducer  goto 10
+	scope_increaer  goto 11
+	opt_template_qualifier  goto 12
+	function_prefix  goto 13
+	virtual_spec  goto 14
+
+
+state 2
+	external_decl : error .  (16)
+
+	.  reduce 16
+
+
+state 3
+	virtual_spec : LE_VIRTUAL .  (45)
+
+	.  reduce 45
+
+
+state 4
+	opt_template_qualifier : LE_TEMPLATE . '<' template_arg_list '>'  (26)
+
+	'<'  shift 15
+	.  error
+
+
+state 5
+	scope_increaer : '{' .  (30)
+
+	.  reduce 30
+
+
+state 6
+	scope_reducer : '}' .  (29)
+
+	.  reduce 29
+
+
+state 7
+	translation_unit : translation_unit external_decl .  (11)
+
+	.  reduce 11
+
+
+state 8
+	external_decl : class_decl .  (12)
+
+	.  reduce 12
+
+
+state 9
+	external_decl : function_decl .  (13)
+
+	.  reduce 13
+
+
+state 10
+	external_decl : scope_reducer .  (14)
+
+	.  reduce 14
+
+
+state 11
+	external_decl : scope_increaer .  (15)
+
+	.  reduce 15
+
+
+state 12
+	class_decl : opt_template_qualifier . class_keyword opt_class_qualifier LE_IDENTIFIER ';'  (27)
+	class_decl : opt_template_qualifier . class_keyword opt_class_qualifier LE_IDENTIFIER '{'  (28)
+
+	LE_STRUCT  shift 16
+	LE_CLASS  shift 17
+	.  error
+
+	class_keyword  goto 18
+
+
+state 13
+	function_decl : function_prefix . func_ret_value special_star_amp func_name '(' ')' const_spec pure_virtual_spec ';'  (33)
+
+	LE_DOUBLE  shift 19
+	LE_INT  shift 20
+	LE_LONG  shift 21
+	LE_CHAR  shift 22
+	LE_FLOAT  shift 23
+	LE_SHORT  shift 24
+	LE_UNSIGNED  shift 25
+	LE_SIGNED  shift 26
+	LE_VOID  shift 27
+	LE_TYPEDEFname  shift 28
+	.  error
+
+	basic_type_name  goto 29
+	func_ret_value  goto 30
+
+
+state 14
+	function_prefix : virtual_spec . const_spec  (41)
+	const_spec : .  (46)
+
+	LE_CONST  shift 31
+	LE_DOUBLE  reduce 46
+	LE_INT  reduce 46
+	LE_LONG  reduce 46
+	LE_CHAR  reduce 46
+	LE_FLOAT  reduce 46
+	LE_SHORT  reduce 46
+	LE_UNSIGNED  reduce 46
+	LE_SIGNED  reduce 46
+	LE_VOID  reduce 46
+	LE_TYPEDEFname  reduce 46
+
+	const_spec  goto 32
+
+
+state 15
+	opt_template_qualifier : LE_TEMPLATE '<' . template_arg_list '>'  (26)
+	template_arg : .  (17)
+
+	LE_CLASS  shift 33
+	LE_TYPENAME  shift 34
+	','  reduce 17
+	'>'  reduce 17
+
+	template_arg  goto 35
+	template_specifiter  goto 36
+	template_arg_list  goto 37
+
+
+state 16
+	class_keyword : LE_STRUCT .  (32)
+
+	.  reduce 32
+
+
+state 17
+	class_keyword : LE_CLASS .  (31)
+
+	.  reduce 31
+
+
+state 18
+	class_decl : opt_template_qualifier class_keyword . opt_class_qualifier LE_IDENTIFIER ';'  (27)
+	class_decl : opt_template_qualifier class_keyword . opt_class_qualifier LE_IDENTIFIER '{'  (28)
+	opt_class_qualifier : .  (23)
+
+	LE_TYPEDEFname  shift 38
+	LE_IDENTIFIER  reduce 23
+
+	opt_class_qualifier  goto 39
+
+
+state 19
+	basic_type_name : LE_DOUBLE .  (6)
+
+	.  reduce 6
+
+
+state 20
+	basic_type_name : LE_INT .  (1)
+
+	.  reduce 1
+
+
+state 21
+	basic_type_name : LE_LONG .  (4)
+
+	.  reduce 4
+
+
+state 22
+	basic_type_name : LE_CHAR .  (2)
+
+	.  reduce 2
+
+
+state 23
+	basic_type_name : LE_FLOAT .  (5)
+
+	.  reduce 5
+
+
+state 24
+	basic_type_name : LE_SHORT .  (3)
+
+	.  reduce 3
+
+
+state 25
+	basic_type_name : LE_UNSIGNED .  (8)
+
+	.  reduce 8
+
+
+state 26
+	basic_type_name : LE_SIGNED .  (7)
+
+	.  reduce 7
+
+
+state 27
+	basic_type_name : LE_VOID .  (9)
+
+	.  reduce 9
+
+
+state 28
+	func_ret_value : LE_TYPEDEFname .  (40)
+
+	.  reduce 40
+
+
+state 29
+	func_ret_value : basic_type_name .  (39)
+
+	.  reduce 39
+
+
+state 30
+	function_decl : function_prefix func_ret_value . special_star_amp func_name '(' ')' const_spec pure_virtual_spec ';'  (33)
+	star_list : .  (50)
+
+	.  reduce 50
+
+	special_star_amp  goto 40
+	star_list  goto 41
+
+
+state 31
+	const_spec : LE_CONST .  (47)
+
+	.  reduce 47
+
+
+state 32
+	function_prefix : virtual_spec const_spec .  (41)
+
+	.  reduce 41
+
+
+state 33
+	template_specifiter : LE_CLASS .  (21)
+
+	.  reduce 21
+
+
+state 34
+	template_specifiter : LE_TYPENAME .  (22)
+
+	.  reduce 22
+
+
+state 35
+	template_arg_list : template_arg .  (19)
+
+	.  reduce 19
+
+
+state 36
+	template_arg : template_specifiter . LE_IDENTIFIER  (18)
+
+	LE_IDENTIFIER  shift 42
+	.  error
+
+
+state 37
+	template_arg_list : template_arg_list . ',' template_arg  (20)
+	opt_template_qualifier : LE_TEMPLATE '<' template_arg_list . '>'  (26)
+
+	','  shift 43
+	'>'  shift 44
+	.  error
+
+
+state 38
+	opt_class_qualifier : LE_TYPEDEFname .  (24)
+
+	.  reduce 24
+
+
+state 39
+	class_decl : opt_template_qualifier class_keyword opt_class_qualifier . LE_IDENTIFIER ';'  (27)
+	class_decl : opt_template_qualifier class_keyword opt_class_qualifier . LE_IDENTIFIER '{'  (28)
+
+	LE_IDENTIFIER  shift 45
+	.  error
+
+
+40: shift/reduce conflict (shift 46, reduce 37) on LE_TYPEDEFname
+state 40
+	function_decl : function_prefix func_ret_value special_star_amp . func_name '(' ')' const_spec pure_virtual_spec ';'  (33)
+	scope_specifier : .  (37)
+
+	LE_TYPEDEFname  shift 46
+	LE_IDENTIFIER  reduce 37
+
+	func_name  goto 47
+	nested_scope_specifier  goto 48
+	scope_specifier  goto 49
+
+
+state 41
+	star_list : star_list . '*'  (51)
+	special_star_amp : star_list . amp_item  (52)
+	amp_item : .  (48)
+
+	'&'  shift 50
+	'*'  shift 51
+	LE_IDENTIFIER  reduce 48
+	LE_TYPEDEFname  reduce 48
+
+	amp_item  goto 52
+
+
+state 42
+	template_arg : template_specifiter LE_IDENTIFIER .  (18)
+
+	.  reduce 18
+
+
+state 43
+	template_arg_list : template_arg_list ',' . template_arg  (20)
+	template_arg : .  (17)
+
+	LE_CLASS  shift 33
+	LE_TYPENAME  shift 34
+	','  reduce 17
+	'>'  reduce 17
+
+	template_arg  goto 53
+	template_specifiter  goto 36
+
+
+state 44
+	opt_template_qualifier : LE_TEMPLATE '<' template_arg_list '>' .  (26)
+
+	.  reduce 26
+
+
+state 45
+	class_decl : opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER . ';'  (27)
+	class_decl : opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER . '{'  (28)
+
+	';'  shift 54
+	'{'  shift 55
+	.  error
+
+
+state 46
+	scope_specifier : LE_TYPEDEFname . LE_CLCL  (38)
+
+	LE_CLCL  shift 56
+	.  error
+
+
+state 47
+	function_decl : function_prefix func_ret_value special_star_amp func_name . '(' ')' const_spec pure_virtual_spec ';'  (33)
+
+	'('  shift 57
+	.  error
+
+
+48: shift/reduce conflict (shift 58, reduce 37) on LE_IDENTIFIER
+48: shift/reduce conflict (shift 46, reduce 37) on LE_TYPEDEFname
+state 48
+	func_name : nested_scope_specifier . LE_IDENTIFIER  (34)
+	nested_scope_specifier : nested_scope_specifier . scope_specifier  (36)
+	scope_specifier : .  (37)
+
+	LE_IDENTIFIER  shift 58
+	LE_TYPEDEFname  shift 46
+
+	scope_specifier  goto 59
+
+
+state 49
+	nested_scope_specifier : scope_specifier .  (35)
+
+	.  reduce 35
+
+
+state 50
+	amp_item : '&' .  (49)
+
+	.  reduce 49
+
+
+state 51
+	star_list : star_list '*' .  (51)
+
+	.  reduce 51
+
+
+state 52
+	special_star_amp : star_list amp_item .  (52)
+
+	.  reduce 52
+
+
+state 53
+	template_arg_list : template_arg_list ',' template_arg .  (20)
+
+	.  reduce 20
+
+
+state 54
+	class_decl : opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';' .  (27)
+
+	.  reduce 27
+
+
+state 55
+	class_decl : opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{' .  (28)
+
+	.  reduce 28
+
+
+state 56
+	scope_specifier : LE_TYPEDEFname LE_CLCL .  (38)
+
+	.  reduce 38
+
+
+state 57
+	function_decl : function_prefix func_ret_value special_star_amp func_name '(' . ')' const_spec pure_virtual_spec ';'  (33)
+
+	')'  shift 60
+	.  error
+
+
+state 58
+	func_name : nested_scope_specifier LE_IDENTIFIER .  (34)
+
+	.  reduce 34
+
+
+state 59
+	nested_scope_specifier : nested_scope_specifier scope_specifier .  (36)
+
+	.  reduce 36
+
+
+state 60
+	function_decl : function_prefix func_ret_value special_star_amp func_name '(' ')' . const_spec pure_virtual_spec ';'  (33)
+	const_spec : .  (46)
+
+	LE_CONST  shift 31
+	';'  reduce 46
+	'='  reduce 46
+
+	const_spec  goto 61
+
+
+state 61
+	function_decl : function_prefix func_ret_value special_star_amp func_name '(' ')' const_spec . pure_virtual_spec ';'  (33)
+	pure_virtual_spec : .  (42)
+
+	'='  shift 62
+	';'  reduce 42
+
+	pure_virtual_spec  goto 63
+
+
+state 62
+	pure_virtual_spec : '=' . LE_OCTALconstant  (43)
+
+	LE_OCTALconstant  shift 64
+	.  error
+
+
+state 63
+	function_decl : function_prefix func_ret_value special_star_amp func_name '(' ')' const_spec pure_virtual_spec . ';'  (33)
+
+	';'  shift 65
+	.  error
+
+
+state 64
+	pure_virtual_spec : '=' LE_OCTALconstant .  (43)
+
+	.  reduce 43
+
+
+state 65
+	function_decl : function_prefix func_ret_value special_star_amp func_name '(' ')' const_spec pure_virtual_spec ';' .  (33)
+
+	.  reduce 33
+
+
+State 40 contains 1 shift/reduce conflict.
+State 48 contains 2 shift/reduce conflicts.
+
+
+96 terminals, 25 nonterminals
+53 grammar rules, 66 states

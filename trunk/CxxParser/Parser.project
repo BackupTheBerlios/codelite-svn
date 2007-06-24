@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="Parser">
+  <Dependencies/>
+  <VirtualDirectory Name="src">
+    <File Name="lex.yy.c"/>
+    <File Name="y.tab.c"/>
+    <File Name="symbol_table.cpp"/>
+    <File Name="tokenizer.cpp"/>
+    <File Name="cxxparser.cpp"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="incldue">
+    <File Name="y.tab.h"/>
+    <File Name="symbol_table.h"/>
+    <File Name="symbol_entry.h"/>
+    <File Name="tree.h"/>
+    <File Name="tree_node.h"/>
+    <File Name="smart_ptr.h"/>
+    <File Name="tokenizer.h"/>
+    <File Name="cxxparser.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="grammar">
+    <File Name="cpp5.l"/>
+    <File Name="cpp5_grammar.y"/>
+  </VirtualDirectory>
+  <Settings Type="Executable">
+    <Configuration Name="Debug" CompilerType="gnu g++">
+      <General OutputFile=".\Debug\CppParser" IntermediateDirectory=".\Debug" Command="CppParser" CommandArguments="" WorkingDirectory=".\Debug"/>
+      <Compiler Required="yes" Options="-g">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Required="yes" Options="-O0">
+        <LibraryPath Value="."/>
+        <LibraryPath Value=".\Debug"/>
+      </Linker>
+      <PreBuild>
+        <Command Enabled="yes">yacc -dl  -v -t cpp5_grammar.y</Command>
+        <Command Enabled="yes">flex -L  cpp5.l</Command>
+      </PreBuild>
+      <PostBuild/>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu g++">
+      <General OutputFile=".\Release\CppParser" IntermediateDirectory=".\Release" Command="CppParser" CommandArguments="" WorkingDirectory=".\Release"/>
+      <Compiler Required="yes" Options="-O2">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Required="yes" Options="-O2">
+        <LibraryPath Value="."/>
+        <LibraryPath Value=".\Release"/>
+      </Linker>
+      <PreBuild>
+        <Command Enabled="yes">yacc -dl  -v -t cpp5_grammar.y</Command>
+        <Command Enabled="yes">flex -L  cpp5.l</Command>
+      </PreBuild>
+      <PostBuild/>
+    </Configuration>
+  </Settings>
+</CodeLite_Project>
