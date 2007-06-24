@@ -17,6 +17,6 @@
   </BuildMatrix>
   <Environment>
     <Variable Name="WorkspaceName" Value="CxxParser"/>
-    <Variable Name="WorkspacePath" Value="C:\Development\C++\CxxParser"/>
+    <Variable Name="WorkspacePath" Value="C:\Development\C++\LiteEditor\CxxParser"/>
   </Environment>
 </CodeLite_Workspace>

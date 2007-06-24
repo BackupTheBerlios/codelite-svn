@@ -8,14 +8,14 @@
 #include "tree.h"
 #include "tree_node.h"
 
-typedef SmartPtr<SymbolTableEntry> SymbolTableEntryPtr;
-typedef TreeNode<std::string, SymbolTableEntryPtr> SymbolTreeNode;
-typedef Tree<std::string, SymbolTableEntryPtr> SymbolTree;
-typedef SmartPtr<SymbolTableEntryPtr> SymbolTreePtr;
+typedef TreeNode<std::string, SymbolData> SymbolTreeNode;
+typedef Tree<std::string, SymbolData> SymbolTree;
+typedef SmartPtr<SymbolTree> SymbolTreePtr;
+typedef SmartPtr<SymbolTreeNode> SymbolTreeNodePtr;
 
 class SymbolTable
 {
-	SymbolTree *m_tree;
+	SymbolTreePtr m_tree;
 public:
 	static SymbolTable& instance();
 	
@@ -27,7 +27,7 @@ public:
 	/**
 	 * add symbol to the table
 	 */ 
-	SymbolTableEntryPtr AddSymbol(SymbolTableEntry *entry);
+	void AddSymbol(const SymbolData &entry);
 	
 private:
 	SymbolTable();

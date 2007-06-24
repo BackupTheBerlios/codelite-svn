@@ -34,11 +34,11 @@ enum SymbolKind
 			function,
 			typedef
  */
-class SymbolTableEntry 
+class SymbolData
 {
 public:
-	SymbolTableEntry(): line(0) {};
-	virtual ~SymbolTableEntry(){}
+	SymbolData(): line(0) {};
+	virtual ~SymbolData(){}
 	
 	/**
 	 * create a unique key identifier to this symbol enntry

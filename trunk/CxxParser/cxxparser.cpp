@@ -5,17 +5,16 @@ extern std::string &getFileName();
 extern std::string getCurrentScope();
 extern int yylineno;
 
-SymbolTableEntry *createClassSymbol(	const std::string &optTmpQualifier, 
-											const std::string &keyWord, 
-											const std::string &optClassQualifer, 
-											const std::string &className, 
-											bool isImpl)
+void createClassSymbol(	const std::string &optTmpQualifier, 
+							const std::string &keyWord, 
+							const std::string &optClassQualifer, 
+							const std::string &className, 
+							const bool isImpl,
+							SymbolData &data)
 {
-	SymbolTableEntry *entry = new SymbolTableEntry();
-	entry->file = getFileName();
-	entry->kind = class_t;
-	entry->name = className;
-	entry->line = yylineno;
-	entry->scope = getCurrentScope();
-	return entry;
+	data.file = getFileName();
+	data.kind = class_t;
+	data.name = className;
+	data.line = yylineno;
+	data.scope = getCurrentScope();
 }
