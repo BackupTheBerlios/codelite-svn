@@ -6,6 +6,7 @@
 #include "editor_config.h"
 #include "macros.h"
 #include "wx/xrc/xmlres.h"
+#include "algorithm"
 
 //Images initialization
 wxBitmap ContextCpp::m_classBmp = wxNullBitmap;
@@ -597,8 +598,23 @@ bool ContextCpp::TryOpenFile(const wxFileName &fileName)
 {
 	if(fileName.FileExists()){
 		//we got a match
-		ManagerST::Get()->OpenFile(fileName.GetFullPath(), wxEmptyString);
+		wxString proj = ManagerST::Get()->GetProjectNameByFile(fileName.GetFullPath());
+		ManagerST::Get()->OpenFile(fileName.GetFullPath(), proj);
 		return true;
+	}
+
+	//ok, the file does not exist in the current directory, try to find elsewhere 
+	//whithin the workspace files
+	std::vector<wxFileName> files;
+	ManagerST::Get()->GetWorkspaceFiles(files, true);
+
+	for(size_t i=0; i<files.size(); i++)
+	{
+		if(files.at(i).GetFullName() == fileName.GetFullName())
+		{
+			wxString proj = ManagerST::Get()->GetProjectNameByFile(files.at(i).GetFullPath());
+			ManagerST::Get()->OpenFile(files.at(i).GetFullPath(), proj);
+		}
 	}
 	return false;
 }
