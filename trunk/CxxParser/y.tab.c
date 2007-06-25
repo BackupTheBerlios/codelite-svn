@@ -12,6 +12,8 @@ static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 /*************** Includes and Defines *****************************/
 #include "string"
 #include "vector"
+#include "symbol_table.h"
+#include "cxxparser.h"
 
 #define YYDEBUG_LEXER_TEXT (yylval) /* our lexer loads this up each time.
 				     We are telling the graphical debugger
@@ -122,66 +124,64 @@ short yylhs[] = {                                        -1,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     0,    2,    2,    2,    2,    2,    7,    7,    9,    9,
     8,    8,   10,   10,   11,   11,    3,    3,    5,    6,
-   12,   12,    4,   16,   19,   19,   20,   20,   14,   14,
-   13,   18,   18,   21,   21,   17,   17,   22,   22,   23,
-   23,   15,
+   12,   12,    4,   16,   16,   19,   14,   14,   13,   18,
+   18,   20,   20,   17,   17,   21,   21,   22,   22,   15,
 };
 short yylen[] = {                                         2,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     2,    1,    1,    1,    1,    1,    0,    2,    1,    3,
     1,    1,    0,    1,    0,    4,    5,    5,    1,    1,
-    1,    1,    9,    2,    1,    2,    0,    2,    1,    1,
-    2,    0,    2,    0,    1,    0,    1,    0,    1,    0,
-    2,    2,
+    1,    1,   10,    0,    2,    2,    1,    1,    2,    0,
+    2,    0,    1,    0,    1,    0,    1,    0,    2,    2,
 };
 short yydefred[] = {                                     10,
-    0,   16,   45,    0,   30,   29,   11,   12,   13,   14,
+    0,   16,   43,    0,   30,   29,   11,   12,   13,   14,
    15,    0,    0,    0,    0,   32,   31,    0,    6,    1,
-    4,    2,    5,    3,    8,    7,    9,   40,   39,   50,
-   47,   41,   21,   22,   19,    0,    0,   24,    0,    0,
-    0,   18,    0,   26,    0,    0,    0,    0,   35,   49,
-   51,   52,   20,   27,   28,   38,    0,   34,   36,    0,
-    0,    0,    0,   43,   33,
+    4,    2,    5,    3,    8,    7,    9,   38,   37,   48,
+   45,   39,   21,   22,   19,    0,    0,   24,    0,   34,
+    0,   18,    0,   26,    0,    0,   47,   49,   50,   20,
+   27,   28,    0,    0,   35,    0,   36,    0,    0,    0,
+    0,   41,   33,
 };
 short yydgoto[] = {                                       1,
    29,    7,    8,    9,   10,   11,   35,   36,   37,   39,
-   12,   18,   13,   30,   40,   47,   32,   63,   48,   49,
-   14,   52,   41,
+   12,   18,   13,   30,   40,   46,   32,   61,   55,   14,
+   49,   41,
 };
 short yysindex[] = {                                      0,
  -123,    0,    0,  -53,    0,    0,    0,    0,    0,    0,
     0, -254, -247, -263, -253,    0,    0, -277,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0, -260,  -18,    0, -258, -264,
-  -29,    0, -253,    0,  -58, -272,   16, -280,    0,    0,
-    0,    0,    0,    0,    0,    0,   17,    0,    0, -263,
-   -4, -248,    2,    0,    0,
+    0,    0,    0,    0,    0, -260,  -18,    0, -258,    0,
+  -29,    0, -253,    0,  -58, -280,    0,    0,    0,    0,
+    0,    0,   10, -272,    0,   15,    0, -263,   -4, -250,
+    1,    0,    0,
 };
 short yyrindex[] = {                                      0,
  -255,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0, -228,   -8,    0,    0, -241,    0,    0,
+    0,    0,    0, -228,   -8,    0,    0, -242,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0, -240,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
  -261,    0,   -8,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,  -44,
-    5,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,  -44,    3,    0,
+    0,    0,    0,
 };
 short yygindex[] = {                                      0,
-    0,    0,    0,    0,    0,    0,   23,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    8,    0,    0,   21,
-    0,    0,    0,
+    0,    0,    0,    0,    0,    0,   20,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    6,    0,    0,    0,
+    0,    0,
 };
 #define YYTABLESIZE 178
 short yytable[] = {                                       5,
-   54,    6,   44,   44,   25,   16,   15,   44,   50,   31,
-   19,   20,   51,   44,   46,   21,   46,   44,   44,   44,
-   44,   22,   58,   44,   44,   43,   23,   24,   25,   46,
-   46,   26,   27,   46,   46,   17,   38,   25,   17,   33,
-   46,   48,   42,   44,   45,   46,   46,   46,   34,   46,
-   46,   46,   48,   17,   56,   57,   62,   60,   44,   64,
-   65,   23,   37,   42,   55,   53,   28,   61,   59,    0,
+   51,    6,   42,   42,   25,   16,   15,   42,   47,   31,
+   19,   20,   48,   42,   44,   21,   44,   42,   42,   42,
+   42,   22,   53,   42,   42,   43,   23,   24,   25,   44,
+   44,   26,   27,   54,   44,   17,   38,   25,   17,   33,
+   44,   46,   42,   44,   45,   44,   44,   44,   34,   56,
+   44,   44,   46,   17,   57,   58,   60,   62,   42,   63,
+   23,   40,   50,   59,   52,    0,   28,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,   46,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,   44,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -197,9 +197,9 @@ short yycheck[] = {                                     123,
   258,  259,   42,  269,   59,  263,   61,  273,  274,  275,
   276,  269,  303,  279,  280,   44,  274,  275,  276,  258,
   259,  279,  280,  314,  263,   44,  314,  293,  293,  293,
-  269,  303,  303,   62,  303,  274,  275,  276,  302,  314,
-  279,  280,  314,   62,  327,   40,   61,   41,  314,  308,
-   59,  303,  303,   59,  123,   43,  314,   60,   48,   -1,
+  269,  303,  303,   62,  303,  274,  275,  276,  302,   40,
+  279,  280,  314,   62,  327,   41,   61,  308,  314,   59,
+  303,   59,   43,   58,  123,   -1,  314,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,  314,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
@@ -276,11 +276,9 @@ char *yyrule[] = {
 "scope_increaer : '{'",
 "class_keyword : LE_CLASS",
 "class_keyword : LE_STRUCT",
-"function_decl : function_prefix func_ret_value special_star_amp func_name '(' ')' const_spec pure_virtual_spec ';'",
-"func_name : nested_scope_specifier LE_IDENTIFIER",
-"nested_scope_specifier : scope_specifier",
+"function_decl : function_prefix func_ret_value special_star_amp nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'",
+"nested_scope_specifier :",
 "nested_scope_specifier : nested_scope_specifier scope_specifier",
-"scope_specifier :",
 "scope_specifier : LE_TYPEDEFname LE_CLCL",
 "func_ret_value : basic_type_name",
 "func_ret_value : LE_TYPEDEFname",
@@ -547,8 +545,12 @@ case 28:
 {
 																												
 																												printf("Found class impl: %s\n", yyvsp[-1].c_str());
-																												/*when a class is found, we do the following:*/
-																												/*1. we add new scope entry*/
+																												SymbolData data;
+																												createClassSymbol(
+																													yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1], true, data
+																													);
+																												SymbolTable::instance().AddSymbol(data);
+																												
 																												/*increase the scope level*/
 																												currentScope.push_back(yyvsp[-1]);
 																												printScopeName();
@@ -587,25 +589,25 @@ case 33:
 																																					}
 break;
 case 34:
-{yyval = yyvsp[-1] + yyvsp[0];}
+{yyval = "";}
 break;
 case 35:
-{yyval = yyvsp[0];}
+{yyval = yyvsp[-1] + " " + yyvsp[0];}
 break;
 case 36:
-{yyval = yyvsp[-1] + " " + yyvsp[0];}
+{yyval = yyvsp[-1] + yyvsp[0];}
 break;
 case 37:
-{yyval = ""; }
+{ yyval = yyvsp[0]; }
 break;
 case 38:
-{yyval = yyvsp[-1] + " " + yyvsp[0];}
+{ yyval = yyvsp[0]; }
 break;
 case 39:
-{ yyval = yyvsp[0]; }
+{ yyval = yyvsp[-1] + " " + yyvsp[0]; }
 break;
 case 40:
-{ yyval = yyvsp[0]; }
+{yyval = ""; }
 break;
 case 41:
 { yyval = yyvsp[-1] + " " + yyvsp[0]; }
@@ -614,7 +616,7 @@ case 42:
 {yyval = ""; }
 break;
 case 43:
-{ yyval = yyvsp[-1] + " " + yyvsp[0]; }
+{ yyval = yyvsp[0]; }
 break;
 case 44:
 {yyval = ""; }
@@ -632,15 +634,9 @@ case 48:
 {yyval = ""; }
 break;
 case 49:
-{ yyval = yyvsp[0]; }
-break;
-case 50:
-{yyval = ""; }
-break;
-case 51:
 {yyval = yyvsp[-1] + yyvsp[0];}
 break;
-case 52:
+case 50:
 { yyval = yyvsp[-1] + yyvsp[0]; }
 break;
     }

@@ -16,12 +16,11 @@ SymbolTable& SymbolTable::instance()
 
 void SymbolTable::AddSymbol(const SymbolData &entry)
 {
-	std::string key = entry.scope + "::" + entry.name;
-	m_symbols.insert(MapEntry(key, entry)); 
+	m_symbols.insert(MapEntry(entry.name, entry)); 
+	printf("Symbol: %s was added the symbol table\n", entry.name.c_str());
 }
 
 bool SymbolTable::IsSymbolExist(const std::string &name, const std::string &scope) const
 {
-	std::string key = scope + "::" + name;
-	return m_symbols.find(key) != m_symbols.end();
+	return m_symbols.find(name) != m_symbols.end();
 }

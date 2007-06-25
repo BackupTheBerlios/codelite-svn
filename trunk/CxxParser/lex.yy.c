@@ -2543,11 +2543,7 @@ int main()
 
 bool isaTYPE(char *string)
 {
-	bool res = SymbolTable::instance().IsSymbolExist(string, getCurrentScope());
-	if(res)
-	{
-		printf("%s is a TYPEDEFname\n", string);
-	}
+	bool res = SymbolTable::instance().IsSymbolExist(string, "");
 	return res;
 }
 

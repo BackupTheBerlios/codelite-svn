@@ -406,11 +406,7 @@ typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
 %%
 bool isaTYPE(char *string)
 {
-	bool res = SymbolTable::instance().IsSymbolExist(string, getCurrentScope());
-	if(res)
-	{
-		printf("%s is a TYPEDEFname\n", string);
-	}
+	bool res = SymbolTable::instance().IsSymbolExist(string, "");
 	return res;
 }
 

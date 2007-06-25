@@ -6,6 +6,8 @@
 /*************** Includes and Defines *****************************/
 #include "string"
 #include "vector"
+#include "symbol_table.h"
+#include "cxxparser.h"
 
 #define YYDEBUG_LEXER_TEXT (yylval) /* our lexer loads this up each time.
 				     We are telling the graphical debugger
@@ -138,8 +140,12 @@ class_decl	:	opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIF
 				| 	opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{' {
 																												
 																												printf("Found class impl: %s\n", $4.c_str());
-																												//when a class is found, we do the following:
-																												//1. we add new scope entry
+																												SymbolData data;
+																												createClassSymbol(
+																													$1, $2, $3, $4, true, data
+																													);
+																												SymbolTable::instance().AddSymbol(data);
+																												
 																												//increase the scope level
 																												currentScope.push_back($4);
 																												printScopeName();
@@ -170,27 +176,21 @@ class_keyword: 	LE_CLASS		{$$ = $1;}
 					;
 					
 /* functions */
-function_decl		:	function_prefix  func_ret_value special_star_amp  func_name '(' ')' const_spec pure_virtual_spec ';'  	{
-																																						printf("Found function: %s\n", $4.c_str());
+function_decl		:	function_prefix  func_ret_value special_star_amp nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'  	{
+																																						printf("Found function: %s\n", $5.c_str());
 																																					}
 						;
 
-								
-func_name			:	nested_scope_specifier LE_IDENTIFIER {$$ = $1 + $2;}
-						;
-						
 /* 
 applicable for C++, for cases where a function is declared as
 void scope::foo(){ ... }
 */
-nested_scope_specifier	: scope_specifier {$$ = $1;}
+nested_scope_specifier		: /*empty*/ {$$ = "";}
 								| nested_scope_specifier scope_specifier {$$ = $1 + " " + $2;}
 								;
 								
-scope_specifier			:	/*empty*/	{$$ = ""; }
-								| 	LE_TYPEDEFname LE_CLCL {$$ = $1 + " " + $2;}
-								;
-
+scope_specifier			:	LE_TYPEDEFname LE_CLCL {$$ = $1 + $2;}
+							;
 
 func_ret_value		:	basic_type_name 		{ $$ = $1; }
 						|	LE_TYPEDEFname			{ $$ = $1; }
