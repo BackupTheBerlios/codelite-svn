@@ -386,7 +386,7 @@ void Frame::CreateToolbars()
 	tb->AddControl(m_workspaceConfig);
 	
 	// Connect an event to handle changes in the choice control
-	ConnectChoice(m_workspaceConfig, Frame::OnWorkspaceConfigChanged);
+	ConnectCombo(m_workspaceConfig, Frame::OnWorkspaceConfigChanged);
 	
 	tb->AddTool(XRCID("build_active_project"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("build_active_project")), wxT("Build Active Project (Ctrl+B)"));
 	tb->AddTool(XRCID("clean_active_project"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("clean")), wxT("Clean Active Project"));
