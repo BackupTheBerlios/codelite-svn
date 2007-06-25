@@ -74,7 +74,7 @@ void FindInFilesDialog::CreateGUIControls()
 	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Find What:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	mainSizer->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
 
-	m_findString = new wxTextCtrl( this, wxID_ANY, m_data.GetFindString(), wxDefaultPosition, wxSize(200, -1));
+	m_findString = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1));
 	mainSizer->Add(m_findString, 0, wxALL | wxEXPAND, 5 );
 
 	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Look In:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
@@ -92,15 +92,12 @@ void FindInFilesDialog::CreateGUIControls()
 	mainSizer->Add(sz, 1, wxEXPAND | wxALL, 5);
 
 	m_matchCase = new wxCheckBox(this, wxID_ANY, wxT("&Match case"));
-	m_matchCase->SetValue(m_data.GetFlags() & wxFRD_MATCHCASE ? true : false);
 	sz->Add(m_matchCase, 1, wxALL | wxEXPAND, 5 );
 
 	m_matchWholeWord = new wxCheckBox(this, wxID_ANY, wxT("Match &whole word"));
-	m_matchWholeWord->SetValue(m_data.GetFlags() & wxFRD_MATCHWHOLEWORD ? true : false);
 	sz->Add(m_matchWholeWord, 1, wxALL | wxEXPAND, 5 );
 
 	m_regualrExpression = new wxCheckBox(this, wxID_ANY, wxT("Regular &expression"));
-	m_regualrExpression->SetValue(m_data.GetFlags() & wxFRD_REGULAREXPRESSION ? true : false);
 	sz->Add(m_regualrExpression, 1, wxALL | wxEXPAND, 5 );
 
 	itemStaticText = new wxStaticText( this, wxID_STATIC, wxT("Look at these file &types:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
@@ -130,8 +127,19 @@ void FindInFilesDialog::CreateGUIControls()
 	mainSizer->Add(new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL), 0, wxEXPAND );
 	mainSizer->Add(btnSizer, 0, wxEXPAND|wxALL, 5);
 
+	
+	SetData(m_data);
 	m_findString->SetSelection(-1, -1); // select all
 	m_findString->SetFocus();
+}
+
+void FindInFilesDialog::SetData(FindReplaceData &data)
+{
+	//sets the previous values
+	m_findString->SetValue(data.GetFindString());
+	m_matchCase->SetValue(data.GetFlags() & wxFRD_MATCHCASE ? true : false);
+	m_matchWholeWord->SetValue(data.GetFlags() & wxFRD_MATCHWHOLEWORD ? true : false);
+	m_regualrExpression->SetValue(data.GetFlags() & wxFRD_REGULAREXPRESSION ? true : false);
 }
 
 void FindInFilesDialog::OnClick(wxCommandEvent &event)
@@ -221,5 +229,7 @@ bool FindInFilesDialog::Show()
 	if( IsShown() )
 		return true;
 
+	SetData(m_data);
+	m_findString->SetSelection(-1, -1); // select all
 	return wxDialog::Show();
 }

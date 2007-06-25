@@ -56,7 +56,8 @@ public:
 				);
  
 	// Return the data 
-	const FindReplaceData& GetData() const { return m_data; }
+	FindReplaceData& GetData() { return m_data; }
+	void SetData(FindReplaceData &data);
 
 	virtual bool Show();
 

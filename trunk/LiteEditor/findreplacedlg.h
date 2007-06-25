@@ -123,7 +123,7 @@ public:
 				);
  
 	// Return the data 
-	const FindReplaceData& GetData() const { return m_data; }
+	 FindReplaceData& GetData() { return m_data; }
 
 	virtual bool Show();
 

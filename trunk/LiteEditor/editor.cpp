@@ -797,10 +797,8 @@ void LEditor::DoFindAndReplace()
 	//if there is a selection, set it
 	if(GetSelectedText().IsEmpty() == false)
 	{
-		m_findReplaceData.SetFindString(GetSelectedText());
+		m_findReplaceDlg->GetData().SetFindString(GetSelectedText());
 	}
-
-	m_findReplaceDlg->SetFindReplaceData(m_findReplaceData);
 	m_findReplaceDlg->Show();
 }
 

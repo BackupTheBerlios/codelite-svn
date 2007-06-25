@@ -777,6 +777,20 @@ void Frame::OnFindInFiles(wxCommandEvent &event)
 		return;
 	}
 
+	//if we have an open editor, and a selected text, make this text
+	//the search string
+	if(m_notebook->GetPageCount() > 0)
+	{
+		LEditor *editor = dynamic_cast<LEditor*>(m_notebook->GetPage((size_t)m_notebook->GetSelection()));
+		if(editor)
+		{
+			wxString selText = editor->GetSelectedText();
+			if(selText.IsEmpty() == false)
+			{
+				m_findInFilesDlg->GetData().SetFindString(selText);
+			}
+		}
+	}
 	m_findInFilesDlg->Show();
 }
 

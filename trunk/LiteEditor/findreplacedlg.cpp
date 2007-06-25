@@ -263,6 +263,8 @@ bool FindReplaceDialog::Show()
 	if( IsShown() )
 		return true;
 
+	SetFindReplaceData(m_data);
+	m_findString->SetSelection(-1, -1); // select all
 	return wxDialog::Show();
 }
 
