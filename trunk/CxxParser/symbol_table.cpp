@@ -1,17 +1,11 @@
 #include "symbol_table.h"
- 
+
 SymbolTable::SymbolTable()   
 {
-	SymbolData entry;
-	entry.name = "<global>";
-	
-	//create a dummy tree root node representing the global scope
-	m_tree = new SymbolTree(entry.name, entry);
 }
 
 SymbolTable::~SymbolTable()
 {
-	//m_tree is a smart pointer, so no need to delete it here
 }
 
 SymbolTable& SymbolTable::instance()
@@ -22,10 +16,12 @@ SymbolTable& SymbolTable::instance()
 
 void SymbolTable::AddSymbol(const SymbolData &entry)
 {
-	std::string key = entry.MakeKey();
+	std::string key = entry.scope + "::" + entry.name;
+	m_symbols.insert(MapEntry(key, entry)); 
 }
 
 bool SymbolTable::IsSymbolExist(const std::string &name, const std::string &scope) const
 {
-	return true;
+	std::string key = scope + "::" + name;
+	return m_symbols.find(key) != m_symbols.end();
 }

@@ -2,6 +2,7 @@
 #define SYMBOL_TABLE_ENTRY
 
 #include "string"
+#include "smart_ptr.h"
 
 enum SymbolKind 
 {
@@ -65,4 +66,5 @@ public:
 	std::string retValue;		//for functions, this one contains the return value
 };
 
+typedef SmartPtr<SymbolData> SymbolDataPtr;
 #endif // SYMBOL_TABLE_ENTRY

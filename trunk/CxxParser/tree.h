@@ -56,23 +56,6 @@ public:
 	 * \param depth Tab depth (for internal use)
 	 */
 	void Print(std::ostream& stream = std::cout , int depth = 0);
-	
-	/**
-	 * Compare this tree against another tree.
-	 * \param targetTree Target tree to compare with
-	 * \param deletedItems Array of pairs of items which exist in this tree and not in target tree
-	 * \param modifiedItems Array of pairs of items which have the same key but differnt data 
-	 * \param newItems Aarray of pairs of items which exist in the target tree but not in this tree
-	 * \param fromNode If its set to null, comparison will start from this tree root node, if not null, 
-	 * comparison will compare sub-tree which root of its fromNode
-	 */
-	void Compare(Tree* targetTree, std::vector<std::pair<TKey, TData> >& deletedItems, std::vector<std::pair<TKey, TData> >& modifiedItems, std::vector<std::pair<TKey, TData> >& newItems, TreeNode<TKey, TData>* fromNode = NULL);
-
-	/**
-	 * Serialize the tree to vector
-	 * \param vec output vector
-	 */
-	void ToVector(std::vector<std::pair<TKey, TData> >& vec);
 };
 
 template <typename TKey, typename TData>
@@ -128,83 +111,6 @@ template <typename TKey, typename TData>
 void Tree<TKey, TData>::Print(std::ostream& stream , int depth)
 {
 	m_root->Print(stream, depth);
-}
-
-template <typename TKey, typename TData>
-void Tree<TKey, TData>::ToVector(std::vector<std::pair<TKey, TData> >& vec)
-{
-	TreeWalker<TKey, TData> walker(GetRoot());
-	for(; !walker.End(); walker++)
-	{
-		if( walker.GetNode()->IsRoot() )
-			continue;
-
-		std::pair<TKey, TData> itemPair;
-		itemPair.first = walker.GetNode()->GetKey();
-		itemPair.second = walker.GetNode()->GetData();
-		vec.push_back( itemPair );
-	}
-}
-
-template <typename TKey, typename TData>
-void Tree<TKey, TData>::Compare(Tree* targetTree, std::vector<std::pair<TKey, TData> >& deletedItems, std::vector<std::pair<TKey, TData> >& modifiedItems, std::vector<std::pair<TKey, TData> >& newItems, TreeNode<TKey, TData>* fromNode)
-{
-	if(!targetTree){
-		return;
-	}
-
-	deletedItems.clear(); newItems.clear(); modifiedItems.clear();
-
-	TreeNode<TKey, TData>* node;
-
-	fromNode == NULL ? node = GetRoot() : node = fromNode;
-	TreeWalker<TKey, TData> sourceTreeWalker(node);
-	TreeWalker<TKey, TData> targetTreeWalker(targetTree->GetRoot());
-	
-	for(; !sourceTreeWalker.End(); sourceTreeWalker++)
-	{
-		if( sourceTreeWalker.GetNode()->IsRoot() )
-			continue;
-
-		TreeNode<TKey, TData>* node = targetTree->Find(sourceTreeWalker.GetNode()->GetKey());
-		if(node == NULL)
-		{
-			// Item does not exist in target tree which means it must been deleted
-			std::pair<TKey, TData> itemPair;
-			itemPair.first = sourceTreeWalker.GetNode()->GetKey();
-			itemPair.second = sourceTreeWalker.GetNode()->GetData();
-			deletedItems.push_back( itemPair );
-		}
-		else 
-		{
-			// Compare data
-			if(node->GetData() == sourceTreeWalker.GetNode()->GetData())
-				continue;
-
-			// Data was modified
-			std::pair<TKey, TData> itemPair;
-			itemPair.first = sourceTreeWalker.GetNode()->GetKey();
-			itemPair.second = node->GetData();
-			modifiedItems.push_back( itemPair );
-		}
-	}
-	
-	for(; !targetTreeWalker.End(); targetTreeWalker++)
-	{
-		if(targetTreeWalker.GetNode()->IsRoot())
-			continue;
-
-		if(Find(targetTreeWalker.GetNode()->GetKey()) == NULL)
-		{
-			// Node from target tree does not exist in this tree
-			// which means that this node is new
-			// Data was modified
-			std::pair<TKey, TData> itemPair;
-			itemPair.first = targetTreeWalker.GetNode()->GetKey();
-			itemPair.second = targetTreeWalker.GetNode()->GetData();
-			newItems.push_back( itemPair );
-		}
-	}
 }
 
 #endif // CODELITE_TREE_H

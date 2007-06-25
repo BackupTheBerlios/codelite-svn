@@ -3,19 +3,15 @@
 
 #include "symbol_entry.h"
 #include "map"
-#include "list"
-#include "smart_ptr.h"
-#include "tree.h"
-#include "tree_node.h"
-
-typedef TreeNode<std::string, SymbolData> SymbolTreeNode;
-typedef Tree<std::string, SymbolData> SymbolTree;
-typedef SmartPtr<SymbolTree> SymbolTreePtr;
-typedef SmartPtr<SymbolTreeNode> SymbolTreeNodePtr;
 
 class SymbolTable
 {
-	SymbolTreePtr m_tree;
+	//a multimap that contains our symbols collected from the parsing
+	//the key is a concatenation of the scope name + the symbol name
+	//multiple entries with same key is allowed.
+	std::multimap<std::string, SymbolData> m_symbols;
+	typedef std::pair<std::string, SymbolData> MapEntry;
+	
 public:
 	static SymbolTable& instance();
 	
