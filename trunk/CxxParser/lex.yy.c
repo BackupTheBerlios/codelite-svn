@@ -834,6 +834,7 @@ maintain appropriate scoping information.
 #include "map"
 #include "y.tab.h" /* YACC generated definitions based on C++ grammar */
 #include "symbol_table.h"
+#include "errno.h"
 
 extern std::string yylval;  /*  We  will always point at the text of the lexeme.
 //         This makes it easy to print out nice trees when  YYDEBUG  is

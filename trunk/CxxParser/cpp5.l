@@ -180,7 +180,7 @@ bool isaTYPE(char *string);
 #define NUMERICAL_RETURN(x) RETURN_VAL(x)            /* some sort of constant */
 #define LITERAL_RETURN(x)   RETURN_VAL(x)            /* a string literal */
 #define C_COMMENT_RETURN(x) RETURN_VAL(x)	     /* C Style comment  */
-#define RETURN_VAL(x) {return(x);}
+#define RETURN_VAL(x) {yylval = yytext; return(x);}
 
 #ifdef yywrap
 #undef yywrap
