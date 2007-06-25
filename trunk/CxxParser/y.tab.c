@@ -338,10 +338,14 @@ void syncParser(){
 }
 
 int main(void) {
-	if( !setLexerInput("test.h") ){
-		return -1;
+	for(int i=0; i<2; i++)
+	{
+		if( !setLexerInput("test.h") ){
+			return -1;
+		}
+		yyparse();
 	}
-	yyparse();
+	
 	return 0;
 }
 #define YYABORT goto yyabort

@@ -1650,6 +1650,15 @@ case 121:
 YY_RULE_SETUP
 {NAMEDOP_RETURN(LE_ELLIPSIS);}
 	YY_BREAK
+case YY_STATE_EOF(INITIAL):
+{	
+							//reset lexer
+							printf("EOF detected\n");
+							yy_flush_buffer( YY_CURRENT_BUFFER); 
+							yylineno=1;
+							yyterminate();
+						}
+	YY_BREAK
 case 122:
 YY_RULE_SETUP
 {return yytext[0];}
@@ -1658,8 +1667,6 @@ case 123:
 YY_RULE_SETUP
 ECHO;
 	YY_BREAK
-			case YY_STATE_EOF(INITIAL):
-				yyterminate();
 
 	case YY_END_OF_BUFFER:
 		{

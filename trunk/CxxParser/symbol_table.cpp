@@ -24,3 +24,8 @@ bool SymbolTable::IsSymbolExist(const std::string &name, const std::string &scop
 {
 	return m_symbols.find(name) != m_symbols.end();
 }
+
+void SymbolTable::DiscardAll()
+{
+	m_symbols.clear();
+}

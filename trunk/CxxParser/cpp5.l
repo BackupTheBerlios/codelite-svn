@@ -398,11 +398,17 @@ typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
 "<<="                {NAMEDOP_RETURN(LE_LSassign);}
 ">>="                {NAMEDOP_RETURN(LE_RSassign);}
 "&="                 {NAMEDOP_RETURN(LE_ANDassign);}
-"^="                 {NAMEDOP_RETURN(LE_ERassign);}
-"|="                 {NAMEDOP_RETURN(LE_ORassign);}
-"..."                {NAMEDOP_RETURN(LE_ELLIPSIS);}
-.	       			   {return yytext[0];}
-
+"^="                	{NAMEDOP_RETURN(LE_ERassign);}
+"|="					{NAMEDOP_RETURN(LE_ORassign);}
+"..."					{NAMEDOP_RETURN(LE_ELLIPSIS);}
+<<EOF>> 				{	
+							//reset lexer
+							printf("EOF detected\n");
+							yy_flush_buffer( YY_CURRENT_BUFFER); 
+							yylineno=1;
+							yyterminate();
+						}
+.						{return yytext[0];}
 
 %%
 bool isaTYPE(char *string)

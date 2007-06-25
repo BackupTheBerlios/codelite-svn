@@ -25,6 +25,11 @@ public:
 	 */ 
 	void AddSymbol(const SymbolData &entry);
 	
+	/**
+	 * discard all symbols from the table
+	 */ 
+	void DiscardAll();
+	
 private:
 	SymbolTable();
 	virtual ~SymbolTable();
