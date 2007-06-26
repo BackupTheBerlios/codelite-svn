@@ -190,10 +190,11 @@ class_keyword: 	LE_CLASS		{$$ = $1;}
 					;
 					
 /* functions */
-function_decl		:	virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'  	{
-																																						printf("Found function: %s\n", $4.c_str());
-																																					}
-						;
+function_decl		:	virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'  					 
+						{
+							printf("Found function: %s\n", $4.c_str());
+						}
+					;
 
 /* 
 applicable for C++, for cases where a function is declared as
@@ -229,15 +230,16 @@ star_list			: 	/*empty*/		{$$ = ""; }
 special_star_amp		:	star_list amp_item { $$ = $1 + $2; }
 						;
 
-/** Variables **/
-variable_decl			:	const_spec nested_scope_specifier basic_type_name special_star_amp  {$$ = $1 + $2 + $3  + $4;}
-						|	const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp var_name_hack {$$ = $1 + $2 + $3  + $4;}
-						| 	const_spec nested_scope_specifier LE_TYPEDEFname '<' template_parameter_list '>' special_star_amp var_name_hack{$$ = $1 + $2 + $3  + $4 + $5 + $6 + $7;}
+stmnt_starter			:	/*empty*/
+						| ';'
 						;
 						
-var_name_hack			:	/*empty*/
-						| 	LE_IDENTIFIER '='
+/** Variables **/
+variable_decl			:	stmnt_starter const_spec nested_scope_specifier basic_type_name special_star_amp  LE_IDENTIFIER {$$ = $1 + $2 + $3  + $4;}
+						|	stmnt_starter const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp LE_IDENTIFIER {$$ = $1 + $2 + $3  + $4;}
+						| 	stmnt_starter const_spec nested_scope_specifier LE_TYPEDEFname '<' template_parameter_list '>' special_star_amp LE_IDENTIFIER {$$ = $1 + $2 + $3  + $4 + $5 + $6 + $7;}
 						;
+
 %%
 void yyerror(char *s) {}
 
