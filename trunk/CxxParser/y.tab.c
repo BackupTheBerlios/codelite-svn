@@ -123,94 +123,119 @@ extern void increaseScope();	/*increase scope with anonymouse value*/
 short yylhs[] = {                                        -1,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     0,    2,    2,    2,    2,    2,    7,    7,    9,    9,
-    8,    8,   10,   10,   11,   11,    3,    3,    5,    6,
-   12,   12,    4,   16,   16,   19,   14,   14,   13,   18,
-   18,   20,   20,   17,   17,   21,   21,   22,   22,   15,
+    8,    8,   10,   10,   11,   11,   12,   12,   12,   13,
+    3,    3,    5,    6,   17,   17,    4,   15,   15,   21,
+   20,   20,   18,   18,   14,   14,   22,   22,   23,   23,
+   16,   19,   19,   19,   24,   24,
 };
 short yylen[] = {                                         2,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     2,    1,    1,    1,    1,    1,    0,    2,    1,    3,
-    1,    1,    0,    1,    0,    4,    5,    5,    1,    1,
-    1,    1,   10,    0,    2,    2,    1,    1,    2,    0,
-    2,    0,    1,    0,    1,    0,    1,    0,    2,    2,
+    1,    1,    0,    1,    0,    4,    0,    1,    3,    4,
+    5,    5,    1,    1,    1,    1,    9,    0,    2,    2,
+    0,    2,    0,    1,    0,    1,    0,    1,    0,    2,
+    2,    4,    5,    8,    0,    2,
 };
 short yydefred[] = {                                     10,
-    0,   16,   43,    0,   30,   29,   11,   12,   13,   14,
-   15,    0,    0,    0,    0,   32,   31,    0,    6,    1,
-    4,    2,    5,    3,    8,    7,    9,   38,   37,   48,
-   45,   39,   21,   22,   19,    0,    0,   24,    0,   34,
-    0,   18,    0,   26,    0,    0,   47,   49,   50,   20,
-   27,   28,    0,    0,   35,    0,   36,    0,    0,    0,
-    0,   41,   33,
+    0,   16,   44,    0,   34,   33,   11,   12,   13,   14,
+   15,    0,    0,    0,   36,   35,    0,   46,   38,   38,
+   21,   22,   19,    0,    0,   24,    0,    0,    0,   18,
+    0,   26,    0,    6,    1,    4,    2,    5,    3,    8,
+    7,    9,    0,   49,   39,    0,    0,   20,   31,   32,
+   40,    0,    0,    0,   52,    0,    0,   28,   38,    0,
+   53,   48,   50,   51,    0,    0,   49,    0,   56,    0,
+   29,    0,    0,    0,    0,   54,   30,   42,   37,
 };
 short yydgoto[] = {                                       1,
-   29,    7,    8,    9,   10,   11,   35,   36,   37,   39,
-   12,   18,   13,   30,   40,   46,   32,   61,   55,   14,
-   49,   41,
+   44,    7,    8,    9,   10,   11,   23,   24,   25,   27,
+   12,   57,   58,   59,   28,   53,   17,   13,   20,   75,
+   45,   64,   54,   61,
 };
 short yysindex[] = {                                      0,
- -123,    0,    0,  -53,    0,    0,    0,    0,    0,    0,
-    0, -254, -247, -263, -253,    0,    0, -277,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0, -260,  -18,    0, -258,    0,
-  -29,    0, -253,    0,  -58, -280,    0,    0,    0,    0,
-    0,    0,   10, -272,    0,   15,    0, -263,   -4, -250,
-    1,    0,    0,
+ -118,    0,    0,  -44,    0,    0,    0,    0,    0,    0,
+    0, -246, -250, -263,    0,    0, -285,    0,    0,    0,
+    0,    0,    0, -266,  -27,    0, -260, -225, -290,    0,
+ -263,    0,  -53,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,  -57,    0,    0,   16, -255,    0,    0,    0,
+    0, -250, -230,   26,    0,   33,  -26,    0,    0,   14,
+    0,    0,    0,    0, -250, -250,    0, -237,    0,   17,
+    0, -230, -255, -229,   21,    0,    0,    0,    0,
 };
 short yyrindex[] = {                                      0,
- -255,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0, -228,   -8,    0,    0, -242,    0,    0,
+ -248,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0, -217,  -22,    0,    0, -222,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
- -261,    0,   -8,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,  -44,    3,    0,
-    0,    0,    0,
+  -22,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,  -38,    0,    0,    0,    0,    0,    0,    0,
+    0,  -42, -231,  -43,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,   10, -228,    0,    0,    0,   25,
+    0, -231,   23,    0,    0,    0,    0,    0,    0,
 };
 short yygindex[] = {                                      0,
-    0,    0,    0,    0,    0,    0,   20,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    6,    0,    0,    0,
-    0,    0,
+    0,    0,    0,    0,    0,    0,   56,    0,    0,    0,
+    0,    0,   22,   -5,  -11,    9,    0,    0,    0,    0,
+    0,    0,    0,   18,
 };
-#define YYTABLESIZE 178
-short yytable[] = {                                       5,
-   51,    6,   42,   42,   25,   16,   15,   42,   47,   31,
-   19,   20,   48,   42,   44,   21,   44,   42,   42,   42,
-   42,   22,   53,   42,   42,   43,   23,   24,   25,   44,
-   44,   26,   27,   54,   44,   17,   38,   25,   17,   33,
-   44,   46,   42,   44,   45,   44,   44,   44,   34,   56,
-   44,   44,   46,   17,   57,   58,   60,   62,   42,   63,
-   23,   40,   50,   59,   52,    0,   28,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,   44,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    2,    0,    0,    0,    0,    0,    0,    0,
+#define YYTABLESIZE 276
+short yytable[] = {                                      49,
+   47,   27,   52,   49,    5,   49,    6,   19,   29,   43,
+   43,   25,   46,   15,   43,   14,   31,   66,   47,   27,
+   43,   17,   18,   47,   43,   43,   43,   43,   26,   21,
+   43,   43,   34,   35,   32,   67,   30,   36,   22,   17,
+   45,   45,   33,   37,   25,   45,   16,   68,   38,   39,
+   40,   45,   55,   41,   42,   56,   45,   45,   45,   70,
+   49,   45,   45,   62,   49,   43,   49,   63,   45,   50,
+   45,   51,   60,   65,   69,   72,   73,   74,   78,   79,
+   23,   77,   55,   41,   49,   45,   48,   71,   43,   76,
+    0,    0,    0,    0,    0,    0,   45,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    3,    0,    0,    0,    4,
+    0,    0,    0,    0,    0,    0,    0,    2,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    3,    0,
+    0,    0,    4,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,   47,
+    0,    0,    0,    0,   49,    0,    0,    0,    0,   51,
+   47,   45,    0,    0,    0,   49,
 };
-short yycheck[] = {                                     123,
-   59,  125,  258,  259,  260,  260,   60,  263,   38,  273,
-  258,  259,   42,  269,   59,  263,   61,  273,  274,  275,
-  276,  269,  303,  279,  280,   44,  274,  275,  276,  258,
-  259,  279,  280,  314,  263,   44,  314,  293,  293,  293,
-  269,  303,  303,   62,  303,  274,  275,  276,  302,   40,
-  279,  280,  314,   62,  327,   41,   61,  308,  314,   59,
-  303,   59,   43,   58,  123,   -1,  314,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,  314,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,  256,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+short yycheck[] = {                                      38,
+   44,   44,   60,   42,  123,   59,  125,   13,   20,  258,
+  259,  260,  303,  260,  263,   60,   44,   44,   62,   62,
+  269,   44,  273,  314,  273,  274,  275,  276,  314,  293,
+  279,  280,  258,  259,   62,   62,  303,  263,  302,   62,
+  258,  259,  303,  269,  293,  263,  293,   59,  274,  275,
+  276,  269,   44,  279,  280,   40,  274,  275,  276,   65,
+   38,  279,  280,   38,   42,  314,   44,   42,   59,  123,
+   61,  327,  303,   41,   61,   67,  314,   61,  308,   59,
+  303,   73,  314,   59,   62,  314,   31,   66,  314,   72,
+   -1,   -1,   -1,   -1,   -1,   -1,  314,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,  297,   -1,   -1,   -1,  301,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,  256,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  297,   -1,
+   -1,   -1,  301,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  303,
+   -1,   -1,   -1,   -1,  303,   -1,   -1,   -1,   -1,  327,
+  314,  314,   -1,   -1,   -1,  314,
 };
 #define YYFINAL 1
 #ifndef YYDEBUG
@@ -270,19 +295,20 @@ char *yyrule[] = {
 "opt_class_qualifier : LE_TYPEDEFname",
 "opt_template_qualifier :",
 "opt_template_qualifier : LE_TEMPLATE '<' template_arg_list '>'",
+"template_parameter_list :",
+"template_parameter_list : template_parameter",
+"template_parameter_list : template_parameter_list ',' template_parameter",
+"template_parameter : const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp",
 "class_decl : opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';'",
 "class_decl : opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{'",
 "scope_reducer : '}'",
 "scope_increaer : '{'",
 "class_keyword : LE_CLASS",
 "class_keyword : LE_STRUCT",
-"function_decl : function_prefix func_ret_value special_star_amp nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'",
+"function_decl : virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'",
 "nested_scope_specifier :",
 "nested_scope_specifier : nested_scope_specifier scope_specifier",
 "scope_specifier : LE_TYPEDEFname LE_CLCL",
-"func_ret_value : basic_type_name",
-"func_ret_value : LE_TYPEDEFname",
-"function_prefix : virtual_spec const_spec",
 "pure_virtual_spec :",
 "pure_virtual_spec : '=' LE_OCTALconstant",
 "virtual_spec :",
@@ -294,6 +320,11 @@ char *yyrule[] = {
 "star_list :",
 "star_list : star_list '*'",
 "special_star_amp : star_list amp_item",
+"variable_decl : const_spec nested_scope_specifier basic_type_name special_star_amp",
+"variable_decl : const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp var_name_hack",
+"variable_decl : const_spec nested_scope_specifier LE_TYPEDEFname '<' template_parameter_list '>' special_star_amp var_name_hack",
+"var_name_hack :",
+"var_name_hack : LE_IDENTIFIER '='",
 };
 #endif
 #ifndef YYSTYPE
@@ -325,27 +356,14 @@ void yyerror(char *s) {}
 
 void syncParser(){
 	//move lexer to the next ';' line or scope opening '{'
-	printf("skipping to next valid token...\n");
-	while(true){
-		int ch = yylex();
-		if(ch == 0){
-			break;
-		}
-		if(ch == (int)';' || ch == (int)'{'){
-			break;
-		}
-	}
+	int ch = yylex();
 }
 
 int main(void) {
-	for(int i=0; i<2; i++)
-	{
-		if( !setLexerInput("test.h") ){
-			return -1;
-		}
-		yyparse();
+	if( !setLexerInput("test.h") ){
+		return -1;
 	}
-	
+	yyparse();
 	return 0;
 }
 #define YYABORT goto yyabort
@@ -543,16 +561,32 @@ case 26:
 { yyval = yyvsp[-3] + yyvsp[-2] + yyvsp[-1] + yyvsp[0];}
 break;
 case 27:
-{printf("%s\n", yyvsp[-4].c_str());}
+{yyval = "";}
 break;
 case 28:
+{yyval = yyvsp[0];}
+break;
+case 29:
+{yyval = yyvsp[-2] + yyvsp[-1] + yyvsp[0];}
+break;
+case 30:
+{yyval = yyvsp[-3] + yyvsp[-2] + yyvsp[-1] +yyvsp[0];}
+break;
+case 31:
 {
-																												
+																												printf("Found class decl: %s\n", yyvsp[-1].c_str());
+																												SymbolData data;
+																												/*create class symbol and add it*/
+																												createClassSymbol(yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1], false, data);
+																												SymbolTable::instance().AddSymbol(data);
+																											}
+break;
+case 32:
+{
 																												printf("Found class impl: %s\n", yyvsp[-1].c_str());
 																												SymbolData data;
-																												createClassSymbol(
-																													yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1], true, data
-																													);
+																												/*create class symbol and add it*/
+																												createClassSymbol(yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1], true, data);
 																												SymbolTable::instance().AddSymbol(data);
 																												
 																												/*increase the scope level*/
@@ -560,7 +594,7 @@ case 28:
 																												printScopeName();
 																											}
 break;
-case 29:
+case 33:
 {
 									if(currentScope.empty())
 									{
@@ -574,74 +608,74 @@ case 29:
 									}
 								}
 break;
-case 30:
+case 34:
 {
 								/*increase random scope*/
 								increaseScope();
 								printScopeName();
 							 }
 break;
-case 31:
+case 35:
 {yyval = yyvsp[0];}
 break;
-case 32:
+case 36:
 {yyval = yyvsp[0];}
 break;
-case 33:
+case 37:
 {
 																																						printf("Found function: %s\n", yyvsp[-5].c_str());
 																																					}
 break;
-case 34:
+case 38:
 {yyval = "";}
 break;
-case 35:
+case 39:
 {yyval = yyvsp[-1] + " " + yyvsp[0];}
 break;
-case 36:
-{yyval = yyvsp[-1] + yyvsp[0];}
-break;
-case 37:
-{ yyval = yyvsp[0]; }
-break;
-case 38:
-{ yyval = yyvsp[0]; }
-break;
-case 39:
-{ yyval = yyvsp[-1] + " " + yyvsp[0]; }
-break;
 case 40:
-{yyval = ""; }
+{yyval = yyvsp[-1] + yyvsp[0];}
 break;
 case 41:
-{ yyval = yyvsp[-1] + " " + yyvsp[0]; }
+{yyval = ""; }
 break;
 case 42:
-{yyval = ""; }
+{ yyval = yyvsp[-1] + " " + yyvsp[0]; }
 break;
 case 43:
-{ yyval = yyvsp[0]; }
+{yyval = ""; }
 break;
 case 44:
-{yyval = ""; }
+{ yyval = yyvsp[0]; }
 break;
 case 45:
-{ yyval = yyvsp[0]; }
+{yyval = ""; }
 break;
 case 46:
-{yyval = ""; }
-break;
-case 47:
 { yyval = yyvsp[0]; }
 break;
-case 48:
+case 47:
 {yyval = ""; }
 break;
+case 48:
+{ yyval = yyvsp[0]; }
+break;
 case 49:
-{yyval = yyvsp[-1] + yyvsp[0];}
+{yyval = ""; }
 break;
 case 50:
+{yyval = yyvsp[-1] + yyvsp[0];}
+break;
+case 51:
 { yyval = yyvsp[-1] + yyvsp[0]; }
+break;
+case 52:
+{yyval = yyvsp[-3] + yyvsp[-2] + yyvsp[-1]  + yyvsp[0];}
+break;
+case 53:
+{yyval = yyvsp[-4] + yyvsp[-3] + yyvsp[-2]  + yyvsp[-1];}
+break;
+case 54:
+{yyval = yyvsp[-7] + yyvsp[-6] + yyvsp[-5]  + yyvsp[-4] + yyvsp[-3] + yyvsp[-2] + yyvsp[-1];}
 break;
     }
     yyssp -= yym;

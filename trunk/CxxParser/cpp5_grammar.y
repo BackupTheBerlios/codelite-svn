@@ -105,8 +105,8 @@ translation_unit	:		/*empty*/
 						| translation_unit external_decl
 						;
 						
-external_decl		:	class_decl	
-						| 	function_decl	
+external_decl			:	class_decl	
+						| 	function_decl	/* function decl also includes variables */
 						| 	scope_reducer
 						| 	scope_increaer
 						| 	error { 
@@ -114,11 +114,11 @@ external_decl		:	class_decl
 								syncParser();
 							}
 						;
-/** Class declaration **/
+/*templates*/
 template_arg		:	/* empty */
 						| template_specifiter LE_IDENTIFIER {$$ = $1 + " " + $2;}
 						;
-
+						
 template_arg_list	:	template_arg	{ $$ = $1; }
 						| 	template_arg_list ',' template_arg	{ $$ = $1 + " " + $2 + " " + $3; }
 						;
@@ -135,15 +135,29 @@ opt_template_qualifier	: /*empty*/
 								| LE_TEMPLATE '<' template_arg_list '>'	{ $$ = $1 + $2 + $3 + $4;}
 								;
 								
+/* the following rules are for template parameters no declarations! */
+template_parameter_list	: /* empty */		{$$ = "";}
+							| template_parameter	{$$ = $1;}
+							| template_parameter_list ',' template_parameter {$$ = $1 + $2 + $3;}
+							;
+
+template_parameter		:	const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp {$$ = $1 + $2 + $3 +$4;}
+							;
+							
 /* the class rule itself */
-class_decl	:	opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';' {printf("%s\n", $1.c_str());}
+class_decl	:	opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';' {
+																												printf("Found class decl: %s\n", $4.c_str());
+																												SymbolData data;
+																												//create class symbol and add it
+																												createClassSymbol($1, $2, $3, $4, false, data);
+																												SymbolTable::instance().AddSymbol(data);
+																											}
+
 				| 	opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{' {
-																												
 																												printf("Found class impl: %s\n", $4.c_str());
 																												SymbolData data;
-																												createClassSymbol(
-																													$1, $2, $3, $4, true, data
-																													);
+																												//create class symbol and add it
+																												createClassSymbol($1, $2, $3, $4, true, data);
 																												SymbolTable::instance().AddSymbol(data);
 																												
 																												//increase the scope level
@@ -176,8 +190,8 @@ class_keyword: 	LE_CLASS		{$$ = $1;}
 					;
 					
 /* functions */
-function_decl		:	function_prefix  func_ret_value special_star_amp nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'  	{
-																																						printf("Found function: %s\n", $5.c_str());
+function_decl		:	virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'  	{
+																																						printf("Found function: %s\n", $4.c_str());
 																																					}
 						;
 
@@ -188,17 +202,10 @@ void scope::foo(){ ... }
 nested_scope_specifier		: /*empty*/ {$$ = "";}
 								| nested_scope_specifier scope_specifier {$$ = $1 + " " + $2;}
 								;
-								
+
 scope_specifier			:	LE_TYPEDEFname LE_CLCL {$$ = $1 + $2;}
 							;
 
-func_ret_value		:	basic_type_name 		{ $$ = $1; }
-						|	LE_TYPEDEFname			{ $$ = $1; }
-						;
-						
-function_prefix	:	virtual_spec const_spec  { $$ = $1 + " " + $2; }
-						;
-						
 pure_virtual_spec	:	/*empty*/				{$$ = ""; }
 						| '=' LE_OCTALconstant	{ $$ = $1 + " " + $2; }
 						;
@@ -219,34 +226,30 @@ star_list			: 	/*empty*/		{$$ = ""; }
 						|	star_list '*'	{$$ = $1 + $2;}
 						;
 
-special_star_amp	:	star_list amp_item { $$ = $1 + $2; }
+special_star_amp		:	star_list amp_item { $$ = $1 + $2; }
 						;
 
+/** Variables **/
+variable_decl			:	const_spec nested_scope_specifier basic_type_name special_star_amp  {$$ = $1 + $2 + $3  + $4;}
+						|	const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp var_name_hack {$$ = $1 + $2 + $3  + $4;}
+						| 	const_spec nested_scope_specifier LE_TYPEDEFname '<' template_parameter_list '>' special_star_amp var_name_hack{$$ = $1 + $2 + $3  + $4 + $5 + $6 + $7;}
+						;
+						
+var_name_hack			:	/*empty*/
+						| 	LE_IDENTIFIER '='
+						;
 %%
 void yyerror(char *s) {}
 
 void syncParser(){
 	//move lexer to the next ';' line or scope opening '{'
-	printf("skipping to next valid token...\n");
-	while(true){
-		int ch = yylex();
-		if(ch == 0){
-			break;
-		}
-		if(ch == (int)';' || ch == (int)'{'){
-			break;
-		}
-	}
+	int ch = yylex();
 }
 
 int main(void) {
-	for(int i=0; i<2; i++)
-	{
-		if( !setLexerInput("test.h") ){
-			return -1;
-		}
-		yyparse();
+	if( !setLexerInput("test.h") ){
+		return -1;
 	}
-	
+	yyparse();
 	return 0;
 }

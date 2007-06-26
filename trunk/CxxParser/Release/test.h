@@ -1,7 +1,5 @@
 template <class T, class B> struct TagEntry
 {
-	class SimpleClass {
-		}
-	virtual TagEntry & TagEntry::foo();
-	
-}
+	int m_name;
+	virtual int foo();
+};
