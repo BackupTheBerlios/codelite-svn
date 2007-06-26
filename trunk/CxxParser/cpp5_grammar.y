@@ -18,12 +18,12 @@ extern char *yytext;
 #define YYDEBUG 0        /* get the pretty debugging code to compile*/
 
 #include "stdio.h"
-int yyparse();
-void yyerror(char *string);
-extern int yylex();
+int cl_scop_parse();
+void cl_scop_error(char *string);
+extern int cl_scop_lex();
 extern bool setLexerInput(const char *fileName);
 void syncParser();
-extern int yylineno;
+extern int cl_scop_lineno;
 extern std::vector<std::string> currentScope;
 
 extern void printScopeName();	//print the current scope name
@@ -110,7 +110,7 @@ external_decl			:	class_decl
 						| 	scope_reducer
 						| 	scope_increaer
 						| 	error { 
-								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", yytext, yylineno);
+								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_scope_text, cl_scope_lineno);
 								syncParser();
 							}
 						;
@@ -245,13 +245,13 @@ void yyerror(char *s) {}
 
 void syncParser(){
 	//move lexer to the next ';' line or scope opening '{'
-	int ch = yylex();
+	int ch = cl_scop_lex();
 }
 
 int main(void) {
 	if( !setLexerInput("test.h") ){
 		return -1;
 	}
-	yyparse();
+	cl_scop_parse();
 	return 0;
 }

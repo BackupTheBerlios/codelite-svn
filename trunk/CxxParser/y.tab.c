@@ -7,7 +7,31 @@ static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 #define yyclearin (yychar=(-1))
 #define yyerrok (yyerrflag=0)
 #define YYRECOVERING (yyerrflag!=0)
-#define YYPREFIX "yy"
+#define yyparse cl_scope_parse
+#define yylex cl_scope_lex
+#define yyerror cl_scope_error
+#define yychar cl_scope_char
+#define yyval cl_scope_val
+#define yylval cl_scope_lval
+#define yydebug cl_scope_debug
+#define yynerrs cl_scope_nerrs
+#define yyerrflag cl_scope_errflag
+#define yyss cl_scope_ss
+#define yyssp cl_scope_ssp
+#define yyvs cl_scope_vs
+#define yyvsp cl_scope_vsp
+#define yylhs cl_scope_lhs
+#define yylen cl_scope_len
+#define yydefred cl_scope_defred
+#define yydgoto cl_scope_dgoto
+#define yysindex cl_scope_sindex
+#define yyrindex cl_scope_rindex
+#define yygindex cl_scope_gindex
+#define yytable cl_scope_table
+#define yycheck cl_scope_check
+#define yyname cl_scope_name
+#define yyrule cl_scope_rule
+#define YYPREFIX "cl_scope_"
 /* Copyright Eran Ifrah(c)*/
 /*************** Includes and Defines *****************************/
 #include "string"
@@ -24,12 +48,12 @@ extern char *yytext;
 #define YYDEBUG 0        /* get the pretty debugging code to compile*/
 
 #include "stdio.h"
-int yyparse();
-void yyerror(char *string);
-extern int yylex();
+int cl_scop_parse();
+void cl_scop_error(char *string);
+extern int cl_scop_lex();
 extern bool setLexerInput(const char *fileName);
 void syncParser();
-extern int yylineno;
+extern int cl_scop_lineno;
 extern std::vector<std::string> currentScope;
 
 extern void printScopeName();	/*print the current scope name*/
@@ -120,7 +144,7 @@ extern void increaseScope();	/*increase scope with anonymouse value*/
 #define LE_ERassign 338
 #define LE_ORassign 339
 #define YYERRCODE 256
-short yylhs[] = {                                        -1,
+short cl_scope_lhs[] = {                                        -1,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     0,    2,    2,    2,    2,    2,    7,    7,    9,    9,
     8,    8,   10,   10,   11,   11,   12,   12,   12,   13,
@@ -128,7 +152,7 @@ short yylhs[] = {                                        -1,
    20,   20,   18,   18,   14,   14,   22,   22,   23,   23,
    16,   24,   24,   19,   19,   19,
 };
-short yylen[] = {                                         2,
+short cl_scope_len[] = {                                         2,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     2,    1,    1,    1,    1,    1,    0,    2,    1,    3,
     1,    1,    0,    1,    0,    4,    0,    1,    3,    4,
@@ -136,7 +160,7 @@ short yylen[] = {                                         2,
     0,    2,    0,    1,    0,    1,    0,    1,    0,    2,
     2,    0,    1,    6,    6,    9,
 };
-short yydefred[] = {                                     10,
+short cl_scope_defred[] = {                                     10,
     0,   16,   44,    0,   34,   33,   11,   12,   13,   14,
    15,    0,    0,    0,   36,   35,    0,   53,   38,    0,
    21,   22,   19,    0,    0,   24,    0,    0,   46,   38,
@@ -146,12 +170,12 @@ short yydefred[] = {                                     10,
     0,   28,   38,   55,   48,   50,   51,   54,    0,    0,
     0,   49,    0,   42,   37,   29,    0,    0,   56,   30,
 };
-short yydgoto[] = {                                       1,
+short cl_scope_dgoto[] = {                                       1,
    54,    7,    8,    9,   10,   11,   23,   24,   25,   27,
    12,   61,   62,   63,   28,   57,   17,   13,   19,   70,
    37,   67,   58,   20,
 };
-short yysindex[] = {                                      0,
+short cl_scope_sindex[] = {                                      0,
  -118,    0,    0,  -28,    0,    0,    0,    0,    0,    0,
     0, -238,  -43, -234,    0,    0, -295,    0,    0, -233,
     0,    0,    0, -240,   -2,    0, -239, -291,    0,    0,
@@ -161,7 +185,7 @@ short yysindex[] = {                                      0,
    -1,    0,    0,    0,    0,    0,    0,    0, -228,   22,
  -233,    0, -232,    0,    0,    0, -220, -252,    0,    0,
 };
-short yyrindex[] = {                                      0,
+short cl_scope_rindex[] = {                                      0,
   -55,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0, -249,    7,    0,    0, -218,    0,    0, -222,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -171,13 +195,13 @@ short yyrindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
  -227,    0,    0,    0,    0,    0,    0,  -27,    0,    0,
 };
-short yygindex[] = {                                      0,
+short cl_scope_gindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,   56,    0,    0,    0,
     0,    0,   19,   -7,    4,  -16,    0,    0,    0,    0,
     0,    0,    0,    0,
 };
 #define YYTABLESIZE 270
-short yytable[] = {                                      27,
+short cl_scope_table[] = {                                      27,
    56,   49,   47,   43,    5,   49,    6,   40,   52,   52,
    49,   35,   30,   52,   49,   18,   49,   27,   26,   52,
    47,   15,   36,   52,   52,   52,   52,   44,   45,   52,
@@ -206,7 +230,7 @@ short yytable[] = {                                      27,
     0,    0,    0,    0,    0,    0,    0,    0,   43,    0,
     0,   47,    0,    0,    0,    0,   49,   43,    0,   45,
 };
-short yycheck[] = {                                      44,
+short cl_scope_check[] = {                                      44,
    60,   38,   44,   59,  123,   42,  125,   59,  258,  259,
    38,  303,   20,  263,   42,   59,   44,   62,  314,  269,
    62,  260,  314,  273,  274,  275,  276,  258,  259,  279,
@@ -241,7 +265,7 @@ short yycheck[] = {                                      44,
 #endif
 #define YYMAXTOKEN 339
 #if YYDEBUG
-char *yyname[] = {
+char *cl_scope_name[] = {
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,"'&'",0,"'('","')'","'*'",0,"','",0,0,0,0,0,0,0,0,0,0,0,0,0,0,"';'",
 "'<'","'='","'>'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -265,7 +289,7 @@ char *yyname[] = {
 "LE_DIVassign","LE_MODassign","LE_PLUSassign","LE_MINUSassign","LE_LSassign",
 "LE_RSassign","LE_ANDassign","LE_ERassign","LE_ORassign",
 };
-char *yyrule[] = {
+char *cl_scope_rule[] = {
 "$accept : translation_unit",
 "basic_type_name : LE_INT",
 "basic_type_name : LE_CHAR",
@@ -354,14 +378,14 @@ void yyerror(char *s) {}
 
 void syncParser(){
 	//move lexer to the next ';' line or scope opening '{'
-	int ch = yylex();
+	int ch = cl_scop_lex();
 }
 
 int main(void) {
 	if( !setLexerInput("test.h") ){
 		return -1;
 	}
-	yyparse();
+	cl_scop_parse();
 	return 0;
 }
 #define YYABORT goto yyabort
@@ -533,7 +557,7 @@ case 9:
 break;
 case 16:
 { 
-								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", yytext, yylineno);
+								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_scope_text, cl_scope_lineno);
 								syncParser();
 							}
 break;

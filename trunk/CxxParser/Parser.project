@@ -2,10 +2,10 @@
 <CodeLite_Project Name="Parser">
   <Dependencies/>
   <VirtualDirectory Name="src">
-    <File Name="lex.yy.c"/>
     <File Name="y.tab.c"/>
     <File Name="symbol_table.cpp"/>
     <File Name="cxxparser.cpp"/>
+    <File Name="lex.cl_scope_.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="incldue">
     <File Name="y.tab.h"/>
@@ -44,8 +44,8 @@
         <LibraryPath Value=".\Release"/>
       </Linker>
       <PreBuild>
-        <Command Enabled="yes">yacc -dl  -v -t cpp5_grammar.y</Command>
-        <Command Enabled="yes">flex -L  cpp5.l</Command>
+        <Command Enabled="yes">yacc -dl  -t -pcl_scope_ cpp5_grammar.y</Command>
+        <Command Enabled="yes">flex -L  -Pcl_scope_ cpp5.l</Command>
       </PreBuild>
       <PostBuild/>
     </Configuration>

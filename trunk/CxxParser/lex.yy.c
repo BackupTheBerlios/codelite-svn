@@ -836,10 +836,8 @@ maintain appropriate scoping information.
 #include "symbol_table.h"
 #include "errno.h"
 
-extern std::string yylval;  /*  We  will always point at the text of the lexeme.
-//         This makes it easy to print out nice trees when  YYDEBUG  is
-//         enabled.   (see  C++  grammar  file  and  its  definition of
-//          YYDEBUG_LEXER_TEXT to be "yylval" */
+extern std::string yylval;
+
 
 #include <stdlib.h>
 #include <string.h>
