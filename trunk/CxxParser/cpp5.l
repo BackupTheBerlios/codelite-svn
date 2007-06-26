@@ -134,6 +134,8 @@ maintain appropriate scoping information.
 
 /* Included code before lex code */
 /*************** Includes and Defines *****************************/
+#define YYSTYPE std::string
+
 #include "string"
 #include "map"
 #include "y.tab.h" /* YACC generated definitions based on C++ grammar */
@@ -181,12 +183,6 @@ bool isaTYPE(char *string);
 #define LITERAL_RETURN(x)   RETURN_VAL(x)            /* a string literal */
 #define C_COMMENT_RETURN(x) RETURN_VAL(x)	     /* C Style comment  */
 #define RETURN_VAL(x) {yylval = yytext; return(x);}
-
-#ifdef yywrap
-#undef yywrap
-#endif
-
-#define yywrap() 1
 
 %}
 
@@ -506,4 +502,9 @@ bool setLexerInput(const char *fileName)
 	//update the working file name
 	setFileName(fileName);
 	return true;
+}
+
+int yywrap()
+{
+	return 1;
 }
