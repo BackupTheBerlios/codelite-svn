@@ -11,6 +11,7 @@ class Target
 	public:
 		Target(wxString name, wxArrayString deps, wxArrayString actions);
 		void stripWhitespace();
+		void splitDepencencies();
 		
 		wxString getName();
 		wxArrayString getDeps();
