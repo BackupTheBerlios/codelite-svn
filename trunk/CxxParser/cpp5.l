@@ -142,7 +142,7 @@ maintain appropriate scoping information.
 #include "symbol_table.h"
 #include "errno.h"
 
-extern std::string yylval;
+extern std::string cl_scope_lval;
 
 
 #include <stdlib.h>
@@ -180,7 +180,7 @@ bool isaTYPE(char *string);
 #define NUMERICAL_RETURN(x) RETURN_VAL(x)            /* some sort of constant */
 #define LITERAL_RETURN(x)   RETURN_VAL(x)            /* a string literal */
 #define C_COMMENT_RETURN(x) RETURN_VAL(x)	     /* C Style comment  */
-#define RETURN_VAL(x) {yylval = yytext; return(x);}
+#define RETURN_VAL(x) {cl_scope_lval = yytext; return(x);}
 
 %}
 
@@ -399,7 +399,7 @@ typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
 							//reset lexer
 							printf("EOF detected\n");
 							yy_flush_buffer( YY_CURRENT_BUFFER); 
-							yylineno=1;
+							cl_scope_lineno=1;
 							yyterminate();
 						}
 .						{return yytext[0];}

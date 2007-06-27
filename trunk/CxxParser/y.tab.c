@@ -39,21 +39,21 @@ static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 #include "symbol_table.h"
 #include "cxxparser.h"
 
-#define YYDEBUG_LEXER_TEXT (yylval) /* our lexer loads this up each time.
+#define YYDEBUG_LEXER_TEXT (cl_scope_lval) /* our lexer loads this up each time.
 				     We are telling the graphical debugger
 				     where to find the spelling of the 
 				     tokens.*/
-extern char *yytext;
+extern char *cl_scope_text;
 #define YYSTYPE std::string
 #define YYDEBUG 0        /* get the pretty debugging code to compile*/
 
 #include "stdio.h"
-int cl_scop_parse();
-void cl_scop_error(char *string);
-extern int cl_scop_lex();
+int cl_scope_parse();
+void cl_scope_error(char *string);
+extern int cl_scope_lex();
 extern bool setLexerInput(const char *fileName);
 void syncParser();
-extern int cl_scop_lineno;
+extern int cl_scope_lineno;
 extern std::vector<std::string> currentScope;
 
 extern void printScopeName();	/*print the current scope name*/
@@ -378,14 +378,14 @@ void yyerror(char *s) {}
 
 void syncParser(){
 	//move lexer to the next ';' line or scope opening '{'
-	int ch = cl_scop_lex();
+	int ch = cl_scope_lex();
 }
 
 int main(void) {
 	if( !setLexerInput("test.h") ){
 		return -1;
 	}
-	cl_scop_parse();
+	cl_scope_parse();
 	return 0;
 }
 #define YYABORT goto yyabort

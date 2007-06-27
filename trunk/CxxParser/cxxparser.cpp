@@ -3,7 +3,7 @@
 
 extern std::string &getFileName();
 extern std::string getCurrentScope();
-extern int yylineno;
+extern int cl_scope_lineno;
 
 void createClassSymbol(	const std::string &optTmpQualifier, 
 							const std::string &keyWord, 
@@ -15,6 +15,6 @@ void createClassSymbol(	const std::string &optTmpQualifier,
 	data.file = getFileName();
 	data.kind = class_t;
 	data.name = className;
-	data.line = yylineno;
+	data.line = cl_scope_lineno;
 	data.scope = getCurrentScope();
 }

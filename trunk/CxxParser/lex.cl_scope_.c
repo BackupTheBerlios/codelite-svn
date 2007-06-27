@@ -849,13 +849,15 @@ maintain appropriate scoping information.
 
 /* Included code before lex code */
 /*************** Includes and Defines *****************************/
+#define YYSTYPE std::string
+
 #include "string"
 #include "map"
 #include "y.tab.h" /* YACC generated definitions based on C++ grammar */
 #include "symbol_table.h"
 #include "errno.h"
 
-extern std::string yylval;
+extern std::string cl_scope_lval;
 
 
 #include <stdlib.h>
@@ -893,13 +895,7 @@ bool isaTYPE(char *string);
 #define NUMERICAL_RETURN(x) RETURN_VAL(x)            /* some sort of constant */
 #define LITERAL_RETURN(x)   RETURN_VAL(x)            /* a string literal */
 #define C_COMMENT_RETURN(x) RETURN_VAL(x)	     /* C Style comment  */
-#define RETURN_VAL(x) {yylval = yytext; return(x);}
-
-#ifdef yywrap
-#undef yywrap
-#endif
-
-#define yywrap() 1
+#define RETURN_VAL(x) {cl_scope_lval = yytext; return(x);}
 
 
 /* Macros after this point can all be overridden by user definitions in
@@ -1672,7 +1668,7 @@ case YY_STATE_EOF(INITIAL):
 							//reset lexer
 							printf("EOF detected\n");
 							yy_flush_buffer( YY_CURRENT_BUFFER); 
-							yylineno=1;
+							cl_scope_lineno=1;
 							yyterminate();
 						}
 	YY_BREAK
@@ -2661,4 +2657,9 @@ bool setLexerInput(const char *fileName)
 	//update the working file name
 	setFileName(fileName);
 	return true;
+}
+
+int yywrap()
+{
+	return 1;
 }
