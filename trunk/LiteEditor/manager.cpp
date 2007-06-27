@@ -1121,10 +1121,13 @@ wxString Manager::GetProjectNameByFile(const wxString &fullPathFileName)
 
 void Manager::ImportFromMakefile(const wxString &path)
 {
-	DebugMessage(path);
+	DebugMessage(path + wxT("\n"));
+	
+	wxFileName fileName = path;
+	DebugMessage(fileName.GetPath() + wxT("\n"));
 	
 	wxString file;
-	FileUtils::ReadFileUTF8(path, file);
+	FileUtils::ReadFileUTF8(fileName, file);
 	
 	StringTokenizer tokenizer(file, wxT("\n"));
 	wxArrayString fileContents;
@@ -1142,42 +1145,56 @@ void Manager::ImportFromMakefile(const wxString &path)
 	TargetLexer lexer(parsed);
 	Targets lexed = lexer.getResult();
 	
-	/*for(int i=0; i< parsed.size(); i++)
-	{	
-		wxString msg;
-		msg << parsed[i].type << wxT(": ") << parsed[i].line << wxT("\n");
-		DebugMessage(msg);
-	}*/
+	CreateWorkspace(wxT("import_from_") + fileName.GetName(), fileName.GetPath(), CtagsOptions());
 	
-	wxString msg;
-	msg << wxT("Displaying results:\n\n");
-
-	for (int i = 0; i < (int)lexed.size(); i++)
+	wxArrayString extentions;
+	extentions.Add(wxT(".h"));
+	extentions.Add(wxT(".hpp"));
+	extentions.Add(wxT(".c"));
+	extentions.Add(wxT(".cc"));
+	extentions.Add(wxT(".cpp"));
+	extentions.Add(wxT(".cxx"));
+	
+	for(size_t i = 0; i < lexed.size(); i++)
 	{
-		Target current = lexed[i];
-
-		wxString name = current.getName();
-		wxArrayString deps = current.getDeps();
-		wxArrayString actions = current.getActions();
-
-		msg << wxT("Target ") << name << wxT(":\n");
-		msg << wxT("Depends on ") << (int)deps.size() << wxT(" things:\n");
-		for(int j = 0; j < (int)deps.size(); j++)
-			msg << wxT("- '") << deps[j] << wxT("'\n");
-
-		msg << wxT("And has ") << (int)actions.size() << wxT(" build rules:\n");
-		for(int j = 0; j < (int)actions.size(); j++)
-			msg << wxT("- '") << actions[j] << wxT("'\n");
-
-		msg << wxT("\n");
+		Target targ = lexed[i];
+		wxArrayString deps = targ.getDeps();
+		
+		ProjectPtr proj(new Project());
+		proj->Create(targ.getName(), fileName.GetPath(), wxT("importedProject"));
+		proj->SetSettings(new ProjectSettings(NULL));
+		
+		for(size_t j = 0; j < deps.size(); j++)
+		{
+			wxString dep = deps[j];
+			if(dep.Right(2) == wxT(".o")) // string ends with .o!
+			{
+				wxString file = dep.Left(dep.size()-2);
+				
+				for(size_t k = 0; k < extentions.size(); k++)
+				{
+					wxString ext = extentions[k];					
+					wxFileName fileName = proj->GetFileName().GetPathWithSep() + file + ext;
+					if(fileName.FileExists()) 
+					{
+						bool added = proj->AddFile(fileName.GetFullPath(), wxT("Source Files"));
+						if(!added)
+						{
+							DebugMessage(wxT("WHOOPS WRONG BAD NOT GOOD!\n"));
+						}
+					}
+				}
+			}
+			else if(deps.Index(dep, false) != wxNOT_FOUND)
+			{
+				wxArrayString dependencies= proj->GetDependencies();
+				dependencies.Add(dep);
+				proj->SetDependencies(dependencies);
+			}
+		}	
+		proj->Save();
+		//AddProject(proj->GetFileName().GetFullPath());
 	}
-	
-	msg << wxT("Done.\n");
-	
-	DebugMessage(msg);
-
 	
 	return;
 }
-
-
