@@ -104,7 +104,7 @@ void DependenciesPage::OnCheckListItemToggled(wxCommandEvent &event)
 	wxString name = m_checkListProjectList->GetString((unsigned int)item);
 	if(!m_checkListProjectList->IsChecked((unsigned int)item)){
 		unsigned int buildOrderId = m_listBoxBuildOrder->FindString(name);
-		if(buildOrderId != wxNOT_FOUND){
+		if(buildOrderId != (unsigned int)wxNOT_FOUND){
 			m_listBoxBuildOrder->Delete(buildOrderId);
 		}
 	} else {
