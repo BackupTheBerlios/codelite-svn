@@ -25,7 +25,7 @@ bool FileUtils::ReadFileUTF8(const wxFileName &fn, wxString &data)
 	char bom[2];
 	if(file.Length() >= 2){
 		if(file.Read(bom, 2) == 2){
-			if(bom[0] == 0xFE && bom[1] == 0xFF){
+			if(bom[0] == (char)0xFE && bom[1] == (char)0xFF){
 				//UTF16
 				isUnic = true;
 			}
