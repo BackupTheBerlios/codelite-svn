@@ -17,7 +17,6 @@ void createClassToken(	const std::string &optTmpQualifier,
 	wxUnusedVar(keyWord);
 	wxUnusedVar(optClassQualifer);
 
-	data->
 	data->fullpath = _U(getFileName().c_str());
 	data->kind = clToken::class_t;
 	data->name = _U(className.c_str());
