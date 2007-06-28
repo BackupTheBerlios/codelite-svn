@@ -38,7 +38,11 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPreBuildEventTool"
+				CommandLine="yacc -dl  -t -pcl_scope_ cpp5_grammar.y
+flex -L  -Pcl_scope_ cpp5.l
+move lex.cl_scope_.c lex.cl_scope.cpp
+move y.tab.c y.tab.cpp"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -95,7 +99,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
+			Name="implementation"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
@@ -104,16 +108,25 @@
 			<File
 				RelativePath=".\codelite.cpp">
 			</File>
+			<File
+				RelativePath=".\codelite.h">
+			</File>
+			<File
+				RelativePath=".\database_impl.cpp">
+			</File>
+			<File
+				RelativePath=".\database_impl.h">
+			</File>
+			<File
+				RelativePath=".\smart_ptr.h">
+			</File>
 		</Filter>
 		<Filter
-			Name="Header Files"
+			Name="interface"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath=".\cltoken.h">
-			</File>
-			<File
-				RelativePath=".\codelite.h">
 			</File>
 			<File
 				RelativePath=".\idatabase.h">
@@ -121,8 +134,37 @@
 			<File
 				RelativePath=".\iparser.h">
 			</File>
+		</Filter>
+		<Filter
+			Name="Grammar"
+			Filter="">
 			<File
-				RelativePath=".\smart_ptr.h">
+				RelativePath=".\cpp5.l">
+			</File>
+			<File
+				RelativePath=".\cpp5_grammar.y">
+			</File>
+		</Filter>
+		<Filter
+			Name="Parser"
+			Filter="">
+			<File
+				RelativePath=".\cxxparser.cpp">
+			</File>
+			<File
+				RelativePath=".\cxxparser.h">
+			</File>
+			<File
+				RelativePath=".\defs.h">
+			</File>
+			<File
+				RelativePath=".\lex.cl_scope.cpp">
+			</File>
+			<File
+				RelativePath=".\y.tab.cpp">
+			</File>
+			<File
+				RelativePath=".\y.tab.h">
 			</File>
 		</Filter>
 	</Files>
