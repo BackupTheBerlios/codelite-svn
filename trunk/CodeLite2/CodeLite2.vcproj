@@ -65,8 +65,9 @@ move y.tab.c y.tab.cpp
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
-				RuntimeLibrary="4"
+				AdditionalIncludeDirectories="&quot;$(WXSTABLE)/lib/vc_lib/msw/&quot;;&quot;$(WXSTABLE)/include&quot;;..\sdk\wxscintilla\include;..\sdk\wxsqlite3\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;__WXMSW__"
+				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -75,7 +76,7 @@ move y.tab.c y.tab.cpp
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/CodeLite2.lib"/>
+				OutputFile="../lib/codelite2.lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool

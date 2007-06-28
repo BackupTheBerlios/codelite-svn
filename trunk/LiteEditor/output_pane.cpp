@@ -155,6 +155,12 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 		m_book->SetSelection((size_t)index);
 	}
 
+	// a dirty hack to remove g++ spam ...
+	if(text.Contains(wxT("type attributes are honored only at type definition")))
+	{
+		return;
+	}
+
 	wxScintilla *win = dynamic_cast<wxScintilla*>(m_book->GetPage((size_t)index));
 	if( win )
 	{
