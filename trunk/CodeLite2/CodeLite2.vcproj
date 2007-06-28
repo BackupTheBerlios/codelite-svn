@@ -39,10 +39,11 @@
 				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="yacc -dl  -t -pcl_scope_ cpp5_grammar.y
+				CommandLine="yacc -dl  -t -v -pcl_scope_ cpp5_grammar.y
 flex -L  -Pcl_scope_ cpp5.l
 move lex.cl_scope_.c lex.cl_scope.cpp
-move y.tab.c y.tab.cpp"/>
+move y.tab.c y.tab.cpp
+"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool

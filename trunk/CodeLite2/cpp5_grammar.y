@@ -120,7 +120,7 @@ external_decl			:	class_decl
 							}
 						;
 /*templates*/
-template_arg		:	/* empty */
+template_arg		:	/* empty */	{ $$ = "";}
 						| template_specifiter LE_IDENTIFIER {$$ = $1 + " " + $2;}
 						;
 						
@@ -132,7 +132,7 @@ template_specifiter	:	LE_CLASS	{ $$ = $1; }
 							|	LE_TYPENAME	{ $$ = $1; }
 							;
 
-opt_class_qualifier	:	/* empty */
+opt_class_qualifier	:	/* empty */			{ $$ = "";}
 							|	LE_TYPEDEFname	{ $$ = $1;}
 							;
 							
@@ -150,25 +150,25 @@ template_parameter		:	const_spec nested_scope_specifier LE_TYPEDEFname special_s
 							;
 							
 /* the class rule itself */
-class_decl	:	opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';' 
+class_decl	:	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';' 
 				{
-					printf("Found class decl: %s\n", $4.c_str());
+					printf("Found class decl: %s\n", $5.c_str());
 					clTokenPtr data(new clToken());
 					//create class symbol and add it
-					createClassToken($1, $2, $3, $4, false, data);
+					createClassToken($2, $3, $4, $5, false, data);
 					getDatabase()->AddToken(data);
 				}
 
-				| 	opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{' 
+				| 	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{' 
 				{
-					printf("Found class impl: %s\n", $4.c_str());
+					printf("Found class impl: %s\n", $5.c_str());
 					clTokenPtr data(new clToken());
 					//create class symbol and add it
-					createClassToken($1, $2, $3, $4, true, data);
+					createClassToken($2, $3, $4, $5, true, data);
 					getDatabase()->AddToken(data);
 					
 					//increase the scope level
-					currentScope.push_back($4);
+						currentScope.push_back($5);
 					printScopeName();
 				}
 				;
@@ -197,7 +197,7 @@ class_keyword: 	LE_CLASS		{$$ = $1;}
 					;
 					
 /* functions */
-function_decl		:	virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'  					 
+function_decl		:	stmnt_starter virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'  					 
 						{
 							printf("Found function: %s\n", $4.c_str());
 						}
@@ -237,14 +237,17 @@ star_list			: 	/*empty*/		{$$ = ""; }
 special_star_amp		:	star_list amp_item { $$ = $1 + $2; }
 						;
 
-stmnt_starter			:	/*empty*/
-						| ';'
+stmnt_starter			:	/*empty*/ {$$ = "";}
+						| ';' {$$ = ";";}
 						;
 						
 /** Variables **/
-variable_decl			:	stmnt_starter const_spec nested_scope_specifier basic_type_name special_star_amp  LE_IDENTIFIER {$$ = $1 + $2 + $3  + $4;}
-						|	stmnt_starter const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp LE_IDENTIFIER {$$ = $1 + $2 + $3  + $4;}
-						| 	stmnt_starter const_spec nested_scope_specifier LE_TYPEDEFname '<' template_parameter_list '>' special_star_amp LE_IDENTIFIER {$$ = $1 + $2 + $3  + $4 + $5 + $6 + $7;}
+variable_decl			:	const_spec nested_scope_specifier basic_type_name special_star_amp  
+							{$$ = $1 + $2 + $3  + $4;}
+						|	const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp
+							{$$ = $1 + $2 + $3  + $4;}
+						| 	const_spec nested_scope_specifier LE_TYPEDEFname '<' template_parameter_list '>' special_star_amp 
+							{$$ = $1 + $2 + $3  + $4 + $5 + $6 + $7;}
 						;
 
 %%
