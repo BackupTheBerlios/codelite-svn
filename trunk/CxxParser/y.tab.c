@@ -148,116 +148,118 @@ short cl_scope_lhs[] = {                                        -1,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     0,    2,    2,    2,    2,    2,    7,    7,    9,    9,
     8,    8,   10,   10,   11,   11,   12,   12,   12,   13,
-    3,    3,    5,    6,   17,   17,    4,   15,   15,   21,
-   20,   20,   18,   18,   14,   14,   22,   22,   23,   23,
-   16,   24,   24,   19,   19,   19,
+    3,    3,    5,    6,   18,   18,    4,    4,   15,   15,
+   22,   21,   21,   19,   19,   14,   14,   23,   23,   24,
+   24,   16,   17,   17,   20,   20,   20,
 };
 short cl_scope_len[] = {                                         2,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     2,    1,    1,    1,    1,    1,    0,    2,    1,    3,
     1,    1,    0,    1,    0,    4,    0,    1,    3,    4,
-    5,    5,    1,    1,    1,    1,    9,    0,    2,    2,
-    0,    2,    0,    1,    0,    1,    0,    1,    0,    2,
-    2,    0,    1,    6,    6,    9,
+    6,    6,    1,    1,    1,    1,   10,   10,    0,    2,
+    2,    0,    2,    0,    1,    0,    1,    0,    1,    0,
+    2,    2,    0,    1,    4,    4,    7,
 };
 short cl_scope_defred[] = {                                     10,
-    0,   16,   44,    0,   34,   33,   11,   12,   13,   14,
-   15,    0,    0,    0,   36,   35,    0,   53,   38,    0,
-   21,   22,   19,    0,    0,   24,    0,    0,   46,   38,
-   18,    0,   26,    0,    0,    0,   39,    0,   20,   31,
-   32,    0,   40,    6,    1,    4,    2,    5,    3,    8,
-    7,    9,    0,   49,    0,    0,    0,    0,    0,    0,
-    0,   28,   38,   55,   48,   50,   51,   54,    0,    0,
-    0,   49,    0,   42,   37,   29,    0,    0,   56,   30,
+    0,   16,   54,   34,   33,   11,   12,   13,   14,   15,
+    0,   45,    0,    0,    0,    0,   36,   35,    0,   47,
+   39,   39,   21,   22,   19,    0,    0,   24,    0,    0,
+    0,   18,    0,   26,    0,    6,    1,    4,    2,    5,
+    3,    8,    7,    9,    0,   50,   40,    0,    0,   20,
+   31,   32,   41,    0,   56,    0,   55,    0,    0,   28,
+   39,   49,   51,   52,    0,    0,   50,    0,    0,   29,
+   57,    0,    0,    0,   30,   43,   37,   38,
 };
 short cl_scope_dgoto[] = {                                       1,
-   54,    7,    8,    9,   10,   11,   23,   24,   25,   27,
-   12,   61,   62,   63,   28,   57,   17,   13,   19,   70,
-   37,   67,   58,   20,
+   46,    6,    7,    8,    9,   10,   25,   26,   27,   29,
+   14,   59,   60,   61,   30,   55,   11,   19,   15,   22,
+   74,   47,   64,   56,
 };
 short cl_scope_sindex[] = {                                      0,
- -118,    0,    0,  -28,    0,    0,    0,    0,    0,    0,
-    0, -238,  -43, -234,    0,    0, -295,    0,    0, -233,
-    0,    0,    0, -240,   -2,    0, -239, -291,    0,    0,
-    0, -234,    0,  -51,   34, -252,    0, -230,    0,    0,
-    0,   35,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,  -59,    0, -233, -233, -226,   28, -225,   18,
-   -1,    0,    0,    0,    0,    0,    0,    0, -228,   22,
- -233,    0, -232,    0,    0,    0, -220, -252,    0,    0,
+  -54,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+ -275,    0,  -39, -253, -249, -221,    0,    0, -277,    0,
+    0,    0,    0,    0,    0, -265,  -13,    0, -258, -181,
+ -278,    0, -221,    0,  -50,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,  -57,    0,    0,    8, -266,    0,
+    0,    0,    0, -249,    0,   22,    0,   24,  -12,    0,
+    0,    0,    0,    0, -249, -249,    0, -247,   18,    0,
+    0, -266, -228,  -49,    0,    0,    0,    0,
 };
 short cl_scope_rindex[] = {                                      0,
-  -55,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0, -249,    7,    0,    0, -218,    0,    0, -222,
+ -246,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+ -217,    0,    0,    0, -173,   -9,    0,    0, -220,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    7,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,  -36,    0,   12,  -44,    0,  -41,    0,   27,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
- -227,    0,    0,    0,    0,    0,    0,  -27,    0,    0,
+    0,    0,   -9,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,  -38,    0,    0,    0,    0,    0,
+    0,    0,    0,  -42,    0,  -43,    0,    0,    0,    0,
+    0,    0,    0,    0,  -53, -230,    0,    0,  -48,    0,
+    0,   66,    0,    0,    0,    0,    0,    0,
 };
 short cl_scope_gindex[] = {                                      0,
-    0,    0,    0,    0,    0,    0,   56,    0,    0,    0,
-    0,    0,   19,   -7,    4,  -16,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,   54,    0,    0,    0,
+    0,    0,   23,    1,   -7,  -28,    0,    0,    0,    0,
     0,    0,    0,    0,
 };
-#define YYTABLESIZE 270
-short cl_scope_table[] = {                                      27,
-   56,   49,   47,   43,    5,   49,    6,   40,   52,   52,
-   49,   35,   30,   52,   49,   18,   49,   27,   26,   52,
-   47,   15,   36,   52,   52,   52,   52,   44,   45,   52,
-   52,   14,   46,   38,   49,   45,   45,   59,   47,   29,
-   45,   32,   71,   48,   49,   50,   45,   60,   51,   52,
-   17,   45,   45,   45,   16,   77,   45,   45,   21,   33,
-   72,   80,   31,   34,   52,   65,   73,   22,   17,   66,
-   45,   41,   45,   42,   43,   55,   64,   68,   69,   74,
-   75,   78,   79,   53,   23,   41,   45,   39,    0,   76,
-    0,   45,    0,    0,    0,    0,    0,    0,    0,    0,
+#define YYTABLESIZE 276
+short cl_scope_table[] = {                                      50,
+   48,   27,   54,   50,    3,   46,   17,   46,   51,   77,
+   42,   53,   53,   53,   31,   21,   53,   57,   48,   27,
+   16,   12,   53,   20,   48,   13,   53,   53,   53,   53,
+   33,   66,   53,   53,   17,   49,   28,   32,   71,   18,
+   44,   44,   25,   75,   35,   44,   53,   58,   34,   67,
+   53,   44,   17,   68,   53,   44,   44,   44,   44,   62,
+   53,   44,   44,   63,   65,   69,   72,   53,    4,   46,
+    5,   23,   52,   78,   42,   25,   36,   37,   73,   76,
+   24,   38,   23,   46,   46,   46,   50,   39,   70,   46,
+    0,    0,   40,   41,   42,   46,   44,   43,   44,    0,
+   46,   46,   46,   50,    0,   46,   46,   50,    0,   50,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,   50,    0,    0,
+    0,    0,   45,    0,    0,    0,    0,    0,    0,    0,
+   46,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    2,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    2,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    3,    0,
-    0,    0,    4,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,   43,   43,   25,    0,    0,   43,    0,    0,
-    0,    0,    0,   43,    0,    0,    0,   43,   43,   43,
-   43,    0,    0,   43,   43,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,   25,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,   43,    0,
-    0,   47,    0,    0,    0,    0,   49,   43,    0,   45,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,   48,
+    0,    0,    0,    0,   50,    0,    0,    0,    0,   53,
+   48,   46,    0,    0,    0,   50,
 };
-short cl_scope_check[] = {                                      44,
-   60,   38,   44,   59,  123,   42,  125,   59,  258,  259,
-   38,  303,   20,  263,   42,   59,   44,   62,  314,  269,
-   62,  260,  314,  273,  274,  275,  276,  258,  259,  279,
-  280,   60,  263,   30,   62,  258,  259,   54,  269,  273,
-  263,   44,   44,  274,  275,  276,  269,   55,  279,  280,
-   44,  274,  275,  276,  293,   72,  279,  280,  293,   62,
-   62,   78,  303,  303,  314,   38,   63,  302,   62,   42,
-   59,  123,   61,   40,  327,   41,  303,  303,   61,  308,
-   59,  314,  303,  314,  303,   59,  314,   32,   -1,   71,
-   -1,  314,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+short cl_scope_check[] = {                                      38,
+   44,   44,   60,   42,   59,   59,  260,   61,   59,   59,
+   59,  258,  259,  260,   22,   15,  263,   46,   62,   62,
+   60,  297,  269,  273,  303,  301,  273,  274,  275,  276,
+   44,   44,  279,  280,   44,  314,  314,  303,   67,  293,
+  258,  259,  260,   72,  303,  263,  293,   40,   62,   62,
+  297,  269,   62,   61,  301,  273,  274,  275,  276,   38,
+  327,  279,  280,   42,   41,   65,  314,  314,  123,  123,
+  125,  293,  123,  123,  123,  293,  258,  259,   61,  308,
+  302,  263,  303,  314,  258,  259,   33,  269,   66,  263,
+   -1,   -1,  274,  275,  276,  269,  314,  279,  280,   -1,
+  274,  275,  276,   38,   -1,  279,  280,   42,   -1,   44,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   62,   -1,   -1,
+   -1,   -1,  314,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+  314,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,  256,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,  256,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  297,   -1,
-   -1,   -1,  301,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,  258,  259,  260,   -1,   -1,  263,   -1,   -1,
-   -1,   -1,   -1,  269,   -1,   -1,   -1,  273,  274,  275,
-  276,   -1,   -1,  279,  280,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,  293,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  314,   -1,
-   -1,  303,   -1,   -1,   -1,   -1,  303,  327,   -1,  314,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  303,
+   -1,   -1,   -1,   -1,  303,   -1,   -1,   -1,   -1,  327,
+  314,  314,   -1,   -1,   -1,  314,
 };
 #define YYFINAL 1
 #ifndef YYDEBUG
@@ -321,13 +323,14 @@ char *cl_scope_rule[] = {
 "template_parameter_list : template_parameter",
 "template_parameter_list : template_parameter_list ',' template_parameter",
 "template_parameter : const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp",
-"class_decl : opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';'",
-"class_decl : opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{'",
+"class_decl : stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';'",
+"class_decl : stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{'",
 "scope_reducer : '}'",
 "scope_increaer : '{'",
 "class_keyword : LE_CLASS",
 "class_keyword : LE_STRUCT",
-"function_decl : virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'",
+"function_decl : stmnt_starter virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'",
+"function_decl : stmnt_starter virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec '{'",
 "nested_scope_specifier :",
 "nested_scope_specifier : nested_scope_specifier scope_specifier",
 "scope_specifier : LE_TYPEDEFname LE_CLCL",
@@ -344,9 +347,9 @@ char *cl_scope_rule[] = {
 "special_star_amp : star_list amp_item",
 "stmnt_starter :",
 "stmnt_starter : ';'",
-"variable_decl : stmnt_starter const_spec nested_scope_specifier basic_type_name special_star_amp LE_IDENTIFIER",
-"variable_decl : stmnt_starter const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp LE_IDENTIFIER",
-"variable_decl : stmnt_starter const_spec nested_scope_specifier LE_TYPEDEFname '<' template_parameter_list '>' special_star_amp LE_IDENTIFIER",
+"variable_decl : const_spec nested_scope_specifier basic_type_name special_star_amp",
+"variable_decl : const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp",
+"variable_decl : const_spec nested_scope_specifier LE_TYPEDEFname '<' template_parameter_list '>' special_star_amp",
 };
 #endif
 #ifndef YYSTYPE
@@ -561,6 +564,9 @@ case 16:
 								syncParser();
 							}
 break;
+case 17:
+{ yyval = "";}
+break;
 case 18:
 {yyval = yyvsp[-1] + " " + yyvsp[0];}
 break;
@@ -575,6 +581,9 @@ case 21:
 break;
 case 22:
 { yyval = yyvsp[0]; }
+break;
+case 23:
+{ yyval = "";}
 break;
 case 24:
 { yyval = yyvsp[0];}
@@ -596,25 +605,25 @@ case 30:
 break;
 case 31:
 {
-																												printf("Found class decl: %s\n", yyvsp[-1].c_str());
-																												SymbolData data;
-																												/*create class symbol and add it*/
-																												createClassSymbol(yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1], false, data);
-																												SymbolTable::instance().AddSymbol(data);
-																											}
+						printf("Found class decl: %s\n", yyvsp[-1].c_str());
+						SymbolData data;
+						/*create class symbol and add it*/
+						createClassSymbol(yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1], false, data);
+						SymbolTable::instance().AddSymbol(data);
+					}
 break;
 case 32:
 {
-																												printf("Found class impl: %s\n", yyvsp[-1].c_str());
-																												SymbolData data;
-																												/*create class symbol and add it*/
-																												createClassSymbol(yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1], true, data);
-																												SymbolTable::instance().AddSymbol(data);
-																												
-																												/*increase the scope level*/
-																												currentScope.push_back(yyvsp[-1]);
-																												printScopeName();
-																											}
+						printf("Found class impl: %s\n", yyvsp[-2].c_str());
+						SymbolData data;
+						/*create class symbol and add it*/
+						createClassSymbol(yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1], true, data);
+						SymbolTable::instance().AddSymbol(data);
+						
+						/*increase the scope level*/
+						currentScope.push_back(yyvsp[-1]);
+						printScopeName();
+					}
 break;
 case 33:
 {
@@ -649,55 +658,66 @@ case 37:
 						}
 break;
 case 38:
-{yyval = "";}
-break;
-case 39:
-{yyval = yyvsp[-1] + " " + yyvsp[0];}
+{
+							printf("Found function: %s\n", yyvsp[-5].c_str());
+							/*increase the scope level*/
+							currentScope.push_back(yyvsp[-5]);
+							printScopeName();
+						}
 break;
 case 40:
-{yyval = yyvsp[-1] + yyvsp[0];}
+{yyval = yyvsp[-1] + " " + yyvsp[0];}
 break;
 case 41:
-{yyval = ""; }
-break;
-case 42:
-{ yyval = yyvsp[-1] + " " + yyvsp[0]; }
-break;
-case 43:
-{yyval = ""; }
-break;
-case 44:
-{ yyval = yyvsp[0]; }
-break;
-case 45:
-{yyval = ""; }
-break;
-case 46:
-{ yyval = yyvsp[0]; }
-break;
-case 47:
-{yyval = ""; }
-break;
-case 48:
-{ yyval = yyvsp[0]; }
-break;
-case 49:
-{yyval = ""; }
-break;
-case 50:
 {yyval = yyvsp[-1] + yyvsp[0];}
 break;
+case 42:
+{yyval = ""; }
+break;
+case 43:
+{ yyval = yyvsp[-1] + " " + yyvsp[0]; }
+break;
+case 44:
+{yyval = ""; }
+break;
+case 45:
+{ yyval = yyvsp[0]; }
+break;
+case 46:
+{yyval = ""; }
+break;
+case 47:
+{ yyval = yyvsp[0]; }
+break;
+case 48:
+{yyval = ""; }
+break;
+case 49:
+{ yyval = yyvsp[0]; }
+break;
+case 50:
+{yyval = ""; }
+break;
 case 51:
+{yyval = yyvsp[-1] + yyvsp[0];}
+break;
+case 52:
 { yyval = yyvsp[-1] + yyvsp[0]; }
 break;
+case 53:
+{yyval = "";}
+break;
 case 54:
-{yyval = yyvsp[-5] + yyvsp[-4] + yyvsp[-3]  + yyvsp[-2];}
+{yyval = ";";}
 break;
 case 55:
-{yyval = yyvsp[-5] + yyvsp[-4] + yyvsp[-3]  + yyvsp[-2];}
+{yyval = yyvsp[-3] + yyvsp[-2] + yyvsp[-1]  + yyvsp[0];}
 break;
 case 56:
-{yyval = yyvsp[-8] + yyvsp[-7] + yyvsp[-6]  + yyvsp[-5] + yyvsp[-4] + yyvsp[-3] + yyvsp[-2];}
+{yyval = yyvsp[-3] + yyvsp[-2] + yyvsp[-1]  + yyvsp[0];}
+break;
+case 57:
+{yyval = yyvsp[-6] + yyvsp[-5] + yyvsp[-4]  + yyvsp[-3] + yyvsp[-2] + yyvsp[-1] + yyvsp[0];}
 break;
     }
     yyssp -= yym;
