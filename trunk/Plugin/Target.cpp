@@ -4,7 +4,7 @@
 #include "wx/arrstr.h"
 #include "tokenizer.h"
 
-Target::Target(wxString name, wxArrayString deps, wxArrayString actions) :
+Target::Target(wxString name, wxArrayString deps, wxArrayString actions) : 
 m_name(name),
 m_deps(deps),
 m_actions(actions)

@@ -19,15 +19,27 @@ class FilePicker;
 class wxFlatNotebook;
 class wxListBox;
 
+#ifndef WXDLLIMPEXP_LE
+	#ifdef WXMAKINGDLL
+	#    define WXDLLIMPEXP_LE WXIMPORT
+	#elif defined(WXUSINGDLL)
+	#    define WXDLLIMPEXP_LE WXEXPORT
+	#else 
+	#    define WXDLLIMPEXP_LE
+	#endif // WXDLLIMPEXP_LE
+#endif
+
 // Workspace information
-class WorkspaceData {
+class WXDLLIMPEXP_LE WorkspaceData {
 public:
 	wxString m_name;			//< Workspace name
 	wxString m_path;			//< Workspace directoy
 };
 
+DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE, wxEVT_NEW_DLG_CREATE_LE, -1)
+
 // Workspace dialog
-class NewDlg : public wxDialog
+class WXDLLIMPEXP_LE NewDlg : public wxDialog
 {
 	WorkspaceData m_workspaceData;
 	ProjectData m_projectData;
@@ -89,10 +101,6 @@ protected:
 
 	wxWindow *CreateProjectPage();
 	wxWindow *CreateWorkspacePage();
-	DECLARE_EVENT_TABLE()
 };
-
-DECLARE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE, -1)
-
 #endif // NEW_DLG_H
 

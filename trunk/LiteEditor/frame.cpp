@@ -44,7 +44,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_COMMAND(wxID_ANY, wxEVT_ASYNC_PROC_ADDLINE, Frame::OnOutputWindowEvent)
 	EVT_COMMAND(wxID_ANY, wxEVT_ASYNC_PROC_STARTED, Frame::OnOutputWindowEvent)
 	EVT_COMMAND(wxID_ANY, wxEVT_ASYNC_PROC_ENDED, Frame::OnOutputWindowEvent)
-	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE, Frame::OnNewDlgCreate)
+	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE_LE, Frame::OnNewDlgCreate)
 	EVT_MENU(wxID_CLOSE_ALL, Frame::OnFileCloseAll)
 	EVT_MENU(wxID_EXIT, Frame::OnQuit)
 	EVT_MENU(wxID_SAVE, Frame::OnSave)
@@ -155,6 +155,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 
 END_EVENT_TABLE()
 Frame* Frame::m_theFrame = NULL;
+
+short **_ctype = 0;
 
 Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 : wxFrame(pParent, id, title, pos, size, style, name)

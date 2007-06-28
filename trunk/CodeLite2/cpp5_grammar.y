@@ -112,6 +112,7 @@ translation_unit	:		/*empty*/
 						
 external_decl			:	class_decl	
 						| 	function_decl	/* function decl also includes variables */
+						|	namespace_decl
 						| 	scope_reducer
 						| 	scope_increaer
 						| 	error { 
@@ -148,7 +149,21 @@ template_parameter_list	: /* empty */		{$$ = "";}
 
 template_parameter		:	const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp {$$ = $1 + $2 + $3 +$4;}
 							;
-							
+/* namespace */
+namespace_decl	:	stmnt_starter LE_NAMESPACE LE_IDENTIFIER ';'		
+					{
+						printf("found namespace %s\n", $3.c_str());
+						currentScope.push_back($3);
+					}
+				|	stmnt_starter LE_NAMESPACE ';'		
+					{
+						//anonymouse namespace
+						printf("found anonymous namespace\n");
+						increaseScope();
+						printScopeName();
+					}
+				;
+				
 /* the class rule itself */
 class_decl	:	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';' 
 				{
@@ -168,7 +183,7 @@ class_decl	:	stmnt_starter opt_template_qualifier class_keyword opt_class_qualif
 					getDatabase()->AddToken(data);
 					
 					//increase the scope level
-						currentScope.push_back($5);
+					currentScope.push_back($5);
 					printScopeName();
 				}
 				;

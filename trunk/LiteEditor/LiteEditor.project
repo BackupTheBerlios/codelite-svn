@@ -110,30 +110,32 @@
   </Dependencies>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu g++">
-      <General OutputFile="../Runtime/LiteEditor" IntermediateDirectory="./Debug_unicode_gcc" Command="LiteEditor" CommandArguments="" WorkingDirectory="../Runtime"/>
-      <Compiler Required="yes" Options="-g  $(shell wx-config --cxxflags --debug=yes --unicode=yes)">
+      <General OutputFile="..\Runtime\LiteEditor" IntermediateDirectory=".\Debug_unicode_gcc" Command="LiteEditor" CommandArguments="" WorkingDirectory="..\Runtime"/>
+      <Compiler Required="yes" Options="-g  $(shell wx-config --cxxflags --unicode=yes);">
         <IncludePath Value="."/>
-        <IncludePath Value="../CodeLite"/>
-        <IncludePath Value="../sdk/wxsqlite3/include"/>
-        <IncludePath Value="../sdk/wxflatnotebook/include"/>
-        <IncludePath Value="../sdk/wxscintilla/include"/>
-        <IncludePath Value="../Plugin"/>
+        <IncludePath Value="..\CodeLite"/>
+        <IncludePath Value="..\sdk\wxsqlite3\include"/>
+        <IncludePath Value="..\sdk\wxflatnotebook\include"/>
+        <IncludePath Value="..\sdk\wxscintilla\include"/>
+        <IncludePath Value="..\Plugin"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXUSINGDLL_FNB"/>
         <Preprocessor Value="WXUSINGDLL_WXSQLITE3"/>
         <Preprocessor Value="WXUSINGDLL_SCI"/>
         <Preprocessor Value="WXUSINGDLL_CODELITE"/>
+        <Preprocessor Value="WXUSINGDLL_LE_SDK"/>
+        <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
-      <Linker Required="yes" Options="-O0 $(shell wx-config --libs --debug=yes --unicode=yes)">
+      <Linker Required="yes" Options="-O2;$(shell wx-config --libs --unicode=yes );-Wl,--subsystem,windows -mwindows;;">
         <LibraryPath Value="."/>
-        <LibraryPath Value="./Debug"/>
-        <LibraryPath Value="../lib/gcc"/>
-        <Library Value="libCodeLiteud.so"/>
-        <Library Value="libplugin_sdkud.so"/>
-        <Library Value="libwxscintillaud.so"/>
-        <Library Value="libwxflatnotebookud.so"/>
-        <Library Value="libwxsqlite3ud.so"/>
-        <Library Value="libsqlite3.so"/>
+        <LibraryPath Value="..\lib\gcc"/>
+        <Library Value="libwxflatnotebooku.dll"/>
+        <Library Value="libCodeLiteu.dll"/>
+        <Library Value="libplugin_sdku.dll"/>
+        <Library Value="libwxscintillau.dll"/>
+        <Library Value="libwxsqlite3u.dll"/>
+        <Library Value="libsqlite3.dll"/>
+        <Library Value="wxmsw28u_gcc_custom.dll"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>

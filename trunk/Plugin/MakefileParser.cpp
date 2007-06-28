@@ -4,7 +4,7 @@
 MakefileParser::MakefileParser(wxArrayString lines) :
 m_lines(lines),
 m_current(0)
-{
+{ 
 	Lex();
 }
 

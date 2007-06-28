@@ -3,7 +3,7 @@
 
 TargetLexer::TargetLexer(TypedStrings lines) :
 m_lines(lines),
-m_current(0)
+m_current(0) 
 {
 	Lex();
 }

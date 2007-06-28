@@ -9,17 +9,22 @@
     <File Name="include/wx/wxsqlite3def.h"/>
     <File Name="include/wx/wxsqlite3dyn.h"/>
   </VirtualDirectory>
-  <Settings Type="Static Library">
+  <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="gnu g++">
-      <General OutputFile="../../lib/gcc/libwxsqlite3ud.a" IntermediateDirectory="./Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
-      <Compiler Required="yes" Options="-g $(shell wx-config --cxxflags --debug=yes --unicode=yes)">
+      <General OutputFile="..\..\lib\gcc\libwxsqlite3u.dll" IntermediateDirectory=".\Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="$(shell wx-config --cxxflags --unicode=yes);;">
         <IncludePath Value="."/>
-        <IncludePath Value="./include"/>
-        <IncludePath Value="./sqlite3/include"/>
+        <IncludePath Value=".\include"/>
+        <IncludePath Value=".\sqlite3\include"/>
         <Preprocessor Value="__WX__"/>
+        <Preprocessor Value="WXMAKINGDLL_WXSQLITE3"/>
+        <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
-      <Linker Required="yes" Options="-O0  ">
+      <Linker Required="yes" Options="-O0;$(shell wx-config --libs --unicode=yes --debug=no)">
         <LibraryPath Value="."/>
+        <LibraryPath Value="..\..\lib\gcc"/>
+        <Library Value="wxmsw28u_gcc_custom.dll"/>
+        <Library Value="sqlite3.a"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>

@@ -2,7 +2,7 @@
 #include <wx/textctrl.h>
 #include <wx/checkbox.h>
 #include <wx/button.h>
-#include <wx/stattext.h>
+#include <wx/stattext.h> 
 #include "filepicker.h" 
 #include "dirpicker.h" 
 #include <wx/statline.h> 
@@ -11,18 +11,15 @@
 #include <wx/listbox.h>  
 #include "project.h"
 #include <map>
-#include "manager.h"
+#include "manager.h" 
 #include "ctags_dialog.h"
 #include "editor_config.h"
 #include "build_settings_config.h"
 
-DEFINE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE)
-
-BEGIN_EVENT_TABLE(NewDlg, wxDialog)
-END_EVENT_TABLE()
+DEFINE_EVENT_TYPE(wxEVT_NEW_DLG_CREATE_LE)
 
 NewDlg::NewDlg() 
-: wxDialog()
+: wxDialog()  
 , m_selection(NEW_DLG_WORKSPACE)
 {
 }
@@ -235,7 +232,7 @@ void NewDlg::OnClick(wxCommandEvent & event)
 				return;
 			}
 
-			wxCommandEvent event(wxEVT_NEW_DLG_CREATE, GetId());
+			wxCommandEvent event(wxEVT_NEW_DLG_CREATE_LE, GetId());
 			event.SetEventObject(this);
 			::wxPostEvent(GetParent()->GetEventHandler(), event);
 		}
@@ -260,7 +257,7 @@ void NewDlg::OnClick(wxCommandEvent & event)
 			wxMessageBox(wxT("Invalid path"), wxT("Error"), wxOK | wxICON_HAND);
 			return;
 		}
-		wxCommandEvent event(wxEVT_NEW_DLG_CREATE, GetId());
+		wxCommandEvent event(wxEVT_NEW_DLG_CREATE_LE, GetId());
 		event.SetEventObject(this);
 		::wxPostEvent(GetParent()->GetEventHandler(), event);
 	}

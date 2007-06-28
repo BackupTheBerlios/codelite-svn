@@ -3,7 +3,7 @@
 #include "wx/regex.h"
 
 RegexProcessor::RegexProcessor(const wxString &reStr)
-{
+{ 
 	m_re = new wxRegEx(reStr);//, wxRE_ADVANCED);
 }
 

@@ -51,28 +51,33 @@
     <File Name="unistd.h"/>
     <File Name="worker_thread.h"/>
   </VirtualDirectory>
-  <Settings Type="Static Library">
+  <Dependencies/>
+  <Settings Type="Dynamic Library">
     <Configuration Name="DebugUnicode" CompilerType="gnu g++">
-      <General OutputFile="../lib/gcc/libCodeLiteud.a" IntermediateDirectory="./Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
-      <Compiler Required="yes" Options="-g $(shell wx-config --cxxflags --debug=yes --unicode=yes)">
+      <General OutputFile="..\lib\gcc\libCodeLiteu.dll" IntermediateDirectory=".\Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="$(shell wx-config --cxxflags --unicode=yes);">
         <IncludePath Value="."/>
-        <IncludePath Value="./include"/>
-        <IncludePath Value="../sdk/wxsqlite3/include"/>
+        <IncludePath Value=".\include"/>
+        <IncludePath Value="..\sdk\wxsqlite3\include"/>
         <Preprocessor Value="__WX__"/>
+        <Preprocessor Value="WXMAKINGDLL_CODELITE"/>
+        <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
-      <Linker Required="yes" Options="">
+      <Linker Required="yes" Options="$(shell wx-config --libs --unicode=yes);">
         <LibraryPath Value="."/>
         <LibraryPath Value="$(IntermediateDirectory)"/>
-        <LibraryPath Value="../lib/gcc"/>
+        <LibraryPath Value="..\lib\gcc"/>
+        <Library Value="wxmsw28u_gcc_custom.dll"/>
+        <Library Value="libwxsqlite3u.dll"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
-      <General OutputFile="../../lib/gcc/CodeLitelu.so" IntermediateDirectory="./Release_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="..\..\lib\gcc\CodeLitelu.so" IntermediateDirectory=".\Release_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="-O2 $(shell wx-config --cxxflags --disable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll/mswu)">
         <IncludePath Value="."/>
-        <IncludePath Value="./include"/>
+        <IncludePath Value=".\include"/>
         <Preprocessor Value="__WX__"/>
       </Compiler>
       <Linker Required="yes" Options="-O2 $(shell wx-config --libs --enable-unicode --enable-shared --enable-monolithic --disable-debug)">
@@ -83,5 +88,4 @@
       <PostBuild/>
     </Configuration>
   </Settings>
-  <Dependencies/>
 </CodeLite_Project>

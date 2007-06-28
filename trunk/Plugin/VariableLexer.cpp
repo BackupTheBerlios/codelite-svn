@@ -7,7 +7,7 @@
 void VariableLexer::DebugMessage(const wxString& msg)
 {
 	wxLogMessage( msg ); 
-}
+} 
 
 VariableLexer::VariableLexer(wxArrayString lines) :
 m_lines(lines),

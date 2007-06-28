@@ -134,23 +134,26 @@ maintain appropriate scoping information.
 
 /* Included code before lex code */
 /*************** Includes and Defines *****************************/
-#define YYSTYPE std::string
 
-#include "string"
+
+#include "wx/string.h"
 #include "map"
-#include "y.tab.h" /* YACC generated definitions based on C++ grammar */
-#include "symbol_table.h"
+#include "y.tab.h"		// YACC generated definitions based on C++ grammar
+#include "idatabase.h"	//an interface to the database which holds our symbol table
 #include "errno.h"
+#include "defs.h"
 
-extern std::string cl_scope_lval;
+#define YYSTYPE std::string
 
 
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
 
+extern std::string cl_scope_lval;
 std::vector<std::string> currentScope;
-std::string g_fileName;
+static std::string g_fileName;
+static IDatabase *g_database = NULL;
 
 void setFileName(const char *fileName);
 std::string &getFileName();
@@ -158,8 +161,9 @@ bool setLexerInput(const char *fileName);
 std::string getCurrentScope();
 void printScopeName();
 
-//TODO:: add a symbol table access in this function
 bool isaTYPE(char *string);
+void setDatabsae(IDatabase *db){g_database = db;}
+IDatabase *getDatabase(){return g_database;}
 
 /* Prototypes */
 #define WHITE_RETURN(x) /* do nothing */
@@ -405,9 +409,10 @@ typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
 .						{return yytext[0];}
 
 %%
+
 bool isaTYPE(char *string)
 {
-	bool res = SymbolTable::instance().IsSymbolExist(string, "");
+	bool res = g_database->IsTokenExist(_U(string));
 	return res;
 }
 

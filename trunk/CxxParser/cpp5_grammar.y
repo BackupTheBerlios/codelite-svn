@@ -6,28 +6,33 @@
 /*************** Includes and Defines *****************************/
 #include "string"
 #include "vector"
-#include "symbol_table.h"
+#include "idatabase.h"
 #include "cxxparser.h"
+#include "stdio.h"
+#include "defs.h"
 
-#define YYDEBUG_LEXER_TEXT (cl_scope_lval) /* our lexer loads this up each time.
-				     We are telling the graphical debugger
-				     where to find the spelling of the 
-				     tokens.*/
-extern char *cl_scope_text;
+#define YYDEBUG_LEXER_TEXT (cl_scope_lval) 
 #define YYSTYPE std::string
 #define YYDEBUG 0        /* get the pretty debugging code to compile*/
 
-#include "stdio.h"
 int cl_scope_parse();
 void cl_scope_error(char *string);
+void syncParser();
+
+//---------------------------------------------
+// externs defined in the lexer
+//---------------------------------------------
+extern char *cl_scope_text;
 extern int cl_scope_lex();
 extern bool setLexerInput(const char *fileName);
-void syncParser();
+extern void setDatabase(IDatabase *db);
 extern int cl_scope_lineno;
 extern std::vector<std::string> currentScope;
-
 extern void printScopeName();	//print the current scope name
 extern void increaseScope();	//increase scope with anonymouse value
+extern std::string &getFileName();
+extern std::string getCurrentScope();
+IDatabase *getDatabase();
 
 /*************** Standard ytab.c continues here *********************/
 %}
@@ -107,6 +112,7 @@ translation_unit	:		/*empty*/
 						
 external_decl			:	class_decl	
 						| 	function_decl	/* function decl also includes variables */
+						|	namespace_decl
 						| 	scope_reducer
 						| 	scope_increaer
 						| 	error { 
@@ -143,29 +149,43 @@ template_parameter_list	: /* empty */		{$$ = "";}
 
 template_parameter		:	const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp {$$ = $1 + $2 + $3 +$4;}
 							;
-							
+/* namespace */
+namespace_decl	:	stmnt_starter LE_NAMESPACE LE_IDENTIFIER ';'		
+					{
+						printf("found namespace %s\n", $3.c_str());
+						currentScope.push_back($3);
+					}
+				|	stmnt_starter LE_NAMESPACE ';'		
+					{
+						//anonymouse namespace
+						printf("found anonymous namespace\n");
+						increaseScope();
+						printScopeName();
+					}
+				;
+				
 /* the class rule itself */
 class_decl	:	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';' 
-					{
-						printf("Found class decl: %s\n", $5.c_str());
-																												SymbolData data;
-																												//create class symbol and add it
-						createClassSymbol($2, $3, $4, $5, false, data);
-																												SymbolTable::instance().AddSymbol(data);
-																											}
+				{
+					printf("Found class decl: %s\n", $5.c_str());
+					clTokenPtr data(new clToken());
+					//create class symbol and add it
+					createClassToken($2, $3, $4, $5, false, data);
+					getDatabase()->AddToken(data);
+				}
 
 				| 	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{' 
-					{
-																												printf("Found class impl: %s\n", $4.c_str());
-																												SymbolData data;
-																												//create class symbol and add it
-						createClassSymbol($2, $3, $4, $5, true, data);
-																												SymbolTable::instance().AddSymbol(data);
-																												
-																												//increase the scope level
-						currentScope.push_back($5);
-																												printScopeName();
-																											}
+				{
+					printf("Found class impl: %s\n", $5.c_str());
+					clTokenPtr data(new clToken());
+					//create class symbol and add it
+					createClassToken($2, $3, $4, $5, true, data);
+					getDatabase()->AddToken(data);
+					
+					//increase the scope level
+					currentScope.push_back($5);
+					printScopeName();
+				}
 				;
 
 scope_reducer		:	'}'	{
@@ -194,15 +214,7 @@ class_keyword: 	LE_CLASS		{$$ = $1;}
 /* functions */
 function_decl		:	stmnt_starter virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'  					 
 						{
-							printf("Found function: %s\n", $5.c_str());
-						}
-						
-					| 	stmnt_starter virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec '{'  					 
-						{
-							printf("Found function: %s\n", $5.c_str());
-							//increase the scope level
-							currentScope.push_back($5);
-							printScopeName();
+							printf("Found function: %s\n", $4.c_str());
 						}
 					;
 
@@ -210,7 +222,7 @@ function_decl		:	stmnt_starter virtual_spec variable_decl nested_scope_specifier
 applicable for C++, for cases where a function is declared as
 void scope::foo(){ ... }
 */
-nested_scope_specifier		: /*empty*/ 
+nested_scope_specifier		: /*empty*/ {$$ = "";}
 								| nested_scope_specifier scope_specifier {$$ = $1 + " " + $2;}
 								;
 
@@ -230,7 +242,7 @@ const_spec			:	/* empty */	{$$ = ""; }
 						;
 						
 amp_item				:	/*empty*/	{$$ = ""; }
-						| '&' 			{ $$ = $1; }
+						|   '&' 			{ $$ = $1; }
 						;
 						
 star_list			: 	/*empty*/		{$$ = ""; }
@@ -265,6 +277,7 @@ int main(void) {
 	if( !setLexerInput("test.h") ){
 		return -1;
 	}
+	setDatabase(NULL);
 	cl_scope_parse();
 	return 0;
 }
