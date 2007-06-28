@@ -156,8 +156,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 END_EVENT_TABLE()
 Frame* Frame::m_theFrame = NULL;
 
-short **_ctype = 0;
-
 Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 : wxFrame(pParent, id, title, pos, size, style, name)
 , m_restartCtags(true)
