@@ -26,7 +26,7 @@ bool DatabaseImpl::OpenDatabase(const wxFileName &fileName)
 	if(m_db->TableExists(wxT("TOKEN")) == false)
 	{
 		//create database schema
-
+		CreateSchema();
 	}
 	return true;
 }
@@ -48,10 +48,19 @@ void DatabaseImpl::CreateSchema()
 		sql = wxT("PRAGMA default_cache_size = 10000;");
 		m_db->ExecuteUpdate(sql);
 	
-		sql = wxT("CREATE TABLE IF NOT EXIST TOKENS (ID INTEGER PRIMARY KEY, NAME TEXT, PARENT_ID NUMERIC, TYPEREF TEXT);");
-		m_db->ExecuteUpdate(sql);
-
-		sql = wxT("CREATE TABLE IF NOT EXIST TOKENS_DATA (ID INTEGER PRIMARY KEY, ACCESS TEXT, FILE TEXT, INHERITS TEXT, KIND TEXT, LINE TEXT, PATTERN TEXT, SCOPE TEXT, SIGNATURE TEXT);");
+		sql = wxT("CREATE TABLE IF NOT EXIST TOKENS (\
+				   ID INTEGER PRIMARY KEY, \
+				   PARENT_ID INTEGER, \
+				   NAME TEXT, \
+				   TYPEREF TEXT,\
+				   ACCESS TEXT, \
+				   FILE TEXT, \
+				   INHERITS TEXT, \
+				   KIND INTEGER, \
+				   LINE INTEGER, \
+				   PATTERN TEXT, \
+				   SCOPE TEXT, \
+				   SIGNATURE TEXT);");
 		m_db->ExecuteUpdate(sql);
 	}
 	catch(wxSQLite3Exception &e)

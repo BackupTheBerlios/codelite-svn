@@ -107,6 +107,9 @@ move y.tab.c y.tab.cpp
 				RelativePath=".\cltoken.cpp">
 			</File>
 			<File
+				RelativePath=".\cltoken.h">
+			</File>
+			<File
 				RelativePath=".\codelite.cpp">
 			</File>
 			<File
@@ -126,9 +129,6 @@ move y.tab.c y.tab.cpp
 			Name="interface"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
-			<File
-				RelativePath=".\cltoken.h">
-			</File>
 			<File
 				RelativePath=".\idatabase.h">
 			</File>

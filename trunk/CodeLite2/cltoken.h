@@ -6,6 +6,22 @@
 #include "list"
 #include "smart_ptr.h"
 
+enum TokenKind 
+{
+	macro_t = 0, 
+	class_t, 
+	namespace_t,
+	struct_t,
+	enum_t, 
+	enumee_t,
+	union_t, 
+	member_t,
+	function_t,
+	prototype_t, 		//we distinguish between function implemntation and declaration
+	typedef_t,
+	global_scope_t
+};
+
 /**
  * \class clToken a token class used by CodeLite2 library. this class represents a valid
  *	language token
@@ -13,24 +29,12 @@
 class clToken 
 {
 public:
-	enum SymbolKind 
-	{
-		macro_t = 0, 
-		class_t, 
-		namespace_t,
-		struct_t,
-		enum_t, 
-		enumee_t,
-		union_t, 
-		member_t,
-		function_t,
-		prototype_t, 		//we distinguish between function implemntation and declaration
-		typedef_t,
-		global_scope_t
-	};
+	clToken();
+	virtual ~clToken();
 
-	size_t		id;
-	SymbolKind  kind;		//symbol kind
+	size_t		id;			//token database id
+	size_t		parentId;	//parent id 
+	TokenKind	kind;		//symbol kind
 	wxString	name;		//symbol name, 
 	wxString	fullpath;	//FULL path name
 	size_t		line;		//line number it can be found

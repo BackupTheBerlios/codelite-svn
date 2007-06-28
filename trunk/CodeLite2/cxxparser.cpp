@@ -14,11 +14,13 @@ void createClassToken(	const std::string &optTmpQualifier,
 						const bool isImpl,
 						clTokenPtr &data)
 {
-	wxUnusedVar(keyWord);
 	wxUnusedVar(optClassQualifer);
+	if(keyWord.compare("class") == 0)
+		data->kind = class_t;
+	else
+		data->kind = struct_t;
 
 	data->fullpath = _U(getFileName().c_str());
-	data->kind = clToken::class_t;
 	data->name = _U(className.c_str());
 	data->line = cl_scope_lineno;
 	data->scope = _U(getCurrentScope().c_str());
