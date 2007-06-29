@@ -22,9 +22,7 @@ bool BuilderGnuMake::Export(const wxString &project, wxString &errMsg)
 		return false;
 	}
 	
-	wxMessageBox(wxGetCwd());
 	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(project, errMsg);
-	
 	wxArrayString depsArr = proj->GetDependencies();
 
 	wxString fn;
