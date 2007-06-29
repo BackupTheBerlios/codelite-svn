@@ -270,7 +270,7 @@ void Manager::OpenWorkspace(const wxString &path)
 	CHECK_MSGBOX(res);
 	
 	wxString msg;
-	msg.Printf("%x", TagsManagerST::Get()->GetDatabase());
+	msg.Printf(wxT("%x"), TagsManagerST::Get()->GetDatabase());
 	wxLogMessage(msg + (TagsManagerST::Get()->GetDatabase()->IsOpen() ? wxT("OPEND") : wxT("CLOSED")));
 	
 	// update status bar

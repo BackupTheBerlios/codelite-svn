@@ -190,11 +190,12 @@
       <Linker Required="yes" Options="-O2;$(shell wx-config --libs --unicode=yes);$(IntermediateDirectory)\code_parser.o;-Wl,--subsystem,windows -mwindows;">
         <LibraryPath Value="."/>
         <LibraryPath Value="..\lib\gcc"/>
-        <Library Value="libwxflatnotebook.dll"/>
-        <Library Value="libCodeLite.dll"/>
-        <Library Value="libplugin_sdk.dll"/>
-        <Library Value="libwxscintilla.dll"/>
-        <Library Value="libwxsqlite3.dll"/>
+        <LibraryPath Value="..\lib\gcc_lib"/>
+        <Library Value="libwxflatnotebooku.a"/>
+        <Library Value="libCodeLiteu.a"/>
+        <Library Value="libplugin_sdku.a"/>
+        <Library Value="libwxscintillau.a"/>
+        <Library Value="libwxsqlite3u.a"/>
         <Library Value="wxmsw28_gcc_custom.dll"/>
       </Linker>
       <PreBuild>

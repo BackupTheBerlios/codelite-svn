@@ -67,7 +67,7 @@ bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 	TagsManagerST::Get()->OpenDatabase(m_fileName.GetPath() + wxFileName::GetPathSeparator() + fn.GetFullName());
 	
 	wxString msg;
-	msg.Printf("%x", TagsManagerST::Get()->GetDatabase());
+	msg.Printf(wxT("%x"), TagsManagerST::Get()->GetDatabase());
 	wxLogMessage(msg + (TagsManagerST::Get()->GetDatabase()->IsOpen() ? wxT("OPEND") : wxT("CLOSED")));
 
 	
@@ -76,7 +76,7 @@ bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 		TagsManagerST::Get()->OpenExternalDatabase(m_fileName.GetPath() + wxFileName::GetPathSeparator() + exDbfile);
 	}
 
-	msg.Printf("%x", TagsManagerST::Get()->GetDatabase());
+	msg.Printf(wxT("%x"), TagsManagerST::Get()->GetDatabase());
 	wxLogMessage(msg + (TagsManagerST::Get()->GetDatabase()->IsOpen() ? wxT("OPEND") : wxT("CLOSED")));
 	return true;
 }
