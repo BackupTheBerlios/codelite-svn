@@ -139,7 +139,6 @@ maintain appropriate scoping information.
 #include "wx/string.h"
 #include "map"
 #include "y.tab.h"		// YACC generated definitions based on C++ grammar
-#include "idatabase.h"	//an interface to the database which holds our symbol table
 #include "errno.h"
 #include "defs.h"
 
@@ -153,7 +152,6 @@ maintain appropriate scoping information.
 extern std::string cl_scope_lval;
 std::vector<std::string> currentScope;
 static std::string g_fileName;
-static IDatabase *g_database = NULL;
 
 void setFileName(const char *fileName);
 std::string &getFileName();
@@ -162,8 +160,6 @@ std::string getCurrentScope();
 void printScopeName();
 
 bool isaTYPE(char *string);
-void setDatabsae(IDatabase *db){g_database = db;}
-IDatabase *getDatabase(){return g_database;}
 
 /* Prototypes */
 #define WHITE_RETURN(x) /* do nothing */
@@ -412,8 +408,7 @@ typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
 
 bool isaTYPE(char *string)
 {
-	bool res = g_database->IsTokenExist(_U(string));
-	return res;
+	return true;
 }
 
 /**

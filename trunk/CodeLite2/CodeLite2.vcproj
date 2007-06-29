@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="CodeLite2"
+	Name="Yacc"
 	ProjectGUID="{6E89CA78-4537-40AD-8754-CB970C81D694}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -101,43 +101,6 @@ move y.tab.c y.tab.cpp
 	</References>
 	<Files>
 		<Filter
-			Name="implementation"
-			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
-			<File
-				RelativePath=".\cltoken.cpp">
-			</File>
-			<File
-				RelativePath=".\cltoken.h">
-			</File>
-			<File
-				RelativePath=".\codelite.cpp">
-			</File>
-			<File
-				RelativePath=".\codelite.h">
-			</File>
-			<File
-				RelativePath=".\database_impl.cpp">
-			</File>
-			<File
-				RelativePath=".\database_impl.h">
-			</File>
-			<File
-				RelativePath=".\smart_ptr.h">
-			</File>
-		</Filter>
-		<Filter
-			Name="interface"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
-			<File
-				RelativePath=".\idatabase.h">
-			</File>
-			<File
-				RelativePath=".\iparser.h">
-			</File>
-		</Filter>
-		<Filter
 			Name="Grammar"
 			Filter="">
 			<File
@@ -150,12 +113,6 @@ move y.tab.c y.tab.cpp
 		<Filter
 			Name="Parser"
 			Filter="">
-			<File
-				RelativePath=".\cxxparser.cpp">
-			</File>
-			<File
-				RelativePath=".\cxxparser.h">
-			</File>
 			<File
 				RelativePath=".\defs.h">
 			</File>

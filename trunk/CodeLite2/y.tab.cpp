@@ -36,8 +36,6 @@ static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 /*************** Includes and Defines *****************************/
 #include "string"
 #include "vector"
-#include "idatabase.h"
-#include "cxxparser.h"
 #include "stdio.h"
 #include "defs.h"
 
@@ -55,14 +53,12 @@ void syncParser();
 extern char *cl_scope_text;
 extern int cl_scope_lex();
 extern bool setLexerInput(const char *fileName);
-extern void setDatabase(IDatabase *db);
 extern int cl_scope_lineno;
 extern std::vector<std::string> currentScope;
 extern void printScopeName();	/*print the current scope name*/
 extern void increaseScope();	/*increase scope with anonymouse value*/
 extern std::string &getFileName();
 extern std::string getCurrentScope();
-IDatabase *getDatabase();
 
 /*************** Standard ytab.c continues here *********************/
 #define LE_AUTO 257
@@ -398,7 +394,6 @@ int main(void) {
 	if( !setLexerInput("test.h") ){
 		return -1;
 	}
-	setDatabase(NULL);
 	cl_scope_parse();
 	return 0;
 }
@@ -631,20 +626,11 @@ break;
 case 34:
 {
 					printf("Found class decl: %s\n", yyvsp[-1].c_str());
-					clTokenPtr data(new clToken());
-					/*create class symbol and add it*/
-					createClassToken(yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1], false, data);
-					getDatabase()->AddToken(data);
 				}
 break;
 case 35:
 {
 					printf("Found class impl: %s\n", yyvsp[-1].c_str());
-					clTokenPtr data(new clToken());
-					/*create class symbol and add it*/
-					createClassToken(yyvsp[-4], yyvsp[-3], yyvsp[-2], yyvsp[-1], true, data);
-					getDatabase()->AddToken(data);
-					
 					/*increase the scope level*/
 					currentScope.push_back(yyvsp[-1]);
 					printScopeName();

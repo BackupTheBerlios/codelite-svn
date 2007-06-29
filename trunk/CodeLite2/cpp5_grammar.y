@@ -6,8 +6,6 @@
 /*************** Includes and Defines *****************************/
 #include "string"
 #include "vector"
-#include "idatabase.h"
-#include "cxxparser.h"
 #include "stdio.h"
 #include "defs.h"
 
@@ -25,14 +23,12 @@ void syncParser();
 extern char *cl_scope_text;
 extern int cl_scope_lex();
 extern bool setLexerInput(const char *fileName);
-extern void setDatabase(IDatabase *db);
 extern int cl_scope_lineno;
 extern std::vector<std::string> currentScope;
 extern void printScopeName();	//print the current scope name
 extern void increaseScope();	//increase scope with anonymouse value
 extern std::string &getFileName();
 extern std::string getCurrentScope();
-IDatabase *getDatabase();
 
 /*************** Standard ytab.c continues here *********************/
 %}
@@ -168,20 +164,11 @@ namespace_decl	:	stmnt_starter LE_NAMESPACE LE_IDENTIFIER ';'
 class_decl	:	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';' 
 				{
 					printf("Found class decl: %s\n", $5.c_str());
-					clTokenPtr data(new clToken());
-					//create class symbol and add it
-					createClassToken($2, $3, $4, $5, false, data);
-					getDatabase()->AddToken(data);
 				}
 
 				| 	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{' 
 				{
 					printf("Found class impl: %s\n", $5.c_str());
-					clTokenPtr data(new clToken());
-					//create class symbol and add it
-					createClassToken($2, $3, $4, $5, true, data);
-					getDatabase()->AddToken(data);
-					
 					//increase the scope level
 					currentScope.push_back($5);
 					printScopeName();
@@ -277,7 +264,6 @@ int main(void) {
 	if( !setLexerInput("test.h") ){
 		return -1;
 	}
-	setDatabase(NULL);
 	cl_scope_parse();
 	return 0;
 }
