@@ -32,7 +32,7 @@ spaces [ \t]+
 "("                     {return '(';    }
 ")"                     {return ')';    }
 "PRINT"			{return PRINT;	}
-{spaces}                {/*return SPACE;*/  }
+{spaces}                {return SPACE;  }
 "\n"			{
 				lineno++;
 				return '\n';	

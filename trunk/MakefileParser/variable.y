@@ -37,6 +37,7 @@ aline:	normalline			{	printf("nline\n"); $$ = $1;		}
 /* Keywords */
 %token WORD
 %token ASSIGN
+%token SPACE
 %token PRINT
 
 /* Start of grammar */
@@ -65,16 +66,18 @@ close:	')'				{	/* do nothing */			}
 variable: open name close 		{	
 						if(TheTokens[$2].size() > 0)
 						{
-							$$ = TheTokens[$2] + " ";
+							$$ = TheTokens[$2];
 						}
 						else
 						{
-							$$ = $2 + " ";
+							$$ = $2;
 						}
 					}
 
-words: WORD				{	$$ = $1 + " ";			}
-     | words WORD 			{	$$ = $1 + $2 + " ";		}
+words: SPACE				{	$$ = " ";			}
+     | WORD				{	$$ = $1;			}
+     | words WORD 			{	$$ = $1 + $2;			}
+     | words SPACE			{	$$ = $1 + " ";			}
 ;
 
 optwords:				{	$$ = "";				}	
