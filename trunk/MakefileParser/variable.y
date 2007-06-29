@@ -40,6 +40,8 @@ aline:	normalline			{	printf("nline\n"); $$ = $1;		}
     |	vline				{	printf("vline\n"); $$ = $1;		}
 ;
 
+
+
 %token SPACE
 */
 /*************** Standard variable.y: continues here *********************/
@@ -70,11 +72,12 @@ line:	'\n'				{	printf("|- newline\n");			}
 
 open:	'$' '('				{	/* do nothing */			}
 
-name:	WORD				{	$$ = $1					}
+name:	wordvars			{	$$ = $1					}
 
 close:	')'				{	/* do nothing */			}
 
 variable: open name close 		{
+						printf("name '%s'\n", $2.c_str());
 						Trim($2);
 						if(TheTokens[$2].size() > 0)
 						{
@@ -82,20 +85,21 @@ variable: open name close 		{
 						}
 						else
 						{
-							//printf("Awr... unmatched token '%s'!\n", $2.c_str());
+							printf("Awr... unmatched token '%s'!\n", $2.c_str());
 							$$ = "";
 						}
 					}
 
-words: SPACE				{	$$ = " ";			}
-     | WORD				{	$$ = $1;			}
-     | words WORD 			{	$$ = $1 + $2;			}
-     | words SPACE			{	$$ = $1 + " ";			}
+words: SPACE				{	$$ = " ";				}
+     | WORD				{	$$ = $1;				}
+     | words WORD 			{	$$ = $1 + $2;				}
+     | words SPACE			{	$$ = $1 + " ";				}
 ;
 
 optwords:				{	$$ = "";				}	
 	| words				{	$$ = $1;				}
 ;
+
 
 vars_line: variable optwords		{	$$ = $1 + $2;				}
          | vars_line variable optwords	{	$$ = $1 + $2 + $3;			}
@@ -131,7 +135,14 @@ printline:	PRINT			{
 						result += "Done.";
 						$$ = result;
 					}
+optspace:
+	| SPACE
+;
 
+wordvars: words				{	$$ = $1;				}
+	| variable optspace		{	$$ = $1;				}
+	| wordvars variable		{	$$ = $1 + $2;				}
+;
 %%
 /* End of grammar */
 

@@ -8,7 +8,7 @@ int lineno = 0;
 //":"			{return ':';	}
 %}
 
-word [a-zA-Z_.\-+\*~:][0-9a-zA-Z_.\-+\*~:]*
+word [0-9a-zA-Z_.\-+\*~:\\@&/|%<>]+
 spaces [ \t]+
 
 %%

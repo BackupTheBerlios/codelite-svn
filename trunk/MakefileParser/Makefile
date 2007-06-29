@@ -17,9 +17,9 @@ $(file).$(infix_bison).o:		$(file).$(infix_bison).c$(filesuffix)
 					$(cc) -g -c $(file).$(infix_bison).c$(filesuffix) -o $(file).$(infix_bison).o
 
 $(file).$(infix_bison).h:		$(file).y
-					bison -d $(file).y -o $(file).$(infix_bison).c$(filesuffix)
+					bison -v -d $(file).y -o $(file).$(infix_bison).c$(filesuffix)
 $(file).$(infix_bison).c$(filesuffix):	$(file).y
-					bison -d $(file).y -o $(file).$(infix_bison).c$(filesuffix)
+					bison -v -d $(file).y -o $(file).$(infix_bison).c$(filesuffix)
 
 $(file).$(infix_lex).o:			$(file).$(infix_lex).c $(file).$(infix_bison).h
 					$(cc) -g -c $(file).$(infix_lex).c -o $(file).$(infix_lex).o
