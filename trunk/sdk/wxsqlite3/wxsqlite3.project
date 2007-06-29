@@ -29,25 +29,27 @@
       <PreBuild/>
       <PostBuild/>
     </Configuration>
-    <Configuration Name="Release" CompilerType="gnu g++">
-      <General OutputFile="../../lib/gcc/libwxsqlite3u.so" IntermediateDirectory="./Release_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
-      <Compiler Required="yes" Options="-O2 $(shell wx-config --cxxflags --disable-debug --enable-unicode --enable-monolithic --enable-shared --wxcfg=gcc_dll/mswu)">
+    <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
+      <General OutputFile="..\..\lib\gcc\libwxsqlite3.dll" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);">
         <IncludePath Value="."/>
-        <IncludePath Value="./include"/>
-        <IncludePath Value="./sqlite3/include"/>
+        <IncludePath Value=".\include"/>
+        <IncludePath Value=".\sqlite3\include"/>
         <Preprocessor Value="__WX__"/>
+        <Preprocessor Value="WXMAKINGDLL_WXSQLITE3"/>
+        <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
-      <Linker Required="yes" Options="-O2">
+      <Linker Required="yes" Options="-O0;$(shell wx-config --libs --debug=no)">
         <LibraryPath Value="."/>
-        <LibraryPath Value="$(IntermediateDirectory)"/>
-        <LibraryPath Value="$(WXSTABLE)/lib/gcc_dll"/>
-        <LibraryPath Value="./sqlite3/lib"/>
-        <Library Value="wxmsw28u_gcc_custom.so"/>
-        <Library Value="sqlite3_mingw.so"/>
+        <LibraryPath Value="..\..\lib\gcc"/>
+        <Library Value="wxmsw28_gcc_custom.dll"/>
+        <Library Value="sqlite3.a"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>
     </Configuration>
   </Settings>
-  <Dependencies/>
+  <Dependencies>
+    <Project Name="sqlite3"/>
+  </Dependencies>
 </CodeLite_Project>
