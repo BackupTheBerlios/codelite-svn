@@ -135,6 +135,13 @@ public:
 	 */
 	void ParseComments(const wxFileName &fileName, std::vector<DbRecordPtr>* comments);
 
+	/**
+	 * return scope name from given input string
+	 * \param in input string
+	 * \return scope name or empty string
+	 */
+	wxString GetScopeName(const wxString &in);
+
 private:
 	/**
 	 * Private constructor

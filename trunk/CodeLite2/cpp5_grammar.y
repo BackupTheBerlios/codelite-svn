@@ -8,6 +8,7 @@
 #include "vector"
 #include "stdio.h"
 #include "defs.h"
+#include "wx/string.h"
 
 #define YYDEBUG_LEXER_TEXT (cl_scope_lval) 
 #define YYSTYPE std::string
@@ -22,7 +23,7 @@ void syncParser();
 //---------------------------------------------
 extern char *cl_scope_text;
 extern int cl_scope_lex();
-extern bool setLexerInput(const char *fileName);
+extern bool setLexerInput(const wxString &in);
 extern int cl_scope_lineno;
 extern std::vector<std::string> currentScope;
 extern void printScopeName();	//print the current scope name
@@ -260,10 +261,15 @@ void syncParser(){
 	int ch = cl_scope_lex();
 }
 
-int main(void) {
-	if( !setLexerInput("test.h") ){
-		return -1;
+// return the scope name at the end of the input string
+wxString get_scope_name(const wxString &in)
+{
+	if( !setLexerInput(in) )
+	{
+		return wxEmptyString;
 	}
+	
 	cl_scope_parse();
-	return 0;
+	wxString scopeName = wxString(getCurrentScope().c_str(),wxConvUTF8);
+	return scopeName;
 }

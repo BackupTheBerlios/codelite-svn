@@ -152,11 +152,9 @@ maintain appropriate scoping information.
 
 extern std::string cl_scope_lval;
 std::vector<std::string> currentScope;
-static std::string g_fileName;
 
-void setFileName(const char *fileName);
 std::string &getFileName();
-bool setLexerInput(const char *fileName);
+bool setLexerInput(const wxString &in);
 std::string getCurrentScope();
 void printScopeName();
 
@@ -440,16 +438,6 @@ void increaseScope()
 	currentScope.push_back(scopeName);
 }
 
-void setFileName(const char *fileName)
-{
-	g_fileName = fileName;
-}
-
-std::string &getFileName()
-{
-	return g_fileName;
-}
-
 std::string getCurrentScope()
 {
 	//format scope name
@@ -465,8 +453,9 @@ std::string getCurrentScope()
 }
 
 /*******************************************************************/
-bool setLexerInput(const char *fileName) 
+bool setLexerInput(const wxString &in) 
 {
+ /*
 	FILE *fp;
 	long len;
 	char *buf = NULL;
@@ -496,12 +485,15 @@ bool setLexerInput(const char *fileName)
 	
 	buf[len] = 0;	// make it null terminated string
 	fclose(fp);
-	
+*/
+		
+	char *buf = (char *)malloc(in.Length()+1); 	//malloc buffer
+	const wxCharBuffer data = _C(in);
+	strcpy(buf, data.data());
 	yy_scan_string(buf);
 	free(buf);
 	
 	//update the working file name
-	setFileName(fileName);
 	return true;
 }
 

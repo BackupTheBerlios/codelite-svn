@@ -728,8 +728,7 @@ void TagsManager::GetTags(const wxString& name, const wxString& scopeName, std::
 	// If we have local scope, we process it first
 	if( scope.IsEmpty() == false )
 	{
-		// Get a list of tags from the current scope, first remove the non-visible scope from the 
-		// row scope
+		//narrow down the scope
 		wxString visibleScope = LanguageST::Get()->GetScope(scope, wxEmptyString);
 		localTags = TagsManagerST::Get()->ParseLocals(visibleScope);
 		if( !localTags )
@@ -754,8 +753,8 @@ void TagsManager::GetTags(const wxString& name, const wxString& scopeName, std::
 	if( scopeName.IsEmpty() == false && scopeName != wxT("<global>"))
 	{
 		wxString parents;
-
 		parents << wxT(" parent in ('<global>', '") << scopeName << wxT("'");
+
 		// Incase this parent inhertis from other parent, add it to the possible
 		// parents
 		TagEntry tag;
