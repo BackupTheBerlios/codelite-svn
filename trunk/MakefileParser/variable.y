@@ -16,6 +16,17 @@ bool append = false;
 
 int yylex(void);
 
+void Trim(std::string& line)
+{
+	size_t to = line.find_first_not_of(" \t");
+	if(to != -1)
+		line.erase(0, to);
+
+	size_t from = line.find_last_not_of(" \t")+1;
+	if(to != -1)
+		line.erase(from);
+}
+
 void yyerror(char* string)
 {
 //	printf("parser error: %s\n", string);
@@ -63,13 +74,15 @@ name:	WORD				{	$$ = $1					}
 
 close:	')'				{	/* do nothing */			}
 
-variable: open name close 		{	
+variable: open name close 		{
+						Trim($2);
 						if(TheTokens[$2].size() > 0)
 						{
 							$$ = TheTokens[$2];
 						}
 						else
 						{
+							printf("Awr... unmatched token '%s'!\n", $2.c_str());
 							$$ = $2;
 						}
 					}
@@ -95,6 +108,9 @@ assignm:	ASSIGN			{	append = true;				}
 ;
 
 assgnline: words assignm words		{
+	 					Trim($1);
+						Trim($3);
+
 	 					if(append)
 						{
 	 						TheTokens[$1] += $3;
@@ -103,14 +119,14 @@ assgnline: words assignm words		{
 						{
 							TheTokens[$1] = $3;
 						}
-	 					$$ = $1 + " = " + $3;			
+	 					$$ = $1 + "=" + $3;			
 					}
 
 printline:	PRINT			{
 	 					std::string result = "Tokens: \n";
 						for(Itokens it = TheTokens.begin(); it != TheTokens.end(); it++)
 						{
-							result += it->first + " = " + it->second + "\n";
+							result += it->first + "=" + it->second + "\n";
 						}
 						result += "Done.";
 						$$ = result;
