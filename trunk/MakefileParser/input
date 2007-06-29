@@ -4,6 +4,9 @@ $(teset)
 bok = rot
 bla = lol
 Lorem ipsum
+PRINT
+Ik zou wel is willen weten wat bla nou is
+$(bla) $(bla) test
 #I say $(test) tataa
 #bla = sex
 #lol = haha

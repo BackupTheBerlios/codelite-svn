@@ -30,7 +30,8 @@ spaces [ ]+
 "$"                     {return '$';    }
 "("                     {return '(';    }
 ")"                     {return ')';    }
-{spaces}                {return SPACE;  }
+"PRINT"			{return PRINT;	}
+{spaces}                {/*return SPACE;*/  }
 "\n"			{
 				lineno++;
 				return '\n';	
