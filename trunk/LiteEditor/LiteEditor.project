@@ -189,6 +189,7 @@
         <Library Value="libplugin_sdku.a"/>
         <Library Value="libwxscintillau.a"/>
         <Library Value="libwxsqlite3u.a"/>
+        <Library Value="libsqlite3.a"/>
         <Library Value="wxmsw28u_gcc_custom.dll"/>
       </Linker>
       <PreBuild>
