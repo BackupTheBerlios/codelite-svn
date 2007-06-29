@@ -5,9 +5,17 @@ void initLexer(const char *filename);
 
 YYSTYPE yyparse();
 
-int main()
+int main(int argv, char* argc[])
 {
-	initLexer("input");
+	if(argv>1)
+	{
+		initLexer(argc[1]);
+	}
+	else
+	{
+		initLexer("input");
+	}
+
 	yyparse();
 	return 0;
 }

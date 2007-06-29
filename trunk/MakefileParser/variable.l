@@ -5,10 +5,11 @@
 #define YY_NO_UNISTD_H 1
 #undef YY_NO_INPUT
 int lineno = 0;
+//":"			{return ':';	}
 %}
 
-word [a-zA-Z_][0-9a-zA-Z_]*
-spaces [ ]+
+word [a-zA-Z_.\-+\*~:][0-9a-zA-Z_.\-+\*~:]*
+spaces [ \t]+
 
 %%
 
