@@ -269,10 +269,6 @@ void Manager::OpenWorkspace(const wxString &path)
 	bool res = WorkspaceST::Get()->OpenWorkspace(path, errMsg);
 	CHECK_MSGBOX(res);
 	
-	wxString msg;
-	msg.Printf(wxT("%x"), TagsManagerST::Get()->GetDatabase());
-	wxLogMessage(msg + (TagsManagerST::Get()->GetDatabase()->IsOpen() ? wxT("OPEND") : wxT("CLOSED")));
-	
 	// update status bar
 	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"), errMsg);
 	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("Workspace DB: '%s'"), dbfile.GetData()), 1);

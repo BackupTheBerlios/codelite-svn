@@ -66,18 +66,11 @@ bool Workspace::OpenWorkspace(const wxString &fileName, wxString &errMsg)
 	wxLogMessage(wxT("Loading database: ") + m_fileName.GetPath() + wxFileName::GetPathSeparator() + fn.GetFullName());
 	TagsManagerST::Get()->OpenDatabase(m_fileName.GetPath() + wxFileName::GetPathSeparator() + fn.GetFullName());
 	
-	wxString msg;
-	msg.Printf(wxT("%x"), TagsManagerST::Get()->GetDatabase());
-	wxLogMessage(msg + (TagsManagerST::Get()->GetDatabase()->IsOpen() ? wxT("OPEND") : wxT("CLOSED")));
-
-	
 	// Load the external database
 	if( exDbfile.IsEmpty() == false ){
 		TagsManagerST::Get()->OpenExternalDatabase(m_fileName.GetPath() + wxFileName::GetPathSeparator() + exDbfile);
 	}
 
-	msg.Printf(wxT("%x"), TagsManagerST::Get()->GetDatabase());
-	wxLogMessage(msg + (TagsManagerST::Get()->GetDatabase()->IsOpen() ? wxT("OPEND") : wxT("CLOSED")));
 	return true;
 }
 

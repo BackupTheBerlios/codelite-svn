@@ -43,7 +43,8 @@ class WXDLLIMPEXP_CL TagEntry : public DbRecord
 	wxString m_name;		///< Tag name (short name, excluding any scope names)
 	std::map<wxString, wxString> m_extFields; ///< Additional extension fields
 	long	m_position;		///< Position in the document - optional field, not persistent item
-	
+	int		m_id;
+
 public:
 	/**
 	 * Construct a TagEntry from tagEntry struct and a project name.
@@ -125,6 +126,9 @@ public:
 	//------------------------------------------
 	// Operations
 	//------------------------------------------
+	long GetId() const { return m_id; }
+	void SetId(long id) { m_id = id;}
+
 	const wxString& GetName() const { return m_name;}
 	void SetName(const wxString& name) { m_name = name; }
 
@@ -237,7 +241,6 @@ public:
 	 * \return TagOk, TagError
 	 */
 	virtual int Delete(wxSQLite3Statement& deletePreparedStmnt);
-
 	
 	/**
 	 * \return delete preapred statement

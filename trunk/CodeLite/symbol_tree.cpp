@@ -440,6 +440,9 @@ void SymbolTree::OnDeleteProject(SymbolTreeEvent& event)
 {
 	wxString proj = event.GetProject();
 
+	if(!m_tree)
+		return;
+
 	// locate the Tree item associated with this project and rmeove it
 	TagNode* node = m_tree->Remove(proj);
 	if( node ) 

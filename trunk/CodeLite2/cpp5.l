@@ -141,6 +141,7 @@ maintain appropriate scoping information.
 #include "y.tab.h"		// YACC generated definitions based on C++ grammar
 #include "errno.h"
 #include "defs.h"
+#include "ctags_manager.h"
 
 #define YYSTYPE std::string
 
@@ -408,7 +409,9 @@ typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
 
 bool isaTYPE(char *string)
 {
-	return true;
+	std::vector<TagEntry> tags;	
+	TagsManagerST::Get()->FindSymbol(_U(string), tags);
+	return tags.empty() == false;
 }
 
 /**
