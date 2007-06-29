@@ -73,11 +73,11 @@ variable: open name close 		{
 						}
 					}
 
-words: WORD				{	$$ = $1 + " ";				}
-     | words WORD 			{	$$ = $1 + $2 + " ";			}
+words: WORD				{	$$ = "|" + $1 + "|";			}
+     | words WORD 			{	$$ = "-" + $1 + $2 + "-";		}
 ;
 
-optwords:				{						}
+optwords:				{	$$ = "";				}	
 	| words				{	$$ = $1 + " ";				}
 ;
 
