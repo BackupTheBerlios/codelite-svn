@@ -82,8 +82,8 @@ variable: open name close 		{
 						}
 						else
 						{
-							printf("Awr... unmatched token '%s'!\n", $2.c_str());
-							$$ = $2;
+							//printf("Awr... unmatched token '%s'!\n", $2.c_str());
+							$$ = "";
 						}
 					}
 
@@ -107,7 +107,7 @@ assignm:	ASSIGN			{	append = true;				}
        |	'='			{	append = false;				}
 ;
 
-assgnline: words assignm words		{
+assgnline: words assignm optwords		{
 	 					Trim($1);
 						Trim($3);
 
