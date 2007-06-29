@@ -113,114 +113,6 @@ ContextBase *ContextCpp::NewInstance(LEditor *container){
 	return new ContextCpp(container);
 }
 
-void ContextCpp::CodeComplete()
-{
-	LEditor &rCtrl = GetCtrl();
-	long pos = rCtrl.GetCurrentPos();
-	bool showFuncProto = false;
-
-	wxChar ch;
-
-	//	Make sure we are not on a comment section
-	if(IsCommentOrString(pos))
-		return;
-
-	// Search for first non-whitespace wxChar
-	int pos1, pos2, end;
-	ch = rCtrl.PreviousChar(pos, pos1);
-
-	switch(ch)
-	{
-	case '.':
-		// Class / Struct completion
-		rCtrl.PreviousChar(pos1, end);
-		break;
-	case '>':
-		// Check previous character if is '-'
-		// We open drop box as well
-		if(rCtrl.PreviousChar(pos1, pos2) == '-')
-		{
-			rCtrl.PreviousChar(pos2, end);
-			break;
-		}
-	case ':':
-		// Check previous character if is ':'
-		// We open drop box as well
-		if(rCtrl.PreviousChar(pos1, pos2) == wxT(':'))
-		{
-			rCtrl.PreviousChar(pos2, end);
-			break;
-		}
-	case '(':
-		showFuncProto = true;
-		rCtrl.PreviousChar(pos1, end);
-		break;
-	default:
-		return;
-	}
-
-	// Get a full expression and pass it, along with the local scope
-	// to the Language parser
-	// We define an expression, by reading from pos and up until we find
-	// the first '{' or ';' or SOT
-	int semiColPos = rCtrl.FindString(wxT(";"), 0, false, rCtrl.GetCurrentPos());
-	int lcurlyPos  = rCtrl.FindString(wxT("{"), 0, false, rCtrl.GetCurrentPos());
-	int start;
-	TagEntry tag;
-	int line = 1;
-
-	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
-	if(start < 0){
-		start = 0;
-	}
-
-	wxString expr = rCtrl.GetTextRange(start, pos);
-
-	// Get the closest function to the current caret position, this will give us a
-	// good idea of the scope we are in it
-	if( TagsManagerST::Get()->FunctionByLine(rCtrl.LineFromPosition(start)+1, rCtrl.GetFileName().GetFullPath(), rCtrl.GetProjectName(), tag) )
-	{
-		line = tag.GetLine();
-	}
-
-	long scopeStartPos = rCtrl.PositionFromLine(line - 1/* wxScintilla counts line from zero */);
-	wxString scope = rCtrl.GetTextRange(scopeStartPos, end);
-	wxString scopeName = tag.GetScopeName();
-
-	if( showFuncProto )
-	{
-		// display call tip with function prototype
-		m_ct = TagsManagerST::Get()->GetFunctionTip(expr, scope, scopeName);
-		if( m_ct->Count() > 0 )
-		{
-			// we have a match
-			rCtrl.CallTipShow(rCtrl.GetCurrentPos(), m_ct->Next());
-			m_tipKind = TipFuncProto;
-		}
-	}
-	else
-	{
-		//--------------------------------------------------------------
-		// Get list of candidates if any and popup the Autucomplete box
-		//--------------------------------------------------------------
-
-		std::vector<TagEntry> candidates;
-		if( TagsManagerST::Get()->AutoCompleteCandidates(expr, scope, scopeName, candidates) )
-		{
-			/// Convert the vector to a string delimited
-			wxString list;
-			size_t i=0;
-			for(; i<candidates.size()-1; i++)
-			{
-				list.Append(candidates.at(i).GetName() + GetImageString(candidates.at(i)) + wxT("@"));
-			}
-
-			list.Append(candidates.at(i).GetName() + GetImageString(candidates.at(i)));
-			GetCtrl().AutoCompShow(0, list);
-		}
-	}
-}
-
 wxString ContextCpp::GetImageString(const TagEntry &entry)
 {
 	if(entry.GetKind() == wxT("class"))
@@ -337,6 +229,13 @@ void ContextCpp::OnDwellEnd(wxScintillaEvent &WXUNUSED(event))
 	}
 }
 
+void ContextCpp::CallTipCancel()
+{
+	LEditor &rCtrl = GetCtrl();
+	rCtrl.CallTipCancel();
+	m_tipKind = TipNone;
+}
+
 void ContextCpp::OnCallTipClick(wxScintillaEvent &event)
 {
 	LEditor &rCtrl = GetCtrl();
@@ -352,6 +251,118 @@ void ContextCpp::OnCallTipClick(wxScintillaEvent &event)
 		break;
 	case Elsewhere:
 		break;
+	}
+}
+
+//=============================================================================
+// >>>>>>>>>>>>>>>>>>>>>>>> CodeCompletion API - START
+//=============================================================================
+
+void ContextCpp::CodeComplete()
+{
+	LEditor &rCtrl = GetCtrl();
+	long pos = rCtrl.GetCurrentPos();
+	bool showFuncProto = false;
+
+	wxChar ch;
+
+	//	Make sure we are not on a comment section
+	if(IsCommentOrString(pos))
+		return;
+
+	// Search for first non-whitespace wxChar
+	int pos1, pos2, end;
+	ch = rCtrl.PreviousChar(pos, pos1);
+
+	switch(ch)
+	{
+	case '.':
+		// Class / Struct completion
+		rCtrl.PreviousChar(pos1, end);
+		break;
+	case '>':
+		// Check previous character if is '-'
+		// We open drop box as well
+		if(rCtrl.PreviousChar(pos1, pos2) == '-')
+		{
+			rCtrl.PreviousChar(pos2, end);
+			break;
+		}
+	case ':':
+		// Check previous character if is ':'
+		// We open drop box as well
+		if(rCtrl.PreviousChar(pos1, pos2) == wxT(':'))
+		{
+			rCtrl.PreviousChar(pos2, end);
+			break;
+		}
+	case '(':
+		showFuncProto = true;
+		rCtrl.PreviousChar(pos1, end);
+		break;
+	default:
+		return;
+	}
+
+	// Get a full expression and pass it, along with the local scope
+	// to the Language parser
+	// We define an expression, by reading from pos and up until we find
+	// the first '{' or ';' or SOT
+	int semiColPos = rCtrl.FindString(wxT(";"), 0, false, rCtrl.GetCurrentPos());
+	int lcurlyPos  = rCtrl.FindString(wxT("{"), 0, false, rCtrl.GetCurrentPos());
+	int start;
+	TagEntry tag;
+	int line = 1;
+
+	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
+	if(start < 0){
+		start = 0;
+	}
+
+	wxString expr = rCtrl.GetTextRange(start, pos);
+
+	// Get the closest function to the current caret position, this will give us a
+	// good idea of the scope we are in it
+	if( TagsManagerST::Get()->FunctionByLine(rCtrl.LineFromPosition(start)+1, rCtrl.GetFileName().GetFullPath(), rCtrl.GetProjectName(), tag) )
+	{
+		line = tag.GetLine();
+	}
+
+	long scopeStartPos = rCtrl.PositionFromLine(line - 1/* wxScintilla counts line from zero */);
+	wxString scope = rCtrl.GetTextRange(scopeStartPos, end);
+	wxString scopeName = tag.GetScopeName();
+
+	if( showFuncProto )
+	{
+		// display call tip with function prototype
+		m_ct = TagsManagerST::Get()->GetFunctionTip(expr, scope, scopeName);
+		if( m_ct->Count() > 0 )
+		{
+			// we have a match
+			rCtrl.CallTipShow(rCtrl.GetCurrentPos(), m_ct->Next());
+			m_tipKind = TipFuncProto;
+		}
+	}
+	else
+	{
+		//--------------------------------------------------------------
+		// Get list of candidates if any and popup the Autucomplete box
+		//--------------------------------------------------------------
+
+		std::vector<TagEntry> candidates;
+		if( TagsManagerST::Get()->AutoCompleteCandidates(expr, scope, scopeName, candidates) )
+		{
+			/// Convert the vector to a string delimited
+			wxString list;
+			size_t i=0;
+			for(; i<candidates.size()-1; i++)
+			{
+				list.Append(candidates.at(i).GetName() + GetImageString(candidates.at(i)) + wxT("@"));
+			}
+
+			list.Append(candidates.at(i).GetName() + GetImageString(candidates.at(i)));
+			GetCtrl().AutoCompShow(0, list);
+		}
 	}
 }
 
@@ -427,6 +438,69 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 	}
 }
 
+void ContextCpp::GetWordAndScope(wxString& word, wxString &scope, wxString& scopeName)
+{
+	LEditor &rCtrl = GetCtrl();
+	// Get the partial word that we have
+	long pos = rCtrl.GetCurrentPos();
+	long start = rCtrl.WordStartPosition(pos, true);
+	long end   = rCtrl.WordEndPosition(pos, true);
+
+	word = rCtrl.GetTextRange(start, end);
+	if(word.IsEmpty())
+		return;
+
+	// Get the visible scope: to reduce the overhead of scanning the entire file
+	// we will work on a smaller scope which will be extracted using the following
+	// logic: scope will be from 'start' exprStart, up to the first function that starts from
+	// here and up or start of file of no function was found
+	TagEntry tag;
+
+	int line = 1;
+	if( TagsManagerST::Get()->FunctionByLine(rCtrl.LineFromPosition(start), rCtrl.GetFileName().GetFullPath(), rCtrl.GetProject(), tag) )
+		line = tag.GetLine();
+
+	long scopeStartPos = rCtrl.PositionFromLine(line - 1/* wxScintilla counts line from zero */);
+	scope = rCtrl.GetTextRange(scopeStartPos, start);
+	scopeName = tag.GetScopeName();
+}
+
+void ContextCpp::CompleteWord()
+{
+	LEditor &rCtrl = GetCtrl();
+	std::vector<TagEntry> tags;
+	wxString scope;
+	wxString scopeName;
+	wxString word;
+
+	//	Make sure we are not on a comment section
+	if(IsCommentOrString(rCtrl.GetCurrentPos()))
+		return;
+
+	// Get the local scope and the word under the cursor
+	GetWordAndScope(word, scope ,scopeName);
+
+	if(word.IsEmpty())
+		return;
+
+	TagsManagerST::Get()->GetTags(word, scopeName, tags, PartialMatch, scope);
+
+	/// Convert the vector to a string delimited
+	wxString list;
+	size_t i=0;
+	if( tags.empty() == false )
+	{
+		for(; i<tags.size()-1; i++)
+			list.Append(tags[i].GetName() + GetImageString(tags[i]) + wxT("@"));
+		list.Append(tags[i].GetName() + GetImageString(tags[i]));
+		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
+	}
+}
+
+//=============================================================================
+// <<<<<<<<<<<<<<<<<<<<<<<<<<< CodeCompletion API - END
+//=============================================================================
+
 void ContextCpp::GotoPreviousDefintion()
 {
 	if(LEditor::GetHistory().empty())
@@ -497,72 +571,6 @@ void ContextCpp::GotoDefinition()
 			ManagerST::Get()->OpenFile(dlg->GetFile(), dlg->GetProject(), dlg->GetLine()-1);
 		}
 		dlg->Destroy();
-	}
-}
-
-void ContextCpp::CallTipCancel()
-{
-	LEditor &rCtrl = GetCtrl();
-	rCtrl.CallTipCancel();
-	m_tipKind = TipNone;
-}
-
-void ContextCpp::GetWordAndScope(wxString& word, wxString &scope, wxString& scopeName)
-{
-	LEditor &rCtrl = GetCtrl();
-	// Get the partial word that we have
-	long pos = rCtrl.GetCurrentPos();
-	long start = rCtrl.WordStartPosition(pos, true);
-	long end   = rCtrl.WordEndPosition(pos, true);
-
-	word = rCtrl.GetTextRange(start, end);
-	if(word.IsEmpty())
-		return;
-
-	// Get the visible scope: to reduce the overhead of scanning the entire file
-	// we will work on a smaller scope which will be extracted using the following
-	// logic: scope will be from 'start' exprStart, up to the first function that starts from
-	// here and up or start of file of no function was found
-	TagEntry tag;
-
-	int line = 1;
-	if( TagsManagerST::Get()->FunctionByLine(rCtrl.LineFromPosition(start), rCtrl.GetFileName().GetFullPath(), rCtrl.GetProject(), tag) )
-		line = tag.GetLine();
-
-	long scopeStartPos = rCtrl.PositionFromLine(line - 1/* wxScintilla counts line from zero */);
-	scope = rCtrl.GetTextRange(scopeStartPos, start);
-	scopeName = tag.GetScopeName();
-}
-
-void ContextCpp::CompleteWord()
-{
-	LEditor &rCtrl = GetCtrl();
-	std::vector<TagEntry> tags;
-	wxString scope;
-	wxString scopeName;
-	wxString word;
-
-	//	Make sure we are not on a comment section
-	if(IsCommentOrString(rCtrl.GetCurrentPos()))
-		return;
-
-	// Get the local scope and the word under the cursor
-	GetWordAndScope(word, scope ,scopeName);
-
-	if(word.IsEmpty())
-		return;
-
-	TagsManagerST::Get()->GetTags(word, scopeName, tags, PartialMatch, scope);
-
-	/// Convert the vector to a string delimited
-	wxString list;
-	size_t i=0;
-	if( tags.empty() == false )
-	{
-		for(; i<tags.size()-1; i++)
-			list.Append(tags[i].GetName() + GetImageString(tags[i]) + wxT("@"));
-		list.Append(tags[i].GetName() + GetImageString(tags[i]));
-		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
 	}
 }
 

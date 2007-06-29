@@ -669,6 +669,10 @@ TagTreePtr TagsManager::TreeFromTags(const wxString& tags, const wxString& proje
 	return tree;
 }
 
+//-----------------------------------------------------------------------------
+// >>>>>>>>>>>>>>>>>>>>> Code Completion API START
+//-----------------------------------------------------------------------------
+
 bool TagsManager::FunctionByLine(const int lineNo, const wxString& fileName, const wxString& project, TagEntry& tag)
 {
 	wxString query;
@@ -997,6 +1001,61 @@ bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& s
 	return candidates.empty() == false;
 }
 
+void TagsManager::GetHoverTip(const wxString & token, const wxString & scope, const wxString & scopeName, bool isFunc, std::vector<wxString> &tips)
+{
+	LanguageST::Get()->GetHoverTip(token, scope, scopeName, isFunc, tips);
+}
+
+clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString & scope, const wxString & scopeName )
+{
+	// display call tip with function prototype
+	std::vector<wxString> tips;
+	wxString expression( expr );
+
+	wxString parent; ///< contains the parent of the function
+	if( LanguageST::Get()->ProcessExpression(expression, parent, true, scope, scopeName).IsEmpty() == false )
+	{
+		// Get the function(s) signatures from database
+		// Trim whitespace from right and left
+		static wxString trimString(wxT("({};\r\n\t\v "));
+
+		expression.erase(0, expression.find_first_not_of(trimString)); 
+		expression.erase(expression.find_last_not_of(trimString)+1);
+
+		wxArrayString dl;
+		dl.Add(wxT("::"));
+		dl.Add(wxT("->"));
+		dl.Add(wxT("."));
+		StringTokenizer tok( expression, dl );
+		wxString funcName = tok.Last();
+
+		wxString sql;
+		std::vector<TagEntry> tags;
+		if( parent.IsEmpty() )
+			sql << wxT("SELECT * FROM TAGS WHERE name='") << funcName << wxT("' AND (parent='<global>' OR parent='") << scopeName << wxT("') AND (kind='function' OR kind='prototype')");
+		else
+			sql << wxT("SELECT * FROM TAGS WHERE name='") << funcName << wxT("' AND parent='") << parent << wxT("' AND (kind='function' OR kind='prototype')");
+		TagsManagerST::Get()->GetTagsBySQL( sql, tags );
+
+		if( tags.size() > 0 )
+		{
+			// we have a match
+			for(size_t i=0; i<tags.size(); i++)
+			{
+				wxString tip;
+				tip << tags[i].GetName() << wxT(" ") << tags[i].GetSignature();
+				tips.push_back( tip );
+			}
+		}
+	}
+	clCallTipPtr ct( new clCallTip(tips) );
+	return ct;
+}
+
+//-----------------------------------------------------------------------------
+// <<<<<<<<<<<<<<<<<<< Code Completion API END
+//-----------------------------------------------------------------------------
+
 void TagsManager::FindSymbol(const wxString& name, std::vector<TagEntry> &tags)
 {
 	wxString query;
@@ -1123,57 +1182,6 @@ void TagsManager::OpenExternalDatabase(const wxFileName &dbName)
 
 	// load it to memory
 	m_pExternalDb->LoadToMemory(dbName);
-}
-
-void TagsManager::GetHoverTip(const wxString & token, const wxString & scope, const wxString & scopeName, bool isFunc, std::vector<wxString> &tips)
-{
-	LanguageST::Get()->GetHoverTip(token, scope, scopeName, isFunc, tips);
-}
-
-clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString & scope, const wxString & scopeName )
-{
-	// display call tip with function prototype
-	std::vector<wxString> tips;
-	wxString expression( expr );
-
-	wxString parent; ///< contains the parent of the function
-	if( LanguageST::Get()->ProcessExpression(expression, parent, true, scope, scopeName).IsEmpty() == false )
-	{
-		// Get the function(s) signatures from database
-		// Trim whitespace from right and left
-		static wxString trimString(wxT("({};\r\n\t\v "));
-
-		expression.erase(0, expression.find_first_not_of(trimString)); 
-		expression.erase(expression.find_last_not_of(trimString)+1);
-
-		wxArrayString dl;
-		dl.Add(wxT("::"));
-		dl.Add(wxT("->"));
-		dl.Add(wxT("."));
-		StringTokenizer tok( expression, dl );
-		wxString funcName = tok.Last();
-
-		wxString sql;
-		std::vector<TagEntry> tags;
-		if( parent.IsEmpty() )
-			sql << wxT("SELECT * FROM TAGS WHERE name='") << funcName << wxT("' AND (parent='<global>' OR parent='") << scopeName << wxT("') AND (kind='function' OR kind='prototype')");
-		else
-			sql << wxT("SELECT * FROM TAGS WHERE name='") << funcName << wxT("' AND parent='") << parent << wxT("' AND (kind='function' OR kind='prototype')");
-		TagsManagerST::Get()->GetTagsBySQL( sql, tags );
-
-		if( tags.size() > 0 )
-		{
-			// we have a match
-			for(size_t i=0; i<tags.size(); i++)
-			{
-				wxString tip;
-				tip << tags[i].GetName() << wxT(" ") << tags[i].GetSignature();
-				tips.push_back( tip );
-			}
-		}
-	}
-	clCallTipPtr ct( new clCallTip(tips) );
-	return ct;
 }
 
 void TagsManager::FilterResults(const std::vector<TagEntry> & src, const wxString & name, std::vector<TagEntry> & target, int flags, std::map<wxString, TagEntry>* tmpMap)

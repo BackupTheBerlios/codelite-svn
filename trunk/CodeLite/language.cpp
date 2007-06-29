@@ -1038,7 +1038,7 @@ void Language::GetHoverTip(const wxString & token, const wxString & scope, const
 	{
 		// Get a list of tags from the current scope, first remove the non-visible scope from the 
 		// row scope
-		wxString visibleScope = LanguageST::Get()->GetScope(scope, wxEmptyString);
+		wxString visibleScope = GetScope(scope, wxEmptyString);
 		localTags = TagsManagerST::Get()->ParseLocals(visibleScope);
 		if(!localTags){
 			return;
