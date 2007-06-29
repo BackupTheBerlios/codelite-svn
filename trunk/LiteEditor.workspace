@@ -23,7 +23,7 @@
       <Project Name="LiteEditor" ConfigName="ReleaseANSI"/>
       <Project Name="CodeLite" ConfigName="ReleaseANSI"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release ANSI" Selected="yes">
+    <WorkspaceConfiguration Name="Release ANSI" Selected="no">
       <Project Name="wxsqlite3" ConfigName="ReleaseANSIStaticLibrary"/>
       <Project Name="wxscintilla" ConfigName="ReleaseANSIStaticLibrary"/>
       <Project Name="wxflatnotebook" ConfigName="ReleaseANSIStaticLibrary"/>
@@ -32,10 +32,19 @@
       <Project Name="LiteEditor" ConfigName="ReleaseANSIStaticLibrary"/>
       <Project Name="CodeLite" ConfigName="ReleaseANSIStaticLibrary"/>
     </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release Unicode" Selected="yes">
+      <Project Name="wxsqlite3" ConfigName="ReleaseUnicode"/>
+      <Project Name="wxscintilla" ConfigName="ReleaseUnicode"/>
+      <Project Name="wxflatnotebook" ConfigName="ReleaseUnicode"/>
+      <Project Name="sqlite3" ConfigName="ReleaseUnicode"/>
+      <Project Name="plugin_sdk" ConfigName="ReleaseUnicode"/>
+      <Project Name="LiteEditor" ConfigName="ReleaseUnicode"/>
+      <Project Name="CodeLite" ConfigName="ReleaseUnicode"/>
+    </WorkspaceConfiguration>
   </BuildMatrix>
   <Environment>
-    <Variable Name="WXSTABLE" Value="C:/wxWidgets-2.8.4"/>
+    <Variable Name="WXSTABLE" Value="D:\Projects\wxWidgets-2.8.4"/>
     <Variable Name="WorkspaceName" Value="LiteEditor"/>
-    <Variable Name="WorkspacePath" Value="C:\Development\C++\LiteEditor"/>
+    <Variable Name="WorkspacePath" Value="D:\Projects\LiteEditor"/>
   </Environment>
 </CodeLite_Workspace>

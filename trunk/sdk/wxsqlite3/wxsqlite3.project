@@ -45,5 +45,24 @@
       <PreBuild/>
       <PostBuild/>
     </Configuration>
+    <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
+      <General OutputFile="..\..\lib\gcc\libwxsqlite3u.dll" IntermediateDirectory=".\ReleaseUnicode" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no --unicode=yes);">
+        <IncludePath Value="."/>
+        <IncludePath Value=".\include"/>
+        <IncludePath Value=".\sqlite3\include"/>
+        <Preprocessor Value="__WX__"/>
+        <Preprocessor Value="WXMAKINGDLL_WXSQLITE3"/>
+        <Preprocessor Value="WXUSINGDLL"/>
+      </Compiler>
+      <Linker Required="yes" Options="-O0;$(shell wx-config --libs --debug=no --unicode=yes)">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="..\..\lib\gcc"/>
+        <Library Value="wxmsw28_gcc_custom.dll"/>
+        <Library Value="sqlite3u.a"/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
   </Settings>
 </CodeLite_Project>
