@@ -98,21 +98,18 @@
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
-      <General OutputFile="..\lib\gcc\libplugin_sdku.a" IntermediateDirectory=".\ReleaseUnicode" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="..\lib\gcc_lib\libplugin_sdku.a" IntermediateDirectory=".\ReleaseUnicode" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --unicode=yes);;">
         <IncludePath Value="."/>
         <IncludePath Value=".\include"/>
         <IncludePath Value="..\CodeLite"/>
         <IncludePath Value="..\sdk\wxsqlite3\include"/>
         <Preprocessor Value="__WX__"/>
-        <Preprocessor Value="WXMAKINGDLL_LE_SDK"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
-      <Linker Required="yes" Options="-O0 $(shell wx-config --libs);">
-        <LibraryPath Value="."/>
-        <LibraryPath Value="..\lib\gcc"/>
-        <Library Value="libCodeLiteu.dll"/>
-        <Library Value="wxmsw28_gcc_custom.dll"/>
+      <Linker Required="yes" Options=" ">
+        <LibraryPath Value=""/>
+        <Library Value=""/>
       </Linker>
       <PreBuild/>
       <PostBuild/>
