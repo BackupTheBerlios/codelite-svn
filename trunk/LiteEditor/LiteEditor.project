@@ -110,51 +110,8 @@
     <Project Name="plugin_sdk"/>
   </Dependencies>
   <Settings Type="Executable">
-    <Configuration Name="Debug" CompilerType="gnu g++">
-      <General OutputFile="..\Runtime\LiteEditor" IntermediateDirectory=".\Debug_unicode_gcc" Command="LiteEditor" CommandArguments="" WorkingDirectory="..\Runtime"/>
-      <Compiler Required="yes" Options="-g  $(shell wx-config --cxxflags --unicode=yes);">
-        <IncludePath Value="."/>
-        <IncludePath Value="..\CodeLite"/>
-        <IncludePath Value="..\sdk\wxsqlite3\include"/>
-        <IncludePath Value="..\sdk\wxflatnotebook\include"/>
-        <IncludePath Value="..\sdk\wxscintilla\include"/>
-        <IncludePath Value="..\Plugin"/>
-        <Preprocessor Value="__WX__"/>
-        <Preprocessor Value="WXUSINGDLL_FNB"/>
-        <Preprocessor Value="WXUSINGDLL_WXSQLITE3"/>
-        <Preprocessor Value="WXUSINGDLL_SCI"/>
-        <Preprocessor Value="WXUSINGDLL_CODELITE"/>
-        <Preprocessor Value="WXUSINGDLL_LE_SDK"/>
-        <Preprocessor Value="WXUSINGDLL"/>
-      </Compiler>
-      <Linker Required="yes" Options="-O2;$(shell wx-config --libs --unicode=yes );-Wl,--subsystem,windows -mwindows;;">
-        <LibraryPath Value="."/>
-        <LibraryPath Value="..\lib\gcc"/>
-        <Library Value="libwxflatnotebooku.dll"/>
-        <Library Value="libCodeLiteu.dll"/>
-        <Library Value="libplugin_sdku.dll"/>
-        <Library Value="libwxscintillau.dll"/>
-        <Library Value="libwxsqlite3u.dll"/>
-        <Library Value="libsqlite3.dll"/>
-        <Library Value="wxmsw28u_gcc_custom.dll"/>
-      </Linker>
-      <PreBuild/>
-      <PostBuild/>
-    </Configuration>
-    <Configuration Name="Release" CompilerType="GNU g++">
-      <General OutputFile="./Release/HelloWorld" IntermediateDirectory="./Release" Command="HelloWorld" CommandArguments="" WorkingDirectory="./Release"/>
-      <Compiler Required="yes" Options="-O2">
-        <IncludePath Value="."/>
-      </Compiler>
-      <Linker Required="yes" Options="-O2">
-        <LibraryPath Value="."/>
-        <LibraryPath Value="./Release"/>
-      </Linker>
-      <PreBuild/>
-      <PostBuild/>
-    </Configuration>
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
-      <General OutputFile="..\Runtime\LiteEditor" IntermediateDirectory=".\Release" Command="LiteEditor" CommandArguments="" WorkingDirectory="..\Runtime"/>
+      <General OutputFile="..\lib\gcc\LiteEditor" IntermediateDirectory=".\Release" Command="LiteEditor" CommandArguments="" WorkingDirectory="..\lib\gcc"/>
       <Compiler Required="yes" Options="-g  $(shell wx-config --cxxflags);">
         <IncludePath Value="."/>
         <IncludePath Value="..\CodeLite"/>
@@ -178,6 +135,34 @@
         <Library Value="libplugin_sdk.dll"/>
         <Library Value="libwxscintilla.dll"/>
         <Library Value="libwxsqlite3.dll"/>
+        <Library Value="wxmsw28_gcc_custom.dll"/>
+      </Linker>
+      <PreBuild>
+        <Command Enabled="yes">windres -i code_parser.rc $(shell wx-config --rcflags) $(IntermediateDirectory)\code_parser.o</Command>
+      </PreBuild>
+      <PostBuild/>
+    </Configuration>
+    <Configuration Name="ReleaseANSIStaticLibrary" CompilerType="gnu g++">
+      <General OutputFile="..\Runtime\LiteEditor" IntermediateDirectory=".\Release_static" Command="LiteEditor" CommandArguments="" WorkingDirectory="..\Runtime"/>
+      <Compiler Required="yes" Options="-g  $(shell wx-config --cxxflags);">
+        <IncludePath Value="."/>
+        <IncludePath Value="..\CodeLite"/>
+        <IncludePath Value="..\sdk\wxsqlite3\include"/>
+        <IncludePath Value="..\sdk\wxflatnotebook\include"/>
+        <IncludePath Value="..\sdk\wxscintilla\include"/>
+        <IncludePath Value="..\Plugin"/>
+        <Preprocessor Value="__WX__"/>
+        <Preprocessor Value="WXUSINGDLL"/>
+      </Compiler>
+      <Linker Required="yes" Options="-O2;$(shell wx-config --libs );$(IntermediateDirectory)\code_parser.o;-Wl,--subsystem,windows -mwindows;">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="..\lib\gcc_lib"/>
+        <Library Value="libwxflatnotebook.a"/>
+        <Library Value="libCodeLite.a"/>
+        <Library Value="libplugin_sdk.a"/>
+        <Library Value="libwxscintilla.a"/>
+        <Library Value="libwxsqlite3.a"/>
+        <Library Value="libsqlite3.a"/>
         <Library Value="wxmsw28_gcc_custom.dll"/>
       </Linker>
       <PreBuild>

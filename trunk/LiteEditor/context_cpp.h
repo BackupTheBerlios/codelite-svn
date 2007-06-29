@@ -7,7 +7,7 @@
 #include "entry.h"
 
 class ContextCpp : public ContextBase {
-	CallTipPtr m_ct;
+	clCallTipPtr m_ct;
 	std::map<wxString, int> m_propertyInt;
 
 	enum TipKind

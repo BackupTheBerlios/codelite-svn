@@ -130,7 +130,10 @@ void SymbolTree::BuildTree( TagTreePtr& tree )
 	{
 		m_tree = TagsManagerST::Get()->Load();
 		if( !m_tree )
+		{
+			wxLogMessage(wxT("Failed to load Symbols from database!"));
 			return;
+		}
 	}
 	else
 		m_tree = tree;

@@ -22,7 +22,7 @@
  * \date 09-18-2006
  * \author Eran
  */
-class WXDLLIMPEXP_CL CallTip
+class WXDLLIMPEXP_CL clCallTip
 {
 	std::vector<wxString> m_tips;
 	std::vector<wxString>::size_type m_curr;
@@ -32,30 +32,30 @@ public:
 	 * Constructor
 	 * \param tips input tips 
 	 */
-	CallTip(const std::vector<wxString> & tips );
+	clCallTip(const std::vector<wxString> & tips );
 
 	/**
 	 * default constructor
 	 */
-	CallTip() {}
+	clCallTip() {}
 
 	/**
 	 * Copy constructor
 	 */
-	CallTip(const CallTip& rhs);
+	clCallTip(const clCallTip& rhs);
 
 	/**
 	 * Assignment operator
 	 * \param rhs right hand side
 	 * \return this
 	 */
-	CallTip& operator=(const CallTip& rhs);
+	clCallTip& operator=(const clCallTip& rhs);
 
 	/**
 	 * Destructor
 	 * \return 
 	 */
-	virtual ~CallTip(){}
+	virtual ~clCallTip(){}
 
 	/**
 	 * Show next tip, if we are at last tip, return the first tip or empty string if no tips exists
@@ -76,5 +76,5 @@ public:
 	std::vector<wxString>::size_type Count() const;
 };
 
-typedef SmartPtr<CallTip> CallTipPtr;
+typedef SmartPtr<clCallTip> clCallTipPtr;
 #endif // CODELITE_CALLTIP_H

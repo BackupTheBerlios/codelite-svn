@@ -14,16 +14,7 @@
   <Project Name="LiteEditor" Path="LiteEditor/LiteEditor.project" Active="Yes"/>
   <Project Name="sqlite3" Path="sqlite3\sqlite3.project"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="DebugUnicode" Selected="no">
-      <Project Name="wxsqlite3" ConfigName="Debug"/>
-      <Project Name="wxscintilla" ConfigName="DebugUnicode"/>
-      <Project Name="wxflatnotebook" ConfigName="DebugUnicode"/>
-      <Project Name="plugin_sdk" ConfigName="DebugUnicode"/>
-      <Project Name="LiteEditor" ConfigName="Debug"/>
-      <Project Name="CodeLite" ConfigName="DebugUnicode"/>
-      <Project Name="sqlite3" ConfigName="Debug"/>
-    </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release ASNI" Selected="yes">
+    <WorkspaceConfiguration Name="Release ASNI DLL" Selected="no">
       <Project Name="wxsqlite3" ConfigName="ReleaseANSI"/>
       <Project Name="wxscintilla" ConfigName="ReleaseANSI"/>
       <Project Name="wxflatnotebook" ConfigName="ReleaseANSI"/>
@@ -31,6 +22,15 @@
       <Project Name="plugin_sdk" ConfigName="ReleaseANSI"/>
       <Project Name="LiteEditor" ConfigName="ReleaseANSI"/>
       <Project Name="CodeLite" ConfigName="ReleaseANSI"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release ANSI" Selected="yes">
+      <Project Name="wxsqlite3" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="wxscintilla" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="wxflatnotebook" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="sqlite3" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="plugin_sdk" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="LiteEditor" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="CodeLite" ConfigName="ReleaseANSIStaticLibrary"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
   <Environment>

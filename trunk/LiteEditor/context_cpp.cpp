@@ -4,7 +4,7 @@
 #include "manager.h"
 #include "symbols_dialog.h"
 #include "editor_config.h"
-#include "macros.h"
+#include "macros.h" 
 #include "wx/xrc/xmlres.h"
 #include "algorithm"
 

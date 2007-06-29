@@ -1543,6 +1543,7 @@ void wxSQLite3Database::Open(const wxString& fileName, const wxMemoryBuffer& key
   wxCharBuffer strFileName = wxConvUTF8.cWC2MB(fileName.wc_str(*wxConvCurrent));
   const char* localFileName = strFileName;
 
+  wxLogMessage(wxT("Opening..."));
   int rc = sqlite3_open((const char*) localFileName, (sqlite3**) &m_db);
 
   if (rc != SQLITE_OK)
@@ -1551,7 +1552,7 @@ void wxSQLite3Database::Open(const wxString& fileName, const wxMemoryBuffer& key
     const char* localError = sqlite3_errmsg((sqlite3*) m_db);
     throw wxSQLite3Exception(rc, UTF8toWxString(localError));
   }
-
+	 wxLogMessage(wxT("opened successfully!"));
   rc = sqlite3_extended_result_codes((sqlite3*) m_db, 1);
   if (rc != SQLITE_OK)
   {

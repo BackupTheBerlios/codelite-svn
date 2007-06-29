@@ -6,18 +6,18 @@
 #endif
 #endif 
 
-CallTip::CallTip(const std::vector<wxString> &tips)
+clCallTip::clCallTip(const std::vector<wxString> &tips)
 : m_tips(tips)
 , m_curr(0)
 {
 }
 
-CallTip::CallTip(const CallTip& rhs)
+clCallTip::clCallTip(const clCallTip& rhs)
 {
 	*this = rhs;
 }
 
-CallTip& CallTip::operator =(const CallTip& rhs)
+clCallTip& clCallTip::operator =(const clCallTip& rhs)
 {
 	if(this == &rhs)
 		return *this;
@@ -25,7 +25,7 @@ CallTip& CallTip::operator =(const CallTip& rhs)
 	return *this;
 }
 
-wxString CallTip::Next() 
+wxString clCallTip::Next() 
 {
 	// format a tip string and return it
 	wxString tip;
@@ -44,7 +44,7 @@ wxString CallTip::Next()
 	return tip;
 }
 
-wxString CallTip::Prev() 
+wxString clCallTip::Prev() 
 {
 	// format a tip string and return it
 	wxString tip;
@@ -64,7 +64,7 @@ wxString CallTip::Prev()
 	return tip;
 }
 
-std::vector<wxString>::size_type CallTip::Count() const
+std::vector<wxString>::size_type clCallTip::Count() const
 {
 	return m_tips.size();
 }

@@ -19,25 +19,8 @@
     <File Name="include/wx/wxFlatNotebook/wxFlatNotebook.h"/>
     <File Name="include/wx/wxFlatNotebook/wxFNBDropTarget.h"/>
   </VirtualDirectory>
-  <Settings Type="Dynamic Library">
-    <Configuration Name="DebugUnicode" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc\libwxflatnotebooku.dll" IntermediateDirectory=".\Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
-      <Compiler Required="yes" Options="$(shell wx-config --cxxflags --unicode=yes);">
-        <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <Preprocessor Value="__WX__"/>
-        <Preprocessor Value="WXMAKINGDLL_FNB"/>
-        <Preprocessor Value="WXUSINGDLL"/>
-      </Compiler>
-      <Linker Required="yes" Options="-O2 $(shell wx-config --libs --unicode=yes);">
-        <LibraryPath Value="."/>
-        <LibraryPath Value="$(IntermediateDirectory)"/>
-        <LibraryPath Value="..\lib\gcc"/>
-        <Library Value="wxmsw28u_gcc_custom.dll"/>
-      </Linker>
-      <PreBuild/>
-      <PostBuild/>
-    </Configuration>
+  <Dependencies/>
+  <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
       <General OutputFile="..\..\lib\gcc\libwxflatnotebook.dll" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);">
@@ -54,6 +37,20 @@
       <PreBuild/>
       <PostBuild/>
     </Configuration>
+    <Configuration Name="ReleaseANSIStaticLibrary" CompilerType="gnu g++">
+      <General OutputFile="..\..\lib\gcc_lib\libwxflatnotebook.a" IntermediateDirectory=".\Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);">
+        <IncludePath Value="."/>
+        <IncludePath Value=".\include"/>
+        <Preprocessor Value="__WX__"/>
+        <Preprocessor Value="WXUSINGDLL"/>
+      </Compiler>
+      <Linker Required="yes" Options=" ">
+        <LibraryPath Value=""/>
+        <Library Value=""/>
+      </Linker>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
   </Settings>
-  <Dependencies/>
 </CodeLite_Project>

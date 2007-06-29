@@ -19,7 +19,7 @@ TagTree::~TagTree()
 }
 
 /// Util function to help us to build a tree from tags
-TagNode* TagTree::AddEntry(const TagEntry& tag)
+TagNode* TagTree::AddEntry(TagEntry& tag)
 {
 	// If a node with thig tag already exist, we simply updating the 
 	// data 

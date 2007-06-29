@@ -466,6 +466,8 @@ TagTreePtr TagsManager::Load(const wxFileName& path, const wxString& project)
 
 	try	
 	{
+		wxLogMessage(wxT("Loading symbols..."));
+		
 		wxSQLite3ResultSet rs = m_pDb->SelectTagsByProject(project, path);
 
 		// Load the records and build a language tree
@@ -482,6 +484,7 @@ TagTreePtr TagsManager::Load(const wxFileName& path, const wxString& project)
 	}
 	catch (wxSQLite3Exception& e)
 	{
+		wxLogMessage(wxT("Caught an exception:") + e.GetMessage());
 		wxUnusedVar(e);
 	}
 	return tree;
@@ -1128,7 +1131,7 @@ void TagsManager::GetHoverTip(const wxString & token, const wxString & scope, co
 	LanguageST::Get()->GetHoverTip(token, scope, scopeName, isFunc, tips);
 }
 
-CallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString & scope, const wxString & scopeName )
+clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString & scope, const wxString & scopeName )
 {
 	// display call tip with function prototype
 	std::vector<wxString> tips;
@@ -1170,7 +1173,7 @@ CallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString & sc
 			}
 		}
 	}
-	CallTipPtr ct( new CallTip(tips) );
+	clCallTipPtr ct( new clCallTip(tips) );
 	return ct;
 }
 

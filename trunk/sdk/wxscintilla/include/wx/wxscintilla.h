@@ -26,14 +26,15 @@
 #include <wx/dnd.h>
 
 
+#ifndef WXDLLIMPEXP_SCI
 #ifdef WXMAKINGDLL_SCI
     #define WXDLLIMPEXP_SCI WXEXPORT
-#elif defined(WXUSINGDLL)
+#elif defined(WXUSINGDLL_SCI)
     #define WXDLLIMPEXP_SCI WXIMPORT
 #else // not making nor using DLL
     #define WXDLLIMPEXP_SCI
 #endif
-
+#endif 
 
 // SWIG can't handle "#if" type of conditionals, only "#ifdef"
 #ifdef SWIG

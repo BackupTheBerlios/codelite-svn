@@ -25,6 +25,7 @@ TagsDatabase::~TagsDatabase()
 {
 	if(m_db)
 	{
+		wxLogMessage(wxT("closing database..."));
 		m_db->Close();
 		delete m_db;
 		m_db = NULL;
@@ -50,15 +51,18 @@ void TagsDatabase::OpenDatabase(const wxFileName& fileName)
 
 	if(!m_fileName.IsOk())
 	{
+		wxLogMessage(wxT("Opening database file: ") + fileName.GetFullPath());
 		// First time we open the db
 		m_db->Open(fileName.GetFullPath());
 		CreateSchema();
 		m_fileName = fileName;
+		wxLogMessage( m_db->IsOpen() ? wxT("Database is open ") : wxT("Database is closed "));
 	}
 	else
 	{
 		// We have both fileName & m_fileName and they 
 		// are different, Close previous db
+		wxLogMessage(wxT("closing database..."));
 		m_db->Close();
 		m_db->Open(fileName.GetFullPath());
 		CreateSchema();
@@ -288,6 +292,7 @@ wxSQLite3ResultSet TagsDatabase::SelectTagsByProject(const wxString& project, co
 	// Incase empty file path is provided, use the current file name
 	wxFileName databaseFileName(path);
 	path.IsOk() == false ? databaseFileName = m_fileName : databaseFileName = path;
+	wxLogMessage( m_db->IsOpen() ? wxT("SelectTagsByProject: Database is open ") : wxT("SelectTagsByProject: Database is closed "));
 	OpenDatabase(databaseFileName);
 
 	wxString query;
@@ -384,6 +389,7 @@ void TagsDatabase::LoadToMemory(const wxFileName& fn)
 	if(m_db->IsOpen() && !m_memDb)
 	{
 		// close any opened database and reopen it as in-memory
+		wxLogMessage(wxT("closing database..."));
 		m_db->Close();
 		m_db->Open(_T(":memory:"));
 	}

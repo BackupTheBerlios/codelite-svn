@@ -132,30 +132,8 @@
       <File Name="src/scintilla/include/WindowAccessor.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
-  <Settings Type="Dynamic Library">
-    <Configuration Name="DebugUnicode" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc\libwxscintillau.dll" IntermediateDirectory=".\Debug_unicode_gcc" Command="" CommandArguments="" WorkingDirectory=""/>
-      <Compiler Required="yes" Options="$(shell wx-config --cxxflags --unicode=yes);;">
-        <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <IncludePath Value="src\scintilla\include"/>
-        <IncludePath Value="src\scintilla\src"/>
-        <Preprocessor Value="__WX__"/>
-        <Preprocessor Value="SCI_LEXER"/>
-        <Preprocessor Value="LINK_LEXERS"/>
-        <Preprocessor Value="WXMAKINGDLL_SCI"/>
-        <Preprocessor Value="WXUSINGDLL"/>
-      </Compiler>
-      <Linker Required="yes" Options="-O0;$(shell wx-config --libs --unicode=yes --debug=no)">
-        <LibraryPath Value="."/>
-        <LibraryPath Value="$(IntermediateDirectory)"/>
-        <LibraryPath Value="..\..\lib\gcc"/>
-        <Library Value="wxmsw28u_gcc_custom.dll"/>
-        <Library Value="Gdi32.dll"/>
-      </Linker>
-      <PreBuild/>
-      <PostBuild/>
-    </Configuration>
+  <Dependencies/>
+  <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
       <General OutputFile="..\..\lib\gcc\libwxscintilla.dll" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);;">
@@ -179,6 +157,21 @@
       <PreBuild/>
       <PostBuild/>
     </Configuration>
+    <Configuration Name="ReleaseANSIStaticLibrary" CompilerType="gnu g++">
+      <General OutputFile="..\..\lib\gcc_lib\libwxscintilla.a" IntermediateDirectory=".\Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
+      <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);;">
+        <IncludePath Value="."/>
+        <IncludePath Value=".\include"/>
+        <IncludePath Value="src\scintilla\include"/>
+        <IncludePath Value="src\scintilla\src"/>
+        <Preprocessor Value="__WX__"/>
+        <Preprocessor Value="SCI_LEXER"/>
+        <Preprocessor Value="LINK_LEXERS"/>
+        <Preprocessor Value="WXUSINGDLL"/>
+      </Compiler>
+      <Linker Required="yes" Options=""/>
+      <PreBuild/>
+      <PostBuild/>
+    </Configuration>
   </Settings>
-  <Dependencies/>
 </CodeLite_Project>

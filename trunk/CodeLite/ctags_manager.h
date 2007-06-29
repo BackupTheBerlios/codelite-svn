@@ -424,7 +424,7 @@ public:
 	 * \param scopeName scope name
 	 * \return call tip object
 	 */
-	CallTipPtr GetFunctionTip(const wxString &expression, const wxString &scope, const wxString &scopeName);
+	clCallTipPtr GetFunctionTip(const wxString &expression, const wxString &scope, const wxString &scopeName);
 
 	/**
 	 * When parsing files, parse comments as well and store them into database

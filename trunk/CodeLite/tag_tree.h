@@ -47,7 +47,7 @@ public:
 	 * \param tag Tag to add
 	 * \return new node that was added to the tree.
 	 */
-	TagNode* AddEntry(const TagEntry& tag);
+	TagNode* AddEntry(TagEntry& tag);
 
 };
 

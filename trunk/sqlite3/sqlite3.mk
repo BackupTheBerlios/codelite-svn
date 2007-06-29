@@ -5,31 +5,6 @@ WXSTABLE=C:/wxWidgets-2.8.4
 WorkspaceName=LiteEditor
 WorkspacePath=C:\Development\C++\LiteEditor
 
-## Debug
-ifeq ($(type), Debug)
-LinkerName=gcc
-ArchiveTool=ar rcu
-SharedObjectLinkerName=gcc
-ObjectSuffix=.o
-DebugSwitch=-g
-IncludeSwitch=-I
-LibrarySwitch=-l
-OutputSwitch=-o
-LibraryPathSwitch=-L
-PreprocessorSwitch=-D
-SourceSwitch=-c
-CompilerName=gcc
-OutputFile=..\..\lib\gcc\libsqlite3.a
-IntermediateDirectory=.\Debug
-Preprocessors=
-CmpOptions=-g $(Preprocessors)
-LinkOptions=-O0
-IncludePath=$(IncludeSwitch). 
-Libs=
-LibPath=$(LibraryPathSwitch). $(LibraryPathSwitch).\Debug 
-Target=Debug
-endif
-
 ## ReleaseANSI
 ifeq ($(type), ReleaseANSI)
 LinkerName=gcc
@@ -55,6 +30,31 @@ LibPath=$(LibraryPathSwitch). $(LibraryPathSwitch).\Release
 Target=ReleaseANSI
 endif
 
+## ReleaseANSIStaticLibrary
+ifeq ($(type), ReleaseANSIStaticLibrary)
+LinkerName=gcc
+ArchiveTool=ar rcu
+SharedObjectLinkerName=gcc
+ObjectSuffix=.o
+DebugSwitch=-g
+IncludeSwitch=-I
+LibrarySwitch=-l
+OutputSwitch=-o
+LibraryPathSwitch=-L
+PreprocessorSwitch=-D
+SourceSwitch=-c
+CompilerName=gcc
+OutputFile=..\lib\gcc_lib\libsqlite3.a
+IntermediateDirectory=.\Release_static
+Preprocessors=
+CmpOptions=-O2 $(Preprocessors)
+LinkOptions=
+IncludePath=$(IncludeSwitch). 
+Libs=
+LibPath=
+Target=ReleaseANSIStaticLibrary
+endif
+
 Objects=$(IntermediateDirectory)\sqlite3$(ObjectSuffix) 
 
 ##
@@ -62,15 +62,15 @@ Objects=$(IntermediateDirectory)\sqlite3$(ObjectSuffix)
 ##
 BuildTarget: $(Target)
 
-Debug: StartMsg PreBuild_Debug $(Objects) Debug_link PostBuild_Debug
-
-Debug_link:
-	$(ArchiveTool) $(OutputFile) $(Objects)
-
-
 ReleaseANSI: StartMsg PreBuild_ReleaseANSI $(Objects) ReleaseANSI_link PostBuild_ReleaseANSI
 
 ReleaseANSI_link:
+	$(ArchiveTool) $(OutputFile) $(Objects)
+
+
+ReleaseANSIStaticLibrary: StartMsg PreBuild_ReleaseANSIStaticLibrary $(Objects) ReleaseANSIStaticLibrary_link PostBuild_ReleaseANSIStaticLibrary
+
+ReleaseANSIStaticLibrary_link:
 	$(ArchiveTool) $(OutputFile) $(Objects)
 
 
@@ -98,14 +98,14 @@ clean:
 ## 
 ## Build Events: (Post & Pre build commands)
 ## 
-PreBuild_Debug:
+PreBuild_ReleaseANSI:
 
-PostBuild_Debug:
+PostBuild_ReleaseANSI:
 
 ## 
 ## Build Events: (Post & Pre build commands)
 ## 
-PreBuild_ReleaseANSI:
+PreBuild_ReleaseANSIStaticLibrary:
 
-PostBuild_ReleaseANSI:
+PostBuild_ReleaseANSIStaticLibrary:
 

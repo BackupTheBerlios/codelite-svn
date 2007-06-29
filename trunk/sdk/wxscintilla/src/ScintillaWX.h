@@ -57,13 +57,15 @@
 
 //----------------------------------------------------------------------
 
+#ifndef WXDLLIMPEXP_SCI
 #ifdef WXMAKINGDLL_SCI
     #define WXDLLIMPEXP_SCI WXEXPORT
-#elif defined(WXUSINGDLL)
+#elif defined(WXUSINGDLL_SCI)
     #define WXDLLIMPEXP_SCI WXIMPORT
 #else // not making nor using DLL
     #define WXDLLIMPEXP_SCI
 #endif
+#endif 
 
 class WXDLLIMPEXP_SCI wxScintilla;           // forward
 class ScintillaWX;
