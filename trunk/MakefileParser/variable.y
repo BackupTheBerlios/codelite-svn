@@ -46,7 +46,7 @@ input:	/* empty */
 ;
 
 line:	'\n'				{	printf("|- newline\n");			}
-	| vars_line '\n'		{	printf("|- vars  line: %s\n", $1.c_str());	}
+	| optwords vars_line '\n'	{	printf("|- vars  line: %s%s\n", $1.c_str(), $2.c_str());	}
     	| wordsline '\n'		{	printf("|- words line: %s\n", $1.c_str());	}
 	| assgnline '\n'		{	printf("|- assgn line: %s\n", $1.c_str());	}
 	| printline '\n'		{	printf("|- print line: %s\n", $1.c_str());	}
@@ -65,20 +65,20 @@ close:	')'				{	/* do nothing */			}
 variable: open name close 		{	
 						if(TheTokens[$2].size() > 0)
 						{
-							$$ = TheTokens[$2] + " ";
+							$$ = TheTokens[$2] + "*";
 						}
 						else
 						{
-							$$ = $2 + " ";
+							$$ = $2 + "*";
 						}
 					}
 
-words: WORD				{	$$ = "|" + $1 + "|";			}
-     | words WORD 			{	$$ = "-" + $1 + $2 + "-";		}
+words: WORD				{	$$ = $1 + "|";			}
+     | words WORD 			{	$$ = $1 + $2 + "-";		}
 ;
 
 optwords:				{	$$ = "";				}	
-	| words				{	$$ = $1 + " ";				}
+	| words				{	$$ = $1;				}
 ;
 
 vars_line: variable optwords		{	$$ = $1 + $2;				}

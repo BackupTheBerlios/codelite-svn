@@ -6,7 +6,7 @@ bla = lol
 Lorem ipsum
 PRINT
 Ik zou wel is willen weten wat bla nou is
-$(bla) $(bla) test
+test een twee $(bla) drie vier $(bok) vijf zes zeven acht
 #I say $(test) tataa
 #bla = sex
 #lol = haha
