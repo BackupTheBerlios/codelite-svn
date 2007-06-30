@@ -1,5 +1,9 @@
 %{
+#include "string"
+
 #define YYSTYPE std::string
+extern std::string yylval;
+
 #include <string>
 #include "variable.tab.h"
 #define YY_NO_UNISTD_H 1
@@ -60,4 +64,9 @@ void initLexer(const char *fileName)
         //set the file to be our buffer
         YY_BUFFER_STATE buffState = yy_create_buffer(file, YY_BUF_SIZE);
         yy_switch_to_buffer(buffState);
+}
+
+int yywrap()
+{
+	return 1;
 }

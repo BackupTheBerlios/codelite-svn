@@ -1,9 +1,10 @@
 #include "variable.tab.h"
 #include <stdio.h>
+#include "string"
 
 void initLexer(const char *filename);
 
-YYSTYPE yyparse();
+std::string yyparse();
 
 int main(int argv, char* argc[])
 {

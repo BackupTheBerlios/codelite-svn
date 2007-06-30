@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 
-#define YYDEBUG 1        		/* get the pretty debugging code to compile*/
+#define YYDEBUG 0        		/* get the pretty debugging code to compile*/
 #define YYSTYPE std::string
 
 extern int lineno;
@@ -61,18 +61,18 @@ input:	/* empty */
 
 line:	'\n'				{	printf("|- newline\n");			}
 	| optwords vars_line '\n'	{	printf("|- vars  line: %s%s\n", $1.c_str(), $2.c_str());	}
-    	| wordsline '\n'		{	printf("|- words line: %s\n", $1.c_str());	}
+	| wordsline '\n'		{	printf("|- words line: %s\n", $1.c_str());	}
 	| assgnline '\n'		{	printf("|- assgn line: %s\n", $1.c_str());	}
 	| printline '\n'		{	printf("|- print line: %s\n", $1.c_str());	}
 	| error	'\n'			{
-						printf("unexpected token '%s' at line %d\n", yylval.c_str(), lineno);
-						yyerrok;
-					}
+									printf("unexpected token '%s' at line %d\n", yylval.c_str(), lineno);
+									yyerrok;
+								}
 ;
 
 open:	'$' '('				{	/* do nothing */			}
 
-name:	wordvars			{	$$ = $1					}
+name:	wordvars			{	$$ = $1;					}
 
 close:	')'				{	/* do nothing */			}
 
