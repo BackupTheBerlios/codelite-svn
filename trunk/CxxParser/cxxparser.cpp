@@ -1,7 +1,6 @@
 #include "cxxparser.h"
 #include "symbol_table.h"
 
-extern std::string &getFileName();
 extern std::string getCurrentScope();
 extern int cl_scope_lineno;
 

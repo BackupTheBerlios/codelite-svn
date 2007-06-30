@@ -2,17 +2,11 @@
 <CodeLite_Project Name="Parser">
   <Dependencies/>
   <VirtualDirectory Name="src">
-    <File Name="y.tab.c"/>
-    <File Name="symbol_table.cpp"/>
-    <File Name="cxxparser.cpp"/>
-    <File Name="lex.cl_scope_.c"/>
+    <File Name="scope_parser.cpp"/>
+    <File Name="cpp_lexer.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="incldue">
-    <File Name="y.tab.h"/>
-    <File Name="symbol_table.h"/>
-    <File Name="symbol_entry.h"/>
-    <File Name="smart_ptr.h"/>
-    <File Name="cxxparser.h"/>
+    <File Name="cpp_lexer.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="grammar">
     <File Name="cpp5.l"/>
@@ -36,18 +30,26 @@
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu g++">
       <General OutputFile=".\Release\CppParser" IntermediateDirectory=".\Release" Command="CppParser" CommandArguments="" WorkingDirectory=".\Release"/>
-      <Compiler Required="yes" Options="-O2">
+      <Compiler Required="yes" Options="-O2;">
         <IncludePath Value="."/>
+        <Preprocessor Value="__YMAIN"/>
       </Compiler>
       <Linker Required="yes" Options="-O2">
         <LibraryPath Value="."/>
         <LibraryPath Value=".\Release"/>
       </Linker>
       <PreBuild>
-        <Command Enabled="yes">yacc -dl  -t -pcl_scope_ cpp5_grammar.y</Command>
+        <Command Enabled="yes">yacc -dl  -t -v -pcl_scope_ cpp5_grammar.y</Command>
         <Command Enabled="yes">flex -L  -Pcl_scope_ cpp5.l</Command>
+        <Command Enabled="yes">copy y.tab.c scope_parser.cpp</Command>
+        <Command Enabled="yes">copy y.tab.h cpp_lexer.h</Command>
+        <Command Enabled="yes">copy lex.cl_scope_.c cpp_lexer.cpp</Command>
       </PreBuild>
-      <PostBuild/>
+      <PostBuild>
+        <Command Enabled="yes">copy scope_parser.cpp ..\CodeLite\.</Command>
+        <Command Enabled="yes">copy cpp_lexer.cpp ..\CodeLite\.</Command>
+        <Command Enabled="yes">copy cpp_lexer.h ..\CodeLite\.</Command>
+      </PostBuild>
     </Configuration>
   </Settings>
 </CodeLite_Project>

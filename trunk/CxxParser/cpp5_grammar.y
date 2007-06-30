@@ -6,11 +6,9 @@
 /*************** Includes and Defines *****************************/
 #include "string"
 #include "vector"
-#include "idatabase.h"
-#include "cxxparser.h"
 #include "stdio.h"
-#include "defs.h"
-
+#include "map"
+	
 #define YYDEBUG_LEXER_TEXT (cl_scope_lval) 
 #define YYSTYPE std::string
 #define YYDEBUG 0        /* get the pretty debugging code to compile*/
@@ -24,15 +22,14 @@ void syncParser();
 //---------------------------------------------
 extern char *cl_scope_text;
 extern int cl_scope_lex();
-extern bool setLexerInput(const char *fileName);
-extern void setDatabase(IDatabase *db);
+extern bool setLexerInput(const std::string &in);
 extern int cl_scope_lineno;
 extern std::vector<std::string> currentScope;
+//extern std::map<std::string, bool> g_symbols;
 extern void printScopeName();	//print the current scope name
 extern void increaseScope();	//increase scope with anonymouse value
-extern std::string &getFileName();
 extern std::string getCurrentScope();
-IDatabase *getDatabase();
+extern void cl_scope_lex_clean();
 
 /*************** Standard ytab.c continues here *********************/
 %}
@@ -134,7 +131,7 @@ template_specifiter	:	LE_CLASS	{ $$ = $1; }
 							;
 
 opt_class_qualifier	:	/* empty */			{ $$ = "";}
-							|	LE_TYPEDEFname	{ $$ = $1;}
+							//|	LE_IDENTIFIER	{ $$ = $1;}
 							;
 							
 opt_template_qualifier	: /*empty*/
@@ -147,40 +144,35 @@ template_parameter_list	: /* empty */		{$$ = "";}
 							| template_parameter_list ',' template_parameter {$$ = $1 + $2 + $3;}
 							;
 
-template_parameter		:	const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp {$$ = $1 + $2 + $3 +$4;}
+template_parameter		:	const_spec nested_scope_specifier LE_IDENTIFIER special_star_amp {$$ = $1 + $2 + $3 +$4;}
 							;
 /* namespace */
-namespace_decl	:	stmnt_starter LE_NAMESPACE LE_IDENTIFIER ';'		
-					{
-						printf("found namespace %s\n", $3.c_str());
-						currentScope.push_back($3);
-					}
-				|	stmnt_starter LE_NAMESPACE ';'		
-					{
-						//anonymouse namespace
-						printf("found anonymous namespace\n");
-						increaseScope();
-						printScopeName();
-					}
-				;
+namespace_decl	:	stmnt_starter LE_NAMESPACE LE_IDENTIFIER '{'		
+						{
+							//g_symbols[$3] = true;
+							currentScope.push_back($3);
+						}
+					|	stmnt_starter LE_NAMESPACE '{'		
+						{
+							//anonymouse namespace
+							printf("found anonymous namespace\n");
+							increaseScope();
+							printScopeName();
+						}
+					;
 				
 /* the class rule itself */
 class_decl	:	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';' 
 				{
 					printf("Found class decl: %s\n", $5.c_str());
-					clTokenPtr data(new clToken());
-					//create class symbol and add it
-					createClassToken($2, $3, $4, $5, false, data);
-					getDatabase()->AddToken(data);
+					//g_symbols[$5] = true;
 				}
 
 				| 	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{' 
 				{
 					printf("Found class impl: %s\n", $5.c_str());
-					clTokenPtr data(new clToken());
-					//create class symbol and add it
-					createClassToken($2, $3, $4, $5, true, data);
-					getDatabase()->AddToken(data);
+					//add new symbol to symbol table
+					//g_symbols[$5] = true;
 					
 					//increase the scope level
 					currentScope.push_back($5);
@@ -189,17 +181,17 @@ class_decl	:	stmnt_starter opt_template_qualifier class_keyword opt_class_qualif
 				;
 
 scope_reducer		:	'}'	{
-									if(currentScope.empty())
-									{
-										//fatal error!
-										printf("CodeLite: fatal error - cant go beyond global scope!\n");
-									}
-									else
-									{
-										currentScope.pop_back();
-										printScopeName();
-									}
+								if(currentScope.empty())
+								{
+									//fatal error!
+									printf("CodeLite: fatal error - cant go beyond global scope!\n");
 								}
+								else
+								{
+									currentScope.pop_back();
+									printScopeName();
+								}
+							}
 					;
 scope_increaer	:	'{' {
 								//increase random scope
@@ -212,9 +204,16 @@ class_keyword: 	LE_CLASS		{$$ = $1;}
 					;
 					
 /* functions */
-function_decl		:	stmnt_starter virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' ')' const_spec pure_virtual_spec ';'  					 
+function_decl		:	stmnt_starter virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' variable_list ')' const_spec pure_virtual_spec ';'  					 
 						{
-							printf("Found function: %s\n", $4.c_str());
+							printf("Found function: %s\n", $5.c_str());
+						}
+						
+					|	stmnt_starter virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' variable_list ')' const_spec  '{'  					 
+						{
+							printf("Found function: %s\n", $5.c_str());
+							currentScope.push_back($5);
+							printScopeName();
 						}
 					;
 
@@ -226,7 +225,7 @@ nested_scope_specifier		: /*empty*/ {$$ = "";}
 								| nested_scope_specifier scope_specifier {$$ = $1 + " " + $2;}
 								;
 
-scope_specifier			:	LE_TYPEDEFname LE_CLCL {$$ = $1 + $2;}
+scope_specifier			:	LE_IDENTIFIER LE_CLCL {$$ = $1 + $2;}
 							;
 
 pure_virtual_spec	:	/*empty*/				{$$ = ""; }
@@ -259,10 +258,22 @@ stmnt_starter			:	/*empty*/ {$$ = "";}
 /** Variables **/
 variable_decl			:	const_spec nested_scope_specifier basic_type_name special_star_amp  
 							{$$ = $1 + $2 + $3  + $4;}
-						|	const_spec nested_scope_specifier LE_TYPEDEFname special_star_amp
+						|	const_spec nested_scope_specifier LE_IDENTIFIER special_star_amp
 							{$$ = $1 + $2 + $3  + $4;}
-						| 	const_spec nested_scope_specifier LE_TYPEDEFname '<' template_parameter_list '>' special_star_amp 
+						| 	const_spec nested_scope_specifier LE_IDENTIFIER '<' template_parameter_list '>' special_star_amp 
 							{$$ = $1 + $2 + $3  + $4 + $5 + $6 + $7;}
+						;
+						
+variable_name			: /*empty*/	{$$ = "";}
+						| LE_IDENTIFIER {$$ = $1;}
+						;
+
+variable_arg			:	variable_decl variable_name{$$ = $1 + $2;}
+						;
+
+variable_list			:	/*empty*/	{$$ = "";}
+						|	variable_arg {$$ = $1;}
+						|	variable_list ',' variable_arg {$$ = $1 + $2 + $3;}
 						;
 
 %%
@@ -273,11 +284,78 @@ void syncParser(){
 	int ch = cl_scope_lex();
 }
 
-int main(void) {
-	if( !setLexerInput("test.h") ){
-		return -1;
+void consumeFuncArgList()
+{
+	int depth = 1;
+	while(depth > 0)
+	{
+		int ch = cl_scope_lex();
+		if(ch == EOF)
+		{
+			break;
+		}
+		if(ch == ')')
+		{
+			depth--;
+			continue;
+		}
+		else if(ch == '(')
+		{
+			depth ++ ;
+			continue;
+		}
 	}
-	setDatabase(NULL);
-	cl_scope_parse();
-	return 0;
 }
+
+// return the scope name at the end of the input string
+std::string get_scope_name(const std::string &in)
+{
+	if( !setLexerInput(in) )
+	{
+		return "";
+	}
+	//call tghe main parsing routine
+	cl_scope_parse();
+	std::string scope = getCurrentScope();
+	//do the lexer cleanup
+	cl_scope_lex_clean();
+	return scope;
+}
+
+#ifdef __YMAIN
+int main()
+{
+	FILE *fp;
+	long len;
+	char *buf = NULL;
+	
+	fp = fopen("test.h", "rb");
+	if(!fp)
+	{
+		printf("failed to open file 'test.h': %s\n", strerror(errno));
+		return false;
+	}	
+	
+	//read the whole file
+	fseek(fp, 0, SEEK_END); 		//go to end
+	len = ftell(fp); 					//get position at end (length)
+	fseek(fp, 0, SEEK_SET); 		//go to begining
+	buf = (char *)malloc(len+1); 	//malloc buffer
+	
+	//read into buffer
+	long bytes = fread(buf, sizeof(char), len, fp);
+	printf("read: %ld\n", bytes);
+	if(bytes != len)
+	{
+		fclose(fp);
+		printf("failed to read from file 'test.h': %s\n", strerror(errno));
+		return false;
+	}
+	
+	buf[len] = 0;	// make it null terminated string
+	fclose(fp);
+	
+	std::string scope = get_scope_name(buf);
+	free(buf);
+}
+#endif // __YMAIN

@@ -849,31 +849,32 @@ maintain appropriate scoping information.
 
 /* Included code before lex code */
 /*************** Includes and Defines *****************************/
+
+
+#include "map"
+#include "y.tab.h"		// YACC generated definitions based on C++ grammar
+#include "errno.h"
+
 #define YYSTYPE std::string
 
 #include "string"
-#include "map"
-#include "y.tab.h" /* YACC generated definitions based on C++ grammar */
-#include "symbol_table.h"
-#include "errno.h"
-
-extern std::string cl_scope_lval;
-
-
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
 
+extern std::string cl_scope_lval;
 std::vector<std::string> currentScope;
-std::string g_fileName;
 
-void setFileName(const char *fileName);
 std::string &getFileName();
-bool setLexerInput(const char *fileName);
+bool setLexerInput(const std::string &in);
 std::string getCurrentScope();
 void printScopeName();
+void cl_scope_lex_clean();
 
-//TODO:: add a symbol table access in this function
+//we keep a very primitive map with only symbol name
+//that we encountered so far
+std::map<std::string, bool> g_symbols;
+
 bool isaTYPE(char *string);
 
 /* Prototypes */
@@ -1667,8 +1668,6 @@ case YY_STATE_EOF(INITIAL):
 {	
 							//reset lexer
 							printf("EOF detected\n");
-							yy_flush_buffer( YY_CURRENT_BUFFER); 
-							cl_scope_lineno=1;
 							yyterminate();
 						}
 	YY_BREAK
@@ -2562,10 +2561,19 @@ int main()
 	}
 #endif
 
+
 bool isaTYPE(char *string)
 {
-	bool res = SymbolTable::instance().IsSymbolExist(string, "");
-	return res;
+	return g_symbols.find(string) != g_symbols.end();
+}
+
+void cl_scope_lex_clean()
+{
+	yy_flush_buffer(YY_CURRENT_BUFFER); 
+	yy_delete_buffer(YY_CURRENT_BUFFER);
+	cl_scope_lineno = 1;
+	currentScope.clear();
+	g_symbols.clear();
 }
 
 /**
@@ -2594,16 +2602,6 @@ void increaseScope()
 	currentScope.push_back(scopeName);
 }
 
-void setFileName(const char *fileName)
-{
-	g_fileName = fileName;
-}
-
-std::string &getFileName()
-{
-	return g_fileName;
-}
-
 std::string getCurrentScope()
 {
 	//format scope name
@@ -2619,43 +2617,11 @@ std::string getCurrentScope()
 }
 
 /*******************************************************************/
-bool setLexerInput(const char *fileName) 
+bool setLexerInput(const std::string &in) 
 {
-	FILE *fp;
-	long len;
-	char *buf = NULL;
-	
-	fp = fopen(fileName, "rb");
-	if(!fp)
-	{
-		printf("failed to open file '%s': %s\n", fileName, strerror(errno));
-		return false;
-	}	
-	
-	//read the whole file
-	fseek(fp, 0, SEEK_END); 		//go to end
-	len = ftell(fp); 					//get position at end (length)
-	fseek(fp, 0, SEEK_SET); 		//go to begining
-	buf = (char *)malloc(len+1); 	//malloc buffer
-	
-	//read into buffer
-	long bytes = fread(buf, sizeof(char), len, fp);
-	printf("read: %ld\n", bytes);
-	if(bytes != len)
-	{
-		fclose(fp);
-		printf("failed to read from file '%s': %s\n", fileName, strerror(errno));
-		return false;
-	}
-	
-	buf[len] = 0;	// make it null terminated string
-	fclose(fp);
-	
-	yy_scan_string(buf);
-	free(buf);
+	yy_scan_string(in.c_str());
 	
 	//update the working file name
-	setFileName(fileName);
 	return true;
 }
 
