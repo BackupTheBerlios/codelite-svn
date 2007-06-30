@@ -135,13 +135,14 @@ printline:	PRINT			{
 						result += "Done.";
 						$$ = result;
 					}
-optspace:
-	| SPACE
+optspace:				{	$$ = "";				}
+	| SPACE				{	$$ = " ";				}
 ;
 
-wordvars: words				{	$$ = $1;				}
-	| variable optspace		{	$$ = $1;				}
+wordvars: WORD optspace			{	$$ = $1 + $2;				}
+	| variable optspace		{	$$ = $1 + $2;				}
 	| wordvars variable		{	$$ = $1 + $2;				}
+	| wordvars WORD 		{	$$ = $1 + $2;				}
 ;
 %%
 /* End of grammar */

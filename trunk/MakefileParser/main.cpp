@@ -1,6 +1,6 @@
 #include "variable.tab.h"
 #include <stdio.h>
-#include "string"
+#include <string>
 
 void initLexer(const char *filename);
 
