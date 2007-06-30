@@ -135,12 +135,12 @@
   <Dependencies/>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc\libwxscintilla.dll" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../../lib/gcc/libwxscintilla.so" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);;">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <IncludePath Value="src\scintilla\include"/>
-        <IncludePath Value="src\scintilla\src"/>
+        <IncludePath Value="./include"/>
+        <IncludePath Value="src/scintilla/include"/>
+        <IncludePath Value="src/scintilla/src"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="SCI_LEXER"/>
         <Preprocessor Value="LINK_LEXERS"/>
@@ -150,20 +150,20 @@
       <Linker Required="yes" Options="-O0;$(shell wx-config --libs ---debug=no)">
         <LibraryPath Value="."/>
         <LibraryPath Value="$(IntermediateDirectory)"/>
-        <LibraryPath Value="..\..\lib\gcc"/>
-        <Library Value="wxmsw28_gcc_custom.dll"/>
-        <Library Value="Gdi32.dll"/>
+        <LibraryPath Value="../../lib/gcc"/>
+        <Library Value="wxmsw28_gcc_custom.so"/>
+        <Library Value="Gdi32.so"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseANSIStaticLibrary" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc_lib\libwxscintilla.a" IntermediateDirectory=".\Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../../lib/gcc_lib/libwxscintilla.a" IntermediateDirectory="./Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);;">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <IncludePath Value="src\scintilla\include"/>
-        <IncludePath Value="src\scintilla\src"/>
+        <IncludePath Value="./include"/>
+        <IncludePath Value="src/scintilla/include"/>
+        <IncludePath Value="src/scintilla/src"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="SCI_LEXER"/>
         <Preprocessor Value="LINK_LEXERS"/>
@@ -174,12 +174,12 @@
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc_lib\libwxscintillau.a" IntermediateDirectory=".\ReleaseUnicode" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../../lib/gcc_lib/libwxscintillau.a" IntermediateDirectory="./ReleaseUnicode" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no --unicode=yes);;">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <IncludePath Value="src\scintilla\include"/>
-        <IncludePath Value="src\scintilla\src"/>
+        <IncludePath Value="./include"/>
+        <IncludePath Value="src/scintilla/include"/>
+        <IncludePath Value="src/scintilla/src"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="SCI_LEXER"/>
         <Preprocessor Value="LINK_LEXERS"/>

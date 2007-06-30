@@ -22,26 +22,26 @@
   <Dependencies/>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc\libwxflatnotebook.dll" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../../lib/gcc/libwxflatnotebook.so" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
+        <IncludePath Value="./include"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXMAKINGDLL_FNB"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
       <Linker Required="yes" Options="-O2 $(shell wx-config --libs);">
-        <LibraryPath Value="..\lib\gcc"/>
-        <Library Value="wxmsw28_gcc_custom.dll"/>
+        <LibraryPath Value="../lib/gcc"/>
+        <Library Value="wxmsw28_gcc_custom.so"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseANSIStaticLibrary" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc_lib\libwxflatnotebook.a" IntermediateDirectory=".\Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../../lib/gcc_lib/libwxflatnotebook.a" IntermediateDirectory="./Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
+        <IncludePath Value="./include"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
@@ -53,10 +53,10 @@
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc_lib\libwxflatnotebooku.a" IntermediateDirectory=".\ReleaseUnicode" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../../lib/gcc_lib/libwxflatnotebooku.a" IntermediateDirectory="./ReleaseUnicode" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no --unicode=yes);">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
+        <IncludePath Value="./include"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>

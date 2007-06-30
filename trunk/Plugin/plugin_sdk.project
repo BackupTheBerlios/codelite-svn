@@ -64,32 +64,32 @@
   <Dependencies/>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
-      <General OutputFile="..\lib\gcc\libplugin_sdk.dll" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../lib/gcc/libplugin_sdk.so" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags);;">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <IncludePath Value="..\CodeLite"/>
-        <IncludePath Value="..\sdk\wxsqlite3\include"/>
+        <IncludePath Value="./include"/>
+        <IncludePath Value="../CodeLite"/>
+        <IncludePath Value="../sdk/wxsqlite3/include"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXMAKINGDLL_LE_SDK"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
       <Linker Required="yes" Options="-O0 $(shell wx-config --libs);">
         <LibraryPath Value="."/>
-        <LibraryPath Value="..\lib\gcc"/>
-        <Library Value="libCodeLite.dll"/>
-        <Library Value="wxmsw28_gcc_custom.dll"/>
+        <LibraryPath Value="../lib/gcc"/>
+        <Library Value="libCodeLite.so"/>
+        <Library Value="wxmsw28_gcc_custom.so"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseANSIStaticLibrary" CompilerType="gnu g++">
-      <General OutputFile="..\lib\gcc_lib\libplugin_sdk.a" IntermediateDirectory=".\Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../lib/gcc_lib/libplugin_sdk.a" IntermediateDirectory="./Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags);;">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <IncludePath Value="..\CodeLite"/>
-        <IncludePath Value="..\sdk\wxsqlite3\include"/>
+        <IncludePath Value="./include"/>
+        <IncludePath Value="../CodeLite"/>
+        <IncludePath Value="../sdk/wxsqlite3/include"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
@@ -98,12 +98,12 @@
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
-      <General OutputFile="..\lib\gcc_lib\libplugin_sdku.a" IntermediateDirectory=".\ReleaseUnicode" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../lib/gcc_lib/libplugin_sdku.a" IntermediateDirectory="./ReleaseUnicode" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --unicode=yes);;">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <IncludePath Value="..\CodeLite"/>
-        <IncludePath Value="..\sdk\wxsqlite3\include"/>
+        <IncludePath Value="./include"/>
+        <IncludePath Value="../CodeLite"/>
+        <IncludePath Value="../sdk/wxsqlite3/include"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>

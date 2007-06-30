@@ -8,7 +8,7 @@
   <Dependencies/>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu gcc">
-      <General OutputFile="..\lib\gcc_lib\libsqlite3.a" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=".\Release"/>
+      <General OutputFile="../lib/gcc_lib/libsqlite3.a" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory="./Release"/>
       <Compiler Required="yes" Options="-O2">
         <IncludePath Value="."/>
       </Compiler>
@@ -19,7 +19,7 @@
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseANSIStaticLibrary" CompilerType="gnu gcc">
-      <General OutputFile="..\lib\gcc_lib\libsqlite3.a" IntermediateDirectory=".\Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../lib/gcc_lib/libsqlite3.a" IntermediateDirectory="./Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="-O2">
         <IncludePath Value="."/>
       </Compiler>

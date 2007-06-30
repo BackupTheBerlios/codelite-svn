@@ -14,13 +14,13 @@
   </VirtualDirectory>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu g++">
-      <General OutputFile=".\Debug\CppParser" IntermediateDirectory=".\Debug" Command="CppParser" CommandArguments="" WorkingDirectory=".\Debug"/>
+      <General OutputFile="./Debug/CppParser" IntermediateDirectory="./Debug" Command="CppParser" CommandArguments="" WorkingDirectory="./Debug"/>
       <Compiler Required="yes" Options="-g">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Required="yes" Options="-O0">
         <LibraryPath Value="."/>
-        <LibraryPath Value=".\Debug"/>
+        <LibraryPath Value="./Debug"/>
       </Linker>
       <PreBuild>
         <Command Enabled="yes">yacc -dl  -v -t cpp5_grammar.y</Command>
@@ -29,14 +29,14 @@
       <PostBuild/>
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu g++">
-      <General OutputFile=".\Release\CppParser" IntermediateDirectory=".\Release" Command="CppParser" CommandArguments="" WorkingDirectory=".\Release"/>
+      <General OutputFile="./Release/CppParser" IntermediateDirectory="./Release" Command="CppParser" CommandArguments="" WorkingDirectory="./Release"/>
       <Compiler Required="yes" Options="-O2;">
         <IncludePath Value="."/>
         <Preprocessor Value="__YMAIN"/>
       </Compiler>
       <Linker Required="yes" Options="-O2">
         <LibraryPath Value="."/>
-        <LibraryPath Value=".\Release"/>
+        <LibraryPath Value="./Release"/>
       </Linker>
       <PreBuild>
         <Command Enabled="yes">yacc -dl  -t -v -pcl_scope_ cpp5_grammar.y</Command>
@@ -46,9 +46,9 @@
         <Command Enabled="yes">copy lex.cl_scope_.c cpp_lexer.cpp</Command>
       </PreBuild>
       <PostBuild>
-        <Command Enabled="yes">copy scope_parser.cpp ..\CodeLite\.</Command>
-        <Command Enabled="yes">copy cpp_lexer.cpp ..\CodeLite\.</Command>
-        <Command Enabled="yes">copy cpp_lexer.h ..\CodeLite\.</Command>
+        <Command Enabled="yes">copy scope_parser.cpp ../CodeLite/.</Command>
+        <Command Enabled="yes">copy cpp_lexer.cpp ../CodeLite/.</Command>
+        <Command Enabled="yes">copy cpp_lexer.h ../CodeLite/.</Command>
       </PostBuild>
     </Configuration>
   </Settings>

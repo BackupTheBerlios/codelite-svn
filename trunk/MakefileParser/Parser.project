@@ -13,13 +13,13 @@
   </VirtualDirectory>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu g++">
-      <General OutputFile=".\Debug\HelloWorld" IntermediateDirectory=".\Debug" Command="HelloWorld" CommandArguments="" WorkingDirectory=".\Debug"/>
+      <General OutputFile="./Debug/HelloWorld" IntermediateDirectory="./Debug" Command="HelloWorld" CommandArguments="" WorkingDirectory="./Debug"/>
       <Compiler Required="yes" Options="-g">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Required="yes" Options="-O0">
         <LibraryPath Value="."/>
-        <LibraryPath Value=".\Debug"/>
+        <LibraryPath Value="./Debug"/>
       </Linker>
       <PreBuild>
         <Command Enabled="yes">yacc -dl  -t variable.y</Command>

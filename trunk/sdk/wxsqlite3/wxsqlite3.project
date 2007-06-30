@@ -14,30 +14,30 @@
   </Dependencies>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc\libwxsqlite3.dll" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../../lib/gcc/libwxsqlite3.so" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <IncludePath Value=".\sqlite3\include"/>
+        <IncludePath Value="./include"/>
+        <IncludePath Value="./sqlite3/include"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXMAKINGDLL_WXSQLITE3"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
       <Linker Required="yes" Options="-O0;$(shell wx-config --libs --debug=no)">
         <LibraryPath Value="."/>
-        <LibraryPath Value="..\..\lib\gcc"/>
-        <Library Value="wxmsw28_gcc_custom.dll"/>
+        <LibraryPath Value="../../lib/gcc"/>
+        <Library Value="wxmsw28_gcc_custom.so"/>
         <Library Value="sqlite3.a"/>
       </Linker>
       <PreBuild/>
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseANSIStaticLibrary" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc_lib\libwxsqlite3.a" IntermediateDirectory=".\Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../../lib/gcc_lib/libwxsqlite3.a" IntermediateDirectory="./Release_static" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <IncludePath Value=".\sqlite3\include"/>
+        <IncludePath Value="./include"/>
+        <IncludePath Value="./sqlite3/include"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
@@ -46,11 +46,11 @@
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
-      <General OutputFile="..\..\lib\gcc_lib\libwxsqlite3u.a" IntermediateDirectory=".\ReleaseUnicode" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="../../lib/gcc_lib/libwxsqlite3u.a" IntermediateDirectory="./ReleaseUnicode" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no --unicode=yes);">
         <IncludePath Value="."/>
-        <IncludePath Value=".\include"/>
-        <IncludePath Value=".\sqlite3\include"/>
+        <IncludePath Value="./include"/>
+        <IncludePath Value="./sqlite3/include"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>

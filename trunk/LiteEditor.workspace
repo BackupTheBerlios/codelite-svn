@@ -12,12 +12,7 @@
   <Project Name="wxscintilla" Path="sdk/wxscintilla/wxscintilla.project"/>
   <Project Name="plugin_sdk" Path="Plugin/plugin_sdk.project" Active="No"/>
   <Project Name="LiteEditor" Path="LiteEditor/LiteEditor.project" Active="Yes"/>
-  <Project Name="sqlite3" Path="sqlite3\sqlite3.project"/>
-  <Environment>
-    <Variable Name="WXSTABLE" Value="D:\Projects\wxWidgets-2.8.4"/>
-    <Variable Name="WorkspaceName" Value="LiteEditor"/>
-    <Variable Name="WorkspacePath" Value="C:\Development\C++\LiteEditor"/>
-  </Environment>
+  <Project Name="sqlite3" Path="sqlite3/sqlite3.project"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Release ASNI DLL" Selected="no">
       <Project Name="wxsqlite3" ConfigName="ReleaseANSI"/>
@@ -47,4 +42,9 @@
       <Project Name="CodeLite" ConfigName="ReleaseUnicode"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
+  <Environment>
+    <Variable Name="WXSTABLE" Value="D:/Projects/wxWidgets-2.8.4"/>
+    <Variable Name="WorkspaceName" Value="LiteEditor"/>
+    <Variable Name="WorkspacePath" Value="/home/sverre/code/CodeLite/trunk"/>
+  </Environment>
 </CodeLite_Workspace>
