@@ -137,7 +137,7 @@ maintain appropriate scoping information.
 
 
 #include "map"
-#include "y.tab.h"		// YACC generated definitions based on C++ grammar
+#include "cpp_lexer.h"		// YACC generated definitions based on C++ grammar
 #include "errno.h"
 
 #define YYSTYPE std::string
