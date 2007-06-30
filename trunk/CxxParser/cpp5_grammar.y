@@ -108,6 +108,8 @@ translation_unit	:		/*empty*/
 						;
 						
 external_decl			:	class_decl	
+						|	enum_decl
+						//|	union decl
 						| 	function_decl	/* function decl also includes variables */
 						|	namespace_decl
 						| 	scope_reducer
@@ -276,6 +278,19 @@ variable_list			:	/*empty*/	{$$ = "";}
 						|	variable_list ',' variable_arg {$$ = $1 + $2 + $3;}
 						;
 
+enum_decl				:	LE_ENUM LE_IDENTIFIER '{' {currentScope.push_back($2); printScopeName();} enum_arg_list '}' 
+						{	
+							currentScope.pop_back();//reduce the scope
+							printScopeName();
+							printf("found enum: %s, args are: %s\n", $2.c_str(), $5.c_str());
+						}
+						;
+
+enum_arg_list			:	/*empty*/ {$$ = "";}
+						|	LE_IDENTIFIER	{$$ = $1;}
+						|	enum_arg_list ',' LE_IDENTIFIER {$$ = $1 + $2 + $3;}
+						;
+						
 %%
 void yyerror(char *s) {}
 
