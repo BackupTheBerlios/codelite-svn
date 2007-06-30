@@ -332,6 +332,19 @@
 				RelativePath=".\y.tab.h">
 			</File>
 		</Filter>
+		<Filter
+			Name="Generated Files"
+			Filter="">
+			<File
+				RelativePath=".\cpp_lexer.cpp">
+			</File>
+			<File
+				RelativePath=".\cpp_lexer.h">
+			</File>
+			<File
+				RelativePath=".\scope_parser.cpp">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

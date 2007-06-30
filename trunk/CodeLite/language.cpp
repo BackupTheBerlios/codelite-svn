@@ -13,7 +13,7 @@
 #endif 
 
 //defined in cpp5_grammar.y
-extern wxString get_scope_name(const wxString &in);
+extern std::string get_scope_name(const std::string &in);
 
 // Some useful macros
 #define CHECK_STATE(x) { if(state != x) { flag = 0; break; } }
@@ -1264,5 +1264,7 @@ void Language::ParseComments(const wxFileName &fileName, std::vector<DbRecordPtr
 wxString Language::GetScopeName(const wxString &in)
 {
 	//defined cpp5_grammar.y
-	return get_scope_name(in);
+	const wxCharBuffer buf = _C(in);
+	std::string scope_name = get_scope_name(buf.data());
+	return _U(scope_name.c_str());
 }
