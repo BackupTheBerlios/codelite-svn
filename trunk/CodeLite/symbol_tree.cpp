@@ -182,6 +182,7 @@ void SymbolTree::AddItem(TagNode* node)
 	//-------------------------------------------------------------------------------
 	// We gather globals together under special node
 	//-------------------------------------------------------------------------------
+	wxString pp = nodeData.GetParent();
 	if( (nodeData.GetParent() == wxT("<global>")) &&					// parent is global scope
 		m_globalsKind.find(nodeData.GetKind()) != m_globalsKind.end() ) //the node kind is one of function, prototype or variable
 	{

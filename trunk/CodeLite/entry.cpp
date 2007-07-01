@@ -236,7 +236,7 @@ int TagEntry::Store(wxSQLite3Statement& insertPerepareStmnt)
 		insertPerepareStmnt.Bind(6, GetAccess());
 		insertPerepareStmnt.Bind(7, GetSignature());
 		insertPerepareStmnt.Bind(8, GetPattern());
-		insertPerepareStmnt.Bind(8, GetParent());
+		insertPerepareStmnt.Bind(9, GetParent());
 		insertPerepareStmnt.Bind(10, GetInherits());
 		insertPerepareStmnt.Bind(11, GetPath());
 		insertPerepareStmnt.Bind(12, GetTyperef());
