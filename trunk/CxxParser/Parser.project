@@ -4,13 +4,18 @@
   <VirtualDirectory Name="src">
     <File Name="scope_parser.cpp"/>
     <File Name="cpp_lexer.cpp"/>
+    <File Name="main.cpp"/>
+    <File Name="var_parser.cpp"/>
+    <File Name="variable.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="incldue">
     <File Name="cpp_lexer.h"/>
+    <File Name="variable.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="grammar">
     <File Name="cpp.l"/>
     <File Name="cpp_scope_grammar.y"/>
+    <File Name="cpp_variables_grammar.y"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu g++">
@@ -40,15 +45,17 @@
       </Linker>
       <PreBuild>
         <Command Enabled="yes">yacc -dl  -t -v -pcl_scope_ cpp_scope_grammar.y</Command>
-        <Command Enabled="yes">flex -L  -Pcl_scope_ cpp.l</Command>
         <Command Enabled="yes">mv y.tab.c scope_parser.cpp</Command>
         <Command Enabled="yes">mv y.tab.h cpp_lexer.h</Command>
+        <Command Enabled="yes">flex -L  -Pcl_scope_ cpp.l</Command>
         <Command Enabled="yes">mv lex.cl_scope_.c cpp_lexer.cpp</Command>
+        <Command Enabled="yes">yacc -l  -t -v -pcl_var_ cpp_variables_grammar.y</Command>
+        <Command Enabled="yes">mv y.tab.c var_parser.cpp</Command>
       </PreBuild>
       <PostBuild>
-        <Command Enabled="yes">copy scope_parser.cpp ..\CodeLite\.</Command>
-        <Command Enabled="yes">copy cpp_lexer.cpp ..\CodeLite\.</Command>
-        <Command Enabled="yes">copy cpp_lexer.h ..\CodeLite\.</Command>
+        <Command Enabled="no">copy scope_parser.cpp ..\CodeLite\.</Command>
+        <Command Enabled="no">copy cpp_lexer.cpp ..\CodeLite\.</Command>
+        <Command Enabled="no">copy cpp_lexer.h ..\CodeLite\.</Command>
       </PostBuild>
     </Configuration>
   </Settings>

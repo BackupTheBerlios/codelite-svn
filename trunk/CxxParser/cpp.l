@@ -15,6 +15,8 @@
 #include <vector>
 
 extern std::string cl_scope_lval;
+extern std::string cl_var_lval;
+
 std::vector<std::string> currentScope;
 
 bool setLexerInput(const std::string &in);
@@ -25,8 +27,11 @@ void cl_scope_lex_clean();
 //we keep a very primitive map with only symbol name
 //that we encountered so far
 std::map<std::string, bool> g_symbols;
+std::map<std::string, bool> g_macros;
 
 bool isaTYPE(char *string);
+bool isaMACRO(char *string);
+static bool defineFound = false;
 
 /* Prototypes */
 #define WHITE_RETURN(x) /* do nothing */
@@ -36,7 +41,13 @@ bool isaTYPE(char *string);
 #define PPPA_KEYWORD_RETURN(x) RETURN_VAL(x)  /* both PreProcessor and PArser keyword */
 #define PP_KEYWORD_RETURN(x)   IDENTIFIER_RETURN()
 
-#define IDENTIFIER_RETURN() RETURN_VAL(isaTYPE(yytext) ? LE_TYPEDEFname: LE_IDENTIFIER )
+#define IDENTIFIER_RETURN(){\
+										if(isaTYPE(yytext)){\
+											RETURN_VAL(LE_TYPEDEFname);\
+										}else if(isaMACRO(yytext)){\
+											RETURN_VAL(LE_MACRO);\
+										}else{ RETURN_VAL(LE_IDENTIFIER);}\
+									}
 
 
 #define PPOP_RETURN(x)       RETURN_VAL((int)*yytext) /* PreProcess and Parser operator */
@@ -47,7 +58,10 @@ bool isaTYPE(char *string);
 #define NUMERICAL_RETURN(x) RETURN_VAL(x)            /* some sort of constant */
 #define LITERAL_RETURN(x)   RETURN_VAL(x)            /* a string literal */
 #define C_COMMENT_RETURN(x) RETURN_VAL(x)	     /* C Style comment  */
-#define RETURN_VAL(x) {cl_scope_lval = yytext; return(x);}
+#define RETURN_VAL(x) {\
+								cl_scope_lval = yytext;\
+								cl_var_lval = yytext;\
+								return(x);}
 
 %}
 
@@ -270,24 +284,44 @@ typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
 						}
 .						{return yytext[0];}
 <PREPR>\n		{ 
-					BEGIN INITIAL;
-				}
+						defineFound = false;
+						BEGIN INITIAL;
+					}
 <PREPR>\\		{
-					printf("Preprocessor state continues to next line!\n");
-					BEGIN WRAP_PREP;
-				}
+						BEGIN WRAP_PREP;
+					}
+<PREPR>define	{
+						defineFound = true;
+					}
 <WRAP_PREP>\n	{
-					printf("Preprocessor state is now resumed\n");
-					BEGIN PREPR;
-				}
-<WRAP_PREP>.    { printf("In pre-processing state, consuming %s\n", yytext);/* eat it */}				
-<PREPR>.        { printf("In pre-processing state, consuming %s\n", yytext);/* eat it */}
-
+						BEGIN PREPR;
+					}
+<WRAP_PREP>{identifier}   { 
+						if(defineFound)
+						{
+							defineFound = false;
+							g_macros[yytext] = true;
+						}
+					}				
+<PREPR>{identifier}       { 
+						if(defineFound)
+						{
+							defineFound = false;
+							g_macros[yytext] = true;
+						}
+					}
+<WRAP_PREP>.	{}					
+<PREPR>.			{}					
 %%
 
 bool isaTYPE(char *string)
 {
 	return g_symbols.find(string) != g_symbols.end();
+}
+
+bool isaMACRO(char *string)
+{
+	return g_macros.find(string) != g_macros.end();
 }
 
 void cl_scope_lex_clean()
@@ -297,6 +331,7 @@ void cl_scope_lex_clean()
 	cl_scope_lineno = 1;
 	currentScope.clear();
 	g_symbols.clear();
+	g_macros.clear();
 }
 
 /**
@@ -306,11 +341,11 @@ void printScopeName()
 {
 	if(currentScope.empty())
 	{
-		printf("current scope is global scope\n");
+		printf("%d: current scope is global scope\n", cl_scope_lineno );
 	}
 	else
 	{
-		printf("current scope is %s\n", getCurrentScope().c_str());
+		printf("%d: current scope is %s\n", cl_scope_lineno, getCurrentScope().c_str());
 	}
 }
 

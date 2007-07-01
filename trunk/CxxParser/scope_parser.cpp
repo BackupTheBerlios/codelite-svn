@@ -43,6 +43,8 @@ static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 #define YYSTYPE std::string
 #define YYDEBUG 0        /* get the pretty debugging code to compile*/
 
+static bool g_onlyNamedScope = true;
+
 int cl_scope_parse();
 void cl_scope_error(char *string);
 void syncParser();
@@ -55,7 +57,6 @@ extern int cl_scope_lex();
 extern bool setLexerInput(const std::string &in);
 extern int cl_scope_lineno;
 extern std::vector<std::string> currentScope;
-/*extern std::map<std::string, bool> g_symbols;*/
 extern void printScopeName();	/*print the current scope name*/
 extern void increaseScope();	/*increase scope with anonymouse value*/
 extern std::string getCurrentScope();
@@ -145,141 +146,139 @@ extern void cl_scope_lex_clean();
 #define LE_ANDassign 337
 #define LE_ERassign 338
 #define LE_ORassign 339
+#define LE_MACRO 340
 #define YYERRCODE 256
 short cl_scope_lhs[] = {                                        -1,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     0,    2,    2,    2,    2,    2,    2,    2,    2,   10,
-   10,   12,   12,   11,   11,   13,   14,   14,   15,   15,
-   15,   16,   18,   18,   17,   17,   17,   17,   19,   19,
-   19,   20,    7,    7,    3,    3,    3,    8,    9,   25,
-   25,    6,    6,   22,   22,   30,   29,   29,   26,   26,
-   21,   21,   31,   31,   32,   32,   23,   24,   24,   27,
-   27,   27,   33,   33,   34,   28,   28,   28,   36,    4,
-   37,   37,   37,   37,   38,   35,   35,   35,    5,
+   10,   12,   12,   11,   11,   13,   13,   14,   14,   14,
+   15,   17,   17,   16,   16,   16,   16,   18,   18,   18,
+   19,    7,    7,   24,   24,    3,    3,    8,    9,   25,
+   25,    6,   21,   21,   29,   26,   26,   20,   20,   30,
+   30,   31,   31,   22,   23,   23,   23,   27,   27,   27,
+   32,   32,   33,   28,   28,   28,   35,    4,   36,   36,
+   36,   36,   37,   34,   34,   34,    5,
 };
 short cl_scope_len[] = {                                         2,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     2,    1,    1,    1,    1,    1,    1,    1,    1,    0,
-    2,    1,    3,    1,    1,    0,    0,    4,    0,    1,
-    3,    3,    0,    3,    0,    1,    1,    1,    0,    1,
-    3,    4,    4,    3,    6,    6,    8,    1,    1,    1,
-    1,   11,   10,    0,    2,    2,    0,    2,    0,    1,
-    0,    1,    0,    1,    0,    2,    2,    0,    1,    4,
-    4,    7,    0,    1,    2,    0,    1,    3,    0,    7,
-    0,    2,    2,    2,    2,    0,    1,    3,    4,
+    2,    1,    3,    1,    1,    0,    4,    0,    1,    3,
+    3,    0,    3,    0,    1,    1,    1,    0,    1,    3,
+    4,    4,    3,    0,    1,    6,    8,    1,    1,    1,
+    1,   11,    0,    2,    2,    0,    1,    0,    1,    0,
+    1,    0,    2,    2,    0,    1,    1,    3,    3,    6,
+    0,    1,    2,    0,    1,    3,    0,    7,    0,    2,
+    2,    2,    2,    0,    1,    3,    4,
 };
 short cl_scope_defred[] = {                                     10,
-    0,   19,   49,   69,   48,   11,   12,   13,   14,   15,
-   16,   17,   18,    0,    0,    0,   60,    0,    0,    0,
-    0,    0,    0,    0,    0,   44,   51,   50,   26,   62,
-   54,   54,   79,   89,   24,   25,   22,    0,    0,   43,
-    0,    0,    0,    0,   21,    0,   28,    0,    6,    1,
-    4,    2,    5,    3,    8,    7,    9,    0,   65,   55,
-    0,    0,    0,   87,   23,   46,   45,    0,   56,    0,
-   71,    0,   70,    0,    0,   85,    0,   80,   36,   38,
-   37,    0,   30,    0,    0,   40,   54,   64,   66,   67,
-    0,    0,   77,   84,   83,   82,   88,    0,   47,    0,
-    0,   65,    0,   74,   75,    0,    0,   31,    0,   32,
-   41,   72,    0,   78,    0,    0,   42,   53,    0,    0,
-   34,   58,   52,
+    0,   19,   49,   67,   48,   66,   11,   12,   13,   14,
+   15,   16,   17,   18,    0,    0,    0,   57,    0,    0,
+    0,    0,    0,    0,    0,    0,   43,   51,   50,    0,
+   59,   53,   77,   87,   24,   25,   22,    0,    0,   42,
+   45,    0,    0,   53,    0,   21,    0,   27,    0,    6,
+    1,    4,    2,    5,    3,    8,    7,    9,    0,   62,
+   54,    0,    0,    0,   85,   23,   46,    0,   55,    0,
+   69,    0,   68,    0,    0,   83,    0,   78,   35,   37,
+   36,    0,   29,    0,    0,   39,   53,   61,   63,   64,
+    0,   82,   81,   80,   86,    0,   47,    0,    0,   62,
+    0,    0,    0,   75,   30,    0,   31,   40,   70,    0,
+   72,   73,   53,    0,    0,   41,   76,    0,   33,   52,
 };
 short cl_scope_dgoto[] = {                                       1,
-   59,    6,    7,    8,    9,   10,   11,   12,   13,   37,
-   38,   39,   41,   20,   82,   83,   84,  110,   85,   86,
-   31,   42,   71,   14,   29,   21,   91,   92,  120,   60,
-   90,   72,  105,   93,   63,   44,   76,   64,
+   60,    7,    8,    9,   10,   11,   12,   13,   14,   37,
+   38,   39,   21,   82,   83,   84,  107,   85,   86,   87,
+   43,   71,   15,   42,   30,   22,  102,  103,   61,   90,
+   72,  112,  104,   64,   45,   76,   65,
 };
 short cl_scope_sindex[] = {                                      0,
-  -48,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0, -227, -282, -276,    0,  -16, -110, -238,
- -236,  -88,  -80, -260,  -67,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0, -237,  -12,    0,
- -232, -148, -225, -220,    0, -260,    0,  -35,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,  -59,    0,    0,
-  -40,    4,  -30,    0,    0,    0,    0, -153,    0, -236,
-    0,   34,    0, -236, -200,    0, -220,    0,    0,    0,
-    0,  -25,    0, -216,  -10,    0,    0,    0,    0,    0,
- -210,   81,    0,    0,    0,    0,    0, -153,    0,   45,
- -236,    0, -209,    0,    0, -236, -236,    0, -236,    0,
-    0,    0, -215,    0,  -44,   -4,    0,    0, -194,   57,
-    0,    0,    0,
+  -45,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0, -239, -266, -254,    0,   -5, -112,
+ -240, -217,  -66,  -53, -242,  -48,    0,    0,    0, -276,
+    0,    0,    0,    0,    0,    0,    0, -227,  -10,    0,
+    0, -218, -186,    0, -207,    0, -242,    0,  -39,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,  -59,    0,
+    0, -201,   25,  -28,    0,    0,    0, -154,    0, -217,
+    0,   49,    0,  -40, -172,    0, -207,    0,    0,    0,
+    0,  -23,    0, -193,   -8,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0, -154,    0,   53, -217,    0,
+ -188, -180,   51,    0,    0, -217,    0,    0,    0, -197,
+    0,    0,    0, -217,   -1,    0,    0,    8,    0,    0,
 };
 short cl_scope_rindex[] = {                                      0,
- -212,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0, -156,    0,    0,    0,    0,    0,    0,
- -123,    0,    0,   -3,    0,    0,    0,    0,    0,    0,
+ -234,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0, -155,    0,    0,    0,    0,    0,
+    0, -147,    0,    0,    3,    0,    0,    0,    0, -177,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,  -29,    0,   -3,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,  -36,    0,    0,
-    0,  -28,    0,    0,    0,    0,    0,  -41,    0,  -34,
-    0,  -32,    0,  -37,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,  -27,    0,    3,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,  -36,    0,
+    0,    0,  -26,    0,    0,    0,    0,  -41,    0,  -34,
+    0,  -32,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-   89,    0,    0,    0,    0,    0,    0, -174,    0,  -24,
- -225,    0,    0,    0,    0, -123,  -23,    0,  -34,    0,
-    0,    0,  -13,    0,   75,    0,    0,    0,    0,    0,
-    0,    0,    0,
+  -37,    0,    0,    0,    0, -168,    0,  -22, -164,    0,
+    0,   65,    0,    0,    0,  -34,    0,    0,    0,    6,
+    0,    0,    0,   20,    0,    0,    0,    0,    0,    0,
 };
 short cl_scope_gindex[] = {                                      0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,   92,
-    0,    0,    0,    0,    0,   41,    0,    0,   35,   44,
-  -17,  -14,  -33,    0,    0,    0,  127,    0,    0,    0,
-    0,    0,    0,   43,    0,    0,    0,   73,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,   97,
+    0,    0,    0,    0,   50,    0,    0,   39,   48,   -7,
+  -21,  -29,    0,    0,    0,    0,  117,    0,    0,    0,
+    0,    0,   37,    0,    0,    0,   74,
 };
 #define YYTABLESIZE 287
-short cl_scope_table[] = {                                      74,
-   70,   65,   29,   76,   65,   65,   76,   65,   63,   39,
-    4,   63,   26,   77,   86,   81,  119,   43,   98,   33,
-   22,   27,   68,   67,   65,   73,   23,   39,   65,   63,
-   65,   46,   35,  101,   33,   61,   30,   61,   15,  101,
-   20,   36,   34,   24,   16,   68,   68,   68,   65,   47,
-   68,  102,   87,   68,   28,   40,   68,  121,   20,   68,
-   68,   68,   68,   68,   75,   45,   68,   68,  112,   17,
-   48,   88,  103,   18,    3,   89,    5,   61,  118,  117,
-   68,   29,   62,   87,   68,   19,  100,   66,   68,  115,
-   68,   87,  104,  113,   78,   86,   81,   99,   33,   61,
-   68,   59,   59,   27,  109,   94,   59,   95,   96,   49,
-   50,   69,   59,  122,   51,  123,   59,   59,   59,   59,
-   52,  107,   59,   59,  106,   53,   54,   55,   35,   73,
-   56,   57,   73,   57,   61,   61,   27,   65,  108,   61,
-   79,   80,   81,  116,  111,   61,   59,   32,  114,   97,
-   61,   61,   61,    0,   58,   61,   61,    0,    0,    0,
+short cl_scope_table[] = {                                      91,
+   70,   62,   28,   74,   62,   62,   74,   62,   60,   38,
+   27,   60,    4,    6,   32,   77,   84,   79,   68,   28,
+   96,   32,   62,   65,   65,   65,   16,   38,   65,   60,
+   73,   65,   17,   47,   65,   99,   23,   65,   65,   65,
+   65,   65,   99,   62,   65,   65,   20,   62,   24,   62,
+   35,   48,   29,  100,   25,   31,   33,   18,   65,   36,
+  119,   19,   65,   41,   20,  101,   65,   62,   65,   34,
+  109,   50,   51,   20,   40,   46,   52,    3,   65,    5,
+  116,   28,   53,   67,   49,   75,   88,   54,   55,   56,
+   89,  114,   57,   58,  113,   63,   78,   84,   79,   97,
+   32,   74,   56,   56,   26,   71,  118,   56,   71,   98,
+   58,   58,  106,   56,  110,   58,   59,   56,   56,   56,
+   56,   58,  111,   56,   56,   44,   58,   58,   58,   69,
+  120,   58,   58,   92,   34,   93,   94,   26,   58,   79,
+   80,   81,   58,   66,  115,  105,  108,   56,   44,  117,
+   95,    0,    0,    0,    0,   58,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,   61,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,   25,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    2,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-   61,   61,    0,    0,    0,   61,    0,    0,    0,    0,
-    0,   61,    0,    0,    0,    0,   61,   61,   61,    0,
-    0,   61,   61,    0,    0,    0,    0,    0,    0,    0,
+   26,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,   35,    0,    0,    0,   61,   65,   69,   61,    0,
-   63,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    2,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+   53,   53,    0,    0,    0,   53,    0,    0,    0,    0,
+    0,   53,    0,    0,    0,    0,   53,   53,   53,    0,
+    0,   53,   53,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,   34,    0,    0,    0,   53,   62,   69,   58,    0,
+   60,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,   69,
 };
 short cl_scope_check[] = {                                      40,
    60,   38,   44,   41,   41,   42,   44,   44,   41,   44,
-   59,   44,  123,   44,   44,   44,   61,   32,   44,   44,
-  303,  260,   58,   59,   38,   59,  303,   62,   42,   62,
-   44,   44,  293,   44,  123,   59,  273,   61,  266,   44,
-   44,  302,  123,   60,  272,  258,  259,  260,   62,   62,
-  263,   62,   70,  266,  293,  123,  269,   62,   62,  272,
-  273,  274,  275,  276,   61,  303,  279,  280,  102,  297,
-  303,   38,   87,  301,  123,   42,  125,  303,  123,  113,
-  293,  123,  303,  101,  297,  313,  303,  123,  301,  107,
-  303,  109,  303,  303,  125,  125,  125,  123,  123,  123,
-  313,  258,  259,  260,   60,  306,  263,  308,  309,  258,
-  259,  327,  269,  308,  263,   59,  273,  274,  275,  276,
-  269,   41,  279,  280,   44,  274,  275,  276,  303,   41,
-  279,  280,   44,   59,  258,  259,  293,   46,   98,  263,
-  294,  295,  296,  109,  101,  269,  303,   21,  106,   77,
-  274,  275,  276,   -1,  303,  279,  280,   -1,   -1,   -1,
+  123,   44,   58,   59,   22,   44,   44,   44,   58,  260,
+   44,   44,   44,  258,  259,  260,  266,   62,  263,   62,
+   60,  266,  272,   44,  269,   44,  303,  272,  273,  274,
+  275,  276,   44,   38,  279,  280,   44,   42,  303,   44,
+  293,   62,  293,   62,   60,  273,  123,  297,  293,  302,
+   62,  301,  297,  340,   62,   87,  301,   62,  303,  123,
+  100,  258,  259,  313,  123,  303,  263,  123,  313,  125,
+  110,  123,  269,  123,  303,   61,   38,  274,  275,  276,
+   42,   41,  279,  280,   44,  303,  125,  125,  125,  123,
+  123,  303,  258,  259,  260,   41,  114,  263,   44,  303,
+  258,  259,   60,  269,  303,  263,  303,  273,  274,  275,
+  276,  269,  303,  279,  280,  303,  274,  275,  276,  327,
+  123,  279,  280,  306,  303,  308,  309,  293,  303,  294,
+  295,  296,  123,   47,  106,   96,   99,  303,   32,  113,
+   77,   -1,   -1,   -1,   -1,  303,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  303,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,  303,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,  256,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+  303,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+  256,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
   258,  259,   -1,   -1,   -1,  263,   -1,   -1,   -1,   -1,
    -1,  269,   -1,   -1,   -1,   -1,  274,  275,  276,   -1,
    -1,  279,  280,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
@@ -292,7 +291,7 @@ short cl_scope_check[] = {                                      40,
 #ifndef YYDEBUG
 #define YYDEBUG 1
 #endif
-#define YYMAXTOKEN 339
+#define YYMAXTOKEN 340
 #if YYDEBUG
 char *cl_scope_name[] = {
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -316,7 +315,7 @@ char *cl_scope_name[] = {
 "LE_LS","LE_RS","LE_LE","LE_GE","LE_EQ","LE_NE","LE_ANDAND","LE_OROR",
 "LE_ELLIPSIS","LE_CLCL","LE_DOTstar","LE_ARROWstar","LE_MULTassign",
 "LE_DIVassign","LE_MODassign","LE_PLUSassign","LE_MINUSassign","LE_LSassign",
-"LE_RSassign","LE_ANDassign","LE_ERassign","LE_ORassign",
+"LE_RSassign","LE_ANDassign","LE_ERassign","LE_ORassign","LE_MACRO",
 };
 char *cl_scope_rule[] = {
 "$accept : translation_unit",
@@ -345,7 +344,6 @@ char *cl_scope_rule[] = {
 "template_arg_list : template_arg_list ',' template_arg",
 "template_specifiter : LE_CLASS",
 "template_specifiter : LE_TYPENAME",
-"opt_class_qualifier :",
 "opt_template_qualifier :",
 "opt_template_qualifier : LE_TEMPLATE '<' template_arg_list '>'",
 "derivation_list :",
@@ -364,20 +362,18 @@ char *cl_scope_rule[] = {
 "template_parameter : const_spec nested_scope_specifier LE_IDENTIFIER special_star_amp",
 "namespace_decl : stmnt_starter LE_NAMESPACE LE_IDENTIFIER '{'",
 "namespace_decl : stmnt_starter LE_NAMESPACE '{'",
-"class_decl : stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ';'",
+"opt_class_qualifier :",
+"opt_class_qualifier : LE_MACRO",
 "class_decl : stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{'",
 "class_decl : stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ':' derivation_list '{'",
 "scope_reducer : '}'",
 "scope_increaer : '{'",
 "class_keyword : LE_CLASS",
 "class_keyword : LE_STRUCT",
-"function_decl : stmnt_starter virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' variable_list ')' const_spec pure_virtual_spec ';'",
-"function_decl : stmnt_starter virtual_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' variable_list ')' const_spec '{'",
+"function_decl : stmnt_starter virtual_spec const_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' variable_list ')' const_spec '{'",
 "nested_scope_specifier :",
 "nested_scope_specifier : nested_scope_specifier scope_specifier",
 "scope_specifier : LE_IDENTIFIER LE_CLCL",
-"pure_virtual_spec :",
-"pure_virtual_spec : '=' LE_OCTALconstant",
 "virtual_spec :",
 "virtual_spec : LE_VIRTUAL",
 "const_spec :",
@@ -389,9 +385,10 @@ char *cl_scope_rule[] = {
 "special_star_amp : star_list amp_item",
 "stmnt_starter :",
 "stmnt_starter : ';'",
-"variable_decl : const_spec nested_scope_specifier basic_type_name special_star_amp",
-"variable_decl : const_spec nested_scope_specifier LE_IDENTIFIER special_star_amp",
-"variable_decl : const_spec nested_scope_specifier LE_IDENTIFIER '<' template_parameter_list '>' special_star_amp",
+"stmnt_starter : ':'",
+"variable_decl : nested_scope_specifier basic_type_name special_star_amp",
+"variable_decl : nested_scope_specifier LE_IDENTIFIER special_star_amp",
+"variable_decl : nested_scope_specifier LE_IDENTIFIER '<' template_parameter_list '>' special_star_amp",
 "variable_name :",
 "variable_name : LE_IDENTIFIER",
 "variable_arg : variable_decl variable_name",
@@ -440,7 +437,7 @@ void yyerror(char *s) {}
 
 void syncParser(){
 	//move lexer to the next ';' line or scope opening '{'
-	int ch = cl_scope_lex();
+	//int ch = cl_scope_lex();
 }
 
 void consumeFuncArgList()
@@ -497,12 +494,15 @@ void consumeDecl()
 }
 
 // return the scope name at the end of the input string
-std::string get_scope_name(const std::string &in)
+std::string get_scope_name(const std::string &in, bool onlyNamedScope)
 {
 	if( !setLexerInput(in) )
 	{
 		return "";
 	}
+	
+	g_onlyNamedScope = onlyNamedScope;
+	
 	//call tghe main parsing routine
 	cl_scope_parse();
 	std::string scope = getCurrentScope();
@@ -510,44 +510,6 @@ std::string get_scope_name(const std::string &in)
 	cl_scope_lex_clean();
 	return scope;
 }
-
-#ifdef __YMAIN
-int main()
-{
-	FILE *fp;
-	long len;
-	char *buf = NULL;
-	
-	fp = fopen("test.h", "rb");
-	if(!fp)
-	{
-		printf("failed to open file 'test.h': %s\n", strerror(errno));
-		return false;
-	}	
-	
-	//read the whole file
-	fseek(fp, 0, SEEK_END); 		//go to end
-	len = ftell(fp); 					//get position at end (length)
-	fseek(fp, 0, SEEK_SET); 		//go to begining
-	buf = (char *)malloc(len+1); 	//malloc buffer
-	
-	//read into buffer
-	long bytes = fread(buf, sizeof(char), len, fp);
-	printf("read: %ld\n", bytes);
-	if(bytes != len)
-	{
-		fclose(fp);
-		printf("failed to read from file 'test.h': %s\n", strerror(errno));
-		return false;
-	}
-	
-	buf[len] = 0;	// make it null terminated string
-	fclose(fp);
-	
-	std::string scope = get_scope_name(buf);
-	free(buf);
-}
-#endif // __YMAIN
 #define YYABORT goto yyabort
 #define YYREJECT goto yyabort
 #define YYACCEPT goto yyaccept
@@ -717,7 +679,7 @@ case 9:
 break;
 case 19:
 { 
-								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_scope_text, cl_scope_lineno);
+								/*printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_scope_text, cl_scope_lineno);*/
 								syncParser();
 							}
 break;
@@ -739,32 +701,32 @@ break;
 case 25:
 { yyval = yyvsp[0]; }
 break;
-case 26:
-{ yyval = "";}
-break;
-case 28:
+case 27:
 { yyval = yyvsp[-3] + yyvsp[-2] + yyvsp[-1] + yyvsp[0];}
 break;
-case 29:
+case 28:
 {yyval = "";}
 break;
-case 30:
+case 29:
 {yyval = yyvsp[0];}
 break;
-case 31:
+case 30:
 {yyval = yyvsp[-2] + yyvsp[-1] + yyvsp[0];}
 break;
-case 32:
+case 31:
 {yyval = yyvsp[-2] + " " + yyvsp[-1] + yyvsp[0];}
 break;
-case 33:
+case 32:
 {yyval = "";}
 break;
-case 34:
+case 33:
 {yyval = yyvsp[-2] + yyvsp[-1] + yyvsp[0];}
 break;
-case 35:
+case 34:
 {yyval = "";}
+break;
+case 35:
+{yyval = yyvsp[0];}
 break;
 case 36:
 {yyval = yyvsp[0];}
@@ -773,46 +735,37 @@ case 37:
 {yyval = yyvsp[0];}
 break;
 case 38:
-{yyval = yyvsp[0];}
-break;
-case 39:
 {yyval = "";}
 break;
-case 40:
+case 39:
 {yyval = yyvsp[0];}
 break;
-case 41:
+case 40:
 {yyval = yyvsp[-2] + yyvsp[-1] + yyvsp[0];}
 break;
-case 42:
+case 41:
 {yyval = yyvsp[-3] + yyvsp[-2] + yyvsp[-1] +yyvsp[0];}
 break;
-case 43:
+case 42:
 {
-							/*g_symbols[$3] = true;*/
 							currentScope.push_back(yyvsp[-1]);
 						}
 break;
-case 44:
+case 43:
 {
 							/*anonymouse namespace*/
-							printf("found anonymous namespace\n");
 							increaseScope();
 							printScopeName();
 						}
 break;
+case 44:
+{yyval = "";}
+break;
 case 45:
-{
-					printf("Found class decl: %s\n", yyvsp[-1].c_str());
-					/*g_symbols[$5] = true;*/
-				}
+{yyval = yyvsp[0];}
 break;
 case 46:
 {
-					printf("Found class impl: %s\n", yyvsp[-1].c_str());
-					/*add new symbol to symbol table*/
-					/*g_symbols[$5] = true;*/
-					
 					/*increase the scope level*/
 					currentScope.push_back(yyvsp[-1]);
 					printScopeName();
@@ -820,10 +773,6 @@ case 46:
 break;
 case 47:
 {
-					printf("Found class impl: %s, derivation list: %s\n", yyvsp[-3].c_str(), yyvsp[-1].c_str());
-					/*add new symbol to symbol table*/
-					/*g_symbols[$5] = true;*/
-					
 					/*increase the scope level*/
 					currentScope.push_back(yyvsp[-3]);
 					printScopeName();
@@ -858,103 +807,102 @@ case 51:
 break;
 case 52:
 {
-							printf("Found function: %s\n", yyvsp[-6].c_str());
-						}
+						/*trim down trailing '::' from scope name*/
+						yyvsp[-6].erase(yyvsp[-6].find_last_not_of(":")+1);
+						currentScope.push_back(yyvsp[-6]);
+						printScopeName();
+					}
 break;
 case 53:
-{
-							printf("Found function: %s\n", yyvsp[-5].c_str());
-							currentScope.push_back(yyvsp[-5]);
-							printScopeName();
-						}
+{yyval = "";}
 break;
 case 54:
-{yyval = "";}
-break;
-case 55:
 {yyval = yyvsp[-1] + " " + yyvsp[0];}
 break;
-case 56:
+case 55:
 {yyval = yyvsp[-1] + yyvsp[0];}
+break;
+case 56:
+{yyval = ""; }
 break;
 case 57:
-{yyval = ""; }
+{ yyval = yyvsp[0]; }
 break;
 case 58:
-{ yyval = yyvsp[-1] + " " + yyvsp[0]; }
+{yyval = ""; }
 break;
 case 59:
-{yyval = ""; }
+{ yyval = yyvsp[0]; }
 break;
 case 60:
-{ yyval = yyvsp[0]; }
+{yyval = ""; }
 break;
 case 61:
-{yyval = ""; }
+{ yyval = yyvsp[0]; }
 break;
 case 62:
-{ yyval = yyvsp[0]; }
+{yyval = ""; }
 break;
 case 63:
-{yyval = ""; }
+{yyval = yyvsp[-1] + yyvsp[0];}
 break;
 case 64:
-{ yyval = yyvsp[0]; }
-break;
-case 65:
-{yyval = ""; }
-break;
-case 66:
-{yyval = yyvsp[-1] + yyvsp[0];}
-break;
-case 67:
 { yyval = yyvsp[-1] + yyvsp[0]; }
 break;
-case 68:
+case 65:
 {yyval = "";}
+break;
+case 66:
+{ yyval = ";";}
+break;
+case 67:
+{ yyval = ":";}
+break;
+case 68:
+{yyval = yyvsp[-2] + yyvsp[-1] + yyvsp[0]  ;}
 break;
 case 69:
-{yyval = ";";}
+{yyval = yyvsp[-2] + yyvsp[-1] + yyvsp[0]  ;}
 break;
 case 70:
-{yyval = yyvsp[-3] + yyvsp[-2] + yyvsp[-1]  + yyvsp[0];}
+{yyval = yyvsp[-5] + yyvsp[-4] + yyvsp[-3]  + yyvsp[-2] + yyvsp[-1] + yyvsp[0] ;}
 break;
 case 71:
-{yyval = yyvsp[-3] + yyvsp[-2] + yyvsp[-1]  + yyvsp[0];}
+{yyval = "";}
 break;
 case 72:
-{yyval = yyvsp[-6] + yyvsp[-5] + yyvsp[-4]  + yyvsp[-3] + yyvsp[-2] + yyvsp[-1] + yyvsp[0];}
+{yyval = yyvsp[0];}
 break;
 case 73:
-{yyval = "";}
-break;
-case 74:
-{yyval = yyvsp[0];}
-break;
-case 75:
 {yyval = yyvsp[-1] + yyvsp[0];}
 break;
-case 76:
+case 74:
 {yyval = "";}
 break;
-case 77:
+case 75:
 {yyval = yyvsp[0];}
 break;
-case 78:
+case 76:
 {yyval = yyvsp[-2] + yyvsp[-1] + yyvsp[0];}
 break;
-case 79:
+case 77:
 {currentScope.push_back(yyvsp[-1]); printScopeName();}
 break;
-case 80:
+case 78:
 {	
 							currentScope.pop_back();/*reduce the scope*/
 							printScopeName();
 							printf("found enum: %s, args are: %s\n", yyvsp[-5].c_str(), yyvsp[-2].c_str());
 						}
 break;
-case 81:
+case 79:
 {yyval = "";}
+break;
+case 80:
+{yyval = yyvsp[-1] + yyvsp[0];}
+break;
+case 81:
+{yyval = yyvsp[-1] + yyvsp[0];}
 break;
 case 82:
 {yyval = yyvsp[-1] + yyvsp[0];}
@@ -963,21 +911,15 @@ case 83:
 {yyval = yyvsp[-1] + yyvsp[0];}
 break;
 case 84:
-{yyval = yyvsp[-1] + yyvsp[0];}
-break;
-case 85:
-{yyval = yyvsp[-1] + yyvsp[0];}
-break;
-case 86:
 {yyval = "";}
 break;
-case 87:
+case 85:
 {yyval = yyvsp[0];}
 break;
-case 88:
+case 86:
 {yyval = yyvsp[-2] + yyvsp[-1] + yyvsp[0];}
 break;
-case 89:
+case 87:
 {	
 								currentScope.push_back(yyvsp[-1]);
 								printScopeName();

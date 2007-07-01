@@ -81,3 +81,4 @@
 #define LE_ANDassign 337
 #define LE_ERassign 338
 #define LE_ORassign 339
+#define LE_MACRO 340
