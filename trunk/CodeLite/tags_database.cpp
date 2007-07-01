@@ -85,7 +85,7 @@ void TagsDatabase::CreateSchema()
 		sql = _T("PRAGMA default_cache_size = 10000;");
 		m_db->ExecuteUpdate(sql);
 	
-		sql = _T("create  table if not exists tags (ID INTEGER PRIMARY KEY AUTOINCREMENT, project string, name string, file string, line integer, kind string, access string, signature string, pattern string, parent string, inherits string, path string, typeref string);");
+		sql = _T("create  table if not exists tags (ID INTEGER PRIMARY KEY AUTOINCREMENT, PARENTID INTEGER, project string, name string, file string, line integer, kind string, access string, signature string, pattern string, parent string, inherits string, path string, typeref string);");
 		m_db->ExecuteUpdate(sql);
 
 		sql = _T("create  table if not exists comments (comment string, file string, line number);");
@@ -252,6 +252,7 @@ void TagsDatabase::Store(TagTreePtr tree, const wxFileName& path, bool autoCommi
 			if(walker.GetNode() == tree->GetRoot())
 				continue;
 
+			walker.GetNode()->GetData().SetParentId(walker.GetNode()->GetParent()->GetData().GetId());
 			if(walker.GetNode()->GetData().Store(insertStmt) == TagExist)
 			{
 				// Update the record
@@ -425,13 +426,13 @@ void TagsDatabase::LoadToMemory(const wxFileName& fn)
 	}
 }
 
-void TagsDatabase::Store(const std::vector<TagEntry> &tags, const wxFileName &path, bool autoCommit)
-{
+//void TagsDatabase::Store(const std::vector<TagEntry> &tags, const wxFileName &path, bool autoCommit)
+//{
 	// convert tags to DbRecord pointer array
-	std::vector<DbRecordPtr> records;
-	for(std::vector<TagEntry>::size_type i=0; i<tags.size(); i++)
-		records.push_back( static_cast<DbRecord*>( new TagEntry( tags[i] ) ) );
-	Store( records, path, autoCommit );
-}
+//	std::vector<DbRecordPtr> records;
+//	for(std::vector<TagEntry>::size_type i=0; i<tags.size(); i++)
+//		records.push_back( static_cast<DbRecord*>( new TagEntry( tags[i] ) ) );
+//	Store( records, path, autoCommit );
+//}
 
 

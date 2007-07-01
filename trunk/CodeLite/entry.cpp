@@ -26,6 +26,7 @@ TagEntry::TagEntry()
 , m_name(wxEmptyString)
 , m_position(wxNOT_FOUND)
 , m_id(wxNOT_FOUND)
+, m_parentId(wxNOT_FOUND)
 {
 }
 
@@ -41,6 +42,7 @@ TagEntry::TagEntry(const TagEntry& rhs)
 TagEntry& TagEntry::operator=(const TagEntry& rhs)
 {
 	m_id = rhs.m_id;
+	m_parentId = rhs.m_parentId;
 	m_project = rhs.m_project;
 	m_file = rhs.m_file;
 	m_kind = rhs.m_kind;
@@ -59,6 +61,7 @@ bool TagEntry::operator ==(const TagEntry& rhs)
 {
 	//Note: tree item id is not used in this function!
 	return	
+		m_parentId == rhs.m_parentId &&
 		m_id == rhs.m_id &&
 		m_project == rhs.m_project && 
 		m_file == rhs.m_file &&
@@ -91,6 +94,7 @@ void TagEntry::Create(const wxString &fileName,
 	SetFile( fileName );
 	SetProject( project );
 	SetId(-1);
+	SetParentId(-1);
 
 	m_extFields = extFields;
 	wxString path;
@@ -200,18 +204,19 @@ TagEntry::TagEntry(wxSQLite3ResultSet& rs)
 {
 	m_extFields.clear();
 	m_id = rs.GetInt(0);
-	m_project = rs.GetString(1);
-	m_name = rs.GetString(2);
-	m_file = rs.GetString(3);
-	m_lineNumber = rs.GetInt(4);
-	m_kind = rs.GetString(5);
-	m_extFields[wxT("access")] = rs.GetString(6);
-	m_extFields[wxT("signature")] = rs.GetString(7);
-	m_pattern = rs.GetString(8);
-	m_parent  = rs.GetString(9);
-	m_extFields[wxT("inherits")] = rs.GetString(10);
-	m_path = rs.GetString(11);
-	m_extFields[wxT("typeref")] = rs.GetString(12);
+	m_parentId = rs.GetInt(1);
+	m_project = rs.GetString(2);
+	m_name = rs.GetString(3);
+	m_file = rs.GetString(4);
+	m_lineNumber = rs.GetInt(5);
+	m_kind = rs.GetString(6);
+	m_extFields[wxT("access")] = rs.GetString(7);
+	m_extFields[wxT("signature")] = rs.GetString(8);
+	m_pattern = rs.GetString(9);
+	m_parent  = rs.GetString(10);
+	m_extFields[wxT("inherits")] = rs.GetString(11);
+	m_path = rs.GetString(12);
+	m_extFields[wxT("typeref")] = rs.GetString(13);
 	m_position = wxNOT_FOUND;
 }
 
@@ -228,20 +233,22 @@ int TagEntry::Store(wxSQLite3Statement& insertPerepareStmnt)
 	try
 	{
 		// see TagsDatabase::GetInsertOneStatement() for the order of binding
-		insertPerepareStmnt.Bind(1, GetProject());
-		insertPerepareStmnt.Bind(2, GetName());
-		insertPerepareStmnt.Bind(3, GetFile());
-		insertPerepareStmnt.Bind(4, GetLine());
-		insertPerepareStmnt.Bind(5, GetKind());
-		insertPerepareStmnt.Bind(6, GetAccess());
-		insertPerepareStmnt.Bind(7, GetSignature());
-		insertPerepareStmnt.Bind(8, GetPattern());
-		insertPerepareStmnt.Bind(9, GetParent());
-		insertPerepareStmnt.Bind(10, GetInherits());
-		insertPerepareStmnt.Bind(11, GetPath());
-		insertPerepareStmnt.Bind(12, GetTyperef());
+		insertPerepareStmnt.Bind(1, GetParentId());
+		insertPerepareStmnt.Bind(2, GetProject());
+		insertPerepareStmnt.Bind(3, GetName());
+		insertPerepareStmnt.Bind(4, GetFile());
+		insertPerepareStmnt.Bind(5, GetLine());
+		insertPerepareStmnt.Bind(6, GetKind());
+		insertPerepareStmnt.Bind(7, GetAccess());
+		insertPerepareStmnt.Bind(8, GetSignature());
+		insertPerepareStmnt.Bind(9, GetPattern());
+		insertPerepareStmnt.Bind(10, GetParent());
+		insertPerepareStmnt.Bind(11, GetInherits());
+		insertPerepareStmnt.Bind(12, GetPath());
+		insertPerepareStmnt.Bind(13, GetTyperef());
 		insertPerepareStmnt.ExecuteUpdate();
 		insertPerepareStmnt.Reset();
+
 	}
 	catch(wxSQLite3Exception& exc)
 	{
@@ -262,18 +269,19 @@ int TagEntry::Update(wxSQLite3Statement& updatePerepareStmnt)
 	try
 	{
 		// see TagsDatabase::GetUpdateOneStatement() function for the order of binding
-		updatePerepareStmnt.Bind(1, GetName());
-		updatePerepareStmnt.Bind(2, GetFile());
-		updatePerepareStmnt.Bind(3, GetLine());
-		updatePerepareStmnt.Bind(4, GetAccess());
-		updatePerepareStmnt.Bind(5, GetPattern());
-		updatePerepareStmnt.Bind(6, GetParent());
-		updatePerepareStmnt.Bind(7, GetInherits());
-		updatePerepareStmnt.Bind(8, GetTyperef());
-		updatePerepareStmnt.Bind(9, GetProject());
-		updatePerepareStmnt.Bind(10, GetKind());
-		updatePerepareStmnt.Bind(11, GetSignature());
-		updatePerepareStmnt.Bind(12, GetPath());
+		updatePerepareStmnt.Bind(1, GetParentId());
+		updatePerepareStmnt.Bind(2, GetName());
+		updatePerepareStmnt.Bind(3, GetFile());
+		updatePerepareStmnt.Bind(4, GetLine());
+		updatePerepareStmnt.Bind(5, GetAccess());
+		updatePerepareStmnt.Bind(6, GetPattern());
+		updatePerepareStmnt.Bind(7, GetParent());
+		updatePerepareStmnt.Bind(8, GetInherits());
+		updatePerepareStmnt.Bind(9, GetTyperef());
+		updatePerepareStmnt.Bind(10, GetProject());
+		updatePerepareStmnt.Bind(11, GetKind());
+		updatePerepareStmnt.Bind(12, GetSignature());
+		updatePerepareStmnt.Bind(13, GetPath());
 		updatePerepareStmnt.ExecuteUpdate();
 		updatePerepareStmnt.Reset();
 	}
@@ -426,11 +434,11 @@ wxString TagEntry::GetDeleteOneStatement()
 
 wxString TagEntry::GetUpdateOneStatement()
 {
-	return wxT("UPDATE TAGS SET Name=?, File=?, Line=?, Access=?, Pattern=?, Parent=?, Inherits=?, Typeref=? WHERE Project=? AND Kind=? AND Signature=? AND Path=?");
+	return wxT("UPDATE TAGS SET ParentId=?, Name=?, File=?, Line=?, Access=?, Pattern=?, Parent=?, Inherits=?, Typeref=? WHERE Project=? AND Kind=? AND Signature=? AND Path=?");
 }
 
 wxString TagEntry::GetInsertOneStatement()
 {
-	return wxT("INSERT INTO TAGS VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");	
+	return wxT("INSERT INTO TAGS VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");	
 }
 

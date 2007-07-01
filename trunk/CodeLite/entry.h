@@ -43,7 +43,8 @@ class WXDLLIMPEXP_CL TagEntry : public DbRecord
 	wxString m_name;		///< Tag name (short name, excluding any scope names)
 	std::map<wxString, wxString> m_extFields; ///< Additional extension fields
 	long	m_position;		///< Position in the document - optional field, not persistent item
-	int		m_id;
+	long	m_id;
+	long	m_parentId;
 
 public:
 	/**
@@ -129,6 +130,9 @@ public:
 	long GetId() const { return m_id; }
 	void SetId(long id) { m_id = id;}
 
+	long GetParentId() const { return m_parentId; }
+	void SetParentId(long id) { m_parentId = id;}
+	
 	const wxString& GetName() const { return m_name;}
 	void SetName(const wxString& name) { m_name = name; }
 

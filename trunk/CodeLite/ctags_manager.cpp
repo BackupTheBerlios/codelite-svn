@@ -448,14 +448,6 @@ void TagsManager::Store(TagTreePtr tree, const wxFileName& path)
 	m_pDb->Store(tree, path);
 }
 
-void TagsManager::Store(const std::vector<TagEntry> &tags, const wxFileName& path)
-{
-	// Make this call threadsafe
-	wxCriticalSectionLocker locker(m_cs);
-
-	m_pDb->Store(tags, path);
-}
-
 TagTreePtr TagsManager::Load(const wxFileName& path, const wxString& project)
 {
 	// Make this call threadsafe
@@ -1146,32 +1138,29 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 		}
 
 		SourceToTags(curFile, tags, m_ctags);
-		tags << fileTags;
+		TagTreePtr tree = TreeFromTags(tags, wxEmptyString);
+		
+		TagsDatabase db;
+		db.Store(tree, dbName, true);
 	}
 
-	std::vector<TagEntry>* vec = VectorFromTags(tags, false);
-	
-	if( prgDlg )
-	{
-		wxString msg;
-		msg << wxT("Updating database this can take a while ...");
-		prgDlg->Update(maxVal, msg);
-	}
+	//if( prgDlg )
+	//{
+	//	wxString msg;
+	//	msg << wxT("Updating database this can take a while ...");
+	//	prgDlg->Update(maxVal, msg);
+	//}
 
 	// create a trasaction and insert all info into the database
 	// we dont use m_pExternalDb since it is on memory only, so 
 	// we use a temproary database
-	TagsDatabase db;
-	db.Store(*vec, dbName);
-	delete vec;
-
-	if( prgDlg )
-	{
-		wxString msg;
-		msg << wxT("Done");
-		prgDlg->Update(maxVal+10, msg);
-		prgDlg->Destroy();
-	}
+	//if( prgDlg )
+	//{
+	//	wxString msg;
+	//	msg << wxT("Done");
+	//	prgDlg->Update(maxVal+10, msg);
+	//	prgDlg->Destroy();
+	//}
 }
 
 void TagsManager::OpenExternalDatabase(const wxFileName &dbName)

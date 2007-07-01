@@ -247,13 +247,6 @@ public:
 	void Store(TagTreePtr tree, const wxFileName& path = wxFileName());
 
 	/**
-	 * \brief Store vector of tags into db.
-	 * \param tags Tags vector to store
-	 * \param path Database file name
-	 */
-	void Store(const std::vector<TagEntry> &tags, const wxFileName& path = wxFileName());
-
-	/**
 	 * \brief Store vector of comments into database
 	 * \param comments comments vector to store
 	 * \param path Database file name

@@ -110,7 +110,6 @@ public:
 	 */
 	void Store(const std::vector<DbRecordPtr> &records, const wxFileName& path, bool autoCommit = true);
 
-
 	/**
 	 * Store vector of TagEntry into db.
 	 * NOTE: This function is deprecatedm use Other form of Store
@@ -118,7 +117,8 @@ public:
 	 * \param path Database file name
 	 * \param autoCommit handle the Store operation inside a transaction or let the user hadle it
 	 */
-	void Store(const std::vector<TagEntry> &tags, const wxFileName& path, bool autoCommit = true);
+	//void Store(const std::vector<TagEntry> &tags, const wxFileName& path, bool autoCommit = true);
+
 	/**
 	 * Return a result set of tags according to project.
 	 * \param project Project name

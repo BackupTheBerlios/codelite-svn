@@ -815,16 +815,17 @@ void LEditor::OnFindDialog(wxCommandEvent& event)
 	{
 		if( !Replace() ) {
 			if(dirDown){
-				if( wxMessageBox(wxT("Lite Editor reached the end of the document, Search again from the start?"), wxT("Lite Editor"), wxYES_NO, m_findReplaceDlg) == wxYES){
+				if( wxMessageBox(wxT("Lite Editor reached the end of the document, Search again from the start?"), wxT("Lite Editor"), wxYES_NO | wxCANCEL, m_findReplaceDlg) == wxYES){
 					Replace();
 				} 
 			} else {
-				if( wxMessageBox(wxT("Lite Editor reached the start of the document, Search again from the end?"), wxT("Lite Editor"), wxYES_NO, m_findReplaceDlg) == wxYES){
+				if( wxMessageBox(wxT("Lite Editor reached the start of the document, Search again from the end?"), wxT("Lite Editor"), wxYES_NO | wxCANCEL, m_findReplaceDlg) == wxYES){
 					Replace();
 				}
 			}
 		}
 	}
+
 	else if(type == wxEVT_FRD_REPLACEALL)
 	{
 		ReplaceAll();
@@ -843,14 +844,14 @@ void LEditor::FindNext(const FindReplaceData &data)
 		wxWindow *parent = m_findReplaceDlg->IsShown() ? m_findReplaceDlg : NULL;
 		if(dirDown)
 		{
-			if( wxMessageBox(wxT("Lite Editor reached the end of the document, Search again from the start?"), wxT("Lite Editor"), wxYES_NO, parent) == wxYES)
+			if( wxMessageBox(wxT("Lite Editor reached the end of the document, Search again from the start?"), wxT("Lite Editor"), wxYES_NO | wxCANCEL, parent) == wxYES)
 			{
 				FindAndSelect(data);
 			} 
 		} 
 		else 
 		{
-			if( wxMessageBox(wxT("Lite Editor reached the start of the document, Search again from the end?"), wxT("Lite Editor"), wxYES_NO, parent) == wxYES)
+			if( wxMessageBox(wxT("Lite Editor reached the start of the document, Search again from the end?"), wxT("Lite Editor"), wxYES_NO | wxCANCEL, parent) == wxYES)
 			{
 				FindAndSelect(data);
 			}
