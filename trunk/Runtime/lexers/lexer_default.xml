@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Lexer Name="Text" Id="1">
-  <KeyWords/>
-  <Extensions/>
+  <KeyWords></KeyWords>
+  <Extensions></Extensions>
   <Properties>
     <Property Id="0" Name="Default" Bold="no" Face="Courier New" Colour="#000000" Size="9"/>
   </Properties>
