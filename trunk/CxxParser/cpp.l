@@ -17,7 +17,6 @@
 extern std::string cl_scope_lval;
 std::vector<std::string> currentScope;
 
-std::string &getFileName();
 bool setLexerInput(const std::string &in);
 std::string getCurrentScope();
 void printScopeName();
@@ -79,6 +78,9 @@ v_tab [\013]
 c_return [\015]
 
 horizontal_white [ ]|{h_tab}
+
+%x PREPR
+%x WRAP_PREP
 
 %%
 
@@ -213,9 +215,7 @@ typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
 "("                  {PPOP_RETURN(LE_LP);}
 ")"                  {PPOP_RETURN(LE_RP);}
 ","                  {PPOP_RETURN(LE_COMMA);}
-"#"                  {NAMED_PPOP_RETURN('#') ;}
-"##"                 {NAMED_PPOP_RETURN(LE_POUNDPOUND);}
-
+^"#"                 {BEGIN PREPR;}
 "{"                  {ASCIIOP_RETURN(LE_LC);}
 "}"                  {ASCIIOP_RETURN(LE_RC);}
 "["                  {ASCIIOP_RETURN(LE_LB);}
@@ -269,6 +269,19 @@ typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
 							yyterminate();
 						}
 .						{return yytext[0];}
+<PREPR>\n		{ 
+					BEGIN INITIAL;
+				}
+<PREPR>\\		{
+					printf("Preprocessor state continues to next line!\n");
+					BEGIN WRAP_PREP;
+				}
+<WRAP_PREP>\n	{
+					printf("Preprocessor state is now resumed\n");
+					BEGIN PREPR;
+				}
+<WRAP_PREP>.    { printf("In pre-processing state, consuming %s\n", yytext);/* eat it */}				
+<PREPR>.        { printf("In pre-processing state, consuming %s\n", yytext);/* eat it */}
 
 %%
 

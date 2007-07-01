@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Lexer Name="Makefile" Id="11">
-  <KeyWords></KeyWords>
+  <KeyWords/>
   <Extensions>*.mk;makefile;Makefile;*.mak</Extensions>
   <Properties>
     <Property Id="0" Name="Default" Bold="no" Face="" Colour="black" Size="9"/>

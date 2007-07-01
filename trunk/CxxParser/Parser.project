@@ -9,8 +9,8 @@
     <File Name="cpp_lexer.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="grammar">
-    <File Name="scope_scope_grammar.y"/>
     <File Name="cpp.l"/>
+    <File Name="cpp_scope_grammar.y"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu g++">
