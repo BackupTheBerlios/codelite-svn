@@ -41,9 +41,9 @@
       <PreBuild>
         <Command Enabled="yes">yacc -dl  -t -v -pcl_scope_ cpp5_grammar.y</Command>
         <Command Enabled="yes">flex -L  -Pcl_scope_ cpp5.l</Command>
-        <Command Enabled="yes">copy y.tab.c scope_parser.cpp</Command>
-        <Command Enabled="yes">copy y.tab.h cpp_lexer.h</Command>
-        <Command Enabled="yes">copy lex.cl_scope_.c cpp_lexer.cpp</Command>
+        <Command Enabled="yes">mv y.tab.c scope_parser.cpp</Command>
+        <Command Enabled="yes">mv y.tab.h cpp_lexer.h</Command>
+        <Command Enabled="yes">mv lex.cl_scope_.c cpp_lexer.cpp</Command>
       </PreBuild>
       <PostBuild>
         <Command Enabled="yes">copy scope_parser.cpp ../CodeLite/.</Command>

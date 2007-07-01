@@ -100,7 +100,7 @@ basic_type_name:
 	
 
 /* ========================================================================*/
-/* find declarations																			*/
+/* find declarations																   */
 /* ========================================================================*/
 
 translation_unit	:		/*empty*/
@@ -109,7 +109,7 @@ translation_unit	:		/*empty*/
 						
 external_decl			:	class_decl	
 						|	enum_decl
-						//|	union decl
+						|	union_decl
 						| 	function_decl	/* function decl also includes variables */
 						|	namespace_decl
 						| 	scope_reducer
@@ -137,9 +137,27 @@ opt_class_qualifier	:	/* empty */			{ $$ = "";}
 							;
 							
 opt_template_qualifier	: /*empty*/
-								| LE_TEMPLATE '<' template_arg_list '>'	{ $$ = $1 + $2 + $3 + $4;}
-								;
-								
+							| LE_TEMPLATE '<' template_arg_list '>'	{ $$ = $1 + $2 + $3 + $4;}
+							;
+/*inheritance*/
+derivation_list			:	/*empty*/ {$$ = "";}
+							|	parent_class {$$ = $1;}
+							| 	derivation_list ',' parent_class {$$ = $1 + $2 + $3;}
+							;
+
+parent_class				: 	access_specifier LE_IDENTIFIER	opt_template_specifier {$$ = $1 + " " + $2 + $3;}
+							;
+							
+opt_template_specifier	: /*empty*/	{$$ = "";}
+							| '<' template_parameter_list '>' {$$ = $1 + $2 + $3;}
+							;
+							
+access_specifier			:	/*empty*/	{$$ = "";}
+							|	LE_PUBLIC {$$ = $1;}
+							| 	LE_PRIVATE {$$ = $1;}
+							| 	LE_PROTECTED {$$ = $1;}
+							;
+							
 /* the following rules are for template parameters no declarations! */
 template_parameter_list	: /* empty */		{$$ = "";}
 							| template_parameter	{$$ = $1;}
@@ -173,6 +191,17 @@ class_decl	:	stmnt_starter opt_template_qualifier class_keyword opt_class_qualif
 				| 	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{' 
 				{
 					printf("Found class impl: %s\n", $5.c_str());
+					//add new symbol to symbol table
+					//g_symbols[$5] = true;
+					
+					//increase the scope level
+					currentScope.push_back($5);
+					printScopeName();
+				}
+				
+				| 	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ':' derivation_list '{' 
+				{
+					printf("Found class impl: %s, derivation list: %s\n", $5.c_str(), $7.c_str());
 					//add new symbol to symbol table
 					//g_symbols[$5] = true;
 					
@@ -278,7 +307,7 @@ variable_list			:	/*empty*/	{$$ = "";}
 						|	variable_list ',' variable_arg {$$ = $1 + $2 + $3;}
 						;
 
-enum_decl				:	LE_ENUM LE_IDENTIFIER '{' {currentScope.push_back($2); printScopeName();} enum_arg_list '}' 
+enum_decl				:	stmnt_starter LE_ENUM LE_IDENTIFIER '{' {currentScope.push_back($3); printScopeName();} enum_arg_list '}' 
 						{	
 							currentScope.pop_back();//reduce the scope
 							printScopeName();
@@ -286,11 +315,27 @@ enum_decl				:	LE_ENUM LE_IDENTIFIER '{' {currentScope.push_back($2); printScope
 						}
 						;
 
-enum_arg_list			:	/*empty*/ {$$ = "";}
-						|	LE_IDENTIFIER	{$$ = $1;}
-						|	enum_arg_list ',' LE_IDENTIFIER {$$ = $1 + $2 + $3;}
+enum_optional_assign	:	/*empty*/ {$$ = "";}
+						|	'=' LE_HEXconstant	{$$ = $1 + $2;}
+						|	'='	 LE_OCTALconstant {$$ = $1 + $2;}
+						|	'='	 LE_INTEGERconstant {$$ = $1 + $2;}
 						;
 						
+enum_argument			:	LE_IDENTIFIER	enum_optional_assign {$$ = $1 + $2;}
+						;
+enum_arg_list			:	/*empty*/ {$$ = "";}
+						|	enum_argument	{$$ = $1;}
+						|	enum_arg_list ',' enum_argument {$$ = $1 + $2 + $3;}
+						;
+
+union_decl			:	stmnt_starter LE_UNION LE_IDENTIFIER '{' 
+							{	
+								currentScope.push_back($3);
+								printScopeName();
+								consumeDecl();
+								printScopeName();
+							}
+						;
 %%
 void yyerror(char *s) {}
 
@@ -320,6 +365,36 @@ void consumeFuncArgList()
 			continue;
 		}
 	}
+}
+
+/**
+ * consume all token until matching closing brace is found
+ */
+void consumeDecl()
+{
+	int depth = 1;
+	while(depth > 0)
+	{
+		int ch = cl_scope_lex();
+		//printf("ch=%d\n", ch);
+		fflush(stdout);
+		if(ch ==0)
+		{
+			break;
+		}
+		if(ch == '}')
+		{
+			depth--;
+			if(depth == 0) currentScope.pop_back();//reduce the scope
+			continue;
+		}
+		else if(ch == '{')
+		{
+			depth ++ ;
+			continue;
+		}
+	}
+	
 }
 
 // return the scope name at the end of the input string

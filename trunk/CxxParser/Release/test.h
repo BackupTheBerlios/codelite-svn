@@ -1,13 +1,7 @@
-template <class T, class B> struct TagEntry
+template <class T, class B> struct TagEntry : public Singleton<TagEntry>, private wxEvtHandler
 {
-	enum Symbol{
-		value, 
-		val,
-		stam
+	union Eran {
+		int main;
+		char *name;
 	}
-	
-	virtual const TagEntry& foo(int val, std::vector<std::string> &name)
-	{
-		m_memberVariable.
-	}
-}
+	m
