@@ -4,7 +4,8 @@
 
 void initLexer(const char *filename);
 
-std::string yyparse();
+//std::string yyparse();
+YYSTYPE yyparse();
 
 int main(int argv, char* argc[])
 {
