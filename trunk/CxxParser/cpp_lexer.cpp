@@ -1599,7 +1599,6 @@ case YY_STATE_EOF(PREPR):
 case YY_STATE_EOF(WRAP_PREP):
 {	
 							//reset lexer
-							printf("EOF detected\n");
 							yyterminate();
 						}
 	YY_BREAK

@@ -895,7 +895,7 @@ case 87:
 {yyval = "";}
 break;
 case 88:
-{	yyval = yyvsp[-1] + " " + yyvsp[0];}
+{	yyval = yyvsp[-1] + yyvsp[0];}
 break;
 case 89:
 {yyval = yyvsp[-1]+ yyvsp[0];}

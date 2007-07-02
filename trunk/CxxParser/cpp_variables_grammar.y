@@ -121,9 +121,9 @@ external_decl		:	{curr_var.Reset();} variables
 						;
 						
 /* the following rules are for template parameters no declarations! */
-template_parameter_list	: /* empty */		{$$ = "";}
+parameter_list	: /* empty */		{$$ = "";}
 							| template_parameter	{$$ = $1;}
-							| template_parameter_list ',' template_parameter {$$ = $1 + $2 + $3;}
+							| parameter_list ',' template_parameter {$$ = $1 + $2 + $3;}
 							;
 
 template_parameter	:	const_spec nested_scope_specifier LE_IDENTIFIER special_star_amp 
@@ -137,7 +137,6 @@ variables			: stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ';'
 								curr_var.m_name = $4;
 								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
 								gs_vars->push_back(curr_var); 
-								//curr_var.Print();
 								curr_var.Reset();
 							}
 						}
@@ -148,7 +147,27 @@ variables			: stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ';'
 								curr_var.m_name = $4;
 								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
 								gs_vars->push_back(curr_var); 
-								//curr_var.Print();
+								curr_var.Reset();
+							}
+						}
+						| stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ','
+						{
+							if(gs_vars)
+							{
+								curr_var.m_name = $4;
+								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
+								gs_vars->push_back(curr_var); 
+								curr_var.Reset();
+							}
+						}
+						
+						| stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ')'
+						{
+							if(gs_vars)
+							{
+								curr_var.m_name = $4;
+								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
+								gs_vars->push_back(curr_var); 
 								curr_var.Reset();
 							}
 						}
@@ -158,11 +177,12 @@ variables			: stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ';'
 applicable for C++, for cases where a function is declared as
 void scope::foo(){ ... }
 */
-nested_scope_specifier		: /*empty*/ {$$ = "";}
-								| nested_scope_specifier scope_specifier {$$ = $1 + " " + $2;}
-								;
+scope_specifier		:	LE_IDENTIFIER LE_CLCL {$$ = $1+ $2;}
+						|	LE_IDENTIFIER  '<' {var_consumeTemplateDecl();} LE_CLCL {$$ = $1 + $4; }
+						;
 
-scope_specifier			:	LE_IDENTIFIER LE_CLCL {$$ = $1 + $2;}
+nested_scope_specifier		: /*empty*/ {$$ = "";}
+							| nested_scope_specifier scope_specifier {	$$ = $1 + $2;}
 							;
 
 const_spec			:	/* empty */	{$$ = ""; }
@@ -183,26 +203,29 @@ special_star_amp		:	star_list amp_item { $$ = $1 + $2; }
 stmnt_starter		:	/*empty*/ {$$ = "";}
 						| ';' { $$ = ";";}
 						| '{' { $$ = "{";}
+						| '(' { $$ = "(";}
 						| '}' { $$ = "}";}
 						| ':' { $$ = ":";}	//e.g. private: std::string m_name;
 						;
 						
 /** Variables **/
-variable_decl		:	const_spec nested_scope_specifier basic_type_name   
+variable_decl		:	const_spec basic_type_name   
 						{
-							$$ = $1 + $2 + $3;
-							curr_var.m_typeScope = $2;
-							curr_var.m_type = $3;
+							$$ = $1 + $2;
+							$2.erase($2.find_last_not_of(":")+1);
+							curr_var.m_type = $2;
 						}
 						|	const_spec nested_scope_specifier LE_IDENTIFIER 
 						{
 							$$ = $1 + $2 + $3;
+							$2.erase($2.find_last_not_of(":")+1);
 							curr_var.m_typeScope = $2;
 							curr_var.m_type = $3;
 						}
-						| 	const_spec nested_scope_specifier LE_IDENTIFIER '<' template_parameter_list '>'  
+						| 	const_spec nested_scope_specifier LE_IDENTIFIER '<' parameter_list '>'  
 						{
 							$$ = $1 + $2 + $3 + $4 + $5 + $6;
+							$2.erase($2.find_last_not_of(":")+1);
 							curr_var.m_typeScope = $2;
 							curr_var.m_type = $3;
 							curr_var.m_isTemplate = true;
@@ -212,6 +235,57 @@ variable_decl		:	const_spec nested_scope_specifier basic_type_name
 						
 %%
 void yyerror(char *s) {}
+
+
+void var_consumeFuncArgList()
+{
+	int depth = 1;
+	while(depth > 0)
+	{
+		int ch = cl_scope_lex();
+		//printf("ch=%d\n", ch);
+		fflush(stdout);
+		if(ch ==0){
+			break;
+		}
+		
+		if(ch == ')')
+		{
+			depth--;
+			continue;
+		}
+		else if(ch == '(')
+		{
+			depth ++ ;
+			continue;
+		}
+	}
+}
+
+void var_consumeTemplateDecl()
+{
+	int depth = 1;
+	while(depth > 0)
+	{
+		int ch = cl_scope_lex();
+		//printf("ch=%d\n", ch);
+		fflush(stdout);
+		if(ch ==0){
+			break;
+		}
+		
+		if(ch == '>')
+		{
+			depth--;
+			continue;
+		}
+		else if(ch == '<')
+		{
+			depth ++ ;
+			continue;
+		}
+	}
+}
 
 
 void var_syncParser(){

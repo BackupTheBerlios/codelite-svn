@@ -273,7 +273,7 @@ applicable for C++, for cases where a function is declared as
 void scope::foo(){ ... }
 */
 nested_scope_specifier		: /*empty*/ {$$ = "";}
-							| nested_scope_specifier scope_specifier {	$$ = $1 + " " + $2;}
+							| nested_scope_specifier scope_specifier {	$$ = $1 + $2;}
 							;
 
 scope_specifier		:	LE_IDENTIFIER LE_CLCL {$$ = $1+ $2;}

@@ -21,9 +21,10 @@ void Variable::Reset()
 
 void Variable::Print()
 {
-	fprintf(	stdout, "{m_name=%s, m_type=%s, m_typeScope=%s, m_templateDecl=%s, m_isPtr=%s}\n", 
+	fprintf(	stdout, "{m_name=%s, m_type=%s, m_typeScope=%s, m_templateDecl=%s, m_isPtr=%s, m_isTemplate=%s}\n", 
 				m_name.c_str(), m_type.c_str(), m_typeScope.c_str(), m_templateDecl.c_str(),
-				m_isPtr ? "true" : "false");
+				m_isPtr ? "true" : "false", 
+				m_isTemplate ? "true" : "false");
 	fflush(stdout);
 }
 

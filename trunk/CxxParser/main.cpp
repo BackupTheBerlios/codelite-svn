@@ -9,17 +9,31 @@
 extern std::string get_scope_name(const std::string &in, bool onlyNamedScope);
 extern void get_variables(const std::string &in, VariableList &li);
 
+void testScopeParser(char *buf);
+void testVarParser(char *buf);
+char *loadFile(const char *fileName);
+
 int main()
+{
+	char *buf = loadFile("test.h");
+	
+	//print the scope name
+	testScopeParser(buf);
+	testVarParser(buf);
+	free(buf);
+}
+
+char *loadFile(const char *fileName)
 {
 	FILE *fp;
 	long len;
 	char *buf = NULL;
 	
-	fp = fopen("test.h", "rb");
+	fp = fopen(fileName, "rb");
 	if(!fp)
 	{
 		printf("failed to open file 'test.h': %s\n", strerror(errno));
-		return false;
+		return NULL;
 	}	
 	
 	//read the whole file
@@ -35,25 +49,37 @@ int main()
 	{
 		fclose(fp);
 		printf("failed to read from file 'test.h': %s\n", strerror(errno));
-		return false;
+		return NULL;
 	}
 	
 	buf[len] = 0;	// make it null terminated string
 	fclose(fp);
-	
-	//print the scope name
-	
+	return buf;
+}
+
+void testScopeParser(char *buf)
+{
+	printf("===== Testing Scope parser ======\n");
 	time_t start = GetTickCount();
 	std::string scope = get_scope_name(buf, true);
 	time_t end = GetTickCount();
-	
-	//print all members found in the file
-	//time_t start = GetTickCount();
-	VariableList li;
-	//printf("===== Testing Variable parser ======\n");
-	//fflush(stdout);
-	//get_variables(buf, li);
-	//time_t end = GetTickCount();
 	printf("total time: %d\n", end-start);
-	free(buf);
 }
+
+void testVarParser(char *buf)
+{
+	printf("===== Testing Variable parser ======\n");
+	time_t start = GetTickCount();
+	VariableList li;
+	fflush(stdout);
+	get_variables(buf, li);
+	time_t end = GetTickCount();
+	for(VariableList::iterator iter = li.begin(); iter != li.end(); iter++)
+	{
+		(*iter).Print();
+	}
+	printf("total time: %d\n", end-start);
+	printf("matches found: %d\n", li.size());
+	
+}
+

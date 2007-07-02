@@ -153,55 +153,61 @@ extern void cl_scope_lex_clean();
 short cl_var_lhs[] = {                                        -1,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     0,    4,    2,    2,    5,    5,    5,    6,    3,    3,
-    8,    8,   12,    7,    7,   13,   13,   14,   14,    9,
-   10,   10,   10,   10,   10,   11,   11,   11,
+    3,    3,   12,   13,   12,    8,    8,    7,    7,   14,
+   14,   15,   15,    9,   10,   10,   10,   10,   10,   10,
+   11,   11,   11,
 };
 short cl_var_len[] = {                                         2,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    0,
     2,    0,    2,    1,    0,    1,    3,    4,    5,    5,
-    0,    2,    2,    0,    1,    0,    1,    0,    2,    2,
-    0,    1,    1,    1,    1,    3,    3,    6,
+    5,    5,    2,    0,    4,    0,    2,    0,    1,    0,
+    1,    0,    2,    2,    0,    1,    1,    1,    1,    1,
+    2,    3,    6,
 };
 short cl_var_defred[] = {                                     10,
-    0,   14,   11,    0,   32,   33,   34,   35,   13,    0,
-   25,   21,   28,    0,    0,    0,    6,    1,    4,    2,
-    5,    3,    8,    7,    9,    0,   36,   22,    0,   27,
-   29,   30,   23,    0,   19,   20,    0,   16,   21,    0,
-   38,    0,   17,    0,   18,
+    0,   14,   11,    0,   36,   37,   38,   39,   40,   13,
+    0,   29,    0,   32,    6,    1,    4,    2,    5,    3,
+    8,    7,    9,   41,    0,    0,    0,    0,   27,    0,
+   31,   33,   34,   23,    0,   21,   19,   20,   22,    0,
+   16,   26,    0,    0,   43,    0,   25,   17,    0,   24,
+   18,
 };
 short cl_var_dgoto[] = {                                       1,
-   27,    3,    9,    4,   37,   38,   39,   14,   15,   10,
-   13,   28,   32,   16,
+   24,    3,   10,    4,   40,   41,   42,   25,   26,   11,
+   14,   29,   43,   33,   27,
 };
 short cl_var_sindex[] = {                                      0,
- -242,    0,    0,  -49,    0,    0,    0,    0,    0, -258,
-    0,    0,    0, -228, -279,  -34,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,  -60,    0,    0,  -36,    0,
-    0,    0,    0, -258,    0,    0,  -26,    0,    0, -258,
-    0, -269,    0, -289,    0,
+ -252,    0,    0,  -32,    0,    0,    0,    0,    0,    0,
+ -261,    0, -211,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0, -290, -287,  -31,  -59,    0,    1,
+    0,    0,    0,    0, -261,    0,    0,    0,    0,  -34,
+    0,    0, -310, -261,    0, -283,    0,    0,  -58,    0,
+    0,
 };
 short cl_var_rindex[] = {                                      0,
-  -52,    0,    0, -247,    0,    0,    0,    0,    0, -214,
-    0,    0,    0,    0,    0,  -42,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,  -37,    0,    0,    0,    0,
-    0,    0,    0,  -41,    0,    0,    0,    0,    0, -264,
-    0,    0,    0,  -25,    0,
+  -37,    0,    0, -244,    0,    0,    0,    0,    0,    0,
+ -225,    0, -280,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,  -38,  -33,    0,    0,
+    0,    0,    0,    0,  -44,    0,    0,    0,    0,    0,
+    0,    0,    0, -290,    0,    0,    0,    0,   -1,    0,
+    0,
 };
 short cl_var_gindex[] = {                                      0,
-    0,    0,    0,    0,    0,    2,   30,    4,    6,    0,
-    0,    0,    0,    0,
+    0,    0,    0,    0,    0,   -5,   29,    4,    7,    0,
+    0,    0,    0,    0,    0,
 };
-#define YYTABLESIZE 267
-short cl_var_table[] = {                                      34,
-   37,   26,   15,   30,   37,   12,   12,   31,    8,    5,
-   31,   31,   28,    2,   11,   31,   28,   40,   28,   26,
-   15,   31,   35,   29,   36,   31,   31,   31,   31,   17,
-   18,   31,   31,   44,   19,   41,   28,   33,   24,   12,
-   20,   43,   42,   24,   24,   21,   22,   23,   24,   45,
-   24,   25,    0,    0,   24,   31,    0,    0,    0,   24,
-   24,   24,    0,    0,   24,   24,    0,    0,    0,    0,
-   12,    0,   12,    6,   26,    7,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,   24,    0,
+#define YYTABLESIZE 283
+short cl_var_table[] = {                                      15,
+   35,   50,   12,    2,   42,   30,   31,    7,   42,   44,
+   32,   12,   28,   35,   35,   30,   47,   15,   35,   49,
+   12,   12,   26,   30,   35,    9,    5,   45,   35,   35,
+   35,   35,   28,   28,   35,   35,   32,   28,   48,   13,
+   32,   39,   32,   28,   36,   46,   15,   16,   28,   28,
+   28,   17,    0,   28,   28,   51,    0,   18,   35,   37,
+   32,   38,   19,   20,   21,    0,    0,   22,   23,    0,
+    0,    0,    0,    0,    0,    0,    0,   28,    0,    0,
+    0,    0,    0,    0,    0,   12,    0,   12,    0,    0,
+    6,    0,    8,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -213,42 +219,45 @@ short cl_var_table[] = {                                      34,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,   12,   12,    0,    0,    0,
-   12,    0,    0,    0,    0,    0,   12,    0,    0,    0,
-   12,   12,   12,   12,    0,    0,   12,   12,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+   12,   12,    0,    0,    0,   12,    0,    0,    0,    0,
+    0,   12,    0,    0,    0,   12,   12,   12,   12,    0,
+    0,   12,   12,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,   28,    0,
+    0,    0,    0,    0,   30,   12,    0,   34,   34,   42,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-   12,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-   26,   24,    0,    0,    0,   37,   33,
+    0,    0,   24,
 };
-short cl_var_check[] = {                                      60,
-   38,   44,   44,   38,   42,   58,   59,   42,   58,   59,
-  258,  259,   38,  256,  273,  263,   42,   44,   44,   62,
-   62,  269,   59,  303,   61,  273,  274,  275,  276,  258,
-  259,  279,  280,  303,  263,   62,   62,  327,  303,   10,
-  269,   40,   39,  258,  259,  274,  275,  276,  263,   44,
-  279,  280,   -1,   -1,  269,  303,   -1,   -1,   -1,  274,
-  275,  276,   -1,   -1,  279,  280,   -1,   -1,   -1,   -1,
-  123,   -1,  125,  123,  303,  125,   -1,   -1,   -1,   -1,
+short cl_var_check[] = {                                      44,
+   60,   60,   40,  256,   38,   44,   38,   40,   42,   44,
+   42,  273,  303,  258,  259,  303,  327,   62,  263,  303,
+   58,   59,  303,   62,  269,   58,   59,   62,  273,  274,
+  275,  276,  258,  259,  279,  280,   38,  263,   44,   11,
+   42,   41,   44,  269,   44,   42,  258,  259,  274,  275,
+  276,  263,   -1,  279,  280,   49,   -1,  269,  303,   59,
+   62,   61,  274,  275,  276,   -1,   -1,  279,  280,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,  303,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,  123,   -1,  125,   -1,   -1,
+  123,   -1,  125,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+  258,  259,   -1,   -1,   -1,  263,   -1,   -1,   -1,   -1,
+   -1,  269,   -1,   -1,   -1,  273,  274,  275,  276,   -1,
+   -1,  279,  280,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  303,   -1,
+   -1,   -1,   -1,   -1,  303,  303,   -1,  327,  327,  303,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,  258,  259,   -1,   -1,   -1,
-  263,   -1,   -1,   -1,   -1,   -1,  269,   -1,   -1,   -1,
-  273,  274,  275,  276,   -1,   -1,  279,  280,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-  303,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-  303,  303,   -1,   -1,   -1,  303,  327,
+   -1,   -1,  327,
 };
 #define YYFINAL 1
 #ifndef YYDEBUG
@@ -258,13 +267,13 @@ short cl_var_check[] = {                                      60,
 #if YYDEBUG
 char *cl_var_name[] = {
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,"'&'",0,0,0,"'*'",0,"','",0,0,0,0,0,0,0,0,0,0,0,0,0,"':'","';'","'<'",
-"'='","'>'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"'{'",0,"'}'",0,0,0,0,0,0,0,
+0,0,0,0,"'&'",0,"'('","')'","'*'",0,"','",0,0,0,0,0,0,0,0,0,0,0,0,0,"':'","';'",
+"'<'","'='","'>'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"'{'",0,"'}'",0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,"LE_AUTO","LE_DOUBLE","LE_INT","LE_STRUCT","LE_BREAK","LE_ELSE",
+0,0,0,0,0,0,0,"LE_AUTO","LE_DOUBLE","LE_INT","LE_STRUCT","LE_BREAK","LE_ELSE",
 "LE_LONG","LE_SWITCH","LE_CASE","LE_ENUM","LE_REGISTER","LE_TYPEDEF","LE_CHAR",
 "LE_EXTERN","LE_RETURN","LE_UNION","LE_CONST","LE_FLOAT","LE_SHORT",
 "LE_UNSIGNED","LE_CONTINUE","LE_FOR","LE_SIGNED","LE_VOID","LE_DEFAULT",
@@ -296,15 +305,19 @@ char *cl_var_rule[] = {
 "$$1 :",
 "external_decl : $$1 variables",
 "external_decl : error",
-"template_parameter_list :",
-"template_parameter_list : template_parameter",
-"template_parameter_list : template_parameter_list ',' template_parameter",
+"parameter_list :",
+"parameter_list : template_parameter",
+"parameter_list : parameter_list ',' template_parameter",
 "template_parameter : const_spec nested_scope_specifier LE_IDENTIFIER special_star_amp",
 "variables : stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ';'",
 "variables : stmnt_starter variable_decl special_star_amp LE_IDENTIFIER '='",
+"variables : stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ','",
+"variables : stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ')'",
+"scope_specifier : LE_IDENTIFIER LE_CLCL",
+"$$2 :",
+"scope_specifier : LE_IDENTIFIER '<' $$2 LE_CLCL",
 "nested_scope_specifier :",
 "nested_scope_specifier : nested_scope_specifier scope_specifier",
-"scope_specifier : LE_IDENTIFIER LE_CLCL",
 "const_spec :",
 "const_spec : LE_CONST",
 "amp_item :",
@@ -315,11 +328,12 @@ char *cl_var_rule[] = {
 "stmnt_starter :",
 "stmnt_starter : ';'",
 "stmnt_starter : '{'",
+"stmnt_starter : '('",
 "stmnt_starter : '}'",
 "stmnt_starter : ':'",
-"variable_decl : const_spec nested_scope_specifier basic_type_name",
+"variable_decl : const_spec basic_type_name",
 "variable_decl : const_spec nested_scope_specifier LE_IDENTIFIER",
-"variable_decl : const_spec nested_scope_specifier LE_IDENTIFIER '<' template_parameter_list '>'",
+"variable_decl : const_spec nested_scope_specifier LE_IDENTIFIER '<' parameter_list '>'",
 };
 #endif
 #ifndef YYSTYPE
@@ -348,6 +362,57 @@ short yyss[YYSTACKSIZE];
 YYSTYPE yyvs[YYSTACKSIZE];
 #define yystacksize YYSTACKSIZE
 void yyerror(char *s) {}
+
+
+void var_consumeFuncArgList()
+{
+	int depth = 1;
+	while(depth > 0)
+	{
+		int ch = cl_scope_lex();
+		//printf("ch=%d\n", ch);
+		fflush(stdout);
+		if(ch ==0){
+			break;
+		}
+		
+		if(ch == ')')
+		{
+			depth--;
+			continue;
+		}
+		else if(ch == '(')
+		{
+			depth ++ ;
+			continue;
+		}
+	}
+}
+
+void var_consumeTemplateDecl()
+{
+	int depth = 1;
+	while(depth > 0)
+	{
+		int ch = cl_scope_lex();
+		//printf("ch=%d\n", ch);
+		fflush(stdout);
+		if(ch ==0){
+			break;
+		}
+		
+		if(ch == '>')
+		{
+			depth--;
+			continue;
+		}
+		else if(ch == '<')
+		{
+			depth ++ ;
+			continue;
+		}
+	}
+}
 
 
 void var_syncParser(){
@@ -571,7 +636,6 @@ case 19:
 								curr_var.m_name = yyvsp[-1];
 								curr_var.m_isPtr = (yyvsp[-2].find("*") != (size_t)-1);
 								gs_vars->push_back(curr_var); 
-								/*curr_var.Print();*/
 								curr_var.Reset();
 							}
 						}
@@ -583,73 +647,105 @@ case 20:
 								curr_var.m_name = yyvsp[-1];
 								curr_var.m_isPtr = (yyvsp[-2].find("*") != (size_t)-1);
 								gs_vars->push_back(curr_var); 
-								/*curr_var.Print();*/
 								curr_var.Reset();
 							}
 						}
 break;
 case 21:
-{yyval = "";}
+{
+							if(gs_vars)
+							{
+								curr_var.m_name = yyvsp[-1];
+								curr_var.m_isPtr = (yyvsp[-2].find("*") != (size_t)-1);
+								gs_vars->push_back(curr_var); 
+								curr_var.Reset();
+							}
+						}
 break;
 case 22:
-{yyval = yyvsp[-1] + " " + yyvsp[0];}
+{
+							if(gs_vars)
+							{
+								curr_var.m_name = yyvsp[-1];
+								curr_var.m_isPtr = (yyvsp[-2].find("*") != (size_t)-1);
+								gs_vars->push_back(curr_var); 
+								curr_var.Reset();
+							}
+						}
 break;
 case 23:
-{yyval = yyvsp[-1] + yyvsp[0];}
+{yyval = yyvsp[-1]+ yyvsp[0];}
 break;
 case 24:
-{yyval = ""; }
+{var_consumeTemplateDecl();}
 break;
 case 25:
-{ yyval = yyvsp[0]; }
+{yyval = yyvsp[-3] + yyvsp[0]; }
 break;
 case 26:
-{yyval = ""; }
+{yyval = "";}
 break;
 case 27:
-{ yyval = yyvsp[0]; }
+{	yyval = yyvsp[-1] + yyvsp[0];}
 break;
 case 28:
 {yyval = ""; }
 break;
 case 29:
-{yyval = yyvsp[-1] + yyvsp[0];}
+{ yyval = yyvsp[0]; }
 break;
 case 30:
-{ yyval = yyvsp[-1] + yyvsp[0]; }
+{yyval = ""; }
 break;
 case 31:
-{yyval = "";}
+{ yyval = yyvsp[0]; }
 break;
 case 32:
-{ yyval = ";";}
+{yyval = ""; }
 break;
 case 33:
-{ yyval = "{";}
+{yyval = yyvsp[-1] + yyvsp[0];}
 break;
 case 34:
-{ yyval = "}";}
+{ yyval = yyvsp[-1] + yyvsp[0]; }
 break;
 case 35:
-{ yyval = ":";}
+{yyval = "";}
 break;
 case 36:
-{
-							yyval = yyvsp[-2] + yyvsp[-1] + yyvsp[0];
-							curr_var.m_typeScope = yyvsp[-1];
-							curr_var.m_type = yyvsp[0];
-						}
+{ yyval = ";";}
 break;
 case 37:
+{ yyval = "{";}
+break;
+case 38:
+{ yyval = "(";}
+break;
+case 39:
+{ yyval = "}";}
+break;
+case 40:
+{ yyval = ":";}
+break;
+case 41:
+{
+							yyval = yyvsp[-1] + yyvsp[0];
+							yyvsp[0].erase(yyvsp[0].find_last_not_of(":")+1);
+							curr_var.m_type = yyvsp[0];
+						}
+break;
+case 42:
 {
 							yyval = yyvsp[-2] + yyvsp[-1] + yyvsp[0];
+							yyvsp[-1].erase(yyvsp[-1].find_last_not_of(":")+1);
 							curr_var.m_typeScope = yyvsp[-1];
 							curr_var.m_type = yyvsp[0];
 						}
 break;
-case 38:
+case 43:
 {
 							yyval = yyvsp[-5] + yyvsp[-4] + yyvsp[-3] + yyvsp[-2] + yyvsp[-1] + yyvsp[0];
+							yyvsp[-4].erase(yyvsp[-4].find_last_not_of(":")+1);
 							curr_var.m_typeScope = yyvsp[-4];
 							curr_var.m_type = yyvsp[-3];
 							curr_var.m_isTemplate = true;

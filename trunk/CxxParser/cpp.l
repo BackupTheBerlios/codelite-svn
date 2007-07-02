@@ -279,7 +279,6 @@ typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
 "..."					{NAMEDOP_RETURN(LE_ELLIPSIS);}
 <<EOF>> 				{	
 							//reset lexer
-							printf("EOF detected\n");
 							yyterminate();
 						}
 .						{return yytext[0];}
