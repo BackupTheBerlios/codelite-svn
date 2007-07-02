@@ -259,11 +259,11 @@ any_operator:
         ;
 				
 /* functions */
-function_decl	: 	stmnt_starter virtual_spec const_spec variable_decl nested_scope_specifier func_name '(' variable_list ')' const_spec  '{'  					 
+function_decl	: 	stmnt_starter opt_template_qualifier virtual_spec const_spec variable_decl nested_scope_specifier func_name '(' {consumeFuncArgList();} const_spec  '{'  					 
 					{
 						//trim down trailing '::' from scope name
-						$5.erase($5.find_last_not_of(":")+1);
-						currentScope.push_back($5);
+						$6.erase($6.find_last_not_of(":")+1);
+						currentScope.push_back($6);
 						printScopeName();
 					}
 				;
@@ -276,7 +276,8 @@ nested_scope_specifier		: /*empty*/ {$$ = "";}
 							| nested_scope_specifier scope_specifier {	$$ = $1 + " " + $2;}
 							;
 
-scope_specifier			:	LE_IDENTIFIER LE_CLCL {$$ = $1 + $2;}
+scope_specifier		:	LE_IDENTIFIER LE_CLCL {$$ = $1+ $2;}
+						|	LE_IDENTIFIER  '<' {consumeTemplateDecl();} LE_CLCL {$$ = $1 + $4;}
 						;
 
 virtual_spec		:	/* empty */	{$$ = ""; }
@@ -312,19 +313,19 @@ variable_decl			:	nested_scope_specifier basic_type_name special_star_amp
 							{$$ = $1 + $2 + $3  + $4 + $5 + $6 ;}
 						;
 						
-					
-variable_name			: /*empty*/	{$$ = "";}
+/*					
+variable_name			: /*empty*//*	{$$ = "";}
 						| LE_IDENTIFIER {$$ = $1;} 
 						;
 
 variable_arg			:	const_spec variable_decl variable_name{$$ = $1 + $2;}
 						;
 
-variable_list			:	/*empty*/	{$$ = "";}
+variable_list			:	/*empty*//*	{$$ = "";}
 						|	variable_arg {$$ = $1;}
 						|	variable_list ',' variable_arg {$$ = $1 + $2 + $3;}
 						;
-
+*/
 enum_decl				:	stmnt_starter LE_ENUM LE_IDENTIFIER '{' {currentScope.push_back($3); printScopeName();} enum_arg_list '}' 
 						{	
 							currentScope.pop_back();//reduce the scope
@@ -413,6 +414,31 @@ void consumeDecl()
 		}
 	}
 	
+}
+
+void consumeTemplateDecl()
+{
+	int depth = 1;
+	while(depth > 0)
+	{
+		int ch = cl_scope_lex();
+		//printf("ch=%d\n", ch);
+		fflush(stdout);
+		if(ch ==0){
+			break;
+		}
+		
+		if(ch == '>')
+		{
+			depth--;
+			continue;
+		}
+		else if(ch == '<')
+		{
+			depth ++ ;
+			continue;
+		}
+	}
 }
 
 // return the scope name at the end of the input string
