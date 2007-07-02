@@ -82,21 +82,21 @@ extern void cl_scope_lex_clean();
 %token  LE_PLUSassign  LE_MINUSassign              		/*   +=      -=              */
 %token  LE_LSassign    LE_RSassign                 		/*   <<=     >>=             */
 %token  LE_ANDassign   LE_ERassign     LE_ORassign    	/*   &=      ^=      |=      */
-%token  LE_MACRO
+%token  LE_MACRO 
 %start   translation_unit
 
 %%
 /* Costants */
 basic_type_name:
-        LE_INT				{ $$ = $1; }
-        | LE_CHAR			{ $$ = $1; }
+        LE_INT			{ $$ = $1; }
+        | LE_CHAR		{ $$ = $1; }
         | LE_SHORT		{ $$ = $1; }
-        | LE_LONG			{ $$ = $1; }
+        | LE_LONG		{ $$ = $1; }
         | LE_FLOAT		{ $$ = $1; }
         | LE_DOUBLE		{ $$ = $1; }
         | LE_SIGNED		{ $$ = $1; }
         | LE_UNSIGNED	{ $$ = $1; }
-        | LE_VOID			{ $$ = $1; }
+        | LE_VOID		{ $$ = $1; }
         ;
 	
 
@@ -111,7 +111,7 @@ translation_unit	:		/*empty*/
 external_decl			:	class_decl	
 						|	enum_decl
 						|	union_decl
-						| 	function_decl	/* function decl also includes variables */
+						| 	function_decl
 						|	namespace_decl
 						| 	scope_reducer
 						| 	scope_increaer
@@ -219,32 +219,66 @@ scope_increaer	:	'{' {
 class_keyword: 	LE_CLASS		{$$ = $1;}
 					|	LE_STRUCT	{$$ = $1;}
 					;
-					
+
+func_name: LE_IDENTIFIER
+		 | LE_OPERATOR any_operator
+		 ;
+
+any_operator:
+        '+'
+        | '-'
+        | '*'
+        | '/'
+        | '%'
+        | '^'
+        | '&'
+        | '|'
+        | '~'
+        | '!'
+        | '<'
+        | '>'
+        | LE_LS
+        | LE_RS
+        | LE_ANDAND
+        | LE_OROR
+        | LE_ARROW
+        | LE_ARROWstar
+        | '.'
+        | LE_DOTstar
+        | LE_ICR
+        | LE_DECR
+        | LE_LE
+        | LE_GE
+        | LE_EQ
+        | LE_NE
+        | '(' ')'
+        | '[' ']'
+        | LE_NEW
+        | LE_DELETE
+        | ','
+        ;
+				
 /* functions */
-function_decl	:stmnt_starter virtual_spec const_spec variable_decl nested_scope_specifier LE_IDENTIFIER '(' variable_list ')' const_spec  '{'  					 
+function_decl	: 	stmnt_starter virtual_spec const_spec variable_decl nested_scope_specifier func_name '(' variable_list ')' const_spec  '{'  					 
 					{
 						//trim down trailing '::' from scope name
 						$5.erase($5.find_last_not_of(":")+1);
 						currentScope.push_back($5);
 						printScopeName();
 					}
-					;
+				;
 
 /* 
 applicable for C++, for cases where a function is declared as
 void scope::foo(){ ... }
 */
 nested_scope_specifier		: /*empty*/ {$$ = "";}
-								| nested_scope_specifier scope_specifier {$$ = $1 + " " + $2;}
-								;
-
-scope_specifier			:	LE_IDENTIFIER LE_CLCL {$$ = $1 + $2;}
+							| nested_scope_specifier scope_specifier {	$$ = $1 + " " + $2;}
 							;
 
-//pure_virtual_spec	:	/*empty*/				{$$ = ""; }
-//						| '=' LE_OCTALconstant	{ $$ = $1 + " " + $2; }
-//						;
-						
+scope_specifier			:	LE_IDENTIFIER LE_CLCL {$$ = $1 + $2;}
+						;
+
 virtual_spec		:	/* empty */	{$$ = ""; }
 						| 	LE_VIRTUAL 	{ $$ = $1; }
 						;
@@ -280,10 +314,10 @@ variable_decl			:	nested_scope_specifier basic_type_name special_star_amp
 						
 					
 variable_name			: /*empty*/	{$$ = "";}
-						| LE_IDENTIFIER {$$ = $1;}
+						| LE_IDENTIFIER {$$ = $1;} 
 						;
 
-variable_arg			:	variable_decl variable_name{$$ = $1 + $2;}
+variable_arg			:	const_spec variable_decl variable_name{$$ = $1 + $2;}
 						;
 
 variable_list			:	/*empty*/	{$$ = "";}

@@ -49,8 +49,8 @@
         <Command Enabled="yes">mv y.tab.h cpp_lexer.h</Command>
         <Command Enabled="yes">flex -L  -Pcl_scope_ cpp.l</Command>
         <Command Enabled="yes">mv lex.cl_scope_.c cpp_lexer.cpp</Command>
-        <Command Enabled="yes">yacc -l  -t -v -pcl_var_ cpp_variables_grammar.y</Command>
-        <Command Enabled="yes">mv y.tab.c var_parser.cpp</Command>
+        <Command Enabled="no">yacc -l  -t -v -pcl_var_ cpp_variables_grammar.y</Command>
+        <Command Enabled="no">mv y.tab.c var_parser.cpp</Command>
       </PreBuild>
       <PostBuild>
         <Command Enabled="no">copy scope_parser.cpp ..\CodeLite\.</Command>

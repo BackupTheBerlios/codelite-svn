@@ -137,7 +137,7 @@ variables			: stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ';'
 								curr_var.m_name = $4;
 								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
 								gs_vars->push_back(curr_var); 
-								curr_var.Print();
+								//curr_var.Print();
 								curr_var.Reset();
 							}
 						}
@@ -148,7 +148,7 @@ variables			: stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ';'
 								curr_var.m_name = $4;
 								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
 								gs_vars->push_back(curr_var); 
-								curr_var.Print();
+								//curr_var.Print();
 								curr_var.Reset();
 							}
 						}

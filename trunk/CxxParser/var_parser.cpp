@@ -571,7 +571,7 @@ case 19:
 								curr_var.m_name = yyvsp[-1];
 								curr_var.m_isPtr = (yyvsp[-2].find("*") != (size_t)-1);
 								gs_vars->push_back(curr_var); 
-								curr_var.Print();
+								/*curr_var.Print();*/
 								curr_var.Reset();
 							}
 						}
@@ -583,7 +583,7 @@ case 20:
 								curr_var.m_name = yyvsp[-1];
 								curr_var.m_isPtr = (yyvsp[-2].find("*") != (size_t)-1);
 								gs_vars->push_back(curr_var); 
-								curr_var.Print();
+								/*curr_var.Print();*/
 								curr_var.Reset();
 							}
 						}

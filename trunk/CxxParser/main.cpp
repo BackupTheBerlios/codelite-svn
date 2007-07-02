@@ -4,6 +4,7 @@
 #include "string.h"
 #include "string"
 #include "variable.h"
+#include <windows.h>
 
 extern std::string get_scope_name(const std::string &in, bool onlyNamedScope);
 extern void get_variables(const std::string &in, VariableList &li);
@@ -42,13 +43,17 @@ int main()
 	
 	//print the scope name
 	
+	time_t start = GetTickCount();
 	std::string scope = get_scope_name(buf, true);
+	time_t end = GetTickCount();
 	
 	//print all members found in the file
-	//VariableList li;
+	//time_t start = GetTickCount();
+	VariableList li;
 	//printf("===== Testing Variable parser ======\n");
 	//fflush(stdout);
 	//get_variables(buf, li);
-	
+	//time_t end = GetTickCount();
+	printf("total time: %d\n", end-start);
 	free(buf);
 }

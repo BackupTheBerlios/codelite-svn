@@ -1,0 +1,2 @@
+1. Scope parser not detecting destructor & constructor properly
+2. Template implementations are not handled correctly - scope specifier should be enhanced to handle templates as well
