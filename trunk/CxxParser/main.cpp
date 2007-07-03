@@ -11,18 +11,51 @@ extern void get_variables(const std::string &in, VariableList &li);
 
 void testScopeParser(char *buf);
 void testVarParser(char *buf);
+void testExprParser(char *buf);
 char *loadFile(const char *fileName);
 
 int main()
 {
 	char *buf = loadFile("test.h");
-	
 	//print the scope name
-	testScopeParser(buf);
-	testVarParser(buf);
+	//testScopeParser(buf);
+	//testVarParser(buf);
+	testExprParser(buf);
 	free(buf);
 }
 
+void testExprParser(char *buf)
+{
+}
+
+void testScopeParser(char *buf)
+{
+	printf("===== Testing Scope parser ======\n");
+	time_t start = GetTickCount();
+	std::string scope = get_scope_name(buf, true);
+	time_t end = GetTickCount();
+	printf("total time: %d\n", end-start);
+}
+
+void testVarParser(char *buf)
+{
+	printf("===== Testing Variable parser ======\n");
+	time_t start = GetTickCount();
+	VariableList li;
+	fflush(stdout);
+	get_variables(buf, li);
+	time_t end = GetTickCount();
+	for(VariableList::iterator iter = li.begin(); iter != li.end(); iter++)
+	{
+		(*iter).Print();
+	}
+	printf("total time: %d\n", end-start);
+	printf("matches found: %d\n", li.size());
+}
+
+//-------------------------------------------------------
+// Help function
+//-------------------------------------------------------
 char *loadFile(const char *fileName)
 {
 	FILE *fp;
@@ -56,30 +89,3 @@ char *loadFile(const char *fileName)
 	fclose(fp);
 	return buf;
 }
-
-void testScopeParser(char *buf)
-{
-	printf("===== Testing Scope parser ======\n");
-	time_t start = GetTickCount();
-	std::string scope = get_scope_name(buf, true);
-	time_t end = GetTickCount();
-	printf("total time: %d\n", end-start);
-}
-
-void testVarParser(char *buf)
-{
-	printf("===== Testing Variable parser ======\n");
-	time_t start = GetTickCount();
-	VariableList li;
-	fflush(stdout);
-	get_variables(buf, li);
-	time_t end = GetTickCount();
-	for(VariableList::iterator iter = li.begin(); iter != li.end(); iter++)
-	{
-		(*iter).Print();
-	}
-	printf("total time: %d\n", end-start);
-	printf("matches found: %d\n", li.size());
-	
-}
-
