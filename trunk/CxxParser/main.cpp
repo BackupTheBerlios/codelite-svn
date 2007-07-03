@@ -8,6 +8,7 @@
 
 extern std::string get_scope_name(const std::string &in, bool onlyNamedScope);
 extern void get_variables(const std::string &in, VariableList &li);
+extern void parse_expression(const std::string &in);
 
 void testScopeParser(char *buf);
 void testVarParser(char *buf);
@@ -26,6 +27,8 @@ int main()
 
 void testExprParser(char *buf)
 {
+	printf("===== Testing expression parser ======\n");
+	parse_expression(buf);
 }
 
 void testScopeParser(char *buf)

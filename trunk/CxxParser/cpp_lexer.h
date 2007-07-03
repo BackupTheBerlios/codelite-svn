@@ -82,3 +82,7 @@
 #define LE_ERassign 338
 #define LE_ORassign 339
 #define LE_MACRO 340
+#define LE_DYNAMIC_CAST 341
+#define LE_STATIC_CAST 342
+#define LE_CONST_CAST 343
+#define LE_REINTERPRET_CAST 344

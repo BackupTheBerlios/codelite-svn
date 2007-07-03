@@ -38,19 +38,21 @@ static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 #include "vector"
 #include "stdio.h"
 #include "map"
+#include "expression_result.h"
 
 #define YYSTYPE std::string
 #define YYDEBUG 0        /* get the pretty debugging code to compile*/
 
 void cl_expr_error(char *string);
-int  cl_var_parse();
-void syncParser();
+
+static ExpressionResult result;
 
 /*---------------------------------------------*/
 /* externs defined in the lexer*/
 /*---------------------------------------------*/
 extern char *cl_expr_text;
 extern int cl_expr_lex();
+extern int cl_expr_parse();
 extern int cl_expr_lineno;
 extern std::vector<std::string> currentScope;
 extern bool setExprLexerInput(const std::string &in);
@@ -140,34 +142,57 @@ extern void cl_expr_lex_clean();
 #define LE_ANDassign 337
 #define LE_ERassign 338
 #define LE_ORassign 339
+#define LE_MACRO 340
+#define LE_DYNAMIC_CAST 341
+#define LE_STATIC_CAST 342
+#define LE_CONST_CAST 343
+#define LE_REINTERPRET_CAST 344
 #define YYERRCODE 256
 short cl_expr_lhs[] = {                                        -1,
-    0,    0,    1,    1,    2,    2,    2,    2,    2,
+    0,    0,    3,    1,    1,    2,    2,    2,    2,    2,
+    5,    5,    5,    5,    8,    8,    9,    9,    7,    4,
+    4,    4,   11,    6,    6,   10,   10,   12,
 };
 short cl_expr_len[] = {                                         2,
-    0,    2,    1,    1,    2,    2,    2,    2,    3,
+    0,    2,    0,    2,    1,    6,    2,    3,    6,    8,
+    1,    1,    1,    1,    0,    1,    0,    2,    2,    0,
+    1,    1,    0,    5,    3,    0,    2,    2,
 };
 short cl_expr_defred[] = {                                      1,
-    0,    4,    0,    0,    0,    2,    3,    8,    6,    7,
-    5,    0,    9,
+    0,    5,    2,    0,   21,   22,    4,    0,    7,   11,
+   12,   13,   14,    0,    0,    0,   26,    0,    0,    8,
+   26,    0,   17,    0,   27,    0,   17,    0,    0,   28,
+   23,   25,    0,    0,    9,   18,   16,   19,   17,    6,
+    0,   24,   10,
 };
 short cl_expr_dgoto[] = {                                       1,
-    6,    7,
+    3,    7,    4,    8,   16,   18,   28,   38,   29,   19,
+   39,   25,
 };
 short cl_expr_sindex[] = {                                      0,
-  -41,    0, -313,  -46, -288,    0,    0,    0,    0,    0,
-    0,  -42,    0,
+ -251,    0,    0,  -31,    0,    0,    0,  -36,    0,    0,
+    0,    0,    0,  -33, -276,  -43,    0,  -19, -280,    0,
+    0,  -12,    0,  -59,    0,  -30,    0, -273,  -22,    0,
+    0,    0,   -9, -269,    0,    0,    0,    0,    0,    0,
+   -6,    0,    0,
 };
 short cl_expr_rindex[] = {                                      0,
+  -40,    0,    0,  -32,    0,    0,    0,    0,    0,    0,
+    0,    0,    0, -267,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,  -29,    0,    0,    0,    0,  -38,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,
 };
 short cl_expr_gindex[] = {                                      0,
+    0,    0,    0,    0,    0,    4,  -13,    0,    0,    0,
     0,    0,
 };
-#define YYTABLESIZE 281
-short cl_expr_table[] = {                                      11,
-    5,    8,   12,   13,    0,    0,    0,    0,    0,    0,
+#define YYTABLESIZE 312
+short cl_expr_table[] = {                                       3,
+   31,    3,   15,   14,    2,   15,   17,   20,   17,   20,
+   32,   17,   17,   34,   20,   37,   21,    3,    3,   36,
+   22,   23,   24,   15,   26,   42,    6,    5,   27,   35,
+   40,   33,   17,   41,   43,   26,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -188,17 +213,20 @@ short cl_expr_table[] = {                                      11,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    2,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    3,    0,    0,    0,    9,    0,    0,    0,   20,    0,
+    0,    0,    0,    0,   15,    0,    0,   30,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    3,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    4,    0,    0,    0,    0,    0,    0,    9,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-   10,
+    3,    3,    3,    3,   10,   11,   12,   13,   20,   20,
+   20,   20,
 };
-short cl_expr_check[] = {                                      46,
-   42,  315,  291,   46,   -1,   -1,   -1,   -1,   -1,   -1,
+short cl_expr_check[] = {                                      40,
+   60,   42,   41,   40,  256,   42,   40,   40,   38,   42,
+   24,   41,   42,   27,  291,   38,   60,   58,   59,   42,
+   17,   41,  303,   62,   21,   39,   58,   59,   41,  303,
+   40,   62,   62,  303,   41,  303,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
@@ -219,55 +247,76 @@ short cl_expr_check[] = {                                      46,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,  256,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+  291,   -1,   -1,   -1,  291,   -1,   -1,   -1,  291,   -1,
+   -1,   -1,   -1,   -1,  303,   -1,   -1,  327,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  291,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,  303,   -1,   -1,   -1,   -1,   -1,   -1,  315,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-  327,
+  341,  342,  343,  344,  341,  342,  343,  344,  341,  342,
+  343,  344,
 };
 #define YYFINAL 1
 #ifndef YYDEBUG
 #define YYDEBUG 1
 #endif
-#define YYMAXTOKEN 339
+#define YYMAXTOKEN 344
 #if YYDEBUG
 char *cl_expr_name[] = {
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,"'*'",0,0,0,"'.'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,"'&'",0,"'('","')'","'*'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"':'","';'",
+"'<'",0,"'>'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"LE_AUTO","LE_DOUBLE",
-"LE_INT","LE_STRUCT","LE_BREAK","LE_ELSE","LE_LONG","LE_SWITCH","LE_CASE",
-"LE_ENUM","LE_REGISTER","LE_TYPEDEF","LE_CHAR","LE_EXTERN","LE_RETURN",
-"LE_UNION","LE_CONST","LE_FLOAT","LE_SHORT","LE_UNSIGNED","LE_CONTINUE",
-"LE_FOR","LE_SIGNED","LE_VOID","LE_DEFAULT","LE_GOTO","LE_SIZEOF","LE_VOLATILE",
-"LE_DO","LE_IF","LE_STATIC","LE_WHILE","LE_NEW","LE_DELETE","LE_THIS",
-"LE_OPERATOR","LE_CLASS","LE_PUBLIC","LE_PROTECTED","LE_PRIVATE","LE_VIRTUAL",
-"LE_FRIEND","LE_INLINE","LE_OVERLOAD","LE_TEMPLATE","LE_TYPENAME",
-"LE_IDENTIFIER","LE_STRINGliteral","LE_FLOATINGconstant","LE_INTEGERconstant",
-"LE_CHARACTERconstant","LE_OCTALconstant","LE_HEXconstant","LE_POUNDPOUND",
-"LE_CComment","LE_CPPComment","LE_NAMESPACE","LE_TYPEDEFname","LE_ARROW",
-"LE_ICR","LE_DECR","LE_LS","LE_RS","LE_LE","LE_GE","LE_EQ","LE_NE","LE_ANDAND",
-"LE_OROR","LE_ELLIPSIS","LE_CLCL","LE_DOTstar","LE_ARROWstar","LE_MULTassign",
+0,"LE_AUTO","LE_DOUBLE","LE_INT","LE_STRUCT","LE_BREAK","LE_ELSE","LE_LONG",
+"LE_SWITCH","LE_CASE","LE_ENUM","LE_REGISTER","LE_TYPEDEF","LE_CHAR",
+"LE_EXTERN","LE_RETURN","LE_UNION","LE_CONST","LE_FLOAT","LE_SHORT",
+"LE_UNSIGNED","LE_CONTINUE","LE_FOR","LE_SIGNED","LE_VOID","LE_DEFAULT",
+"LE_GOTO","LE_SIZEOF","LE_VOLATILE","LE_DO","LE_IF","LE_STATIC","LE_WHILE",
+"LE_NEW","LE_DELETE","LE_THIS","LE_OPERATOR","LE_CLASS","LE_PUBLIC",
+"LE_PROTECTED","LE_PRIVATE","LE_VIRTUAL","LE_FRIEND","LE_INLINE","LE_OVERLOAD",
+"LE_TEMPLATE","LE_TYPENAME","LE_IDENTIFIER","LE_STRINGliteral",
+"LE_FLOATINGconstant","LE_INTEGERconstant","LE_CHARACTERconstant",
+"LE_OCTALconstant","LE_HEXconstant","LE_POUNDPOUND","LE_CComment",
+"LE_CPPComment","LE_NAMESPACE","LE_TYPEDEFname","LE_ARROW","LE_ICR","LE_DECR",
+"LE_LS","LE_RS","LE_LE","LE_GE","LE_EQ","LE_NE","LE_ANDAND","LE_OROR",
+"LE_ELLIPSIS","LE_CLCL","LE_DOTstar","LE_ARROWstar","LE_MULTassign",
 "LE_DIVassign","LE_MODassign","LE_PLUSassign","LE_MINUSassign","LE_LSassign",
-"LE_RSassign","LE_ANDassign","LE_ERassign","LE_ORassign",
+"LE_RSassign","LE_ANDassign","LE_ERassign","LE_ORassign","LE_MACRO",
+"LE_DYNAMIC_CAST","LE_STATIC_CAST","LE_CONST_CAST","LE_REINTERPRET_CAST",
 };
 char *cl_expr_rule[] = {
 "$accept : translation_unit",
 "translation_unit :",
 "translation_unit : translation_unit primary_expr",
-"primary_expr : simple_expr",
+"$$1 :",
+"primary_expr : $$1 simple_expr",
 "primary_expr : error",
-"simple_expr : LE_IDENTIFIER '.'",
-"simple_expr : LE_IDENTIFIER LE_ARROW",
-"simple_expr : LE_IDENTIFIER LE_CLCL",
-"simple_expr : LE_THIS LE_ARROW",
-"simple_expr : '*' LE_THIS '.'",
+"simple_expr : stmnt_starter special_cast '<' cast_type '>' '('",
+"simple_expr : stmnt_starter LE_THIS",
+"simple_expr : stmnt_starter '*' LE_THIS",
+"simple_expr : stmnt_starter '(' cast_type ')' special_star_amp LE_IDENTIFIER",
+"simple_expr : stmnt_starter '(' '(' cast_type ')' special_star_amp LE_IDENTIFIER ')'",
+"special_cast : LE_DYNAMIC_CAST",
+"special_cast : LE_STATIC_CAST",
+"special_cast : LE_CONST_CAST",
+"special_cast : LE_REINTERPRET_CAST",
+"amp_item :",
+"amp_item : '&'",
+"star_list :",
+"star_list : star_list '*'",
+"special_star_amp : star_list amp_item",
+"stmnt_starter :",
+"stmnt_starter : ';'",
+"stmnt_starter : ':'",
+"$$2 :",
+"cast_type : nested_scope_specifier LE_IDENTIFIER '<' $$2 special_star_amp",
+"cast_type : nested_scope_specifier LE_IDENTIFIER special_star_amp",
+"nested_scope_specifier :",
+"nested_scope_specifier : nested_scope_specifier scope_specifier",
+"scope_specifier : LE_IDENTIFIER LE_CLCL",
 };
 #endif
 #ifndef YYSTYPE
@@ -323,7 +372,7 @@ void expr_FuncArgList()
 	}
 }
 
-void expr_TemplateDecl()
+void expr_consumeTemplateDecl()
 {
 	int depth = 1;
 	while(depth > 0)
@@ -348,7 +397,6 @@ void expr_TemplateDecl()
 	}
 }
 
-
 void expr_syncParser(){
 	//dont do anything, a hook to allow us to implement some
 	//nice error recovery if needed
@@ -358,10 +406,13 @@ void expr_syncParser(){
 void parse_expression(const std::string &in)
 {
 	//provide the lexer with new input
-	if( !setExprLexerInput(in) )
-	{
+	if( !setExprLexerInput(in) ){
 		return;
 	}
+	printf("parsing...\n");
+	cl_expr_parse();
+	//do the lexer cleanup
+	cl_expr_lex_clean();
 }
 #define YYABORT goto yyabort
 #define YYREJECT goto yyabort
@@ -503,13 +554,133 @@ yyreduce:
     yyval = yyvsp[1-yym];
     switch (yyn)
     {
-case 4:
+case 3:
+{result.Reset();}
+break;
+case 5:
 { 
-								yyclearin;	/*clear lookahead token*/
-								yyerrok;
+								/*yyclearin;	//clear lookahead token*/
+								/*yyerrok;*/
 								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_expr_text, cl_expr_lineno);
 								expr_syncParser();
 							}
+break;
+case 6:
+{
+						expr_FuncArgList(); 
+						yyval = yyvsp[-2];
+						result.m_isaType = true;
+						result.m_name = yyvsp[-2];
+						result.m_isFunc = false;
+						result.Print();
+					}
+break;
+case 7:
+{
+						yyval = yyvsp[0];
+						result.m_isaType = false;
+						result.m_name = yyval;
+						result.m_isFunc = false;
+						result.m_isThis = true;
+						result.m_isPtr = true;
+						result.Print();
+					}
+break;
+case 8:
+{
+						yyval = yyvsp[0];
+						result.m_isaType = false;
+						result.m_name = yyval;
+						result.m_isFunc = false;
+						result.m_isThis = true;
+						result.Print();
+					}
+break;
+case 9:
+{
+						yyval = yyvsp[-3];
+						result.m_isaType = true;
+						result.m_name = yyval;
+						result.m_isFunc = false;
+						result.m_isThis = false;
+						result.Print();
+					}
+break;
+case 10:
+{
+						yyval = yyvsp[-4];
+						result.m_isaType = true;
+						result.m_name = yyval;
+						result.m_isFunc = false;
+						result.m_isThis = false;
+						result.Print();
+					}
+break;
+case 11:
+{yyval = yyvsp[0];}
+break;
+case 12:
+{yyval = yyvsp[0];}
+break;
+case 13:
+{yyval = yyvsp[0];}
+break;
+case 14:
+{yyval = yyvsp[0];}
+break;
+case 15:
+{yyval = ""; }
+break;
+case 16:
+{ yyval = yyvsp[0]; }
+break;
+case 17:
+{yyval = ""; }
+break;
+case 18:
+{yyval = yyvsp[-1] + yyvsp[0];}
+break;
+case 19:
+{ yyval = yyvsp[-1] + yyvsp[0]; }
+break;
+case 20:
+{yyval = "";}
+break;
+case 21:
+{ yyval = ";";}
+break;
+case 22:
+{ yyval = ":";}
+break;
+case 23:
+{expr_consumeTemplateDecl();}
+break;
+case 24:
+{
+					yyval = yyvsp[-4] + yyvsp[-3]; 
+					yyvsp[-4].erase(yyvsp[-4].find_last_not_of(":")+1);
+					result.m_scope = yyvsp[-4]; 
+					result.m_name = yyvsp[-3];
+					result.m_isPtr = (yyvsp[0].find("*") != (size_t)-1);;
+				}
+break;
+case 25:
+{
+					yyval = yyvsp[-2] + yyvsp[-1]; 
+					yyvsp[-2].erase(yyvsp[-2].find_last_not_of(":")+1);
+					result.m_scope = yyvsp[-2]; 
+					result.m_name = yyvsp[-1];
+					result.m_isPtr = (yyvsp[0].find("*") != (size_t)-1);;
+				}
+break;
+case 26:
+{yyval = "";}
+break;
+case 27:
+{	yyval = yyvsp[-1] + yyvsp[0];}
+break;
+case 28:
+{yyval = yyvsp[-1]+ yyvsp[0];}
 break;
     }
     yyssp -= yym;

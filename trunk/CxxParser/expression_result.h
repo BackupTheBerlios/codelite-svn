@@ -9,6 +9,9 @@ public:
 	bool			m_isFunc;
 	std::string m_name;
 	bool 			m_isThis;
+	bool			m_isaType;
+	bool 			m_isPtr;
+	std::string m_scope;
 	
 public:
 	ExpressionResult();

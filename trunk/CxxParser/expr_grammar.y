@@ -8,19 +8,21 @@
 #include "vector"
 #include "stdio.h"
 #include "map"
+#include "expression_result.h"
 
 #define YYSTYPE std::string
 #define YYDEBUG 0        /* get the pretty debugging code to compile*/
 
 void cl_expr_error(char *string);
-int  cl_var_parse();
-void syncParser();
+
+static ExpressionResult result;
 
 //---------------------------------------------
 // externs defined in the lexer
 //---------------------------------------------
 extern char *cl_expr_text;
 extern int cl_expr_lex();
+extern int cl_expr_parse();
 extern int cl_expr_lineno;
 extern std::vector<std::string> currentScope;
 extern bool setExprLexerInput(const std::string &in);
@@ -76,6 +78,11 @@ extern void cl_expr_lex_clean();
 %token  LE_PLUSassign  LE_MINUSassign              		/*   +=      -=              */
 %token  LE_LSassign    LE_RSassign                 		/*   <<=     >>=             */
 %token  LE_ANDassign   LE_ERassign     LE_ORassign    	/*   &=      ^=      |=      */
+%token  LE_MACRO 
+%token  LE_DYNAMIC_CAST
+%token  LE_STATIC_CAST
+%token  LE_CONST_CAST
+%token  LE_REINTERPRET_CAST
 
 %start   translation_unit
 
@@ -88,22 +95,110 @@ translation_unit	:		/*empty*/
 						| translation_unit primary_expr
 						;
 						
-primary_expr		:	simple_expr	
+primary_expr		:	{result.Reset();} simple_expr	
 						| 	error { 
-								yyclearin;	//clear lookahead token
-								yyerrok;
+								//yyclearin;	//clear lookahead token
+								//yyerrok;
 								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_expr_text, cl_expr_lineno);
 								expr_syncParser();
 							}
 						;
 
-simple_expr	: LE_IDENTIFIER '.'
-				| LE_IDENTIFIER LE_ARROW
-				| LE_IDENTIFIER LE_CLCL
-				| LE_THIS LE_ARROW
-				| '*' LE_THIS '.'
+simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '(' 
+					{
+						expr_FuncArgList(); 
+						$$ = $4;
+						result.m_isaType = true;
+						result.m_name = $4;
+						result.m_isFunc = false;
+						result.Print();
+					}
+				| 	stmnt_starter LE_THIS 
+					{
+						$$ = $2;
+						result.m_isaType = false;
+						result.m_name = $$;
+						result.m_isFunc = false;
+						result.m_isThis = true;
+						result.m_isPtr = true;
+						result.Print();
+					}
+				| 	stmnt_starter '*' LE_THIS 
+					{
+						$$ = $3;
+						result.m_isaType = false;
+						result.m_name = $$;
+						result.m_isFunc = false;
+						result.m_isThis = true;
+						result.Print();
+					}
+				| 	stmnt_starter '(' cast_type ')' special_star_amp LE_IDENTIFIER 
+					{
+						$$ = $3;
+						result.m_isaType = true;
+						result.m_name = $$;
+						result.m_isFunc = false;
+						result.m_isThis = false;
+						result.Print();
+					}
+				| 	stmnt_starter '(' '(' cast_type ')' special_star_amp LE_IDENTIFIER ')'
+					{
+						$$ = $4;
+						result.m_isaType = true;
+						result.m_name = $$;
+						result.m_isFunc = false;
+						result.m_isThis = false;
+						result.Print();
+					}
 				;
-				
+
+special_cast 	: 	LE_DYNAMIC_CAST {$$ = $1;}
+					|	LE_STATIC_CAST {$$ = $1;}
+					|	LE_CONST_CAST {$$ = $1;}
+					|	LE_REINTERPRET_CAST {$$ = $1;}
+					;
+
+amp_item				:	/*empty*/	{$$ = ""; }
+						|   '&' 			{ $$ = $1; }
+						;
+						
+star_list			: 	/*empty*/		{$$ = ""; }
+						|	star_list '*'	{$$ = $1 + $2;}
+						;
+
+special_star_amp	:	star_list amp_item { $$ = $1 + $2; }
+						;
+
+stmnt_starter		:	/*empty*/ {$$ = "";}
+						| ';' { $$ = ";";}
+						| ':' { $$ = ":";}	//e.g. private: std::string m_name;
+						;
+
+cast_type: nested_scope_specifier LE_IDENTIFIER '<' {expr_consumeTemplateDecl();} special_star_amp
+				{
+					$$ = $1 + $2; 
+					$1.erase($1.find_last_not_of(":")+1);
+					result.m_scope = $1; 
+					result.m_name = $2;
+					result.m_isPtr = ($5.find("*") != (size_t)-1);;
+				}
+			| nested_scope_specifier LE_IDENTIFIER special_star_amp
+				{
+					$$ = $1 + $2; 
+					$1.erase($1.find_last_not_of(":")+1);
+					result.m_scope = $1; 
+					result.m_name = $2;
+					result.m_isPtr = ($3.find("*") != (size_t)-1);;
+				}
+			;
+
+nested_scope_specifier	: /*empty*/ {$$ = "";}
+								| nested_scope_specifier scope_specifier {	$$ = $1 + $2;}
+								;
+
+scope_specifier	:	LE_IDENTIFIER LE_CLCL {$$ = $1+ $2;}
+						;
+						
 %%
 void yyerror(char *s) {}
 
@@ -133,7 +228,7 @@ void expr_FuncArgList()
 	}
 }
 
-void expr_TemplateDecl()
+void expr_consumeTemplateDecl()
 {
 	int depth = 1;
 	while(depth > 0)
@@ -158,7 +253,6 @@ void expr_TemplateDecl()
 	}
 }
 
-
 void expr_syncParser(){
 	//dont do anything, a hook to allow us to implement some
 	//nice error recovery if needed
@@ -168,8 +262,11 @@ void expr_syncParser(){
 void parse_expression(const std::string &in)
 {
 	//provide the lexer with new input
-	if( !setExprLexerInput(in) )
-	{
+	if( !setExprLexerInput(in) ){
 		return;
 	}
+	printf("parsing...\n");
+	cl_expr_parse();
+	//do the lexer cleanup
+	cl_expr_lex_clean();
 }

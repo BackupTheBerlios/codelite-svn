@@ -135,82 +135,87 @@ horizontal_white [ ]|{h_tab}
 			WHITE_RETURN('\n');
 			}
 
-auto                {PA_KEYWORD_RETURN(LE_AUTO);}
-break               {PA_KEYWORD_RETURN(LE_BREAK);}
-case                {PA_KEYWORD_RETURN(LE_CASE);}
-char                {PA_KEYWORD_RETURN(LE_CHAR);}
-const               {PA_KEYWORD_RETURN(LE_CONST);}
-continue            {PA_KEYWORD_RETURN(LE_CONTINUE);}
-default             {PA_KEYWORD_RETURN(LE_DEFAULT);}
-define             {PP_KEYWORD_RETURN(LE_DEFINE);}
-defined            {PP_KEYWORD_RETURN(LE_OPDEFINED);}
-do                  {PA_KEYWORD_RETURN(LE_DO);}
-double              {PA_KEYWORD_RETURN(LE_DOUBLE);}
-elif                {PP_KEYWORD_RETURN(LE_ELIF);}
-else              {PPPA_KEYWORD_RETURN(LE_ELSE);}
-endif              {PP_KEYWORD_RETURN(LE_ENDIF);}
-enum                {PA_KEYWORD_RETURN(LE_ENUM);}
-error              {PP_KEYWORD_RETURN(LE_ERROR);}
-extern              {PA_KEYWORD_RETURN(LE_EXTERN);}
-float               {PA_KEYWORD_RETURN(LE_FLOAT);}
-for                 {PA_KEYWORD_RETURN(LE_FOR);}
-goto                {PA_KEYWORD_RETURN(LE_GOTO);}
-if                {PPPA_KEYWORD_RETURN(LE_IF);}
-ifdef              {PP_KEYWORD_RETURN(LE_IFDEF);}
-ifndef             {PP_KEYWORD_RETURN(LE_IFNDEF);}
-include            {PP_KEYWORD_RETURN(LE_INCLUDE); }
-int                 {PA_KEYWORD_RETURN(LE_INT);}
-line               {PP_KEYWORD_RETURN(LE_LINE);}
-long                {PA_KEYWORD_RETURN(LE_LONG);}
-pragma             {PP_KEYWORD_RETURN(LE_PRAGMA);}
-register            {PA_KEYWORD_RETURN(LE_REGISTER);}
-return              {PA_KEYWORD_RETURN(LE_RETURN);}
-short               {PA_KEYWORD_RETURN(LE_SHORT);}
-signed              {PA_KEYWORD_RETURN(LE_SIGNED);}
-sizeof              {PA_KEYWORD_RETURN(LE_SIZEOF);}
-static              {PA_KEYWORD_RETURN(LE_STATIC);}
-struct              {PA_KEYWORD_RETURN(LE_STRUCT);}
-switch              {PA_KEYWORD_RETURN(LE_SWITCH);}
-typedef             {PA_KEYWORD_RETURN(LE_TYPEDEF);}
-undef              {PP_KEYWORD_RETURN(LE_UNDEF);}
-union               {PA_KEYWORD_RETURN(LE_UNION);}
-unsigned            {PA_KEYWORD_RETURN(LE_UNSIGNED);}
-void                {PA_KEYWORD_RETURN(LE_VOID);}
-volatile            {PA_KEYWORD_RETURN(LE_VOLATILE);}
-while               {PA_KEYWORD_RETURN(LE_WHILE);}
+auto                	{PA_KEYWORD_RETURN(LE_AUTO);}
+break               	{PA_KEYWORD_RETURN(LE_BREAK);}
+case                	{PA_KEYWORD_RETURN(LE_CASE);}
+char                	{PA_KEYWORD_RETURN(LE_CHAR);}
+const               	{PA_KEYWORD_RETURN(LE_CONST);}
+continue            	{PA_KEYWORD_RETURN(LE_CONTINUE);}
+default             	{PA_KEYWORD_RETURN(LE_DEFAULT);}
+define             	{PP_KEYWORD_RETURN(LE_DEFINE);}
+defined            	{PP_KEYWORD_RETURN(LE_OPDEFINED);}
+do                  	{PA_KEYWORD_RETURN(LE_DO);}
+double              	{PA_KEYWORD_RETURN(LE_DOUBLE);}
+elif                	{PP_KEYWORD_RETURN(LE_ELIF);}
+else              	{PPPA_KEYWORD_RETURN(LE_ELSE);}
+endif              	{PP_KEYWORD_RETURN(LE_ENDIF);}
+enum                	{PA_KEYWORD_RETURN(LE_ENUM);}
+error              	{PP_KEYWORD_RETURN(LE_ERROR);}
+extern              	{PA_KEYWORD_RETURN(LE_EXTERN);}
+float               	{PA_KEYWORD_RETURN(LE_FLOAT);}
+for                 	{PA_KEYWORD_RETURN(LE_FOR);}
+goto                	{PA_KEYWORD_RETURN(LE_GOTO);}
+if                	{PPPA_KEYWORD_RETURN(LE_IF);}
+ifdef              	{PP_KEYWORD_RETURN(LE_IFDEF);}
+ifndef             	{PP_KEYWORD_RETURN(LE_IFNDEF);}
+include            	{PP_KEYWORD_RETURN(LE_INCLUDE); }
+int                 	{PA_KEYWORD_RETURN(LE_INT);}
+line               	{PP_KEYWORD_RETURN(LE_LINE);}
+long                	{PA_KEYWORD_RETURN(LE_LONG);}
+pragma             	{PP_KEYWORD_RETURN(LE_PRAGMA);}
+register            	{PA_KEYWORD_RETURN(LE_REGISTER);}
+return              	{PA_KEYWORD_RETURN(LE_RETURN);}
+short               	{PA_KEYWORD_RETURN(LE_SHORT);}
+signed              	{PA_KEYWORD_RETURN(LE_SIGNED);}
+sizeof              	{PA_KEYWORD_RETURN(LE_SIZEOF);}
+static              	{PA_KEYWORD_RETURN(LE_STATIC);}
+struct              	{PA_KEYWORD_RETURN(LE_STRUCT);}
+switch              	{PA_KEYWORD_RETURN(LE_SWITCH);}
+typedef             	{PA_KEYWORD_RETURN(LE_TYPEDEF);}
+undef              	{PP_KEYWORD_RETURN(LE_UNDEF);}
+union               	{PA_KEYWORD_RETURN(LE_UNION);}
+unsigned            	{PA_KEYWORD_RETURN(LE_UNSIGNED);}
+void                	{PA_KEYWORD_RETURN(LE_VOID);}
+volatile            	{PA_KEYWORD_RETURN(LE_VOLATILE);}
+while               	{PA_KEYWORD_RETURN(LE_WHILE);}
 
 
-class               {CPP_KEYWORD_RETURN(LE_CLASS);}
-namespace           {CPP_KEYWORD_RETURN(LE_NAMESPACE);}
-delete              {CPP_KEYWORD_RETURN(LE_DELETE);}
-friend              {CPP_KEYWORD_RETURN(LE_FRIEND);}
-inline              {CPP_KEYWORD_RETURN(LE_INLINE);}
-new                 {CPP_KEYWORD_RETURN(LE_NEW);}
-operator            {CPP_KEYWORD_RETURN(LE_OPERATOR);}
-overload            {CPP_KEYWORD_RETURN(LE_OVERLOAD);}
-protected           {CPP_KEYWORD_RETURN(LE_PROTECTED);}
-private             {CPP_KEYWORD_RETURN(LE_PRIVATE);}
-public              {CPP_KEYWORD_RETURN(LE_PUBLIC);}
-this                {CPP_KEYWORD_RETURN(LE_THIS);}
-virtual             {CPP_KEYWORD_RETURN(LE_VIRTUAL);}
-template				  {CPP_KEYWORD_RETURN(LE_TEMPLATE);}
-typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
+class               	{CPP_KEYWORD_RETURN(LE_CLASS);}
+namespace           	{CPP_KEYWORD_RETURN(LE_NAMESPACE);}
+delete              	{CPP_KEYWORD_RETURN(LE_DELETE);}
+friend              	{CPP_KEYWORD_RETURN(LE_FRIEND);}
+inline              	{CPP_KEYWORD_RETURN(LE_INLINE);}
+new                 	{CPP_KEYWORD_RETURN(LE_NEW);}
+operator            	{CPP_KEYWORD_RETURN(LE_OPERATOR);}
+overload            	{CPP_KEYWORD_RETURN(LE_OVERLOAD);}
+protected           	{CPP_KEYWORD_RETURN(LE_PROTECTED);}
+private             	{CPP_KEYWORD_RETURN(LE_PRIVATE);}
+public             	{CPP_KEYWORD_RETURN(LE_PUBLIC);}
+this                	{CPP_KEYWORD_RETURN(LE_THIS);}
+virtual             	{CPP_KEYWORD_RETURN(LE_VIRTUAL);}
+template				  	{CPP_KEYWORD_RETURN(LE_TEMPLATE);}
+typename				  	{CPP_KEYWORD_RETURN(LE_TYPENAME);}
+dynamic_cast			{CPP_KEYWORD_RETURN(LE_DYNAMIC_CAST);}
+static_cast				{CPP_KEYWORD_RETURN(LE_STATIC_CAST);}
+const_cast				{CPP_KEYWORD_RETURN(LE_CONST_CAST);}
+reinterpret_cast 		{CPP_KEYWORD_RETURN(LE_REINTERPRET_CAST);}
 
-{identifier}          {IDENTIFIER_RETURN();}
+{identifier}         {IDENTIFIER_RETURN();}
 
-{decimal_constant}  {NUMERICAL_RETURN(LE_INTEGERconstant);}
-{octal_constant}    {NUMERICAL_RETURN(LE_OCTALconstant);}
-{hex_constant}      {NUMERICAL_RETURN(LE_HEXconstant);}
-{floating_constant} {NUMERICAL_RETURN(LE_FLOATINGconstant);}
-
-
-"L"?[']{c_char}+[']     {
-			NUMERICAL_RETURN(LE_CHARACTERconstant);
-			}
+{decimal_constant}  	{NUMERICAL_RETURN(LE_INTEGERconstant);}
+{octal_constant}    	{NUMERICAL_RETURN(LE_OCTALconstant);}
+{hex_constant}      	{NUMERICAL_RETURN(LE_HEXconstant);}
+{floating_constant} 	{NUMERICAL_RETURN(LE_FLOATINGconstant);}
 
 
-"L"?["]{s_char}*["]     {
-			LITERAL_RETURN(LE_STRINGliteral);}
+"L"?[']{c_char}+[']  {
+							NUMERICAL_RETURN(LE_CHARACTERconstant);
+							}
+
+
+"L"?["]{s_char}*["]  {
+							LITERAL_RETURN(LE_STRINGliteral);
+							}
 
 
 
@@ -264,27 +269,27 @@ typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
 ">>="                {NAMEDOP_RETURN(LE_RSassign);}
 "&="                 {NAMEDOP_RETURN(LE_ANDassign);}
 "^="                	{NAMEDOP_RETURN(LE_ERassign);}
-"|="					{NAMEDOP_RETURN(LE_ORassign);}
-"..."					{NAMEDOP_RETURN(LE_ELLIPSIS);}
-<<EOF>> 				{	
-							//reset lexer
-							yyterminate();
-						}
-.						{return yytext[0];}
-<PREPR>\n		{ 
-						defineFound = false;
-						BEGIN INITIAL;
-					}
-<PREPR>\\		{
-						BEGIN WRAP_PREP;
-					}
-<PREPR>define	{
-						defineFound = true;
-					}
-<WRAP_PREP>\n	{
-						BEGIN PREPR;
-					}
-<WRAP_PREP>{identifier}   { 
+"|="						{NAMEDOP_RETURN(LE_ORassign);}
+"..."						{NAMEDOP_RETURN(LE_ELLIPSIS);}
+<<EOF>> 					{	
+								//reset lexer
+								yyterminate();
+							}
+.							{return yytext[0];}
+<PREPR>\n				{ 
+							defineFound = false;
+							BEGIN INITIAL;
+							}
+<PREPR>\\				{
+							BEGIN WRAP_PREP;
+							}
+<PREPR>define			{
+							defineFound = true;
+							}
+<WRAP_PREP>\n			{
+							BEGIN PREPR;
+							}
+<WRAP_PREP>{identifier} { 
 						if(defineFound)
 						{
 							defineFound = false;

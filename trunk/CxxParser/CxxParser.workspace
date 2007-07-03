@@ -7,13 +7,13 @@
     <Option Name="ParseComments">yes</Option>
   </Ctags>
   <Project Name="Parser" Path="Parser.project" Active="Yes"/>
-  <Environment>
-    <Variable Name="WorkspaceName" Value="CxxParser"/>
-    <Variable Name="WorkspacePath" Value="C:\Development\C++\LiteEditor\CxxParser"/>
-  </Environment>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Project Name="Parser" ConfigName="Release"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
+  <Environment>
+    <Variable Name="WorkspaceName" Value="CxxParser"/>
+    <Variable Name="WorkspacePath" Value="C:\Development\C++\LiteEditor\CxxParser"/>
+  </Environment>
 </CodeLite_Workspace>

@@ -206,6 +206,10 @@ this                {CPP_KEYWORD_RETURN(LE_THIS);}
 virtual             {CPP_KEYWORD_RETURN(LE_VIRTUAL);}
 template				  {CPP_KEYWORD_RETURN(LE_TEMPLATE);}
 typename				  {CPP_KEYWORD_RETURN(LE_TYPENAME);}
+dynamic_cast		{CPP_KEYWORD_RETURN(LE_DYNAMIC_CAST);}
+static_cast			{CPP_KEYWORD_RETURN(LE_STATIC_CAST);}
+const_cast			{CPP_KEYWORD_RETURN(LE_CONST_CAST);}
+reinterpret_cast 	{CPP_KEYWORD_RETURN(LE_REINTERPRET_CAST);}
 
 {identifier}          {IDENTIFIER_RETURN();}
 

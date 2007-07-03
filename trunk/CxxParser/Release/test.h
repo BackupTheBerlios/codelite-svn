@@ -1,29 +1,8 @@
-#ifndef VARIABLE_H
-#define VARIABLE_H
-
-#include "string"
-#include "list"
-
-class Variable
-{
-public:
-	std::string 	m_name;
-	bool 				m_isTemplate;
-	std::string		m_templateDecl;
-	bool				m_isPtr;
-	std::string		m_type;		//as in 'int a;' -> type=int
-	std::string		m_typeScope;//as in 'std::string a;' -> typeScope = std, type=string
-	
-public:
-	Variable();
-	virtual ~Variable();
-
-	//clear the class content
-	void Reset();
-	
-	//print the variable to stdout
-	void Print();
-};
-
-typedef std::list<Variable> VariableList;
-#endif //VARIABLE_H
+dynamic_cast<wxFlatNotebook*>(myNotebook)
+static_cast<wxFlatNotebook*>(myNotebook)
+reinterpret_cast<wxFlatNotebook*>(myNotebook)
+const_cast<wxFlatNotebook>(myNotebook)
+((std::vector<wxString>&)strVec)
+(wxFlatNotebook*)myNotebook
+this
+*this

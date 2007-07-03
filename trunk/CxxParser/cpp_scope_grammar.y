@@ -83,6 +83,11 @@ extern void cl_scope_lex_clean();
 %token  LE_LSassign    LE_RSassign                 		/*   <<=     >>=             */
 %token  LE_ANDassign   LE_ERassign     LE_ORassign    	/*   &=      ^=      |=      */
 %token  LE_MACRO 
+%token  LE_DYNAMIC_CAST
+%token  LE_STATIC_CAST
+%token  LE_CONST_CAST
+%token  LE_REINTERPRET_CAST
+
 %start   translation_unit
 
 %%
