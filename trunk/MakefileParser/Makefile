@@ -27,6 +27,11 @@ $(file).$(infix_lex).o:			$(file).$(infix_lex).c $(file).$(infix_bison).h
 $(file).$(infix_lex).c:			$(file).l
 					flex -o $(file).$(infix_lex).c $(file).l
 
+install:				$(file).$(infix_lex).c $(file).$(infix_bison).h $(file).$(infix_bison).c$(filesuffix)
+					cp $(file).$(infix_lex).c ../Plugin
+					cp $(file).$(infix_bison).h ../Plugin
+					cp $(file).$(infix_bison).c$(filesuffix) ../Plugin
+
 clean:
 					rm -f $(file) $(file).$(infix_lex).* $(file).$(infix_bison).* main.o variable.output
 					rm -f *~
