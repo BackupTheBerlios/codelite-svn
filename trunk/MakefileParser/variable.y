@@ -1,16 +1,17 @@
 %{
 /**** Includes and Defines *****************************/
 #include <stdio.h>
-#include <string>
+#include <wx/string.h>
 #include <map>
-#include <vector>
+#include <wx/arrstr.h>
+#include <wx/wxchar.h>
 
 #define YYDEBUG 0        		/* get the pretty debugging code to compile*/
-#define YYSTYPE std::string
+#define YYSTYPE wxString
 
 
-typedef std::vector<std::string> Strings;
-typedef std::map<std::string, std::string> tokens;
+typedef wxArrayString Strings;
+typedef std::map<wxString, wxString> tokens;
 typedef tokens::iterator Itokens;
 
 extern Strings TheOutput;
@@ -22,41 +23,23 @@ extern int lineno;
 bool append = false;
 int yylex(void);
 
-void Trim(std::string& line)
+void Trim(YYSTYPE& line)
 {
-	size_t to = line.find_first_not_of(" \t");
-	if(to != -1)
-		line.erase(0, to);
-
-	size_t from = line.find_last_not_of(" \t")+1;
-	if(to != -1)
-		line.erase(from);
+	line.Trim(true);
+	line.Trim(false);
 }
 
 void yyerror(char* string)
 {
 //	printf("parser error: %s\n", string);
 }
-/*
 
-	| assignline '\n'		{	printf("|- assignment: %s\n", $1.c_str());	}
-
-
-aline:	normalline			{	printf("nline\n"); $$ = $1;		}
-    |	vline				{	printf("vline\n"); $$ = $1;		}
-;
-
-
-
-%token SPACE
-*/
 /*************** Standard variable.y: continues here *********************/
 %}
 
 /* Keywords */
 %token WORD
 %token ASSIGN
-%token SPACE
 %token PRINT
 
 /* Start of grammar */
@@ -71,10 +54,8 @@ line:	'\n'				{	/* Do Nothing */				}
 	| assgnline '\n'		{	/* Do Nothing */				}
 	| printline '\n'		{	/* Do Nothing */				}
 	| error	'\n'			{
-						char buf[1024];
-						buf[0] = '\0';
-						sprintf(buf, "Line %3d: Unexpected token '%s'");
-						std::string msg(buf);
+						YYSTYPE msg;
+						msg << wxT("Line ") << lineno << wxT(": Unexpected token '") << yylval << wxT("'.");
 						TheError.push_back(msg);
 						yyerrok;
 					}
@@ -95,7 +76,7 @@ variable: open name close 		{
 						else
 						{
 							TheUnmatched.push_back($2);
-							$$ = "";
+							$$ = wxEmptyString;
 						}
 					}
 
@@ -103,11 +84,11 @@ words: WORD				{	$$ = $1;				}
      | words WORD 			{	$$ = $1 + $2;				}
 ;
 
-optwords:				{	$$ = "";				}
+optwords:				{	$$ = wxEmptyString;			}
 	| words				{	$$ = $1;				}
 ;	
 
-optvars:				{	$$ = "";				}	
+optvars:				{	$$ = wxEmptyString;			}	
 	| wordvars			{	$$ = $1;				}
 ;
 
@@ -134,16 +115,16 @@ assgnline: words assignm optvars	{
 						{
 							TheTokens[$1] = $3;
 						}
-	 					$$ = $1 + "=" + $3;			
+	 					$$ = $1 + wxT("=") + $3;			
 					}
 
 printline:	PRINT			{
-	 					std::string result = "Tokens: \n";
+	 					YYSTYPE result = wxT("Tokens: \n");
 						for(Itokens it = TheTokens.begin(); it != TheTokens.end(); it++)
 						{
-							result += "'" + it->first + "'='" + it->second + "'\n";
+							result += wxT("'") + it->first + wxT("'='") + it->second + wxT("'\n");
 						}
-						result += "Done.";
+						result += wxT("Done.");
 						$$ = result;
 					}
 

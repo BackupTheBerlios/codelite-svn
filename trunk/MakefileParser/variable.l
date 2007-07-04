@@ -1,12 +1,9 @@
 %{
-#include <string>
-#include <vector>
+#include <wx/string.h>
 
-#define YYSTYPE std::string
-extern std::string yylval;
-typedef std::vector<std::string> Strings;
+#define YYSTYPE wxString
+extern wxString yylval;
 
-#include <string>
 #include "variable.tab.h"
 #define YY_NO_UNISTD_H 1
 #undef YY_NO_INPUT
@@ -14,7 +11,6 @@ int lineno = 0;
 %}
 
 word [0-9a-zA-Z_.\-+\*~:\\@&/|%\<\>,\'^ \t]+
-spaces [ \t]+
 
 %%
 
@@ -42,7 +38,7 @@ spaces [ \t]+
 				return '\n';	
 			}			
 {word}                  {				
-                                yylval = std::string(yytext);
+                                yylval.Printf(wxT("%s"),yytext);
                                 return WORD;
                         }
 .                      	{
