@@ -23,10 +23,11 @@ extern int lineno;
 bool append = false;
 int yylex(void);
 
-void Trim(YYSTYPE& line)
-{
-	line.Trim(true);
-	line.Trim(false);
+#define TrimString(string) { \
+	wxPrintf(wxT("before: '%s'\n"), string.c_str()); \
+	string = string.Trim(true);\
+	string = string.Trim(false);\
+	wxPrintf(wxT("after: '%s'\n"), string.c_str());\
 }
 
 void yyerror(char* string)
@@ -68,7 +69,7 @@ name:	wordvars			{	$$ = $1;				}
 close:	')'				{	/* do nothing */			}
 
 variable: open name close 		{
-						Trim($2);
+						TrimString($2);
 						if(TheTokens[$2].size() > 0)
 						{
 							$$ = TheTokens[$2];
@@ -104,8 +105,8 @@ assignm:	ASSIGN			{	append = true;				}
 ;
 
 assgnline: words assignm optvars	{
-	 					Trim($1);
-						Trim($3);
+	 					TrimString($1);
+						TrimString($3);
 
 	 					if(append)
 						{

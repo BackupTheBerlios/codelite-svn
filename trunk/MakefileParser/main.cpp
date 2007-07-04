@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <wx/string.h>
 #include <wx/arrstr.h>
+#include <wx/app.h>
 #include <map>
 
 void initLexer(const char *filename);
@@ -21,6 +22,7 @@ tokens TheTokens;
 
 int main(int argv, char* argc[])
 {
+	wxInitialize();
 	if(argv>1)
 	{
 		initLexer(argc[1]);
@@ -57,5 +59,6 @@ int main(int argv, char* argc[])
         }
 
 	printf("=============== DONE =============\n");
+	wxUninitialize();
 	return 0;
 }
