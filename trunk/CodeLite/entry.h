@@ -127,11 +127,11 @@ public:
 	//------------------------------------------
 	// Operations
 	//------------------------------------------
-	long GetId() const { return m_id; }
-	void SetId(long id) { m_id = id;}
+	int GetId() const { return m_id; }
+	void SetId(int id) { m_id = id;}
 
-	long GetParentId() const { return m_parentId; }
-	void SetParentId(long id) { m_parentId = id;}
+	int GetParentId() const { return m_parentId; }
+	void SetParentId(int id) { m_parentId = id;}
 	
 	const wxString& GetName() const { return m_name;}
 	void SetName(const wxString& name) { m_name = name; }
