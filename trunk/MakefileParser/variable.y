@@ -59,25 +59,24 @@ input:	/* empty */
 	| input line
 ;
 
-line:	'\n'				{	printf("|- newline\n");			}
+line:	'\n'				{	printf("|- newline\n");				}
 	| optwords vars_line '\n'	{	printf("|- vars  line: %s%s\n", $1.c_str(), $2.c_str());	}
 	| wordsline '\n'		{	printf("|- words line: %s\n", $1.c_str());	}
 	| assgnline '\n'		{	printf("|- assgn line: %s\n", $1.c_str());	}
 	| printline '\n'		{	printf("|- print line: %s\n", $1.c_str());	}
 	| error	'\n'			{
-									printf("unexpected token '%s' at line %d\n", yylval.c_str(), lineno);
-									yyerrok;
-								}
+						printf("unexpected token '%s' at line %d\n", yylval.c_str(), lineno);
+						yyerrok;
+					}
 ;
 
 open:	'$' '('				{	/* do nothing */			}
 
-name:	wordvars			{	$$ = $1;					}
+name:	wordvars			{	$$ = $1;				}
 
 close:	')'				{	/* do nothing */			}
 
 variable: open name close 		{
-						printf("name '%s'\n", $2.c_str());
 						Trim($2);
 						if(TheTokens[$2].size() > 0)
 						{
@@ -111,7 +110,7 @@ assignm:	ASSIGN			{	append = true;				}
        |	'='			{	append = false;				}
 ;
 
-assgnline: words assignm optwords		{
+assgnline: words assignm optwords	{
 	 					Trim($1);
 						Trim($3);
 
@@ -130,7 +129,7 @@ printline:	PRINT			{
 	 					std::string result = "Tokens: \n";
 						for(Itokens it = TheTokens.begin(); it != TheTokens.end(); it++)
 						{
-							result += it->first + "=" + it->second + "\n";
+							result += "'" + it->first + "'='" + it->second + "'\n";
 						}
 						result += "Done.";
 						$$ = result;

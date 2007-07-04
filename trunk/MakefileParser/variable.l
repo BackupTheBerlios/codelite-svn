@@ -1,5 +1,5 @@
 %{
-#include "string"
+#include <string>
 
 #define YYSTYPE std::string
 extern std::string yylval;
@@ -9,10 +9,9 @@ extern std::string yylval;
 #define YY_NO_UNISTD_H 1
 #undef YY_NO_INPUT
 int lineno = 0;
-//":"			{return ':';	}
 %}
 
-word [0-9a-zA-Z_.\-+\*~:\\@&/|%<>]+
+word [0-9a-zA-Z_.\-+\*~:\\@&/|%\<\>,\'^]+
 spaces [ \t]+
 
 %%
@@ -46,7 +45,7 @@ spaces [ \t]+
                                 return WORD;
                         }
 .                      	{
-				printf("?> '%s'\n", yytext);
+				//printf("?> '%s'\n", yytext);
 			}
 
 %%
