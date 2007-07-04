@@ -5,6 +5,8 @@
 #include <map>
 #include <wx/arrstr.h>
 #include <wx/wxchar.h>
+#include <wx/txtstrm.h>
+#include <wx/wfstream.h>
 
 #define YYDEBUG 0        		/* get the pretty debugging code to compile*/
 #define YYSTYPE wxString
@@ -22,12 +24,15 @@ extern int lineno;
 
 bool append = false;
 int yylex(void);
-
-#define TrimString(string) { \
-	wxPrintf(wxT("before: '%s'\n"), string.c_str()); \
-	string = string.Trim(true);\
-	string = string.Trim(false);\
-	wxPrintf(wxT("after: '%s'\n"), string.c_str());\
+void TrimString(wxString &string)
+{
+	wxFFileOutputStream output( stderr );
+        wxTextOutputStream cout( output );
+	
+	cout << wxT("Before: ") << string;
+	string = string.Trim(true);
+	string = string.Trim(false);
+	cout << wxT("After: ") << string;
 }
 
 void yyerror(char* string)
