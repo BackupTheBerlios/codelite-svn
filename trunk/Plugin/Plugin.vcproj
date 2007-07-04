@@ -367,6 +367,15 @@
 				RelativePath=".\TargetLexer.h">
 			</File>
 			<File
+				RelativePath=".\variable.tab.cpp">
+			</File>
+			<File
+				RelativePath=".\variable.tab.h">
+			</File>
+			<File
+				RelativePath=".\variable.yy.cpp">
+			</File>
+			<File
 				RelativePath=".\VariableLexer.cpp">
 			</File>
 			<File

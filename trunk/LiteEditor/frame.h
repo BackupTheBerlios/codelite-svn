@@ -168,6 +168,7 @@ protected:
 	void OnFileCloseAll(wxCommandEvent &event);
 	void OnFindResource(wxCommandEvent &event);
 	void OnImportMakefile(wxCommandEvent &event);
+	void OnImportMakefileUI(wxUpdateUIEvent &event);
 
 	// this event is sent from the notebook container to the frame
 	void OnFileClosing(wxFlatNotebookEvent &event);

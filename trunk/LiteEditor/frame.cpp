@@ -148,7 +148,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 
 	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
 	EVT_MENU(XRCID("import_from_makefile"), Frame::OnImportMakefile)
-
+	EVT_UPDATE_UI(XRCID("import_from_makefile"), Frame::OnImportMakefileUI)
 	EVT_CLOSE(Frame::OnClose)
 	EVT_TIMER(wxID_ANY, Frame::OnTimer)
 
@@ -1141,6 +1141,10 @@ void Frame::OnFindResource(wxCommandEvent &event)
 	dlg->Destroy();
 }
 
+void Frame::OnImportMakefileUI(wxUpdateUIEvent &event)
+{
+	event.Enable(false);
+}
 
 void Frame::OnImportMakefile(wxCommandEvent &event)
 {
