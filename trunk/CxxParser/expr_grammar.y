@@ -150,6 +150,17 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 						result.m_isThis = false;
 						result.Print();
 					}
+				| 	stmnt_starter nested_scope_specifier LE_IDENTIFIER '(' 
+					{
+						expr_FuncArgList();//consume the function parameters
+						result.m_isaType = false;
+						result.m_name = $3;
+						result.m_isFunc = true;
+						result.m_isThis = false;
+						$2.erase($2.find_last_not_of(":")+1);
+						result.m_scope = $2;
+						result.Print();
+					}
 				;
 
 special_cast 	: 	LE_DYNAMIC_CAST {$$ = $1;}

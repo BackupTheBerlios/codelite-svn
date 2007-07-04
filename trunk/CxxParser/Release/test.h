@@ -6,3 +6,4 @@ const_cast<wxFlatNotebook>(myNotebook)
 (wxFlatNotebook*)myNotebook
 this
 *this
+Class::DoTheWork(myVector.GetName())
