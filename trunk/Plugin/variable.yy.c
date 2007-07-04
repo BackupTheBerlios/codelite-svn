@@ -463,19 +463,16 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "variable.l"
 #line 2 "variable.l"
-#include <string>
-#include <vector>
+#include <wx/string.h>
 
-#define YYSTYPE std::string
-extern std::string yylval;
-typedef std::vector<std::string> Strings;
+#define YYSTYPE wxString
+extern wxString yylval;
 
-#include <string>
 #include "variable.tab.h"
 #define YY_NO_UNISTD_H 1
 #undef YY_NO_INPUT
 int lineno = 0;
-#line 479 "variable.yy.c"
+#line 476 "variable.yy.c"
 
 #define INITIAL 0
 
@@ -628,10 +625,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 19 "variable.l"
+#line 15 "variable.l"
 
 
-#line 635 "variable.yy.c"
+#line 632 "variable.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -716,7 +713,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 21 "variable.l"
+#line 17 "variable.l"
 {
        register int c;
        #ifdef __cplusplus
@@ -732,38 +729,38 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 34 "variable.l"
+#line 30 "variable.l"
 {return ASSIGN;	}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 35 "variable.l"
+#line 31 "variable.l"
 {return '=';    }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 36 "variable.l"
+#line 32 "variable.l"
 {return '$';    }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 37 "variable.l"
+#line 33 "variable.l"
 {return '(';    }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 38 "variable.l"
+#line 34 "variable.l"
 {return ')';    }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 39 "variable.l"
+#line 35 "variable.l"
 {return PRINT;	}
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 40 "variable.l"
+#line 36 "variable.l"
 {
 				lineno++;
 				return '\n';	
@@ -771,25 +768,25 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 44 "variable.l"
+#line 40 "variable.l"
 {				
-                                yylval = std::string(yytext);
+                                yylval.Printf(wxT("%s"),yytext);
                                 return WORD;
                         }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 48 "variable.l"
+#line 44 "variable.l"
 {
 				//printf("?> '%s'\n", yytext);
 			}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 52 "variable.l"
+#line 48 "variable.l"
 ECHO;
 	YY_BREAK
-#line 793 "variable.yy.c"
+#line 790 "variable.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1775,7 +1772,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 52 "variable.l"
+#line 48 "variable.l"
 
 
 

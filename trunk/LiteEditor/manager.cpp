@@ -1130,7 +1130,7 @@ void Manager::ImportFromMakefile(const wxString &path)
 	wxFileName fileName = path;
 	DebugMessage(fileName.GetPath() + wxT("\n"));
 	
-	wxString file;
+	/*wxString file;
 	FileUtils::ReadFileUTF8(fileName, file);
 	
 	StringTokenizer tokenizer(file, wxT("\n"));
@@ -1138,9 +1138,9 @@ void Manager::ImportFromMakefile(const wxString &path)
 	for(int i = 0; i < tokenizer.Count(); i++)
 	{
 		fileContents.Add(tokenizer[i]);
-	}
+	}*/
 	
-	VariableLexer expander(fileContents);
+	VariableLexer expander(path);
 	wxArrayString expanded = expander.getResult();
 	
 	MakefileParser parser(expanded);

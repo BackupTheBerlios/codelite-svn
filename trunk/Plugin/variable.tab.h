@@ -41,15 +41,13 @@
    enum yytokentype {
      WORD = 258,
      ASSIGN = 259,
-     SPACE = 260,
-     PRINT = 261
+     PRINT = 260
    };
 #endif
 /* Tokens.  */
 #define WORD 258
 #define ASSIGN 259
-#define SPACE 260
-#define PRINT 261
+#define PRINT 260
 
 
 
