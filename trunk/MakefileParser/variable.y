@@ -3,17 +3,23 @@
 #include <stdio.h>
 #include <string>
 #include <map>
+#include <vector>
 
 #define YYDEBUG 0        		/* get the pretty debugging code to compile*/
 #define YYSTYPE std::string
 
-extern int lineno;
 
+typedef std::vector<std::string> Strings;
 typedef std::map<std::string, std::string> tokens;
 typedef tokens::iterator Itokens;
-tokens TheTokens;
-bool append = false;
 
+extern Strings TheOutput;
+extern Strings TheUnmatched;
+extern Strings TheError;
+extern tokens TheTokens;
+extern int lineno;
+
+bool append = false;
 int yylex(void);
 
 void Trim(std::string& line)
@@ -56,16 +62,20 @@ aline:	normalline			{	printf("nline\n"); $$ = $1;		}
 /* Start of grammar */
 %%
 input:	/* empty */
-	| input line
+	| input line			{	/* Do Nothing */				}
 ;
 
-line:	'\n'				{	printf("|%2d- newline\n", lineno);				}
-	| optwords vars_line '\n'	{	printf("|%2d- vars  line: %s%s\n", lineno, $1.c_str(), $2.c_str());	}
-	| wordsline '\n'		{	printf("|%2d- words line: %s\n", lineno, $1.c_str());	}
-	| assgnline '\n'		{	printf("|%2d- assgn line: %s\n", lineno, $1.c_str());	}
-	| printline '\n'		{	printf("|%2d- print line: %s\n", lineno, $1.c_str());	}
+line:	'\n'				{	/* Do Nothing */				}
+	| optwords vars_line '\n'	{	TheOutput.push_back($1+$2);			}
+	| wordsline '\n'		{	TheOutput.push_back($1);			}
+	| assgnline '\n'		{	/* Do Nothing */				}
+	| printline '\n'		{	/* Do Nothing */				}
 	| error	'\n'			{
-						printf("unexpected token '%s' at line %d\n", yylval.c_str(), lineno);
+						char buf[1024];
+						buf[0] = '\0';
+						sprintf(buf, "Line %3d: Unexpected token '%s'");
+						std::string msg(buf);
+						TheError.push_back(msg);
 						yyerrok;
 					}
 ;
@@ -84,7 +94,7 @@ variable: open name close 		{
 						}
 						else
 						{
-							printf("Awr... unmatched token '%s'!\n", $2.c_str());
+							TheUnmatched.push_back($2);
 							$$ = "";
 						}
 					}
