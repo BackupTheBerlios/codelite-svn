@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CodeLite_Workspace Name="CxxParser" Database=".\CxxParser.tags">
+<CodeLite_Workspace Name="CxxParser" Database="./CxxParser.tags">
   <Ctags>
     <Option Name="Macros"/>
     <Option Name="Language">C++</Option>
@@ -14,6 +14,6 @@
   </BuildMatrix>
   <Environment>
     <Variable Name="WorkspaceName" Value="CxxParser"/>
-    <Variable Name="WorkspacePath" Value="C:\Development\C++\LiteEditor\CxxParser"/>
+    <Variable Name="WorkspacePath" Value="/home/eran/Development/CodeLite/trunk/CxxParser"/>
   </Environment>
 </CodeLite_Workspace>
