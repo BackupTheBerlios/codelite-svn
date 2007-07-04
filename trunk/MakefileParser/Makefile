@@ -28,5 +28,5 @@ $(file).$(infix_lex).c:			$(file).l
 					flex -o $(file).$(infix_lex).c $(file).l
 
 clean:
-					rm -f $(file) $(file).$(infix_lex).* $(file).$(infix_bison).* main.o
-					rm *~
+					rm -f $(file) $(file).$(infix_lex).* $(file).$(infix_bison).* main.o variable.output
+					rm -f *~

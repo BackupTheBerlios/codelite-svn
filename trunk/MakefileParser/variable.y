@@ -59,11 +59,11 @@ input:	/* empty */
 	| input line
 ;
 
-line:	'\n'				{	printf("|- newline\n");				}
-	| optwords vars_line '\n'	{	printf("|- vars  line: %s%s\n", $1.c_str(), $2.c_str());	}
-	| wordsline '\n'		{	printf("|- words line: %s\n", $1.c_str());	}
-	| assgnline '\n'		{	printf("|- assgn line: %s\n", $1.c_str());	}
-	| printline '\n'		{	printf("|- print line: %s\n", $1.c_str());	}
+line:	'\n'				{	printf("|%2d- newline\n", lineno);				}
+	| optwords vars_line '\n'	{	printf("|%2d- vars  line: %s%s\n", lineno, $1.c_str(), $2.c_str());	}
+	| wordsline '\n'		{	printf("|%2d- words line: %s\n", lineno, $1.c_str());	}
+	| assgnline '\n'		{	printf("|%2d- assgn line: %s\n", lineno, $1.c_str());	}
+	| printline '\n'		{	printf("|%2d- print line: %s\n", lineno, $1.c_str());	}
 	| error	'\n'			{
 						printf("unexpected token '%s' at line %d\n", yylval.c_str(), lineno);
 						yyerrok;
@@ -89,14 +89,16 @@ variable: open name close 		{
 						}
 					}
 
-words: SPACE				{	$$ = " ";				}
-     | WORD				{	$$ = $1;				}
+words: WORD				{	$$ = $1;				}
      | words WORD 			{	$$ = $1 + $2;				}
-     | words SPACE			{	$$ = $1 + " ";				}
 ;
 
-optwords:				{	$$ = "";				}	
+optwords:				{	$$ = "";				}
 	| words				{	$$ = $1;				}
+;	
+
+optvars:				{	$$ = "";				}	
+	| wordvars			{	$$ = $1;				}
 ;
 
 
@@ -110,7 +112,7 @@ assignm:	ASSIGN			{	append = true;				}
        |	'='			{	append = false;				}
 ;
 
-assgnline: words assignm optwords	{
+assgnline: words assignm optvars	{
 	 					Trim($1);
 						Trim($3);
 
@@ -134,12 +136,9 @@ printline:	PRINT			{
 						result += "Done.";
 						$$ = result;
 					}
-optspace:				{	$$ = "";				}
-	| SPACE				{	$$ = " ";				}
-;
 
-wordvars: WORD optspace			{	$$ = $1 + $2;				}
-	| variable optspace		{	$$ = $1 + $2;				}
+wordvars: WORD 				{	$$ = $1;				}
+	| variable 			{	$$ = $1;				}
 	| wordvars variable		{	$$ = $1 + $2;				}
 	| wordvars WORD 		{	$$ = $1 + $2;				}
 ;

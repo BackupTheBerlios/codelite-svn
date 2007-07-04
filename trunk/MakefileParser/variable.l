@@ -1,8 +1,10 @@
 %{
 #include <string>
+#include <vector>
 
 #define YYSTYPE std::string
 extern std::string yylval;
+typedef std::vector<std::string> Strings;
 
 #include <string>
 #include "variable.tab.h"
@@ -11,7 +13,7 @@ extern std::string yylval;
 int lineno = 0;
 %}
 
-word [0-9a-zA-Z_.\-+\*~:\\@&/|%\<\>,\'^]+
+word [0-9a-zA-Z_.\-+\*~:\\@&/|%\<\>,\'^ ]+
 spaces [ \t]+
 
 %%
@@ -35,7 +37,6 @@ spaces [ \t]+
 "("                     {return '(';    }
 ")"                     {return ')';    }
 "PRINT"			{return PRINT;	}
-{spaces}                {return SPACE;  }
 "\n"			{
 				lineno++;
 				return '\n';	
