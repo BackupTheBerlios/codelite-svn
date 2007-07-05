@@ -31,8 +31,6 @@ ParseThread::~ParseThread()
 void ParseThread::ProcessRequest(ThreadRequest * request)
 {
 	ParseRequest *req = (ParseRequest*)request;
-	
-	wxString project = req->project;
 	wxString dbfile  = req->dbfile;
 	wxString file  = req->file;
 	
@@ -43,7 +41,7 @@ void ParseThread::ProcessRequest(ThreadRequest * request)
 	TagTreePtr oldTree;
 	try
 	{
-		wxSQLite3ResultSet rs = m_pDb->SelectTagsByProjectAndFile(project, file, wxFileName(dbfile));
+		wxSQLite3ResultSet rs = m_pDb->SelectTagsByFile(file, wxFileName(dbfile));
 		
 		// Load the records and build a language tree
 		TagEntry root;
@@ -66,11 +64,11 @@ void ParseThread::ProcessRequest(ThreadRequest * request)
 	std::vector<DbRecordPtr> comments;
 	if( TagsManagerST::Get()->GetParseComments() )
 	{
-		newTree = TagsManagerST::Get()->ParseSourceFile(wxFileName(file), project, &comments);
+		newTree = TagsManagerST::Get()->ParseSourceFile(wxFileName(file), &comments);
 	}
 	else
 	{
-		newTree = TagsManagerST::Get()->ParseSourceFile(wxFileName(file), project);
+		newTree = TagsManagerST::Get()->ParseSourceFile(wxFileName(file));
 	}
 	//-------------------------------------------------------------------
 	// Now what is left to be done here, is to update the GUI tree

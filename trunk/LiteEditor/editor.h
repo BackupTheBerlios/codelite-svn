@@ -11,7 +11,7 @@
 #include <wx/wxFlatNotebook/wxFlatNotebook.h>
 #include "context_base.h"
 #include "wx/menu.h"
-
+#include "browse_record.h"
 class wxFindReplaceDialog;
 
 //incase we are using DLL build of wxWdigets, we need to make this class to export its 
@@ -54,7 +54,7 @@ class WXDLLIMPEXP_LE LEditor : public wxScintilla
 	wxMenu *m_rightClickMenu;
 
 	// static cache among editors to keep track of jumping between editors
-	static std::stack<TagEntry> m_history;
+	static std::stack<BrowseRecord> m_history;
 	static FindReplaceDialog *m_findReplaceDlg;
 	static FindReplaceData m_findReplaceData;
 	int m_lastMatchPos;
@@ -233,7 +233,7 @@ public:
 	/**
 	 * Return the current LEditor history stack
 	 */
-	static std::stack<TagEntry> &GetHistory() { return m_history; }
+	static std::stack<BrowseRecord> &GetHistory() { return m_history; }
 
 private:
 

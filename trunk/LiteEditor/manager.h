@@ -48,14 +48,6 @@ public:
 
 	/*!
 	 * \brief
-	 * Open a file using TagEntry as input
-	 * 
-	 * \param tag TagEntry 
-	 */
-	void OpenFile(const TagEntry &tag);
-
-	/*!
-	 * \brief
 	 * Open a file using file name and line number
 	 * 
 	 * \param fileName full path of the file name
@@ -63,8 +55,10 @@ public:
 	 * \param lineno the cursor will be placed at lineno
 	 * \param position the position of the match starting from begining
 	 */
-	void OpenFile(const wxString &file_name, const wxString &projectName, int lineno = wxNOT_FOUND, long position = wxNOT_FOUND);
-
+	void OpenFile(const wxString &file_name, 
+				  const wxString &projectName, 
+				  int lineno = wxNOT_FOUND, 
+				  long position = wxNOT_FOUND);
 
 	/**
 	 * Create new file on the disk and open it in the main editor
@@ -463,7 +457,7 @@ protected:
 	void OnProcessEnd(wxProcessEvent &event);
 
 private:
-	void DoRetagProject(const wxString &projectName, bool updateUItree);
+	void DoRetagProject(const wxString &projectName);
 
 	/**
 	 * Update the symbol & file tress

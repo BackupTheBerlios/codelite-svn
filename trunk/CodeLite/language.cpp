@@ -1161,15 +1161,7 @@ wxString Language::GetStringTip(TagEntry &tag)
 	}
 	else
 	{
-		if( tag.GetProject().IsEmpty() == false )
-		{
-			// the project is part of the path, remove it
-			StringTokenizer tkz( tag.GetPath(), wxString( tag.GetProject() + _T("::") ) );
-			path = tkz.Last();
-		}
-		else
-			path = tag.GetPath();
-
+		path = tag.GetPath();
 		Qualifier( tag, isPtr, false, &qualifier );
 		tip << comment << qualifier << _T(" ")
 			<< path

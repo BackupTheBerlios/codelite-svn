@@ -10,14 +10,13 @@
 #endif
 #endif 
 
-TagEntry::TagEntry(const tagEntry& entry, const wxString& project)
+TagEntry::TagEntry(const tagEntry& entry)
 {
-	Create(entry, project);
+	Create(entry);
 }
 
 TagEntry::TagEntry()
-: m_project(wxEmptyString)
-, m_path(wxEmptyString)
+: m_path(wxEmptyString)
 , m_file(wxEmptyString)
 , m_lineNumber(-1)
 , m_pattern(wxEmptyString)
@@ -43,7 +42,6 @@ TagEntry& TagEntry::operator=(const TagEntry& rhs)
 {
 	m_id = rhs.m_id;
 	m_parentId = rhs.m_parentId;
-	m_project = rhs.m_project;
 	m_file = rhs.m_file;
 	m_kind = rhs.m_kind;
 	m_parent = rhs.m_parent;
@@ -63,7 +61,6 @@ bool TagEntry::operator ==(const TagEntry& rhs)
 	return	
 		m_parentId == rhs.m_parentId &&
 		m_id == rhs.m_id &&
-		m_project == rhs.m_project && 
 		m_file == rhs.m_file &&
 		m_kind == rhs.m_kind &&
 		m_parent == rhs.m_parent &&
@@ -83,8 +80,7 @@ void TagEntry::Create(const wxString &fileName,
 					  int lineNumber, 
 					  const wxString &pattern, 
 					  const wxString &kind, 
-					  std::map<wxString, wxString>& extFields, 
-					  const wxString& project)
+					  std::map<wxString, wxString>& extFields)
 {
 	SetPosition( wxNOT_FOUND );
 	SetName( name );
@@ -92,7 +88,6 @@ void TagEntry::Create(const wxString &fileName,
 	SetKind( kind.IsEmpty() ? wxT("<unknown>") : kind );
 	SetPattern( pattern );
 	SetFile( fileName );
-	SetProject( project );
 	SetId(-1);
 	SetParentId(-1);
 
@@ -128,15 +123,9 @@ void TagEntry::Create(const wxString &fileName,
 
 	(tok.Count() < 2) ? parent = wxT("<global>") : parent = tok[tok.Count()-2];
 	SetParent(parent);
-
-	// If we have a project, add it to the tag name
-	if(!project.IsEmpty())
-	{
-		SetPath( project + wxT("::") + GetPath() );
-	}
 }
 
-void TagEntry::Create(const tagEntry& entry, const wxString& project)
+void TagEntry::Create(const tagEntry& entry)
 {
 	// Get other information from the string data and store it into map
 	for (int i = 0;  i < entry.fields.count;  ++i)
@@ -150,8 +139,7 @@ void TagEntry::Create(const tagEntry& entry, const wxString& project)
 			entry.address.lineNumber, 
 			_U(entry.address.pattern), 
 			_U(entry.kind), 
-			m_extFields, 
-			project);
+			m_extFields);
 }
 
 void TagEntry::Print()
@@ -184,6 +172,10 @@ wxString TagEntry::GetDisplayName() const
 {
 	wxString name;
 	name << GetName() << GetSignature();
+	if(GetKind() == wxT("prototype"))
+	{
+		name << wxT(": [prototype]");
+	}
 	return name;
 }
 
@@ -205,18 +197,17 @@ TagEntry::TagEntry(wxSQLite3ResultSet& rs)
 	m_extFields.clear();
 	m_id = rs.GetInt(0);
 	m_parentId = rs.GetInt(1);
-	m_project = rs.GetString(2);
-	m_name = rs.GetString(3);
-	m_file = rs.GetString(4);
-	m_lineNumber = rs.GetInt(5);
-	m_kind = rs.GetString(6);
-	m_extFields[wxT("access")] = rs.GetString(7);
-	m_extFields[wxT("signature")] = rs.GetString(8);
-	m_pattern = rs.GetString(9);
-	m_parent  = rs.GetString(10);
-	m_extFields[wxT("inherits")] = rs.GetString(11);
-	m_path = rs.GetString(12);
-	m_extFields[wxT("typeref")] = rs.GetString(13);
+	m_name = rs.GetString(2);
+	m_file = rs.GetString(3);
+	m_lineNumber = rs.GetInt(4);
+	m_kind = rs.GetString(5);
+	m_extFields[wxT("access")] = rs.GetString(6);
+	m_extFields[wxT("signature")] = rs.GetString(7);
+	m_pattern = rs.GetString(8);
+	m_parent  = rs.GetString(9);
+	m_extFields[wxT("inherits")] = rs.GetString(10);
+	m_path = rs.GetString(11);
+	m_extFields[wxT("typeref")] = rs.GetString(12);
 	m_position = wxNOT_FOUND;
 }
 
@@ -234,18 +225,17 @@ int TagEntry::Store(wxSQLite3Statement& insertPerepareStmnt)
 	{
 		// see TagsDatabase::GetInsertOneStatement() for the order of binding
 		insertPerepareStmnt.Bind(1, GetParentId());
-		insertPerepareStmnt.Bind(2, GetProject());
-		insertPerepareStmnt.Bind(3, GetName());
-		insertPerepareStmnt.Bind(4, GetFile());
-		insertPerepareStmnt.Bind(5, GetLine());
-		insertPerepareStmnt.Bind(6, GetKind());
-		insertPerepareStmnt.Bind(7, GetAccess());
-		insertPerepareStmnt.Bind(8, GetSignature());
-		insertPerepareStmnt.Bind(9, GetPattern());
-		insertPerepareStmnt.Bind(10, GetParent());
-		insertPerepareStmnt.Bind(11, GetInherits());
-		insertPerepareStmnt.Bind(12, GetPath());
-		insertPerepareStmnt.Bind(13, GetTyperef());
+		insertPerepareStmnt.Bind(2, GetName());
+		insertPerepareStmnt.Bind(3, GetFile());
+		insertPerepareStmnt.Bind(4, GetLine());
+		insertPerepareStmnt.Bind(5, GetKind());
+		insertPerepareStmnt.Bind(6, GetAccess());
+		insertPerepareStmnt.Bind(7, GetSignature());
+		insertPerepareStmnt.Bind(8, GetPattern());
+		insertPerepareStmnt.Bind(9, GetParent());
+		insertPerepareStmnt.Bind(10, GetInherits());
+		insertPerepareStmnt.Bind(11, GetPath());
+		insertPerepareStmnt.Bind(12, GetTyperef());
 		insertPerepareStmnt.ExecuteUpdate();
 		insertPerepareStmnt.Reset();
 
@@ -278,10 +268,9 @@ int TagEntry::Update(wxSQLite3Statement& updatePerepareStmnt)
 		updatePerepareStmnt.Bind(7, GetParent());
 		updatePerepareStmnt.Bind(8, GetInherits());
 		updatePerepareStmnt.Bind(9, GetTyperef());
-		updatePerepareStmnt.Bind(10, GetProject());
-		updatePerepareStmnt.Bind(11, GetKind());
-		updatePerepareStmnt.Bind(12, GetSignature());
-		updatePerepareStmnt.Bind(13, GetPath());
+		updatePerepareStmnt.Bind(10, GetKind());
+		updatePerepareStmnt.Bind(11, GetSignature());
+		updatePerepareStmnt.Bind(12, GetPath());
 		updatePerepareStmnt.ExecuteUpdate();
 		updatePerepareStmnt.Reset();
 	}
@@ -299,10 +288,9 @@ int TagEntry::Delete(wxSQLite3Statement &deletePreparedStmnt)
 	// Delete is done using the index
 	try
 	{
-		deletePreparedStmnt.Bind(1, GetProject());		// Project
-		deletePreparedStmnt.Bind(2, GetKind());			// Kind
-		deletePreparedStmnt.Bind(3, GetSignature());	// Signature
-		deletePreparedStmnt.Bind(4, GetPath());			// Path
+		deletePreparedStmnt.Bind(1, GetKind());			// Kind
+		deletePreparedStmnt.Bind(2, GetSignature());	// Signature
+		deletePreparedStmnt.Bind(3, GetPath());			// Path
 		deletePreparedStmnt.ExecuteUpdate();
 		deletePreparedStmnt.Reset();
 	}
@@ -330,13 +318,6 @@ wxString TagEntry::GetScopeName() const
 		return wxEmptyString;
 	else
 	{
-		if(!GetProject().IsEmpty())
-		{
-			// Remove the project name from the path
-			wxString prefix(GetProject() + wxT("::"));
-			scopeName.StartsWith(prefix.GetData(), &scopeName);
-		}
-
 		// Remove the last token
 		StringTokenizer tok(scopeName, wxT("::"));
 		scopeName.Empty();
@@ -429,16 +410,16 @@ wxString TagEntry::NameFromTyperef() const
 
 wxString TagEntry::GetDeleteOneStatement()
 {
-	return wxT("DELETE FROM TAGS WHERE Project=? AND Kind=? AND Signature=? AND Path=?");
+	return wxT("DELETE FROM TAGS WHERE Kind=? AND Signature=? AND Path=?");
 }
 
 wxString TagEntry::GetUpdateOneStatement()
 {
-	return wxT("UPDATE TAGS SET ParentId=?, Name=?, File=?, Line=?, Access=?, Pattern=?, Parent=?, Inherits=?, Typeref=? WHERE Project=? AND Kind=? AND Signature=? AND Path=?");
+	return wxT("UPDATE TAGS SET ParentId=?, Name=?, File=?, Line=?, Access=?, Pattern=?, Parent=?, Inherits=?, Typeref=? WHERE Kind=? AND Signature=? AND Path=?");
 }
 
 wxString TagEntry::GetInsertOneStatement()
 {
-	return wxT("INSERT INTO TAGS VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");	
+	return wxT("INSERT INTO TAGS VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");	
 }
 

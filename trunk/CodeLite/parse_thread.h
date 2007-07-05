@@ -23,7 +23,6 @@ class WXDLLIMPEXP_CL ParseRequest : public ThreadRequest
 {
 public:
 	wxString file;
-	wxString project;
 	wxString dbfile;
 };
 

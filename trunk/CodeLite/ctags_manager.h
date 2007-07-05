@@ -192,30 +192,27 @@ public:
 	 * User should use ParseSourceFile, which calls to this function internally.
 	 * This function throws a std::exception*.
 	 * \param fp CTAGS tags file name
-	 * \param project Project to associate to this file
 	 * \return tag tree
 	 */
-	TagTreePtr ParseTagsFile(const wxFileName& fp, const wxString& project = wxEmptyString);
+	TagTreePtr ParseTagsFile(const wxFileName& fp);
 
 	/**
 	 * Parse a source file and construct a TagTree.
 	 * This function throws a std::exception*.
 	 * \param fp Source file name
-	 * \param project Project to associate to this file
 	 * \param comments if not null, comments will be parsed as well, and will be returned as vector
 	 * \return tag tree
 	 */
-	TagTreePtr ParseSourceFile(const wxFileName& fp, const wxString& project = wxEmptyString, std::vector<DbRecordPtr> *comments = NULL);
+	TagTreePtr ParseSourceFile(const wxFileName& fp, std::vector<DbRecordPtr> *comments = NULL);
 
 	/**
 	 * Parse an array of source files and construct a TagTree.
 	 * This function throws a std::exception*.
 	 * \param fpArr An array of source files
-	 * \param project Project to associate to this file
 	 * \param comments if not null, comments will be parsed as well, and will be returned as vector
 	 * \return tag tree
 	 */
-	TagTreePtr ParseSourceFiles(const std::vector<wxFileName> &fpArr, const wxString& project = wxEmptyString, std::vector<DbRecordPtr> *comments = NULL);
+	TagTreePtr ParseSourceFiles(const std::vector<wxFileName> &fpArr, std::vector<DbRecordPtr> *comments = NULL);
 
 	/**
 	 * Parse a source file for local variables only construct a TagTree.
@@ -254,13 +251,12 @@ public:
 	void StoreComments(const std::vector<DbRecordPtr> &comments, const wxFileName& path = wxFileName());
 
 	/**
-	 * Construct tree from database. 
-	 * Returned tree should be freed by caller.
-	 * \param path Database file name
-	 * \param project Project name
-	 * \return tag tree, must be freed by caller
+	 * load all symbols of fileName from the database and return them 
+	 * to user as tree
+	 * \param path file's symbols
+	 * \return tag tree
 	 */
-	TagTreePtr Load(const wxFileName& path = wxFileName(), const wxString& project = wxEmptyString);
+	TagTreePtr Load(const wxFileName& fileName);
 
 	/**
 	 * Open sqlite database.
@@ -275,12 +271,11 @@ public:
 	const TagsDatabase* GetDatabase() const { return m_pDb; }
 
 	/**
-	 * Delete all entries from database that are related to project and file name.
+	 * Delete all entries from database that are related to file name.
 	 * \param path Database name
-	 * \param project Project name
 	 * \param fileName File name
 	 */
-	void Delete(const wxFileName& path, const wxString& project, const wxString& fileName);
+	void Delete(const wxFileName& path, const wxString& fileName);
 
 	/**
 	 * Start a ctags process on a filter mode. 
@@ -469,10 +464,9 @@ private:
 	 * User should use ParseSourceFile, which calls to this function internally.
 	 * This function throws a std::exception*.
 	 * \param tags wxString containing the tags to parse
-	 * \param project Project to associate to this file
 	 * \return tag tree
 	 */
-	TagTreePtr ParseTags(const wxString& tags, const wxString& project = wxEmptyString);
+	TagTreePtr ParseTags(const wxString& tags);
 	
 	/**
 	 * Create a vector of tags.
@@ -487,18 +481,16 @@ private:
 	 * Construct a tag object from line.
 	 * \param line Line 
 	 * \param tag Tag from the line (output)
-	 * \param project Tag project name
 	 */
-	void TagFromLine(const wxString& line, TagEntry& tag, const wxString& project);
+	void TagFromLine(const wxString& line, TagEntry& tag);
 
 	/**
 	 * Parse tags from memory and constructs a TagTree. 
 	 * This function throws a std::exception*.
 	 * \param tags wxString containing the tags to parse
-	 * \param project Project to associate to this file
 	 * \return tag tree, must be freed by caller
 	 */
-	TagTreePtr TreeFromTags(const wxString& tags, const wxString& project);
+	TagTreePtr TreeFromTags(const wxString& tags);
 
 	/**
 	 * Filter out entries from src vector. The filter is done base on the name & flags

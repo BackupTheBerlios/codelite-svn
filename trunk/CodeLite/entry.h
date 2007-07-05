@@ -32,7 +32,6 @@
  */
 class WXDLLIMPEXP_CL TagEntry : public DbRecord
 {
-	wxString m_project;		///< Project this tag is belong to
 	wxString m_path;		///< Tag full path
 	wxString m_file;		///< File this tag is found
 	int		 m_lineNumber;	///< Line number
@@ -48,11 +47,10 @@ class WXDLLIMPEXP_CL TagEntry : public DbRecord
 
 public:
 	/**
-	 * Construct a TagEntry from tagEntry struct and a project name.
+	 * Construct a TagEntry from tagEntry struct
 	 * \param entry Tag entry
-	 * \param project Project name
 	 */
-	TagEntry(const tagEntry& entry, const wxString& project);
+	TagEntry(const tagEntry& entry);
 
 	/**
 	 * Default constructor.
@@ -91,9 +89,8 @@ public:
 	/**
 	 * Construct a TagEntry from tagEntry struct.
 	 * \param entry Tag entry
-	 * \param project Project name
 	 */
-	void Create(const tagEntry& entry, const wxString& project);
+	void Create(const tagEntry& entry);
 
 	/**
 	 * Construct a TagEntry from values.
@@ -110,8 +107,7 @@ public:
 				int lineNumber, 
 				const wxString &pattern, 
 				const wxString &kind, 
-				std::map<wxString, wxString>& extFields, 
-				const wxString& project);
+				std::map<wxString, wxString>& extFields);
 
 	/**
 	 * Test if this entry has been initialised.
@@ -153,9 +149,6 @@ public:
 
 	const wxString& GetParent() const { return m_parent; }
 	void SetParent(const wxString& parent) { m_parent = parent; }
-
-	const wxString& GetProject() const { return m_project; }
-	void SetProject(const wxString& project) { m_project = project; }
 
 	wxTreeItemId& GetTreeItemId() { return m_hti; }
 	void SetTreeItemId(wxTreeItemId& hti) { m_hti = hti; }

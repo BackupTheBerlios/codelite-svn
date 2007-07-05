@@ -2,8 +2,10 @@
 #include "fileview.h"
 #include "cpp_symbol_tree.h"
 #include <wx/xrc/xmlres.h>
+#include "frame.h"
+#include "wx/choicebk.h"
 
-const wxString WorkspacePane::SYMBOL_VIEW = wxT("Symbols");
+const wxString WorkspacePane::SYMBOL_VIEW = wxT("Outline");
 const wxString WorkspacePane::FILE_VIEW   = wxT("Files");
 
 extern wxImageList* CreateSymbolTreeImages();
@@ -19,12 +21,6 @@ WorkspacePane::WorkspacePane(wxWindow *parent, const wxString &caption)
 WorkspacePane::~WorkspacePane()
 {
 
-}
-
-void WorkspacePane::OnPaint(wxPaintEvent &event)
-{
-	wxPaintDC dc(this);
-	event.Skip();
 }
 
 int WorkspacePane::CaptionToIndex(const wxString &caption)
@@ -53,19 +49,39 @@ void WorkspacePane::CreateGUIControls()
 	m_book->SetImageList( &m_images );
 
 	// Add the class view tree
-	m_tree = new CppSymbolTree(m_book, wxID_ANY);
-	m_book->AddPage(m_tree, WorkspacePane::SYMBOL_VIEW, true, 1);
+	m_treeBook = new wxChoicebook(m_book, wxID_ANY);
+	m_book->AddPage(m_treeBook, WorkspacePane::SYMBOL_VIEW, false, 1);
 
 	m_fileView = new FileViewTree(m_book, wxID_ANY);
-	m_book->AddPage(m_fileView, WorkspacePane::FILE_VIEW, false, 0);
-
-	// Set the images for the symbols
-	m_tree->SetSymbolsImages( CreateSymbolTreeImages() );
+	m_book->AddPage(m_fileView, WorkspacePane::FILE_VIEW, true, 0);
 }
 
-void WorkspacePane::BuildSymbolTree(TagTreePtr tree)
+CppSymbolTree *WorkspacePane::GetTreeByFilename(const wxFileName &filename)
 {
-	m_tree->BuildTree( tree );
+	size_t count = m_treeBook->GetPageCount();
+	//found the relevant page
+	for(size_t i=0; i<count; i++)
+	{
+		CppSymbolTree *tree = dynamic_cast<CppSymbolTree *>(m_treeBook->GetPage(i));
+		if(tree)
+		{
+			if(tree->GetFilename() == filename)
+				return tree;
+		} // if(tree)
+	} // for(size_t i=0; i<count; i++)
+	return NULL;
+}
+
+void WorkspacePane::BuildSymbolTree(const wxFileName &filename)
+{
+	CppSymbolTree *tree = GetTreeByFilename(filename);
+	if(!tree)
+	{
+		tree = new CppSymbolTree(m_treeBook, wxID_ANY);
+		tree->SetSymbolsImages(CreateSymbolTreeImages());
+		m_treeBook->AddPage(tree, filename.GetFullName(), true);
+	} // if(!tree)
+	tree->BuildTree(filename);
 }
 
 void WorkspacePane::BuildFileTree()
@@ -73,3 +89,52 @@ void WorkspacePane::BuildFileTree()
 	m_fileView->BuildTree();
 }
 
+SymbolTree *WorkspacePane::GetSymbolTree()
+{
+	int id = Frame::Get()->GetNotebook()->GetSelection();
+	if(id != wxNOT_FOUND)
+	{
+		LEditor *editor = dynamic_cast<LEditor*>( Frame::Get()->GetNotebook()->GetPage((size_t)id));
+		if(editor)
+		{
+			return GetTreeByFilename(editor->GetFileName());
+		} // if(editor)
+	} // if(id != wxNOT_FOUND)
+	return NULL;
+}
+
+void WorkspacePane::DisplaySymbolTree(const wxFileName &filename)
+{
+	size_t count = m_treeBook->GetPageCount();
+	//found the relevant page
+	for(size_t i=0; i<count; i++)
+	{
+		CppSymbolTree *tree = dynamic_cast<CppSymbolTree *>(m_treeBook->GetPage(i));
+		if(tree)
+		{
+			if(tree->GetFilename() == filename)
+			{
+				m_treeBook->SetSelection(i);
+				return;
+			} // if(tree->GetFilename() == filename)
+		} // if(tree)
+	} // for(size_t i=0; i<count; i++)
+}
+
+void WorkspacePane::DeleteSymbolTree(const wxFileName &filename)
+{
+	size_t count = m_treeBook->GetPageCount();
+	//found the relevant page
+	for(size_t i=0; i<count; i++)
+	{
+		CppSymbolTree *tree = dynamic_cast<CppSymbolTree *>(m_treeBook->GetPage(i));
+		if(tree)
+		{
+			if(tree->GetFilename() == filename)
+			{
+				m_treeBook->DeletePage(i);
+				return;
+			} // if(tree->GetFilename() == filename)
+		} // if(tree)
+	} // for(size_t i=0; i<count; i++)
+}

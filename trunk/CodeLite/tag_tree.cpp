@@ -37,7 +37,7 @@ TagNode* TagTree::AddEntry(TagEntry& tag)
 	// To add an entry to the tree, we first must make sure
 	// that all path to it exist
 	wxString name = tag.GetPath();
-	StringTokenizer tok(name, _T("::"));
+	StringTokenizer tok(name, wxT("::"));
 
 	wxString parentPath;
 	TagNode* node = GetRoot();
@@ -55,15 +55,6 @@ TagNode* TagTree::AddEntry(TagEntry& tag)
 			TagEntry ee;
 			ee.SetPath(parentPath);
 			ee.SetName(tok[i]);
-			ee.SetProject(tag.GetProject());
-
-			// Maybe we are adding a project node?
-			if(!tag.GetProject().IsEmpty() && i==0)
-			{
-				// If a tag has a project and we are adding the first 
-				// node in its path, then this node is a porject
-				ee.SetKind(_T("project"));
-			}
 			node = AddChild(parentPath, ee, lastFoundNode);
 		}
 

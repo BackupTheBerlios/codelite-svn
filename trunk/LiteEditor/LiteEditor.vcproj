@@ -243,6 +243,9 @@
 			Name="Editors"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath=".\browse_record.h">
+			</File>
+			<File
 				RelativePath=".\context_base.cpp">
 			</File>
 			<File
@@ -528,6 +531,12 @@
 			</File>
 			<File
 				RelativePath=".\shell_window.h">
+			</File>
+			<File
+				RelativePath=".\tree_symbol_page.cpp">
+			</File>
+			<File
+				RelativePath=".\tree_symbol_page.h">
 			</File>
 			<File
 				RelativePath=".\workspace_pane.cpp">

@@ -123,7 +123,8 @@ void TagsManager::OpenDatabase(const wxFileName& fileName){
 	m_pDb->OpenDatabase(fileName);
 }
 
-TagTreePtr TagsManager::ParseTagsFile(const wxFileName& fp, const wxString& project)
+// Currently not in use, maybe in the future??
+TagTreePtr TagsManager::ParseTagsFile(const wxFileName& fp)
 {
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
@@ -147,14 +148,14 @@ TagTreePtr TagsManager::ParseTagsFile(const wxFileName& fp, const wxString& proj
 	TagTreePtr tree( new TagTree(wxT("<ROOT>"), root) );
 	while (tagsNext (file, &entry) == TagSuccess)
 	{
-		TagEntry tag( entry, project );
+		TagEntry tag( entry );
 		tree->AddEntry(tag);
 	}
 	tagsClose(file);
 	return tree;
 }
 
-void TagsManager::TagFromLine(const wxString& line, TagEntry& tag, const wxString& project)
+void TagsManager::TagFromLine(const wxString& line, TagEntry& tag)
 {
 	wxString pattern, kind;
 	wxString strLine = line;
@@ -224,10 +225,10 @@ void TagsManager::TagFromLine(const wxString& line, TagEntry& tag, const wxStrin
 		}
 	}
 
-	tag.Create(fileName, name, lineNumber, pattern, kind, extFields, project);
+	tag.Create(fileName, name, lineNumber, pattern, kind, extFields);
 }
 
-TagTreePtr TagsManager::ParseTags(const wxString& tags, const wxString& project)
+TagTreePtr TagsManager::ParseTags(const wxString& tags)
 {
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
@@ -252,7 +253,7 @@ TagTreePtr TagsManager::ParseTags(const wxString& tags, const wxString& project)
 		delete [] tagLine;
 
 		// Construct the tag from the line
-		TagFromLine(line, tag, project);
+		TagFromLine(line, tag);
 
 		// Add the tag to the tree
 		tree->AddEntry(tag);
@@ -264,7 +265,7 @@ TagTreePtr TagsManager::ParseTags(const wxString& tags, const wxString& project)
 	return tree;
 }
 
-TagTreePtr TagsManager::ParseSourceFile(const wxFileName& fp, const wxString& project, std::vector<DbRecordPtr> *comments)
+TagTreePtr TagsManager::ParseSourceFile(const wxFileName& fp, std::vector<DbRecordPtr> *comments)
 {
 	wxString tags;
 	if( !m_ctags ){
@@ -274,7 +275,7 @@ TagTreePtr TagsManager::ParseSourceFile(const wxFileName& fp, const wxString& pr
 	SourceToTags(fp, tags, m_ctags);
 
 	//	return ParseTagsFile(tags, project);
-	TagTreePtr ttp = TagTreePtr( TreeFromTags(tags, project) );
+	TagTreePtr ttp = TagTreePtr( TreeFromTags(tags) );
 
 	if( comments && m_parseComments )
 	{
@@ -295,7 +296,6 @@ void TagsManager::CreateProject(const wxString &projectName)
 	TagEntry proj;
 	proj.SetPath(projectName);
 	proj.SetName(projectName);
-	proj.SetProject(projectName);
 	proj.SetKind(wxT("project"));
 
 	// Obtain an sql insert statement
@@ -305,7 +305,7 @@ void TagsManager::CreateProject(const wxString &projectName)
 	proj.Store( insertStmt );
 }
 
-TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, const wxString& project, std::vector<DbRecordPtr> *comments)
+TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, std::vector<DbRecordPtr> *comments)
 {
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
@@ -369,7 +369,7 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, c
 		}
 	}
 	
-	return TagTreePtr( TreeFromTags(tags, project) );
+	return TagTreePtr( TreeFromTags(tags) );
 }
 
 std::vector<TagEntry>* TagsManager::ParseLocals(const wxString& scope)
@@ -419,7 +419,7 @@ std::vector<TagEntry>* TagsManager::VectorFromTags(const wxString& tags, bool on
 		delete [] tagLine;
 
 		// Construct the tag from the line
-		TagFromLine(line, tag, wxEmptyString);
+		TagFromLine(line, tag);
 
 		// Only local tags are collected
 		if(onlyLocals && tag.GetKind() == wxT("local"))
@@ -448,19 +448,17 @@ void TagsManager::Store(TagTreePtr tree, const wxFileName& path)
 	m_pDb->Store(tree, path);
 }
 
-TagTreePtr TagsManager::Load(const wxFileName& path, const wxString& project)
+TagTreePtr TagsManager::Load(const wxFileName& fileName)
 {
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
 
 	// Incase empty file path is provided, use the current file name
 	TagTreePtr tree;
-
 	try	
 	{
 		wxLogMessage(wxT("Loading symbols..."));
-		
-		wxSQLite3ResultSet rs = m_pDb->SelectTagsByProject(project, path);
+		wxSQLite3ResultSet rs = m_pDb->SelectTagsByFile(fileName.GetFullPath());
 
 		// Load the records and build a language tree
 		TagEntry root;
@@ -482,12 +480,12 @@ TagTreePtr TagsManager::Load(const wxFileName& path, const wxString& project)
 	return tree;
 }
 
-void TagsManager::Delete(const wxFileName& path, const wxString& project, const wxString& fileName)
+void TagsManager::Delete(const wxFileName& path, const wxString& fileName)
 {
 	// Make this call threadsafe
 	wxCriticalSectionLocker locker(m_cs);
 
-	m_pDb->Delete(path, project, fileName);
+	m_pDb->DeleteByFileName(path, fileName);
 }
 
 //--------------------------------------------------------
@@ -623,7 +621,7 @@ void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, clProce
 	}
 }
 
-TagTreePtr TagsManager::TreeFromTags(const wxString& tags, const wxString& project)
+TagTreePtr TagsManager::TreeFromTags(const wxString& tags)
 {
 	// Load the records and build a language tree
 	TagEntry root;
@@ -647,7 +645,7 @@ TagTreePtr TagsManager::TreeFromTags(const wxString& tags, const wxString& proje
 		delete [] tagLine;
 
 		// Construct the tag from the line
-		TagFromLine(line, tag, project);
+		TagFromLine(line, tag);
 
 		// Add the tag to the tree, locals are not added to the 
 		// tree
@@ -1138,7 +1136,7 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 		}
 
 		SourceToTags(curFile, tags, m_ctags);
-		TagTreePtr tree = TreeFromTags(tags, wxEmptyString);
+		TagTreePtr tree = TreeFromTags(tags);
 		
 		TagsDatabase db;
 		db.Store(tree, dbName, true);

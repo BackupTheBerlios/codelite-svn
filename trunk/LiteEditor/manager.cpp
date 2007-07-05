@@ -33,6 +33,7 @@
 #include "VariableLexer.h"
 #include "MakefileParser.h"
 #include "TargetLexer.h"
+#include "workspace_pane.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -82,6 +83,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 {
 	wxFileName fileName(file_name);
 	wxFlatNotebook *notebook = Frame::Get()->GetNotebook();
+	bool updTree = true;
 
 	//make sure that the notebook is visible
 	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Editor"));
@@ -100,6 +102,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 		if( editor ){
 			if( editor->GetFileName() == fileName.GetFullPath() )
 			{
+				updTree = !(notebook->GetSelection() == (int)nCount);
 				notebook ->SetSelection( nCount );
 				break;
 			}
@@ -136,15 +139,13 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 		editor->GotoLine( lineno );
 	}
 
+	//update the symbol tree
+	if(updTree)
+		Frame::Get()->GetWorkspacePane()->BuildSymbolTree(fileName);
+
 	editor->SetProject( projectName );
 	editor->SetFocus ();
 	editor->SetSCIFocus (true);
-}
-
-/// Open file and set the cursor to be on the line
-void Manager::OpenFile(const TagEntry& tag)
-{
-	OpenFile(tag.GetFile(), tag.GetProject(), tag.GetLine() - 1, tag.GetPosition());
 }
 
 void Manager::SetPageTitle(wxWindow *page, const wxString &name)
@@ -272,23 +273,18 @@ void Manager::OpenWorkspace(const wxString &path)
 	// update status bar
 	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"), errMsg);
 	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("Workspace DB: '%s'"), dbfile.GetData()), 1);
-	wxLogMessage(TagsManagerST::Get()->GetDatabase()->IsOpen() ? wxT("OPEND") : wxT("CLOSED"));
 	
 	// load ctags options
 	wxBusyCursor cursor;
 	CtagsOptions options = WorkspaceST::Get()->LoadCtagsOptions();
 	TagsManagerST::Get()->SetCtagsOptions( options );
 	TagsManagerST::Get()->ParseComments(options.GetParseComments());
-	wxLogMessage(TagsManagerST::Get()->GetDatabase()->IsOpen() ? wxT("OPEND") : wxT("CLOSED"));
 	
 	//initialize some environment variable to be available for this workspace
 	CreateEnvironmentVars(path);
 
-	wxLogMessage(TagsManagerST::Get()->GetDatabase()->IsOpen() ? wxT("OPEND") : wxT("CLOSED"));
-	
 	TagTreePtr dummy;
 	Frame::Get()->GetWorkspacePane()->BuildFileTree();
-	Frame::Get()->GetWorkspacePane()->BuildSymbolTree(dummy);
 
 	//Update the configuration choice on the toolbar
 	DoUpdateConfigChoiceControl();
@@ -372,15 +368,13 @@ void Manager::AddProject(const wxString & path)
 
 	wxBusyCursor cursor;
 	if (TagsManagerST::Get()->GetParseComments()) {
-		ttp = TagsManagerST::Get()->ParseSourceFiles(vList, p->GetName(), &comments);
+		ttp = TagsManagerST::Get()->ParseSourceFiles(vList, &comments);
 		TagsManagerST::Get()->StoreComments(comments);
 	} else {
-		ttp = TagsManagerST::Get()->ParseSourceFiles(vList, p->GetName());
+		ttp = TagsManagerST::Get()->ParseSourceFiles(vList);
 	}
 
 	TagsManagerST::Get()->Store(ttp);
-	// Update the trees
-	Frame::Get()->GetWorkspacePane()->GetSymbolTree()->AddSymbols(ttp);
 	RebuildFileView();
 }
 
@@ -407,8 +401,7 @@ bool Manager::RemoveProject(const wxString &name)
 	// update gui trees
 
 	// Notify the symbol tree to update the gui
-	SymbolTreeEvent evt(name, wxEVT_COMMAND_SYMBOL_TREE_DELETE_PROJECT);
-	wxPostEvent(Frame::Get()->GetWorkspacePane()->GetSymbolTree(), evt);
+
 	Frame::Get()->GetWorkspacePane()->GetFileViewTree()->BuildTree();
 	return true;
 }
@@ -493,15 +486,12 @@ bool Manager::AddFileToProject(const wxString &fileName, const wxString &vdFullP
 	if( project.IsEmpty() == false ){
 		std::vector<DbRecordPtr> comments;
 		if(TagsManagerST::Get()->GetParseComments()){
-			ttp = TagsManagerST::Get()->ParseSourceFile(fileName, project, &comments);
+			ttp = TagsManagerST::Get()->ParseSourceFile(fileName, &comments);
 			TagsManagerST::Get()->StoreComments(comments);
 		}else{
-			ttp = TagsManagerST::Get()->ParseSourceFile(fileName, project);
+			ttp = TagsManagerST::Get()->ParseSourceFile(fileName);
 		}
 		TagsManagerST::Get()->Store(ttp);
-
-		// Update 
-		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->AddSymbols(ttp);
 	}
 	return true;
 }
@@ -542,15 +532,12 @@ void Manager::AddFilesToProject(const wxArrayString &files, const wxString &vdFu
 		wxBusyCursor cursor;
 		std::vector<DbRecordPtr> comments;
 		if(TagsManagerST::Get()->GetParseComments()){
-			ttp = TagsManagerST::Get()->ParseSourceFiles(vFiles, project, &comments);
+			ttp = TagsManagerST::Get()->ParseSourceFiles(vFiles, &comments);
 			TagsManagerST::Get()->StoreComments(comments);
 		}else{
-			ttp = TagsManagerST::Get()->ParseSourceFiles(vFiles, project);
+			ttp = TagsManagerST::Get()->ParseSourceFiles(vFiles);
 		}
 		TagsManagerST::Get()->Store(ttp);
-
-		// Update 
-		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->AddSymbols(ttp);
 	}
 }
 
@@ -590,14 +577,8 @@ bool Manager::RemoveFile(const wxString &fileName, const wxString &vdFullPath)
 void Manager::RemoveFileFromSymbolTree(const wxFileName &fileName, const wxString &project)
 {
 	if( project.IsEmpty() == false ){
-		// Build second tree from the updated file
-		TagTreePtr tree = TagsManagerST::Get()->ParseSourceFile(fileName, project);
-		
 		// Remove the file from the tags database as well
-		TagsManagerST::Get()->Delete(TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName(), project, fileName.GetFullPath());
-		
-		// Update 
-		Frame::Get()->GetWorkspacePane()->GetSymbolTree()->RemoveSymbols(tree);
+		TagsManagerST::Get()->Delete(TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName(), fileName.GetFullPath());
 	}
 }
 
@@ -1020,17 +1001,13 @@ bool Manager::IsFileInWorkspace(const wxString &fileName)
 
 void Manager::RetagProject(const wxString &projectName)
 {
-	DoRetagProject(projectName, true);	
+	DoRetagProject(projectName);	
 }
  
-void Manager::DoRetagProject(const wxString &projectName, bool updateUItree)
+void Manager::DoRetagProject(const wxString &projectName)
 {
 	//remove project from database
 	TagsManagerST::Get()->DeleteProject(projectName);
-
-	//update tree - tell it to remove the project
-	SymbolTreeEvent evt(projectName, wxEVT_COMMAND_SYMBOL_TREE_DELETE_PROJECT);
-	Frame::Get()->GetWorkspacePane()->GetSymbolTree()->ProcessEvent(evt);
 
 	//now rebuild the project
 	ProjectPtr proj = GetProject(projectName);
@@ -1049,18 +1026,13 @@ void Manager::DoRetagProject(const wxString &projectName, bool updateUItree)
 		proj->GetFiles(files);
 
 		bool parseComments = TagsManagerST::Get()->GetParseComments();
-		ttp = TagsManagerST::Get()->ParseSourceFiles(files, projectName, parseComments ? &comments : NULL);
+		ttp = TagsManagerST::Get()->ParseSourceFiles(files, parseComments ? &comments : NULL);
 
 		TagsManagerST::Get()->Store(ttp);
 		if(parseComments){
 			TagsManagerST::Get()->StoreComments(comments);
 		}
-
-		//update gui tree
-		if(updateUItree){
-			Frame::Get()->GetWorkspacePane()->GetSymbolTree()->AddSymbols(ttp);
-		}
-	}
+	} // if( proj )
 }
 
 void Manager::RetagWorkspace()
@@ -1069,11 +1041,8 @@ void Manager::RetagWorkspace()
 	GetProjectList(projects);
 
 	for(size_t i=0; i<projects.GetCount(); i++){
-		DoRetagProject(projects.Item(i), false);
+		DoRetagProject(projects.Item(i));
 	}
-
-	TagTreePtr tree;
-	Frame::Get()->GetWorkspacePane()->GetSymbolTree()->BuildTree(tree);
 }
 
 void Manager::WriteProgram(const wxString &line)

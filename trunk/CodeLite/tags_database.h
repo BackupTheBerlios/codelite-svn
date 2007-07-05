@@ -111,39 +111,20 @@ public:
 	void Store(const std::vector<DbRecordPtr> &records, const wxFileName& path, bool autoCommit = true);
 
 	/**
-	 * Store vector of TagEntry into db.
-	 * NOTE: This function is deprecatedm use Other form of Store
-	 * \param records records to store
-	 * \param path Database file name
-	 * \param autoCommit handle the Store operation inside a transaction or let the user hadle it
-	 */
-	//void Store(const std::vector<TagEntry> &tags, const wxFileName& path, bool autoCommit = true);
-
-	/**
-	 * Return a result set of tags according to project.
-	 * \param project Project name
-	 * \param path Database file name
-	 * \return result set
-	 */
-	wxSQLite3ResultSet SelectTagsByProject(const wxString& project, const wxFileName& path);
-
-	/**
-	 * Return a result set of tags according to project and file.
-	 * \param project Project name
+	 * Return a result set of tags according to file name.
 	 * \param file Source file name
 	 * \param path Database file name
 	 * \return result set
 	 */
-	wxSQLite3ResultSet SelectTagsByProjectAndFile(const wxString& project, const wxString& file, const wxFileName& path);
+	wxSQLite3ResultSet SelectTagsByFile(const wxString& file, const wxFileName& path = wxFileName());
 
 	/**
-	 * Delete all entries from database that are related to project and filename.
+	 * Delete all entries from database that are related to filename.
 	 * \param path Database name
-	 * \param project Project name
 	 * \param fileName File name
 	 * \param autoCommit handle the Delete operation inside a transaction or let the user hadle it
 	 */
-	void Delete(const wxFileName& path, const wxString& project, const wxString& fileName, bool autoCommit = true);
+	void DeleteByFileName(const wxFileName& path, const wxString& fileName, bool autoCommit = true);
 
 	/**
 	 * Begin transaction.

@@ -9,18 +9,17 @@
 #include "findinfilesdlg.h"
 #include "editor.h"
 #include "output_pane.h"
-#include "workspace_pane.h"
-#include "workspace_pane.h"
 #include "findinfilesdlg.h"
 #include "ctags_dialog.h"
 #include "cl_process.h"
 #include "envvar_table.h"
 #include "wx/choice.h"
 #include "wx/timer.h"
+#include "parse_thread.h"
 
 // forward decls
 class TagEntry;
-
+class WorkspacePane;
 
 /**
  * The main frame class
@@ -174,6 +173,11 @@ protected:
 	void OnFileClosing(wxFlatNotebookEvent &event);
 	void OnPageChanged(wxFlatNotebookEvent &event);
 	void OnPageClosed(wxFlatNotebookEvent &event);
+
+	//handle symbol tree events
+	void OnAddSymbols(SymbolTreeEvent &event);
+	void OnDeleteSymbols(SymbolTreeEvent &event);
+	void OnUpdateSymbols(SymbolTreeEvent &event);
 
 	// Any class wishing to process wxWindows events must use this macro
 	DECLARE_EVENT_TABLE()

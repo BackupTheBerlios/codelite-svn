@@ -4,7 +4,6 @@
 #include <wx/xrc/xmlres.h>
 #include "symbol_tree.h"
 #include <wx/splitter.h>
-#include "parse_thread.h"
 #include "cpp_symbol_tree.h"
 #include "language.h"
 #include "editor_config.h"
@@ -28,11 +27,15 @@
 #include "async_executable_cmd.h"
 #include "close_all_dlg.h"
 #include "open_resouce_dlg.h"
+#include "workspace_pane.h"
 
 //----------------------------------------------------------------
 // Our main frame
 //----------------------------------------------------------------
 BEGIN_EVENT_TABLE(Frame, wxFrame)
+	EVT_SYMBOLTREE_ADD_ITEM(wxID_ANY, Frame::OnAddSymbols)
+	EVT_SYMBOLTREE_DELETE_ITEM(wxID_ANY, Frame::OnDeleteSymbols)
+	EVT_SYMBOLTREE_UPDATE_ITEM(wxID_ANY, Frame::OnUpdateSymbols)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_MATCHFOUND, Frame::OnSearchThread)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHCANCELED, Frame::OnSearchThread)
 	EVT_COMMAND(wxID_ANY, wxEVT_SEARCH_THREAD_SEARCHEND, Frame::OnSearchThread)
@@ -267,6 +270,9 @@ void Frame::CreateGUIControls(void)
 	// with another object as 'this'
 	//--------------------------------------------------------------------------------------
 	ParseThreadST::Get()->Start();
+	
+	// Connect this tree to the parse thread
+	ParseThreadST::Get()->SetNotifyWindow( this );
 
 	// And finally create a status bar
 	wxStatusBar* statusBar = new wxStatusBar(this, wxID_ANY);
@@ -647,7 +653,15 @@ void Frame::OnFileClosing(wxFlatNotebookEvent &event)
 
 	bool veto;
 	ClosePage(editor, true, event.GetSelection(), false, veto);
-	if( veto ) event.Veto();
+	if( veto ) 
+	{
+		event.Veto();
+	}
+	else
+	{
+		//update the symbol view 
+		GetWorkspacePane()->DeleteSymbolTree(editor->GetFileName());
+	}
 	event.Skip();
 }
 
@@ -658,6 +672,9 @@ void Frame::OnPageChanged(wxFlatNotebookEvent &event)
 	if( !editor ){
 		return;
 	}
+	
+	//update the symbol view as well
+	GetWorkspacePane()->DisplaySymbolTree(editor->GetFileName());
 	editor->SetActive();
 	event.Skip();
 }
@@ -665,7 +682,6 @@ void Frame::OnPageChanged(wxFlatNotebookEvent &event)
 void Frame::OnPageClosed(wxFlatNotebookEvent &event)
 {
 	wxUnusedVar(event);
-	m_notebook->GetPageCount();
 }
 
 void Frame::OnFileSaveAll(wxCommandEvent &event)
@@ -704,7 +720,11 @@ void Frame::ClosePage(LEditor *editor, bool notify, int index, bool doDelete, bo
 					veto = true;
 					return;
 				} else {
-					if( doDelete ) m_notebook->DeletePage(index, notify);
+					if( doDelete ) 
+					{
+						GetWorkspacePane()->DeleteSymbolTree(editor->GetFileName());
+						m_notebook->DeletePage(index, notify);
+					}
 				}
 			}
 			break;
@@ -713,14 +733,22 @@ void Frame::ClosePage(LEditor *editor, bool notify, int index, bool doDelete, bo
 			return; // do nothing
 		case wxNO:
 			// just delete the tab without saving the changes
-			if( doDelete ) m_notebook->DeletePage(index, notify);
+			if( doDelete ) 
+			{
+				GetWorkspacePane()->DeleteSymbolTree(editor->GetFileName());
+				m_notebook->DeletePage(index, notify);
+			}
 			break;
 		}
 	} 
 	else 
 	{
 		// file is not modified, just remove the tab
-		if( doDelete ) m_notebook->DeletePage(index, notify);
+		if( doDelete ) 
+		{
+			GetWorkspacePane()->DeleteSymbolTree(editor->GetFileName());
+			m_notebook->DeletePage(index, notify);
+		} // if( doDelete )
 	}
 }
 
@@ -1156,4 +1184,25 @@ void Frame::OnImportMakefile(wxCommandEvent &event)
 		ManagerST::Get()->ImportFromMakefile(dlg->GetPath());
 	}
 	dlg->Destroy();
+}
+
+void Frame::OnAddSymbols(SymbolTreeEvent &event)
+{
+	SymbolTree *tree = GetWorkspacePane()->GetSymbolTree();
+	if(tree)
+		tree->AddSymbols(event);
+}
+
+void Frame::OnDeleteSymbols(SymbolTreeEvent &event)
+{
+	SymbolTree *tree = GetWorkspacePane()->GetSymbolTree();
+	if(tree)
+		tree->DeleteSymbols(event);
+}
+
+void Frame::OnUpdateSymbols(SymbolTreeEvent &event)
+{
+	SymbolTree *tree = GetWorkspacePane()->GetSymbolTree();
+	if(tree)
+		tree->UpdateSymbols(event);
 }

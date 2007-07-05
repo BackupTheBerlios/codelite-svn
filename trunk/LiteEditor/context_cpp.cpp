@@ -8,6 +8,7 @@
 #include "wx/xrc/xmlres.h"
 #include "algorithm"
 #include "language.h"
+#include "browse_record.h"
 
 //Images initialization
 wxBitmap ContextCpp::m_classBmp = wxNullBitmap;
@@ -403,8 +404,8 @@ void ContextCpp::GotoPreviousDefintion()
 		return;
 
 	// Get the last tag visited
-	TagEntry tag(LEditor::GetHistory().top());
-	ManagerST::Get()->OpenFile(tag);
+	BrowseRecord record = LEditor::GetHistory().top();
+	ManagerST::Get()->OpenFile(record.filename, record.project, record.lineno, record.position);
 
 	// remove it from the stack
 	LEditor::GetHistory().pop();
@@ -440,23 +441,23 @@ void ContextCpp::GotoDefinition()
 		return;
 
 	// Remember this position before skipping to the next one
-	TagEntry tag;
-	tag.SetLine(rCtrl.LineFromPosition(rCtrl.GetCurrentPos())+1 /** scintilla counts from zero, while tagentry from 1**/);
-	tag.SetFile(rCtrl.GetFileName().GetFullPath());
+	BrowseRecord record;
+	record.lineno = rCtrl.LineFromPosition(rCtrl.GetCurrentPos())+1; // scintilla counts from zero, while tagentry from 1
+	record.filename = rCtrl.GetFileName().GetFullPath();
 
 	//if the file is part of the workspace set the project name
 	//else, open it with empty project
-	tag.SetProject(rCtrl.GetProject());
-	tag.SetPosition(rCtrl.GetCurrentPos());
+	record.position = rCtrl.GetCurrentPos();
 
 	// Keep the current position as well
-	LEditor::GetHistory().push(tag);
+	LEditor::GetHistory().push(record);
 
 	// Did we get a single match?
 	if(tags.size() == 1)
 	{
 		// Just open the file and set the cursor on the match we found
-		ManagerST::Get()->OpenFile(tags[0]);
+		wxString projectName = ManagerST::Get()->GetProjectNameByFile(tags[0].GetFile());
+		ManagerST::Get()->OpenFile(tags[0].GetFile(), projectName, tags[0].GetLine()-1);
 	}
 	else
 	{

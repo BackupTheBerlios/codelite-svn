@@ -85,7 +85,7 @@ void TagsDatabase::CreateSchema()
 		sql = _T("PRAGMA default_cache_size = 10000;");
 		m_db->ExecuteUpdate(sql);
 	
-		sql = _T("create  table if not exists tags (ID INTEGER PRIMARY KEY AUTOINCREMENT, PARENTID INTEGER, project string, name string, file string, line integer, kind string, access string, signature string, pattern string, parent string, inherits string, path string, typeref string);");
+		sql = _T("create  table if not exists tags (ID INTEGER PRIMARY KEY AUTOINCREMENT, PARENTID INTEGER, name string, file string, line integer, kind string, access string, signature string, pattern string, parent string, inherits string, path string, typeref string);");
 		m_db->ExecuteUpdate(sql);
 
 		sql = _T("create  table if not exists comments (comment string, file string, line number);");
@@ -95,7 +95,7 @@ void TagsDatabase::CreateSchema()
 		m_db->ExecuteUpdate(sql);
 
 		// Create unique index on tags table
-		sql = _T("CREATE UNIQUE INDEX IF NOT EXISTS TAGS_UNIQ on tags(project, kind, path, signature);");
+		sql = _T("CREATE UNIQUE INDEX IF NOT EXISTS TAGS_UNIQ on tags(kind, path, signature);");
 		m_db->ExecuteUpdate(sql);
 
 		// Create search indexes
@@ -285,28 +285,7 @@ void TagsDatabase::Store(TagTreePtr tree, const wxFileName& path, bool autoCommi
 	}
 }
 
-wxSQLite3ResultSet TagsDatabase::SelectTagsByProject(const wxString& project, const wxFileName& path)
-{
-	// Incase empty file path is provided, use the current file name
-	wxFileName databaseFileName(path);
-	path.IsOk() == false ? databaseFileName = m_fileName : databaseFileName = path;
-	wxLogMessage( m_db->IsOpen() ? wxT("SelectTagsByProject: Database is open ") : wxT("SelectTagsByProject: Database is closed "));
-	OpenDatabase(databaseFileName);
-
-	wxString query;
-	if(project.IsEmpty())
-	{
-		query = wxString::Format(_T("select * from tags;"));
-	}
-	else
-	{
-		query << _T("select * from tags where project='") << project << _T("';");
-	}
-	return m_db->ExecuteQuery(query.GetData());
-
-}
-
-wxSQLite3ResultSet TagsDatabase::SelectTagsByProjectAndFile(const wxString& project, const wxString& file, const wxFileName& path)
+wxSQLite3ResultSet TagsDatabase::SelectTagsByFile(const wxString& file, const wxFileName& path)
 {
 	// Incase empty file path is provided, use the current file name
 	wxFileName databaseFileName(path);
@@ -314,12 +293,12 @@ wxSQLite3ResultSet TagsDatabase::SelectTagsByProjectAndFile(const wxString& proj
 	OpenDatabase(databaseFileName);
 
 	wxString query;
-	query = wxString::Format(_T("select * from tags where project='%s' and file='%s';"), project.GetData(), file.GetData());
+	query = wxString::Format(_T("select * from tags where file='%s';"), file.GetData());
 	return m_db->ExecuteQuery(query.GetData());
 }
 
 
-void TagsDatabase::Delete(const wxFileName& path, const wxString& project, const wxString& fileName, bool autoCommit)
+void TagsDatabase::DeleteByFileName(const wxFileName& path, const wxString& fileName, bool autoCommit)
 {
 	// make sure database is open
 	OpenDatabase(path);
@@ -328,14 +307,14 @@ void TagsDatabase::Delete(const wxFileName& path, const wxString& project, const
 	{
 		if( autoCommit )
 			m_db->Begin();
-		m_db->ExecuteUpdate(wxString::Format(_T("Delete from tags where project='%s' AND File='%s'"), project.GetData(), fileName.GetData()));
+		m_db->ExecuteUpdate(wxString::Format(wxT("Delete from tags where File='%s'"), fileName.GetData()));
 
 		if( autoCommit )
 			m_db->Commit();
 	}
 	catch (wxSQLite3Exception& e)
 	{
-		wxUnusedVar(e);
+		wxLogMessage(e.GetMessage());
 		if( autoCommit )
 			m_db->Rollback();
 	}

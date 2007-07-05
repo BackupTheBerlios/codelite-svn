@@ -3,6 +3,7 @@
 
 #include "ctags_manager.h"
 #include "parse_thread.h"
+#include "wx/filename.h"
 
 #ifdef WXMAKINGDLL_CODELITE
 #    define WXDLLIMPEXP_CL WXEXPORT
@@ -22,20 +23,21 @@
  */
 class WXDLLIMPEXP_CL MyTreeItemData : public wxTreeItemData
 {
+private:
+	wxString m_fileName;
+	int		 m_lineno;
+
 public:
     /**
      * Constructor.
-     * \param key The full name of an item as returned by TagNode::GetKey()
+     * \param filename The full name the file 
+	 * \param filename line no of the symbol
      */
-    MyTreeItemData(const wxString& key) : m_key(key) { }
+    MyTreeItemData(const wxString& filename, int lineno) : m_fileName(filename), m_lineno(lineno)
+	{ }
 
-	/**
-     * \return the key of the item
-     */
-    const wxString& GetKey() const { return m_key; }
-
-private:
-    wxString m_key;
+	const wxString &GetFileName() const {return m_fileName;}
+	int GetLineno() const {return m_lineno;}
 };
 
 /**
@@ -49,12 +51,12 @@ class WXDLLIMPEXP_CL SymbolTree : public wxTreeCtrl
 {
 protected:
 	std::map<wxString, int> m_imagesMap;
-	TagTreePtr m_tree;
-	std::map<wxString, wxTreeItemId> m_globalsMap;
-	std::map<wxString, wxTreeItemId> m_prototypesMap;
-	std::map<wxString, wxTreeItemId> m_macrosMap;
+	wxTreeItemId m_globalsNode;
+	wxTreeItemId m_prototypesNode;
+	wxTreeItemId m_macrosNode;
 	std::map<void*, bool> m_sortItems;
 	std::map<wxString, bool> m_globalsKind;
+	wxFileName m_fileName;
 
 public:
 	/**
@@ -88,10 +90,9 @@ public:
 	virtual void Create(wxWindow *parent, const wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
 	
 	/**
-	 * Construct the gui tree from Tag Tree.
-	 * If tree is NULL, the latest tree from TagsManagerST::Get()->Load() will be used.
+	 * Construct a outline tree for fileName
 	 */
-	void BuildTree(TagTreePtr& tree);
+	void BuildTree(const wxFileName &fileName);
 
 	/**
 	 * User provided icons for the symbols tree. 
@@ -121,17 +122,14 @@ public:
 		AssignImageList(images);
 	};
 
-	/**
-	 * Remove symbols from the tree
-	 * \param tree 
-	 */
-	void RemoveSymbols(TagTreePtr tree);
+	void AddSymbols(SymbolTreeEvent& event);
+	void DeleteSymbols(SymbolTreeEvent& event);
+	void UpdateSymbols(SymbolTreeEvent& event);
 
 	/**
-	 * Add symbols to the tree
-	 * \param tree 
+	 * return the file name assocaited with this symbol tree
 	 */
-	void AddSymbols(TagTreePtr tree);
+	const wxFileName &GetFilename() const {return m_fileName;}
 
 protected:
 
@@ -175,12 +173,6 @@ protected:
 	 * \param key node key
 	 */
 	void UpdateGuiItem(TagEntry& data, const wxString& key);
-
-	DECLARE_EVENT_TABLE()
-	void OnAddSymbols(SymbolTreeEvent& event);
-	void OnDeleteSymbols(SymbolTreeEvent& event);
-	void OnUpdateSymbols(SymbolTreeEvent& event);
-	void OnDeleteProject(SymbolTreeEvent& event);
 	DECLARE_DYNAMIC_CLASS(SymbolTree)
 };
 #endif // CODELITE_SYMBOL_TREE_H

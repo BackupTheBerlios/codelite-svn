@@ -97,20 +97,12 @@ void CppSymbolTree::OnMouseDblClick(wxMouseEvent& event)
 	{
 		event.Skip();
 		return;
-	}
+	} // if( !itemData )
 
-	// Find the node in the tree
-	TagNode* node = m_tree->Find(itemData->GetKey());
-	if( node )
-	{
-		if(node->GetData().GetKind() == _T("project"))
-		{
-			event.Skip();
-			return;
-		}
-		// Open the file and set the cursor to line number
-		ManagerST::Get()->OpenFile(node->GetData());
-		return;
-	}
-	event.Skip();
+	wxString filename = itemData->GetFileName();
+	wxString project = ManagerST::Get()->GetProjectNameByFile(filename);
+	int lineno = itemData->GetLineno()-1;
+	
+	// Open the file and set the cursor to line number
+	ManagerST::Get()->OpenFile(filename, project, lineno);
 }

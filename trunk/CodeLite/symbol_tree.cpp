@@ -13,27 +13,15 @@
 
 IMPLEMENT_DYNAMIC_CLASS(SymbolTree, wxTreeCtrl)
 
-BEGIN_EVENT_TABLE(SymbolTree, wxTreeCtrl)
-EVT_SYMBOLTREE_ADD_ITEM(wxID_ANY, SymbolTree::OnAddSymbols)
-EVT_SYMBOLTREE_DELETE_ITEM(wxID_ANY, SymbolTree::OnDeleteSymbols)
-EVT_SYMBOLTREE_UPDATE_ITEM(wxID_ANY, SymbolTree::OnUpdateSymbols)
-EVT_SYMBOLTREE_DELETE_PROJECT(wxID_ANY, SymbolTree::OnDeleteProject)
-END_EVENT_TABLE()
-
 SymbolTree::SymbolTree()
-: m_tree(NULL)
 {
 	InitialiseSymbolMap();
 }
 
 SymbolTree::SymbolTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
-: m_tree(NULL)
 {
 	InitialiseSymbolMap();
 	Create(parent, id, pos, size, style);
-
-	// Connect this tree to the parse thread
-	ParseThreadST::Get()->SetNotifyWindow( this );
 }
 
 SymbolTree::~SymbolTree()
@@ -111,44 +99,41 @@ void SymbolTree::Create(wxWindow *parent, const wxWindowID id, const wxPoint& po
 	style |= (wxTR_HIDE_ROOT | wxTR_HAS_BUTTONS );
 #endif
 	wxTreeCtrl::Create(parent, id, pos, size, style);
-
-	TagTreePtr dummy;
-	BuildTree( dummy );
+	BuildTree( wxFileName() );
 } 
 
-void SymbolTree::BuildTree( TagTreePtr& tree )
+void SymbolTree::BuildTree(const wxFileName &fileName)
 {
 	// Clear the tree
 	DeleteAllItems();
-	m_globalsMap.clear();
-	m_prototypesMap.clear();
+	m_globalsNode = wxTreeItemId();
+	m_prototypesNode = wxTreeItemId();
+	m_macrosNode = wxTreeItemId();
 	m_sortItems.clear();
-	m_macrosMap.clear();
-
+	
+	m_fileName = fileName;
 	// Get the current tree
-	if( ! tree )
+	TagTreePtr m_tree = TagsManagerST::Get()->Load(m_fileName);
+	if( !m_tree )
 	{
-		m_tree = TagsManagerST::Get()->Load();
-		if( !m_tree )
-		{
-			wxLogMessage(wxT("Failed to load Symbols from database!"));
-			return;
-		}
+		wxLogMessage(wxT("Failed to load Symbols from database!"));
+		return;
 	}
-	else
-		m_tree = tree;
 
 	// Add invisible root node
 	wxTreeItemId root = AddRoot(wxT("Workspace"), 0, 0); // Workspace icon;
-	m_tree->GetRoot()->GetData().SetTreeItemId( root );
-
 	TreeWalker<wxString, TagEntry> walker(m_tree->GetRoot());
+	
+	// add three items here:
+	// the globals node, the mcros and the prototype node
+	m_globalsNode    = AppendItem(root, wxT("Global Functions and Variables"), 2, 2, new MyTreeItemData(wxT("Global Functions and Variables"), -1));
+	m_prototypesNode = AppendItem(root, wxT("Functions Prototypes"), 2, 2, new MyTreeItemData(wxT("Functions Prototypes"), -1));
+	m_macrosNode     = AppendItem(root, wxT("Macros"), 2, 2, new MyTreeItemData(wxT("Macros"), -1));
 
 	// Iterate over the tree and add items
 	m_sortItems.clear();
 
 	Freeze();
-
 	for(; !walker.End(); walker++)
 	{
 		// Add the item to the tree
@@ -171,97 +156,49 @@ void SymbolTree::AddItem(TagNode* node)
 	// Get node icon index
 	TagEntry nodeData = node->GetData();
 	
-
 	int iconIndex = GetItemIconIndex(nodeData.GetKind(), nodeData.GetAccess());
 	wxString displayName(nodeData.GetDisplayName());
-	wxTreeItemId parentHti;
 
+	wxTreeItemId parentHti;
 	if(nodeData.GetName().IsEmpty())
 		return;
 
 	//-------------------------------------------------------------------------------
 	// We gather globals together under special node
 	//-------------------------------------------------------------------------------
-	wxString pp = nodeData.GetParent();
 	if( (nodeData.GetParent() == wxT("<global>")) &&					// parent is global scope
 		m_globalsKind.find(nodeData.GetKind()) != m_globalsKind.end() ) //the node kind is one of function, prototype or variable
 	{
-		//search for the global node for this project
-		std::map<wxString, wxTreeItemId>::iterator iter = m_globalsMap.find(node->GetData().GetProject());
-		if(iter == m_globalsMap.end())
-		{
-			// First time, add a node under the project node
-			parentHti = AppendItem(node->GetParent()->GetData().GetTreeItemId(),
-						wxT("Global Functions and Variables"),
-						2, 2, new MyTreeItemData(wxT("Global Functions and Variables")));
-			m_globalsMap[nodeData.GetProject()] = parentHti;
-		}
-		else
-			parentHti = iter->second;
+		parentHti = m_globalsNode;
 	}
 	else
 		parentHti = node->GetParent()->GetData().GetTreeItemId();
-
-	//---------------------------------------------------------------------------------
-	// make prototypes function as child of a special node in the tree
-	//---------------------------------------------------------------------------------
-	if(nodeData.GetKind() == wxT("prototype"))
-	{
-		std::map<wxString, wxTreeItemId>::iterator iter = m_prototypesMap.find(node->GetParent()->GetData().GetPath());
-		if(iter != m_prototypesMap.end())
-		{
-			parentHti = iter->second;
-		}
-		else
-			return;
-	}
 
 	//---------------------------------------------------------------------------------
 	// Macros are gathered under the 'Macros' node
 	//---------------------------------------------------------------------------------
 	if(nodeData.GetKind() == wxT("macro"))
 	{
-		std::map<wxString, wxTreeItemId>::iterator iter = m_macrosMap.find(node->GetData().GetProject());
-		if(iter != m_macrosMap.end())
-		{
-			parentHti = iter->second;
-		}
-		else
-			return;
+		parentHti = m_macrosNode;
 	}
 
 	//only if parent is valid, we add item to the tree
 	wxTreeItemId hti;
+
+	if(parentHti.IsOk() == false)
+	{
+		 parentHti = GetRootItem();
+	}
+
 	if(parentHti.IsOk()){
 		hti = AppendItem(parentHti,				// parent
 						displayName,			// display name
 						iconIndex,				// item image index
 						iconIndex,				// selected item image
-						new MyTreeItemData(node->GetKey()));
+						new MyTreeItemData(node->GetData().GetFile(), node->GetData().GetLine()));
+		node->GetData().SetTreeItemId( hti );
+		m_sortItems[parentHti.m_pItem] = true;
 	}
-
-	node->GetData().SetTreeItemId( hti );
-
-	// incase the added note was a container, add a prototype node under it as well
-	if( TagsManagerST::Get()->GetCtagsOptions().GetLanguage() == wxT("C++")){
-		if(nodeData.IsContainer())
-		{
-			// add the prototype node under it
-			m_prototypesMap[nodeData.GetPath()] = AppendItem(node->GetData().GetTreeItemId(),
-				wxT("Functions Prototypes"),
-				2, 2, new MyTreeItemData(wxT("Functions Prototypes")));
-		}
-
-		// are we a project?
-		if(nodeData.GetKind() == wxT("project"))
-		{
-			// First time, add a 'global' node under the root
-			m_globalsMap[nodeData.GetName()] = AppendItem(hti, wxT("Global Functions and Variables"), 2, 2, new MyTreeItemData(wxT("Global Functions and Variables")));
-			m_macrosMap[nodeData.GetName()] = AppendItem(hti, wxT("Macros"), 2, 2, new MyTreeItemData(wxT("Macros")));
-		}
-	}
-
-	m_sortItems[parentHti.m_pItem] = true;
 }
 
 void SymbolTree::SortTree(std::map<void*, bool> & nodes)
@@ -309,8 +246,9 @@ int SymbolTree::GetItemIconIndex(const wxString &kind, const wxString &access)
 	return index;
 }
 
-void SymbolTree::OnUpdateSymbols(SymbolTreeEvent& event)
+void SymbolTree::UpdateSymbols(SymbolTreeEvent& event)
 {
+	/*
 	if( !m_tree ) 
 		return;
 
@@ -326,10 +264,12 @@ void SymbolTree::OnUpdateSymbols(SymbolTreeEvent& event)
 		UpdateGuiItem(data, key);
 	}
 	Thaw();
+	*/
 }
 
 void SymbolTree::UpdateGuiItem(TagEntry& data, const wxString& key)
 {
+	/*
 	TagNode* node = m_tree->Find(key);
 	if( node )
 	{
@@ -355,123 +295,14 @@ void SymbolTree::UpdateGuiItem(TagEntry& data, const wxString& key)
 			// Need to update the image as well
 			SetItemImage(node->GetData().GetTreeItemId(), iconIndex);
 		}
-	}
+		}*/
 }
 
-void SymbolTree::OnDeleteSymbols(SymbolTreeEvent& event)
+void SymbolTree::DeleteSymbols(SymbolTreeEvent& event)
 {
-	if( !m_tree ) 
-		return;
-
-	std::vector<std::pair<wxString, TagEntry> > items = event.GetItems();
-	size_t i=0;
-
-	Freeze();
-	for(; i<items.size(); i++)
-	{
-		wxString key = items[i].first;
-		
-		TagNode* node = m_tree->Find(key);
-		if( node )
-		{
-			// Project nodes are never removed from here
-			if(node->GetData().GetKind() == wxT("project"))
-				continue;
-
-			// Remove the node from the GUI tree
-			wxTreeItemId hti = node->GetData().GetTreeItemId();
-			Delete(hti);
-
-			// if this node is a container, remove its prototype as well
-			if(node->GetData().IsContainer())
-			{
-				std::map<wxString, wxTreeItemId>::iterator it = m_prototypesMap.find(node->GetData().GetPath());
-				if(it != m_prototypesMap.end())
-					m_prototypesMap.erase(it);
-			}
-
-			// If this node is a project, remove its 'Global' node as well from the 
-			// globals map
-			if(node->GetData().GetKind() == wxT("project"))
-			{
-				std::map<wxString, wxTreeItemId>::iterator it = m_globalsMap.find(node->GetData().GetName());
-				if(it != m_globalsMap.end())
-					m_globalsMap.erase(it);
-			}
-
-			// Remove the node from the tag tree as well
-			node = m_tree->Remove(key);
-			delete node;
-		}
-	}
-	Thaw();
 }
 
-void SymbolTree::OnAddSymbols(SymbolTreeEvent& event)
+
+void SymbolTree::AddSymbols(SymbolTreeEvent& event)
 {
-	if( !m_tree )
-		return;
-
-	std::vector<std::pair<wxString, TagEntry> > items = event.GetItems();
-	size_t i=0;
-	m_sortItems.clear();
-
-	Freeze();
-	for(; i<items.size(); i++)
-	{
-		wxString key = items[i].first;
-		TagEntry nodeData = items[i].second;
-
-		// Check to see if this node already exist in the tree
-		if(m_tree->Find(nodeData.Key()))
-		{
-			UpdateGuiItem(nodeData, key);
-		}
-		else
-		{
-			TagNode* node = m_tree->AddEntry(nodeData);
-			AddItem(node);
-		}
-	}
-	SortTree(m_sortItems);
-	Thaw();
-}
-
-void SymbolTree::OnDeleteProject(SymbolTreeEvent& event)
-{
-	wxString proj = event.GetProject();
-
-	if(!m_tree)
-		return;
-
-	// locate the Tree item associated with this project and rmeove it
-	TagNode* node = m_tree->Remove(proj);
-	if( node ) 
-	{
-		// remove succeeded
-		wxTreeItemId hti = node->GetData().GetTreeItemId();
-		if( hti.IsOk() )
-			Delete( hti );
-		delete node;
-	}
-}
-
-void SymbolTree::RemoveSymbols(TagTreePtr tree)
-{
-	std::vector<std::pair<wxString, TagEntry> >  deletedItems;
-	tree->ToVector(deletedItems);
-
-	//send event to this object to remove the symbols
-	SymbolTreeEvent event(deletedItems, wxEVT_COMMAND_SYMBOL_TREE_DELETE_ITEM);
-	wxPostEvent(this, event);
-}
-
-void SymbolTree::AddSymbols(TagTreePtr tree)
-{
-	std::vector<std::pair<wxString, TagEntry> >  newItems;
-	tree->ToVector(newItems);
-
-	//send event to this object to remove the symbols
-	SymbolTreeEvent event(newItems, wxEVT_COMMAND_SYMBOL_TREE_ADD_ITEM);
-	wxPostEvent(this, event);
 }

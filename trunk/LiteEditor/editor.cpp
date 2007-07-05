@@ -41,7 +41,7 @@ EVT_COMMAND(wxID_ANY, wxEVT_FRD_CLOSE, LEditor::OnFindDialog)
 END_EVENT_TABLE()
 
 // Instantiate statics
-std::stack<TagEntry> LEditor::m_history;
+std::stack<BrowseRecord> LEditor::m_history;
 FindReplaceDialog* LEditor::m_findReplaceDlg = NULL;
 FindReplaceData LEditor::m_findReplaceData;
 std::map<wxString, int> LEditor::ms_bookmarkShapes;
@@ -372,7 +372,6 @@ bool LEditor::SaveFile()
 	wxFileName absFile( m_fileName);
 	absFile.MakeAbsolute();
 	req->file = absFile.GetFullPath();
-	req->project = m_project;
 
 	ParseThreadST::Get()->Add(req);
 	return true;

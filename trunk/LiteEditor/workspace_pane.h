@@ -4,9 +4,12 @@
 #include "wx/panel.h"
 #include "tag_tree.h"
 #include "wx/wxFlatNotebook/wxFlatNotebook.h"
+#include "wx/filename.h"
 
 class FileViewTree;
 class SymbolTree;
+class wxChoicebook;
+class CppSymbolTree;
 
 class WorkspacePane : public wxPanel 
 {
@@ -17,12 +20,13 @@ public:
 	wxFlatNotebook *m_book;
 	wxString m_caption;
 	FileViewTree *m_fileView;
-	SymbolTree* m_tree;
 	wxFlatNotebookImageList m_images;
+	wxChoicebook *m_treeBook;
 
 private:
 	void CreateGUIControls();
-	
+	CppSymbolTree *GetTreeByFilename(const wxFileName &filename);
+
 public:
 	WorkspacePane(wxWindow *parent, const wxString &caption);
 	virtual ~WorkspacePane();
@@ -30,21 +34,19 @@ public:
 	//-----------------------------------------------
 	// Operations
 	//-----------------------------------------------
-	void BuildSymbolTree(TagTreePtr tree);
+	void BuildSymbolTree(const wxFileName &filename);
 	void BuildFileTree();
+	void DisplaySymbolTree(const wxFileName &filename);
+	void DeleteSymbolTree(const wxFileName &filename);
 
 	// Return the index of the given tab by name
 	int CaptionToIndex(const wxString &caption);
-
-	// event handlers
-	void OnPaint(wxPaintEvent &event);
-	void OnEraseBg(wxEraseEvent &){};
 
 	//-----------------------------------------------
 	// Setters/Getters
 	//-----------------------------------------------
 	wxFlatNotebook *GetNotebook() { return m_book; }
-	SymbolTree *GetSymbolTree() { return m_tree; }
+	SymbolTree *GetSymbolTree();
 	FileViewTree *GetFileViewTree() { return m_fileView; }
 	const wxString &GetCaption() const { return m_caption; }
 };
