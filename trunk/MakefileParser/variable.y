@@ -7,6 +7,7 @@
 #include <wx/wxchar.h>
 #include <wx/txtstrm.h>
 #include <wx/wfstream.h>
+#include <wx/app.h>
 
 #define YYDEBUG 0        		/* get the pretty debugging code to compile*/
 #define YYSTYPE wxString
@@ -26,13 +27,25 @@ bool append = false;
 int yylex(void);
 void TrimString(wxString &string)
 {
-	wxFFileOutputStream output( stderr );
-        wxTextOutputStream cout( output );
-	
-	cout << wxT("Before: ") << string;
-	string = string.Trim(true);
-	string = string.Trim(false);
-	cout << wxT("After: ") << string;
+        bool good = wxInitialize();
+	if(!good)
+	{
+		printf("wx could not be initialized, aborting.\n");
+		exit(-1);
+	}
+	else
+	{
+		printf("wx initialized succesfully!\n");
+		wxFFileOutputStream MYoutput( stderr );
+		wxTextOutputStream MYcout( MYoutput );
+		wxString string = wxT(" a test yo ");
+		MYcout << wxT("Before: '") << string << wxT("'\n");
+		string = string.Trim(true);
+		MYcout << wxT("AfterT: '") << string << wxT("'\n");
+		string = string.Trim(false);
+		MYcout << wxT("AfterF: '") << string << wxT("'\n");
+	}
+	wxUninitialize();
 }
 
 void yyerror(char* string)
@@ -74,14 +87,16 @@ name:	wordvars			{	$$ = $1;				}
 close:	')'				{	/* do nothing */			}
 
 variable: open name close 		{
-						TrimString($2);
-						if(TheTokens[$2].size() > 0)
+						wxString token = $2;
+						TrimString(token);
+
+						if(TheTokens[token].size() > 0)
 						{
-							$$ = TheTokens[$2];
+							$$ = TheTokens[token];
 						}
 						else
 						{
-							TheUnmatched.push_back($2);
+							TheUnmatched.push_back(token);
 							$$ = wxEmptyString;
 						}
 					}
@@ -110,18 +125,20 @@ assignm:	ASSIGN			{	append = true;				}
 ;
 
 assgnline: words assignm optvars	{
-	 					TrimString($1);
-						TrimString($3);
+	 					wxString name = $1;
+						wxString value = $3;
+						TrimString(name);
+						TrimString(value);
 
 	 					if(append)
 						{
-	 						TheTokens[$1] += $3;
+	 						TheTokens[name] += value;
 						}
 						else
 						{
-							TheTokens[$1] = $3;
+							TheTokens[name] = value;
 						}
-	 					$$ = $1 + wxT("=") + $3;			
+	 					$$ = name + wxT("=") + value;			
 					}
 
 printline:	PRINT			{
