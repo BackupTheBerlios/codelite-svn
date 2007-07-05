@@ -64,7 +64,7 @@ LIBP=-L../lib
 
 WXLIBS= $(shell wx-config --libs std $(WXCFG)) -L/usr/X11R6/lib -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 
 TRACE_FLAG=## Comment this if you dont want messages in log window
-CCFLAGS= -D__WX__ -Wall $(TRACE_FLAG) -I. -DWXUSINGDLL -DWX_PRECOMP -DNO_GCC_PRAGMA -DXTHREADS -D_REENTRANT -DXUSE_MTSAFE_API -pthread $(shell wx-config --cxxflags $(WXCFG)) $(PROFILER) -fno-strict-aliasing -pthread -DYY_NEVER_INTERACTIVE
+CCFLAGS= -D__WX__ -Wall $(TRACE_FLAG) -I. -DWXUSINGDLL -DWX_PRECOMP -DNO_GCC_PRAGMA -DXTHREADS -D_REENTRANT -DXUSE_MTSAFE_API -pthread $(shell wx-config --cxxflags $(WXCFG)) $(PROFILER) -fno-strict-aliasing -pthread -DYY_NEVER_INTERACTIVE=1
 
 LINK_FLAGS =  $(WXLIBS) -L$(OUTPUT_DIR) -Lsdk/wxflatnotebook/lib -lwxflatnotebook$(EXT) -lcodelite$(EXT) -lplugin$(EXT) -lwxsqlite3$(EXT) -lwxscintilla$(EXT) -Lsdk/sqlite3/lib -lsqlite3 $(PROFILER) -pthread  -lz -ldl -lm  -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lfontconfig -lXext -lXrender -lXinerama -lXi -lXrandr -lXcursor -lXfixes -lX11 -lgobject-2.0 -lgmodule-2.0 -ldl -lgthread-2.0 -lglib-2.0 -lXinerama -lpng -lz
 
