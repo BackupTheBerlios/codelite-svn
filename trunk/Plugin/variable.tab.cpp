@@ -87,6 +87,9 @@
 #include <wx/string.h>
 #include <map>
 #include <wx/arrstr.h>
+#include <wx/wxchar.h>
+#include <wx/txtstrm.h>
+#include <wx/wfstream.h>
 
 #define YYDEBUG 0        		/* get the pretty debugging code to compile*/
 #define YYSTYPE wxString
@@ -104,11 +107,15 @@ extern int lineno;
 
 bool append = false;
 int yylex(void);
-
-void Trim(YYSTYPE& line)
+void TrimString(wxString &string)
 {
-	line.Trim(true);
-	line.Trim(false);
+	wxFFileOutputStream output( stderr );
+        wxTextOutputStream cout( output );
+	
+	cout << wxT("Before: ") << string;
+	string = string.Trim(true);
+	string = string.Trim(false);
+	cout << wxT("After: ") << string;
 }
 
 void yyerror(char* string)
@@ -150,7 +157,7 @@ typedef int YYSTYPE;
 
 
 /* Line 216 of yacc.c.  */
-#line 154 "variable.tab.c"
+#line 161 "variable.tab.c"
 
 #ifdef short
 # undef short
@@ -442,10 +449,10 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    46,    46,    47,    50,    51,    52,    53,    54,    55,
-      63,    65,    67,    69,    82,    83,    86,    87,    90,    91,
-      95,    96,    99,   101,   102,   105,   120,   130,   131,   132,
-     133
+       0,    53,    53,    54,    57,    58,    59,    60,    61,    62,
+      70,    72,    74,    76,    89,    90,    93,    94,    97,    98,
+     102,   103,   106,   108,   109,   112,   127,   137,   138,   139,
+     140
 };
 #endif
 
@@ -1371,37 +1378,37 @@ yyreduce:
   switch (yyn)
     {
         case 3:
-#line 47 "variable.y"
-    {	/* Do Nothing */				;}
-    break;
-
-  case 4:
-#line 50 "variable.y"
-    {	/* Do Nothing */				;}
-    break;
-
-  case 5:
-#line 51 "variable.y"
-    {	TheOutput.push_back((yyvsp[(1) - (3)])+(yyvsp[(2) - (3)]));			;}
-    break;
-
-  case 6:
-#line 52 "variable.y"
-    {	TheOutput.push_back((yyvsp[(1) - (2)]));			;}
-    break;
-
-  case 7:
-#line 53 "variable.y"
-    {	/* Do Nothing */				;}
-    break;
-
-  case 8:
 #line 54 "variable.y"
     {	/* Do Nothing */				;}
     break;
 
+  case 4:
+#line 57 "variable.y"
+    {	/* Do Nothing */				;}
+    break;
+
+  case 5:
+#line 58 "variable.y"
+    {	TheOutput.push_back((yyvsp[(1) - (3)])+(yyvsp[(2) - (3)]));			;}
+    break;
+
+  case 6:
+#line 59 "variable.y"
+    {	TheOutput.push_back((yyvsp[(1) - (2)]));			;}
+    break;
+
+  case 7:
+#line 60 "variable.y"
+    {	/* Do Nothing */				;}
+    break;
+
+  case 8:
+#line 61 "variable.y"
+    {	/* Do Nothing */				;}
+    break;
+
   case 9:
-#line 55 "variable.y"
+#line 62 "variable.y"
     {
 						YYSTYPE msg;
 						msg << wxT("Line ") << lineno << wxT(": Unexpected token '") << yylval << wxT("'.");
@@ -1411,24 +1418,24 @@ yyreduce:
     break;
 
   case 10:
-#line 63 "variable.y"
+#line 70 "variable.y"
     {	/* do nothing */			;}
     break;
 
   case 11:
-#line 65 "variable.y"
+#line 72 "variable.y"
     {	(yyval) = (yyvsp[(1) - (1)]);				;}
     break;
 
   case 12:
-#line 67 "variable.y"
+#line 74 "variable.y"
     {	/* do nothing */			;}
     break;
 
   case 13:
-#line 69 "variable.y"
+#line 76 "variable.y"
     {
-						Trim((yyvsp[(2) - (3)]));
+						TrimString((yyvsp[(2) - (3)]));
 						if(TheTokens[(yyvsp[(2) - (3)])].size() > 0)
 						{
 							(yyval) = TheTokens[(yyvsp[(2) - (3)])];
@@ -1442,65 +1449,65 @@ yyreduce:
     break;
 
   case 14:
-#line 82 "variable.y"
+#line 89 "variable.y"
     {	(yyval) = (yyvsp[(1) - (1)]);				;}
     break;
 
   case 15:
-#line 83 "variable.y"
+#line 90 "variable.y"
     {	(yyval) = (yyvsp[(1) - (2)]) + (yyvsp[(2) - (2)]);				;}
     break;
 
   case 16:
-#line 86 "variable.y"
+#line 93 "variable.y"
     {	(yyval) = wxEmptyString;			;}
     break;
 
   case 17:
-#line 87 "variable.y"
+#line 94 "variable.y"
     {	(yyval) = (yyvsp[(1) - (1)]);				;}
     break;
 
   case 18:
-#line 90 "variable.y"
+#line 97 "variable.y"
     {	(yyval) = wxEmptyString;			;}
     break;
 
   case 19:
-#line 91 "variable.y"
+#line 98 "variable.y"
     {	(yyval) = (yyvsp[(1) - (1)]);				;}
     break;
 
   case 20:
-#line 95 "variable.y"
+#line 102 "variable.y"
     {	(yyval) = (yyvsp[(1) - (2)]) + (yyvsp[(2) - (2)]);				;}
     break;
 
   case 21:
-#line 96 "variable.y"
+#line 103 "variable.y"
     {	(yyval) = (yyvsp[(1) - (3)]) + (yyvsp[(2) - (3)]) + (yyvsp[(3) - (3)]);			;}
     break;
 
   case 22:
-#line 99 "variable.y"
+#line 106 "variable.y"
     {	(yyval) = (yyvsp[(1) - (1)]);				;}
     break;
 
   case 23:
-#line 101 "variable.y"
+#line 108 "variable.y"
     {	append = true;				;}
     break;
 
   case 24:
-#line 102 "variable.y"
+#line 109 "variable.y"
     {	append = false;				;}
     break;
 
   case 25:
-#line 105 "variable.y"
+#line 112 "variable.y"
     {
-	 					Trim((yyvsp[(1) - (3)]));
-						Trim((yyvsp[(3) - (3)]));
+	 					TrimString((yyvsp[(1) - (3)]));
+						TrimString((yyvsp[(3) - (3)]));
 
 	 					if(append)
 						{
@@ -1515,7 +1522,7 @@ yyreduce:
     break;
 
   case 26:
-#line 120 "variable.y"
+#line 127 "variable.y"
     {
 	 					YYSTYPE result = wxT("Tokens: \n");
 						for(Itokens it = TheTokens.begin(); it != TheTokens.end(); it++)
@@ -1528,28 +1535,28 @@ yyreduce:
     break;
 
   case 27:
-#line 130 "variable.y"
+#line 137 "variable.y"
     {	(yyval) = (yyvsp[(1) - (1)]);				;}
     break;
 
   case 28:
-#line 131 "variable.y"
+#line 138 "variable.y"
     {	(yyval) = (yyvsp[(1) - (1)]);				;}
     break;
 
   case 29:
-#line 132 "variable.y"
+#line 139 "variable.y"
     {	(yyval) = (yyvsp[(1) - (2)]) + (yyvsp[(2) - (2)]);				;}
     break;
 
   case 30:
-#line 133 "variable.y"
+#line 140 "variable.y"
     {	(yyval) = (yyvsp[(1) - (2)]) + (yyvsp[(2) - (2)]);				;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1553 "variable.tab.c"
+#line 1560 "variable.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1763,7 +1770,7 @@ yyreturn:
 }
 
 
-#line 135 "variable.y"
+#line 142 "variable.y"
 
 /* End of grammar */
 

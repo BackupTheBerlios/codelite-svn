@@ -28,6 +28,8 @@
     <File Name="Target.cpp"/>
     <File Name="TargetLexer.cpp"/>
     <File Name="VariableLexer.cpp"/>
+    <File Name="variable.tab.cpp"/>
+    <File Name="variable.yy.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Header Files">
     <File Name="async_executable_cmd.h"/>
@@ -60,6 +62,7 @@
     <File Name="MakefileParser.h"/>
     <File Name="TargetLexer.h"/>
     <File Name="VariableLexer.h"/>
+    <File Name="variable.yy.h"/>
   </VirtualDirectory>
   <Dependencies/>
   <Settings Type="Static Library">
