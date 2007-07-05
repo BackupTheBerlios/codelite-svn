@@ -30,9 +30,9 @@ $(file).$(infix_lex).c:			$(file).l
 					flex -o $(file).$(infix_lex).c $(file).l
 
 install:				$(file).$(infix_lex).c $(file).$(infix_bison).h $(file).$(infix_bison).c$(filesuffix)
-					cp $(file).$(infix_lex).c ../Plugin
-					cp $(file).$(infix_bison).h ../Plugin
-					cp $(file).$(infix_bison).c$(filesuffix) ../Plugin
+					cp $(file).$(infix_lex).c ../Plugin/$(file).$(infix_lex).cpp
+					cp $(file).$(infix_bison).h ../Plugin/$(file).$(infix_lex).h
+					cp $(file).$(infix_bison).c$(filesuffix) ../Plugin/$(file).$(infix_bison).cpp
 
 clean:
 					rm -f $(file) $(file).$(infix_lex).* $(file).$(infix_bison).* main.o variable.output
