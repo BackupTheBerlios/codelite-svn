@@ -1,6 +1,7 @@
 #include "precompiled_header.h"
 
 #include "language.h"
+#include "variable.h"
 #include "ctags_manager.h"
 #include "y.tab.h"
 #include <wx/stopwatch.h>
@@ -17,8 +18,11 @@
 //cpp_scope_garmmar.y
 //cpp_variables_grammar.y
 //expr_garmmar.y
+
 extern std::string get_scope_name(const std::string &in);
 extern ExpressionResult &parse_expression(const std::string &in);
+extern void get_variables(const std::string &in, VariableList &li);
+
 //===============================================================
 
 // Some useful macros
@@ -545,18 +549,6 @@ wxString Language::GetVarQualifier(const wxString& identifier, const wxString& s
 	return qual;
 }
 
-wxString Language::ResolveCppCast(const wxString& expression)
-{
-	wxString s = expression;
-	int start = (int)s.find_first_not_of(_T("("));
-	if(start < 0)
-		return wxEmptyString;
-	int end = (int)s.find_first_not_of(_T("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890*&:_"), start);
-	if(end < 0)
-		return wxEmptyString;
-	return expression.substr(start, end-start);
-}
-
 bool Language::NextToken(wxString &token, wxString &delim, wxString &srcStr)
 {
 	if(srcStr.IsEmpty())
@@ -634,9 +626,36 @@ ExpressionResult Language::ProcessExpression(const wxString& stmt, const wxStrin
 	wxString scopeName = GetScopeName(text);
 	wxLogMessage(wxT("Current scope: [") + scopeName + wxT("]"));
 
+	TagEntry parent;
 	while(NextToken(word, oper, statement))
 	{
 		result = ParseExpression(word);
+		//parsing failed?
+		if(result.m_name.empty())
+			break;
+
+		if(!parent.IsOk())
+		{
+			//no tokens before this, what we need to do now, is find the TagEntry
+			//that corrseponds to the result
+			wxString type_name, type_scope;
+			if(result.m_isaType)
+			{
+				type_scope = result.m_scope.empty() ? scopeName : _U(result.m_scope.c_str());
+				if(oper == wxT("->") || oper == wxT("."))
+				{
+					wxLogMessage(wxT("Illegal usage of '->', '.' operator on a type :") + _U(result.m_name.c_str()));
+					break;
+				} // if(oper == wxT("->") || oper == wxT("."))  
+				type_name = _U(result.m_name.c_str());
+			} // if(result.m_isaType)  
+			else
+			{
+				bool res = TypeFromName(_U(result.m_name.c_str()), text, scopeName, type_name, type_scope);
+				if(!res)
+					break;
+			}
+		}
 	}
 
 	/*
@@ -1147,4 +1166,56 @@ ExpressionResult Language::ParseExpression(const wxString &in)
 	const wxCharBuffer buf = _C(in);
 	ExpressionResult result = parse_expression(buf.data());
 	return result;
+}
+
+bool Language::TypeFromName(const wxString &name, const wxString &text, const wxString &scopeName, wxString &type, wxString &typeScope)
+{
+	//try local scope
+	VariableList li;
+	const wxCharBuffer buf = _C(text);
+	get_variables(buf.data(), li);
+
+	//search for a full match in the returned list
+	for(VariableList::iterator iter = li.begin(); iter != li.end(); iter++)
+	{
+		Variable var = (*iter);
+		wxString var_name = _U(var.m_name.c_str());
+		if(var_name == name)
+		{
+			type = _U(var.m_type.c_str());
+			typeScope = _U(var.m_typeScope.c_str());
+			return true;
+		}
+	} // for(VariableList::iterator iter = li.begin(); iter != li.end(); iter++)
+	//no match in local scope, try the database
+	
+	//first we try to match the current scope
+	std::vector<TagEntry> tags;
+	TagsManagerST::Get()->GetTags(name, scopeName, tags, ExactMatch);
+	if(tags.size() == 1)
+	{
+		//we have a single match!
+		type = tags.at(0).GetName();
+		typeScope = tags.at(0).GetScopeName();
+		return true;
+	} // if(tags.size() == 1)
+	else if(tags.empty())
+	{
+		//no matches found at all, try the global scope
+		TagsManagerST::Get()->GetTags(name, wxT("<global>"), tags, ExactMatch);
+		if(tags.size() == 1)
+		{
+			//we have a single match!
+			type = tags.at(0).GetName();
+			typeScope = tags.at(0).GetScopeName();
+			return true;
+		} // if(tags.size() == 1)
+		return false;
+	}
+	else
+	{
+		//too much matches
+		wxLogMessage(wxT("Found too many matches for name: ") + name + wxT(" at scope: ") + scopeName);
+		return false;
+	}
 }
