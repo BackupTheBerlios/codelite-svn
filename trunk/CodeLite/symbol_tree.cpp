@@ -106,6 +106,7 @@ void SymbolTree::BuildTree(const wxFileName &fileName)
 {
 	// Clear the tree
 	DeleteAllItems();
+	m_items.clear();
 	m_globalsNode = wxTreeItemId();
 	m_prototypesNode = wxTreeItemId();
 	m_macrosNode = wxTreeItemId();
@@ -113,7 +114,7 @@ void SymbolTree::BuildTree(const wxFileName &fileName)
 	
 	m_fileName = fileName;
 	// Get the current tree
-	TagTreePtr m_tree = TagsManagerST::Get()->Load(m_fileName);
+	m_tree = TagsManagerST::Get()->Load(m_fileName);
 	if( !m_tree )
 	{
 		wxLogMessage(wxT("Failed to load Symbols from database!"));
@@ -169,7 +170,10 @@ void SymbolTree::AddItem(TagNode* node)
 	if( (nodeData.GetParent() == wxT("<global>")) &&					// parent is global scope
 		m_globalsKind.find(nodeData.GetKind()) != m_globalsKind.end() ) //the node kind is one of function, prototype or variable
 	{
-		parentHti = m_globalsNode;
+		if(nodeData.GetKind() == wxT("prototype"))
+			parentHti = m_prototypesNode;
+		else
+			parentHti = m_globalsNode;	
 	}
 	else
 		parentHti = node->GetParent()->GetData().GetTreeItemId();
@@ -198,6 +202,7 @@ void SymbolTree::AddItem(TagNode* node)
 						new MyTreeItemData(node->GetData().GetFile(), node->GetData().GetLine()));
 		node->GetData().SetTreeItemId( hti );
 		m_sortItems[parentHti.m_pItem] = true;
+		m_items[nodeData.Key()] = hti;
 	}
 }
 
@@ -207,11 +212,13 @@ void SymbolTree::SortTree(std::map<void*, bool> & nodes)
 	for(; iter != nodes.end(); iter++)
 	{
 		wxTreeItemId item = iter->first;
-
-		// Does this node has children?
-		if( GetChildrenCount( item ) == 0 )
-			continue;
-		SortChildren(item); 
+		if(item.IsOk())
+		{
+			// Does this node has children?
+			if( GetChildrenCount( item ) == 0 )
+				continue;
+			SortChildren(item); 
+		}
 	}
 }
 
@@ -248,7 +255,6 @@ int SymbolTree::GetItemIconIndex(const wxString &kind, const wxString &access)
 
 void SymbolTree::UpdateSymbols(SymbolTreeEvent& event)
 {
-	/*
 	if( !m_tree ) 
 		return;
 
@@ -264,20 +270,16 @@ void SymbolTree::UpdateSymbols(SymbolTreeEvent& event)
 		UpdateGuiItem(data, key);
 	}
 	Thaw();
-	*/
 }
 
 void SymbolTree::UpdateGuiItem(TagEntry& data, const wxString& key)
 {
-	/*
+	if(!m_tree)
+		return;
+
 	TagNode* node = m_tree->Find(key);
 	if( node )
 	{
-		// If the update the was made on a prototype entry and we already have a 'function' entry in the 
-		// tree, we dont update the GUI tree
-		if( data.GetKind() == wxT("prototype") && node->GetData().GetKind() == wxT("function"))
-			return;
-
 		// Update the new data with the gui tree item id
 		data.SetTreeItemId( node->GetData().GetTreeItemId() );
 		node->SetData(data);
@@ -288,21 +290,68 @@ void SymbolTree::UpdateGuiItem(TagEntry& data, const wxString& key)
 		wxTreeItemId itemId = node->GetData().GetTreeItemId();
 		if(itemId.IsOk()){
 			curIconIndex = GetItemImage(itemId);
-		}
+			if(curIconIndex != iconIndex )
+			{
+				// Need to update the image as well
+				SetItemImage(node->GetData().GetTreeItemId(), iconIndex);
+				SetItemImage(node->GetData().GetTreeItemId(), iconIndex, wxTreeItemIcon_Selected);
 
-		if(curIconIndex != iconIndex && itemId.IsOk())
-		{
-			// Need to update the image as well
-			SetItemImage(node->GetData().GetTreeItemId(), iconIndex);
+			} // if(curIconIndex != iconIndex )
+			//update the linenumber and file
+			MyTreeItemData *item_data = new MyTreeItemData(data.GetFile(), data.GetLine());
+			wxTreeItemData *old_data = GetItemData(itemId);
+			if(old_data)
+				delete old_data;
+			SetItemData(itemId, item_data);
 		}
-		}*/
+	}
 }
 
 void SymbolTree::DeleteSymbols(SymbolTreeEvent& event)
 {
+	if(!m_tree)
+		return;
+
+	std::vector<std::pair<wxString, TagEntry> > items = event.GetItems();
+	Freeze();
+	for(size_t i=0; i<items.size(); i++)
+	{
+		wxString key  = items.at(i).first;
+		TagEntry data = items.at(i).second;
+
+		std::map<wxString, wxTreeItemId>::iterator iter = m_items.find(key);
+		if(iter != m_items.end() && iter->second.IsOk())
+		{
+			wxTreeItemId hti = iter->second;
+			Delete(hti);
+			m_items.erase(iter);
+		}
+	} // for(size_t i=0; i<items.size(); i++)
+	Thaw();
 }
 
 
 void SymbolTree::AddSymbols(SymbolTreeEvent& event)
 {
+	if(!m_tree)
+		return;
+
+	m_sortItems.clear();
+	std::vector<std::pair<wxString, TagEntry> > items = event.GetItems();
+	Freeze();
+	for(size_t i=0; i<items.size(); i++)
+	{
+		TagEntry data = items.at(i).second;
+		if(m_tree)
+		{
+			TagNode *node = m_tree->AddEntry(data);
+			if(node)
+			{
+				AddItem(node);
+			}
+		}
+	} // for(size_t i=0; i<items.size(); i++)
+	SortTree(m_sortItems);
+	m_sortItems.clear();
+	Thaw();
 }

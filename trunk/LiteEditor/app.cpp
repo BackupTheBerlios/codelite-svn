@@ -18,6 +18,7 @@ App::App(void)
 App::~App(void)
 {
 	wxImage::CleanUpHandlers();
+	wxAppBase::ExitMainLoop();
 }
 
 bool App::OnInit()

@@ -4,6 +4,7 @@
 #include "ctags_manager.h"
 #include "parse_thread.h"
 #include "wx/filename.h"
+#include "map"
 
 #ifdef WXMAKINGDLL_CODELITE
 #    define WXDLLIMPEXP_CL WXEXPORT
@@ -26,6 +27,7 @@ class WXDLLIMPEXP_CL MyTreeItemData : public wxTreeItemData
 private:
 	wxString m_fileName;
 	int		 m_lineno;
+	
 
 public:
     /**
@@ -57,7 +59,8 @@ protected:
 	std::map<void*, bool> m_sortItems;
 	std::map<wxString, bool> m_globalsKind;
 	wxFileName m_fileName;
-
+	std::map<wxString, wxTreeItemId> m_items;
+	TagTreePtr m_tree;
 public:
 	/**
 	 * Default cosntructor.
@@ -174,5 +177,6 @@ protected:
 	 */
 	void UpdateGuiItem(TagEntry& data, const wxString& key);
 	DECLARE_DYNAMIC_CLASS(SymbolTree)
+	void OnItemActivated(wxTreeEvent &event);
 };
 #endif // CODELITE_SYMBOL_TREE_H

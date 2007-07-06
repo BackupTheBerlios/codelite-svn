@@ -1,5 +1,5 @@
 #line 2 "variable.yy.c"
-
+#include "unistd.h"
 #line 4 "variable.yy.c"
 
 #define  YY_INT_ALIGNED short int

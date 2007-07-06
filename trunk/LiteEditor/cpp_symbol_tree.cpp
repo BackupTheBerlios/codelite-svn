@@ -54,6 +54,7 @@ CppSymbolTree::CppSymbolTree(wxWindow *parent, const wxWindowID id, const wxPoin
 {
 	Connect(GetId(), wxEVT_COMMAND_TREE_ITEM_RIGHT_CLICK, wxTreeEventHandler(CppSymbolTree::OnMouseRightUp));
 	Connect(GetId(), wxEVT_LEFT_DCLICK, wxMouseEventHandler(CppSymbolTree::OnMouseDblClick));
+	Connect(GetId(), wxEVT_COMMAND_TREE_KEY_DOWN, wxTreeEventHandler(CppSymbolTree::OnItemActivated));
 }
 
 void CppSymbolTree::OnMouseRightUp(wxTreeEvent &event)
@@ -86,13 +87,18 @@ void CppSymbolTree::OnMouseDblClick(wxMouseEvent& event)
 		event.Skip();
 		return;
 	}
+	
+	DoItemActivated(treeItem, event);
+}
 
+void CppSymbolTree::DoItemActivated(wxTreeItemId item, wxEvent &event)
+{
 	//-----------------------------------------------------
 	// Each tree items, keeps a private user data that 
 	// holds the key for searching the its corresponding
 	// node in the m_tree data structure
 	//-----------------------------------------------------
-	MyTreeItemData* itemData = static_cast<MyTreeItemData*>(GetItemData(treeItem));
+	MyTreeItemData* itemData = static_cast<MyTreeItemData*>(GetItemData(item));
 	if( !itemData )
 	{
 		event.Skip();
@@ -105,4 +111,14 @@ void CppSymbolTree::OnMouseDblClick(wxMouseEvent& event)
 	
 	// Open the file and set the cursor to line number
 	ManagerST::Get()->OpenFile(filename, project, lineno);
+}
+
+void CppSymbolTree::OnItemActivated(wxTreeEvent &event)
+{
+	if(event.GetKeyCode() == WXK_RETURN){
+		wxTreeItemId item = GetSelection();
+		DoItemActivated(item, event);
+	}else{
+		event.Skip();
+	}
 }

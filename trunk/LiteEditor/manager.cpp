@@ -83,7 +83,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 {
 	wxFileName fileName(file_name);
 	wxFlatNotebook *notebook = Frame::Get()->GetNotebook();
-	bool updTree = true;
+	bool updTree = false;
 
 	//make sure that the notebook is visible
 	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Editor"));
@@ -102,7 +102,6 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 		if( editor ){
 			if( editor->GetFileName() == fileName.GetFullPath() )
 			{
-				updTree = !(notebook->GetSelection() == (int)nCount);
 				notebook ->SetSelection( nCount );
 				break;
 			}
@@ -128,6 +127,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 
 		notebook ->AddPage(editor, fileName.GetFullName(), true);
 		notebook ->Thaw();
+		updTree = true;
 	}
 
 	// Go to tag line number and gives scintilla the focus

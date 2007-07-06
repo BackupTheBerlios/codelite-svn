@@ -21,7 +21,9 @@ public:
 protected:
 	virtual void OnMouseDblClick(wxMouseEvent& event);
 	virtual void OnMouseRightUp(wxTreeEvent& event);
-	
+	virtual void OnItemActivated(wxTreeEvent &event);
+	void DoItemActivated(wxTreeItemId item, wxEvent &event);
+
 	DECLARE_DYNAMIC_CLASS(CppSymbolTree)
 };
 

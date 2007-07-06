@@ -45,8 +45,8 @@ void ParseThread::ProcessRequest(ThreadRequest * request)
 		
 		// Load the records and build a language tree
 		TagEntry root;
-		root.SetName(_T("<ROOT>"));
-		oldTree.Reset( new TagTree(_T("<ROOT>"), root) );
+		root.SetName(wxT("<ROOT>"));
+		oldTree.Reset( new TagTree(wxT("<ROOT>"), root) );
 		while( rs.NextRow() )
 		{
 			TagEntry entry(rs);
@@ -99,7 +99,7 @@ void ParseThread::ProcessRequest(ThreadRequest * request)
 		try
 		{
 			wxString sql;
-			sql << _T("DELETE FROM COMMENTS WHERE file='") << file << _T("'");
+			sql << wxT("DELETE FROM COMMENTS WHERE FILE='") << file << wxT("'");
 			m_pDb->ExecuteUpdate( sql );
 			m_pDb->Store( comments, wxFileName(), false );
 		}

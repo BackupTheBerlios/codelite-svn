@@ -60,7 +60,6 @@ bool TagEntry::operator ==(const TagEntry& rhs)
 	//Note: tree item id is not used in this function!
 	return	
 		m_parentId == rhs.m_parentId &&
-		m_id == rhs.m_id &&
 		m_file == rhs.m_file &&
 		m_kind == rhs.m_kind &&
 		m_parent == rhs.m_parent &&
