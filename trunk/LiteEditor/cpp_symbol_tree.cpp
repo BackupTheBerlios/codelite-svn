@@ -98,6 +98,9 @@ void CppSymbolTree::DoItemActivated(wxTreeItemId item, wxEvent &event)
 	// holds the key for searching the its corresponding
 	// node in the m_tree data structure
 	//-----------------------------------------------------
+	if(item.IsOk() == false)
+		return;
+
 	MyTreeItemData* itemData = static_cast<MyTreeItemData*>(GetItemData(item));
 	if( !itemData )
 	{

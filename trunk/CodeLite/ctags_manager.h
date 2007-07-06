@@ -347,13 +347,11 @@ public:
 	/**
 	 * Return autocompletion candidates based on parsing an expression and retrieving its member from the database.
 	 * \param expr Expression to evaluate, can be complex one, such as ((MyClass&)cls).GetName().GetData() ... )
-	 * \param scope Scope where the expression is located
-	 * \param scopeName Scope name if any (for example, if the scope starts with void Buffer::Add(){ ... expr , then
-	 * the scope name is 'Buffer'
+	 * \param text Scope where the expression is located
 	 * \param candidates [output] list of TagEntries that can be displayed in Autucompletion box
 	 * \return true if candidates.size() is greater than 0
 	 */
-	bool AutoCompleteCandidates(const wxString& expr, const wxString& scope, const wxString& scopeName, std::vector<TagEntry> &candidates);
+	bool AutoCompleteCandidates(const wxString& expr, const wxString& text, std::vector<TagEntry> &candidates);
 
 	/**
 	 * Delete all tags related to project

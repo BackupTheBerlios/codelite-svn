@@ -336,13 +336,34 @@
 			Name="Generated Files"
 			Filter="">
 			<File
+				RelativePath=".\cpp_expr_lexer.cpp">
+			</File>
+			<File
+				RelativePath=".\cpp_expr_parser.cpp">
+			</File>
+			<File
 				RelativePath=".\cpp_lexer.cpp">
 			</File>
 			<File
 				RelativePath=".\cpp_lexer.h">
 			</File>
 			<File
+				RelativePath=".\expression_result.cpp">
+			</File>
+			<File
+				RelativePath=".\expression_result.h">
+			</File>
+			<File
 				RelativePath=".\scope_parser.cpp">
+			</File>
+			<File
+				RelativePath=".\var_parser.cpp">
+			</File>
+			<File
+				RelativePath=".\variable.cpp">
+			</File>
+			<File
+				RelativePath=".\variable.h">
 			</File>
 		</Filter>
 	</Files>

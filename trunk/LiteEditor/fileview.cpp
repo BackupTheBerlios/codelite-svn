@@ -275,6 +275,8 @@ void FileViewTree::DoItemActivated(wxTreeItemId &item, wxEvent &event)
 	// holds the key for searching the its corresponding
 	// node in the m_tree data structure
 	//-----------------------------------------------------
+	if(item.IsOk() == false)
+		return;
 	FilewViewTreeItemData* itemData = static_cast<FilewViewTreeItemData*>(GetItemData(item));
 	if( !itemData )
 	{

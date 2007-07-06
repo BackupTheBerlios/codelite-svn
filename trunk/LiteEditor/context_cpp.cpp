@@ -305,33 +305,34 @@ void ContextCpp::CodeComplete()
 		return;
 	}
 
-	// Get a full expression and pass it, along with the local scope
-	// to the Language parser
-	// We define an expression, by reading from pos and up until we find
+	// The auto-completion functionality needs the following input from user
+	// inorder to try display a auto-completion box:
+	// -the text up till the current position
+	// -the statement (an example of statement: 'm_somemember.getName()->' excluding the '->') 
+	// -an output array that will be populated with possible matches
+
+	// The full expression is obtained by simply searching backwards for 
 	// the first '{' or ';' or SOT
 	int semiColPos = rCtrl.FindString(wxT(";"), 0, false, rCtrl.GetCurrentPos());
 	int lcurlyPos  = rCtrl.FindString(wxT("{"), 0, false, rCtrl.GetCurrentPos());
+	// get the full text of the current page
+	wxString text = rCtrl.GetTextRange(0, rCtrl.GetCurrentPos());
+	
 	int start;
-	TagEntry tag;
-
 	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
 	if(start < 0){
 		start = 0;
 	}
 
 	wxString expr = rCtrl.GetTextRange(start, pos);
-	
-	//get the current scope name
-	wxString text = rCtrl.GetTextRange(0, rCtrl.GetCurrentPos());
-	wxString scopeName = LanguageST::Get()->GetScopeName(text);
-
+	std::vector<TagEntry> candidates;
 	if( showFuncProto )
 	{
 		//display function tooltip 
 	}
 	else
 	{
-		//display list members
+		TagsManagerST::Get()->AutoCompleteCandidates(expr, text, candidates);
 	}
 }
 

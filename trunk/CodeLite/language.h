@@ -9,12 +9,13 @@
 #include "entry.h"
 #include <wx/filename.h>
 #include "db_record.h"
+#include "expression_result.h"
 
 #ifdef WXMAKINGDLL_CODELITE
 #    define WXDLLIMPEXP_CL WXEXPORT
 #elif defined(WXUSINGDLL_CODELITE)
 #    define WXDLLIMPEXP_CL WXIMPORT
-#else /* not making nor using FNB as DLL */
+#else
 #    define WXDLLIMPEXP_CL
 #endif
 
@@ -94,13 +95,10 @@ public:
 	/**
 	 * Process a grammar expression and return the type resolved.
 	 * \param stmt c++ statement
-	 * \param parent [output] the parent of the last token of the expressions (example, ClassA::FuncThatReturnClassB().PrintFuncOfClassB() - parent will be ClassB)
-	 * \param scope Local scope
-	 * \param calltipContext this function is called in GetFunctionTip() context
-	 * \param scopeName Scope name
+	 * \param text scope text
 	 * \return qualifier of the statement
 	 */
-	wxString ProcessExpression(const wxString& stmt, wxString & parent, bool calltipContext = false, const wxString& scope = wxEmptyString, const wxString& scopeName = wxEmptyString);
+	ExpressionResult ProcessExpression(const wxString& stmt, const wxString& text);
 
 	/**
 	 * Set the language specific auto completion delimeteres, for example: for C++ you should populate
@@ -135,12 +133,24 @@ public:
 	 */
 	void ParseComments(const wxFileName &fileName, std::vector<DbRecordPtr>* comments);
 
+	//==========================================================
+	// New API based on the yacc grammar files
+	//==========================================================
+
 	/**
 	 * return scope name from given input string
 	 * \param in input string
 	 * \return scope name or empty string
 	 */
 	wxString GetScopeName(const wxString &in);
+
+	/**
+	 * parse an expression and return the result. this functions uses 
+	 * the sqlite database as its symbol table
+	 * \param in input string expression
+	 * \return ExpressionResult, if it fails to parse it, check result.m_name.empty() for success
+	 */
+	ExpressionResult ParseExpression(const wxString &in);
 
 private:
 	/**

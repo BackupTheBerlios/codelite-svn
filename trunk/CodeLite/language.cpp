@@ -12,8 +12,14 @@
 #endif
 #endif 
 
-//defined in cpp5_grammar.y
+//===============================================================
+//defined in generated files from the yacc grammar:
+//cpp_scope_garmmar.y
+//cpp_variables_grammar.y
+//expr_garmmar.y
 extern std::string get_scope_name(const std::string &in);
+extern ExpressionResult &parse_expression(const std::string &in);
+//===============================================================
 
 // Some useful macros
 #define CHECK_STATE(x) { if(state != x) { flag = 0; break; } }
@@ -606,8 +612,9 @@ bool Language::IsPointer(const wxString &qualifier)
 	return false;
 }
 
-wxString Language::ProcessExpression(const wxString& stmt, wxString & parent, bool calltipContext, const wxString& scope, const wxString& scopeName)
+ExpressionResult Language::ProcessExpression(const wxString& stmt, const wxString& text)
 {
+	ExpressionResult result;
 	wxString statement( stmt );
 
 	// Trim whitespace from right and left
@@ -622,15 +629,17 @@ wxString Language::ProcessExpression(const wxString& stmt, wxString & parent, bo
 	wxString str;
 	wxString left;
 	wxString qualifier;
-	bool isPointer(false);
 
 	std::vector<TagEntry> tags;
-	
-	if( !NextToken(word, oper, statement) )
+	wxString scopeName = GetScopeName(text);
+	wxLogMessage(wxT("Current scope: [") + scopeName + wxT("]"));
+
+	while(NextToken(word, oper, statement))
 	{
-		return wxEmptyString;
+		result = ParseExpression(word);
 	}
 
+	/*
 	// Trim whitespaces and such
 	word.erase(0, word.find_first_not_of(trimString)); 
 	word.erase(word.find_last_not_of(trimString)+1);
@@ -643,141 +652,11 @@ wxString Language::ProcessExpression(const wxString& stmt, wxString & parent, bo
 
 	StringTokenizer tok(word, delims);
 	word = tok.Last();
-
-	// try to resolve C-Style casting
-	if( word.StartsWith(_T("("), &left) )
+	while( NextToken( word, oper, statement) )
 	{
-		if( Match(_T('('), str, left) )
-		{
-			wxString truncStr(_T("(") + str);
-			
-			// Get qualifier name from the truncated string
-			qualifier = ResolveCppCast( truncStr );
-
-			qualifier.erase(0, qualifier.find_first_not_of(_T("*& "))); 
-
-			// Before we do trim right, test whether this qualifier is a 
-			// pointer
-			isPointer = IsPointer(qualifier);
-			qualifier.erase(qualifier.find_last_not_of(_T("*& "))+1);
-		}
-		else
-			return wxEmptyString;
 	}
-	else
-	{
-		//---------------------------------------------------------------------		
-		// TODO::
-		// check for other casting style
-		// (static_cast, dynamic_cast, reinterpret_cast, const_cast)
-		//---------------------------------------------------------------------
-
-		// try to find word qualifier either from local scope or from
-		// glocal scope
-		wxString tmpScope(scope);
-		wxString tmpScopeName(scopeName);
-		bool foundThisKeyword(false);
-
-		// get the qualifier of 'word'
-		qualifier = GetWordQualifier( word, scope, scopeName, isPointer );
-		if( qualifier.IsEmpty() )
-			return wxEmptyString;
-	
-		// do some validations
-		if(isPointer && oper != _T("->"))
-		{
-			return wxEmptyString;
-		}
-
-		if(!isPointer && oper == _T("->"))
-		{
-			return wxEmptyString;
-		}
-		
-		// the parent of the first token is empty
-		parent = _T("");
-		word.Empty();
-		oper.Empty();
-
-		while( NextToken( word, oper, statement) )
-		{
-			tmpScopeName = qualifier;
-			parent = qualifier;
-
-			if( calltipContext && statement.IsEmpty() )
-				// We can end here for calltip context 
-				break;
-
-			tags.clear();
-
-			// incase word is a function, remove the braces
-			word = word.BeforeFirst(_T('('));
-			
-			TagsManagerST::Get()->GetMembers( tmpScopeName, word, tags );
-			qualifier = GetTagQualifier( tags, isPointer );
-			
-			if( qualifier.IsEmpty())
-				return wxEmptyString;
-			
-			if(oper == _T("::") && (tags[0].GetKind() == _T("function") || tags[0].GetKind() == _T("prototype")))
-			{
-				// A function cant be followed by a scope operator
-				return wxEmptyString;
-			}
-
-			// test whether our qualifier is a pointer
-			isPointer = IsPointer(qualifier);
-
-			//----------------------------------------------------------------------
-			// Incase the word we are searching for, is 'this', we override the 
-			// IsPointer() function result: If word is 'this' it is set to true,
-			// elss if it is '*this' it is set to false
-			//----------------------------------------------------------------------
-			if(word == _T("this"))
-			{
-				if( foundThisKeyword )
-				{
-					return wxEmptyString;
-				}
-				foundThisKeyword = true;
-				isPointer = true;
-			}
-			
-			if(word == _T("*this"))
-			{
-				if( foundThisKeyword )
-				{
-						return wxEmptyString;
-				}
-				foundThisKeyword = true;
-				isPointer = false;
-			}
-
-			if(isPointer && oper != _T("->"))
-			{
-				return wxEmptyString;
-			}
-
-			if(!isPointer && oper == _T("->"))
-			{
-				return wxEmptyString;
-			}
-
-			// Remove any specifiers from the qualifier
-			qualifier.erase(0, qualifier.find_first_not_of(_T("*& "))); 
-			isPointer = IsPointer(qualifier);
-			qualifier.erase(qualifier.find_last_not_of(_T("*& "))+1);
-
-			// Print debug message
-
-			// If we have more tokens, keep processing them
-			// but now the parent is set the previous qualifier
-			tmpScope.Empty();
-			oper.Empty();
-			word.Empty();
-		}
-	}
-	return qualifier;
+	*/
+	return result;
 }
 
 bool Language::ParseSignature(const wxString &signature, std::vector<std::pair<wxString, wxString> >& args, wxString & trailer)
@@ -1255,8 +1134,17 @@ void Language::ParseComments(const wxFileName &fileName, std::vector<DbRecordPtr
 
 wxString Language::GetScopeName(const wxString &in)
 {
-	//defined cpp5_grammar.y
 	const wxCharBuffer buf = _C(in);
 	std::string scope_name = get_scope_name(buf.data());
-	return _U(scope_name.c_str());
+	wxString scope = _U(scope_name.c_str());
+	if(scope.IsEmpty())
+		scope = wxT("<global>");
+	return scope;
+}
+
+ExpressionResult Language::ParseExpression(const wxString &in)
+{
+	const wxCharBuffer buf = _C(in);
+	ExpressionResult result = parse_expression(buf.data());
+	return result;
 }
