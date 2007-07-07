@@ -1,0 +1,7 @@
+1. Handle inheritance retieval from the database TagsManager::FindByNameAndScope()
+2. AutoCompleteCandidates - display a pop-up dialog
+3. When deleting a project / file from workspace, remove information from 'Comments' table as well
+4. WordComplete() - need to be modified to comply with new CC re-design
+5. Code cleanup, remove all 'old' code - easy to maintain
+6. Tooltips - provide user tooltips based on 'ProcessExpression' function
+
