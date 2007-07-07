@@ -1,4 +1,9 @@
-1. Handle inheritance retieval from the database TagsManager::FindByNameAndScope()
+1. Handle inheritance retieval from the database TagsManager::GetDerivationList() function, it accpets as input the type e.g. NS::String
+   the function should search in the database using sql select similar to this:
+   select * from tags where PARENT='NS' AND PATH='NS::String';
+   OR, incase PATH is only 'String'
+   select * from tags where PARENT='<global>' AND PATH='String';
+   
 2. AutoCompleteCandidates - display a pop-up dialog
 3. When deleting a project / file from workspace, remove information from 'Comments' table as well
 4. WordComplete() - need to be modified to comply with new CC re-design
