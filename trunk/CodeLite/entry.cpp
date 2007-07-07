@@ -303,29 +303,29 @@ int TagEntry::Delete(wxSQLite3Statement &deletePreparedStmnt)
 
 wxString TagEntry::GetScopeName() const
 {
-	wxString scopeName(GetPath());
-
-	if(GetKind() == wxT("project"))
-		return wxEmptyString;
+	wxString path(GetPath());
 
 	// Is this is a global tag?
 	if(GetParent() == wxT("<global>"))
 		return wxT("<global>");
 
 	// Get the scope name (if we have one)
-	if(scopeName.IsEmpty())
+	if(path.IsEmpty())
 		return wxEmptyString;
 	else
 	{
 		// Remove the last token
-		StringTokenizer tok(scopeName, wxT("::"));
-		scopeName.Empty();
-	
-		for(int i=0; i<tok.Count()-1; i++)
-			scopeName += tok[i];
+		wxString suffix, scopeName;
+		suffix << wxT("::") << GetName();
+
+		if(path.EndsWith(suffix, &scopeName))
+		{
+			return scopeName;
+		}
+		return wxEmptyString;
 	}
-	return scopeName;
 }
+
 wxString TagEntry::GetKind() const {
 	 // if the tree element is a typeref, use the actual type
 	// and not the kind that ctags thinks it is

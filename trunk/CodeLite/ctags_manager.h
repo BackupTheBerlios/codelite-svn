@@ -221,12 +221,6 @@ public:
 	 * \return a sorted TagEntry vector which must be freed by caller
 	 */	
 	std::vector<TagEntry>* ParseLocals(const wxString& scope);
-
-	/**
-	 * Create an empty project in the tags database
-	 * \param projectName the project name to create
-	 */	
-	void CreateProject(const wxString &projectName);
 	
 	/**
 	 * \brief Set the full path to ctags executable, else TagsManager will use relative path ctags.
@@ -303,6 +297,13 @@ public:
 	void SetEventHandler(wxEvtHandler* evtHandler);
 
 	/**
+	 * Test if filename matches the current ctags file spec.
+	 * \param filename file name to test
+	 * \return true if the file name extension matches the current running ctags file spec
+	 */
+	bool IsValidCtagsFile(const wxFileName &filename) const;
+
+	/**
 	 * Return the closest functions' line number from lineNo, the search direction is UP.
 	 * \param lineNo Line number to start from
 	 * \param project Project name
@@ -327,6 +328,15 @@ public:
 	 * default is set to false
 	 */
 	void GetTags(const wxString& name, const wxString& scopeName, std::vector<TagEntry>& tags, int flags = PartialMatch, const wxString& scope = wxEmptyString, bool allowDups = false);
+
+	/** 
+	 * Find symbols by name and scope. 
+	 * \param name symbol name
+	 * \param scope full path to symbol. if set to wxEmptyString, the search is performed against the global
+	 * \param tags [output] a vector of the results tags
+	 * \return true on success false otherwise
+	 */
+	void FindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags);
 
 	/**
 	 * Return list of tags for the code completion (user hit '.'  '->' '::' )
@@ -357,7 +367,7 @@ public:
 	 * Delete all tags related to project
 	 * \param projectName project name
 	 */
-	void DeleteProject(const wxString& projectName);
+	void DeleteProject(const std::vector<wxFileName> &projectFiles);
 
 	/**
 	 * Build a secondary database that will be used for searching (e.g. database containing C/C++ header files)

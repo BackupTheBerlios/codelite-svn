@@ -455,9 +455,10 @@ protected:
 	Manager(void);
 	virtual ~Manager(void);
 	void OnProcessEnd(wxProcessEvent &event);
-
+	
 private:
 	void DoRetagProject(const wxString &projectName);
+	void RemoveProjectNameFromOpenFiles(const std::vector<wxFileName> &project_files);
 
 	/**
 	 * Update the symbol & file tress

@@ -286,25 +286,6 @@ TagTreePtr TagsManager::ParseSourceFile(const wxFileName& fp, std::vector<DbReco
 	return ttp;
 }
 
-void TagsManager::CreateProject(const wxString &projectName)
-{
-	// Make this call threadsafe
-	wxCriticalSectionLocker locker(m_cs);
-
-	// Create a tag entry of type project and fill the missing 
-	// values
-	TagEntry proj;
-	proj.SetPath(projectName);
-	proj.SetName(projectName);
-	proj.SetKind(wxT("project"));
-
-	// Obtain an sql insert statement
-	wxSQLite3Statement insertStmt = m_pDb->PrepareStatement(proj.GetInsertOneStatement());
-
-	// store the project into the database
-	proj.Store( insertStmt );
-}
-
 TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, std::vector<DbRecordPtr> *comments)
 {
 	// Make this call threadsafe
@@ -659,6 +640,26 @@ TagTreePtr TagsManager::TreeFromTags(const wxString& tags)
 	return tree;
 }
 
+bool TagsManager::IsValidCtagsFile(const wxFileName &filename) const
+{
+	bool is_ok(false);
+	// Put a request on the parsing thread to update the GUI tree & the database
+	wxString filespec = GetCtagsOptions().GetFileSpec();
+
+	//if the file spec matches the current file, notify ctags
+	wxStringTokenizer tkz(filespec, wxT(";"));
+	while(tkz.HasMoreTokens())
+	{
+		wxString spec = tkz.NextToken();
+		if(wxMatchWild(spec, filename.GetFullName()))
+		{
+			is_ok = true;
+			break;
+		}
+	} // while(tkz.HasMoreTokens())
+	return is_ok;
+}
+
 //-----------------------------------------------------------------------------
 // >>>>>>>>>>>>>>>>>>>>> Code Completion API START
 //-----------------------------------------------------------------------------
@@ -985,7 +986,14 @@ bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& t
 {
 	candidates.clear();
 	wxString path;
-	ExpressionResult exprRes = LanguageST::Get()->ProcessExpression(expr, text);
+	wxString typeName, typeScope;
+	bool res = LanguageST::Get()->ProcessExpression(expr, text, typeName, typeScope);
+	if(!res){
+		return false;
+	}
+
+	//load all tags from the database that matches typeName & typeScope
+
 	/*
 	if( tagName.IsEmpty() == false )
 		TagsByParent(tagName, candidates, true);
@@ -1049,10 +1057,18 @@ void TagsManager::FindSymbol(const wxString& name, std::vector<TagEntry> &tags)
 	}
 }
 
-void TagsManager::DeleteProject(const wxString& projectName)
+void TagsManager::DeleteProject(const std::vector<wxFileName> &projectFiles)
 {
 	wxString query;
-	query << wxT("delete from tags where project='") << projectName << wxT("'");
+	wxString filelist;
+	query << wxT("delete from tags where file in (");
+	for(size_t i=0; i<projectFiles.size(); i++)
+	{
+		filelist << wxT("'") << projectFiles.at(i).GetFullPath() << wxT("'") << wxT(",");
+	}
+	filelist = filelist.BeforeLast(wxT(','));
+	query << filelist << wxT(")");
+
 	m_pDb->Begin();
 	m_pDb->ExecuteUpdate(query);
 	m_pDb->Commit();
@@ -1212,3 +1228,54 @@ void TagsManager::StoreComments(const std::vector<DbRecordPtr> &comments, const 
 	m_pDb->Store( comments, path );
 }
 
+void TagsManager::FindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags)
+{
+	wxString sql;
+	wxString path;
+	
+	if(scope == wxT("<global>"))
+	{
+		path << name;
+	}
+	else
+	{
+		path << scope << wxT("::") << name;
+	}
+
+	sql << wxT("select * from tags where name='") << name << wxT("' and path='") << path << wxT("'");
+	wxSQLite3ResultSet rs = m_pDb->Query(sql);
+	
+	// Add the database results
+	try
+	{
+		while( rs.NextRow() )
+		{
+			// Construct a TagEntry from the rescord set
+			TagEntry tag(rs);
+			tags.push_back(tag);
+		}
+
+		if( m_pExternalDb->IsOpen() )
+		{
+			wxSQLite3ResultSet ex_rs;
+			ex_rs = m_pExternalDb->Query(sql);
+
+			// add results from external database to the workspace database
+			while( ex_rs.NextRow() )
+			{		
+				// Construct a TagEntry from the rescord set
+				// if duplicate entries are allowed, add them directly to the tags output vector,
+				// else add them to tmpMap (to remove duplicate entries)
+				TagEntry tag(ex_rs);
+				tags.push_back(tag);
+			}
+		}
+	}
+	catch( wxSQLite3Exception& e)
+	{
+		wxLogMessage(e.GetMessage());
+	}
+
+	// Sort the results base on their name
+	std::sort(tags.begin(), tags.end(), SDescendingSort());	
+}

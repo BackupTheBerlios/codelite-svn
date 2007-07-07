@@ -10,6 +10,8 @@
 #include <wx/filename.h>
 #include "db_record.h"
 #include "expression_result.h"
+#include "variable.h"
+#include "function.h"
 
 #ifdef WXMAKINGDLL_CODELITE
 #    define WXDLLIMPEXP_CL WXEXPORT
@@ -91,14 +93,6 @@ public:
 	 * \return true if matched brace was found
 	 */
 	bool Match(const char& ch, wxString &s, const wxString& sourceString = wxEmptyString);
-	
-	/**
-	 * Process a grammar expression and return the type resolved.
-	 * \param stmt c++ statement
-	 * \param text scope text
-	 * \return qualifier of the statement
-	 */
-	ExpressionResult ProcessExpression(const wxString& stmt, const wxString& text);
 
 	/**
 	 * Set the language specific auto completion delimeteres, for example: for C++ you should populate
@@ -137,6 +131,20 @@ public:
 	// New API based on the yacc grammar files
 	//==========================================================
 
+
+	/**
+	 * Evaluate a C++ expression. for example, the following expression: '((wxFlatNotebook*)book)->'
+	 * will be processed into typeName=wxFlatNotebook, and typeScope=<global> (assuming wxFlatNotebook is not 
+	 * placed within any namespace)
+	 * \param stmt c++ expression
+	 * \param text text where this expression was found
+	 * \param typeName [output]
+	 * \param typeScope [output]
+	 * \return true on success, false otherwise. The output fields are only to be checked with the return 
+	 * valus is 'true'
+	 */
+	bool ProcessExpression(const wxString& stmt, const wxString& text, wxString &typeName, wxString &typeScope);
+
 	/**
 	 * return scope name from given input string
 	 * \param in input string
@@ -152,6 +160,25 @@ public:
 	 */
 	ExpressionResult ParseExpression(const wxString &in);
 
+	/**
+	 * get the name's type, using local scope when possible. if parsing of local scope fails to find
+	 * a match, try the symbol database
+	 * \param name name to search for
+	 * \param text the scope
+	 * \param scopeName the scope name
+	 * \param firstToken set to true if the 'name' is the first token in the chain (myClass.some_func(). --> when testing for some_func(), firstToken = false
+	 * and when testing myClass. --> first token is set to true
+	 * \param type [output] name's type, incase 'name' is matched to a function, type will contain the type of the reutrn value of the function
+	 * \param typeScope [output] type's scope
+	 * \return true on success false otherwise
+	 */
+	bool TypeFromName(	const wxString &name, 
+						const wxString &text, 
+						const wxString &scopeName, 
+						bool firstToken,
+						wxString &type, 
+						wxString &typeScope);
+
 private:
 	/**
 	 * Private constructor
@@ -162,13 +189,6 @@ private:
 	 * Private destructor
 	 */
 	virtual ~Language();
-	
-	/**
-	 * Return the qualifier from a casting expression.
-	 * \param expression Input expression
-	 * \return qualifier or an empty string
-	 */
-	wxString ResolveCppCast(const wxString& expression);
 
 	/**
 	 * Return the next token and the delimiter found
@@ -233,6 +253,8 @@ private:
 	/// Return tip string from tag
 	wxString GetStringTip(TagEntry& tag);
 
+	bool VariableFromPattern(const wxString &pattern, Variable &var);
+	bool FunctionFromPattern(const wxString &pattern, Function &foo);
 private:
 	
 	std::map<wxString, int> m_operatorMap;

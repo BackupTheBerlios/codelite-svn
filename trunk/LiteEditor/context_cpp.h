@@ -68,7 +68,7 @@ public:
 	virtual void OnDwellStart(wxScintillaEvent &event);
 
 private:
-	void GetWordAndScope(wxString& word, wxString &scope, wxString &scopeName);
+	wxString GetWordUnderCaret();
 	wxString GetImageString(const TagEntry &entry);
 };
 

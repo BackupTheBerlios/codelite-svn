@@ -15,10 +15,6 @@ TagsDatabase::TagsDatabase(bool memDb)
 : m_memDb(memDb)
 {
 	m_db = new wxSQLite3Database();
-
-	// are we memory database?
-	if(m_memDb)
-		m_db->Open(wxT(":memory:"));
 }
 
 TagsDatabase::~TagsDatabase()
@@ -368,11 +364,11 @@ void TagsDatabase::LoadToMemory(const wxFileName& fn)
 		// close any opened database and reopen it as in-memory
 		wxLogMessage(wxT("closing database..."));
 		m_db->Close();
-		m_db->Open(_T(":memory:"));
-	}
+	} // if(m_db->IsOpen() && !m_memDb)
 
 	try
 	{
+		m_db->Open(_T(":memory:"));
 		// copy database schema, we do it by opening a second database
 		wxString sql;
 		wxSQLite3Database *budb = new wxSQLite3Database();

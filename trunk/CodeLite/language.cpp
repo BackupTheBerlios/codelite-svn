@@ -2,6 +2,7 @@
 
 #include "language.h"
 #include "variable.h"
+#include "function.h"
 #include "ctags_manager.h"
 #include "y.tab.h"
 #include <wx/stopwatch.h>
@@ -22,6 +23,7 @@
 extern std::string get_scope_name(const std::string &in);
 extern ExpressionResult &parse_expression(const std::string &in);
 extern void get_variables(const std::string &in, VariableList &li);
+extern void get_functions(const std::string &in, FunctionList &li);
 
 //===============================================================
 
@@ -604,16 +606,20 @@ bool Language::IsPointer(const wxString &qualifier)
 	return false;
 }
 
-ExpressionResult Language::ProcessExpression(const wxString& stmt, const wxString& text)
+bool Language::ProcessExpression(const wxString& stmt, const wxString& text, 
+								 wxString &typeName, //output
+								 wxString &typeScope)//output
 {
 	ExpressionResult result;
 	wxString statement( stmt );
+	bool evaluationSucceeded = true;
 
 	// Trim whitespace from right and left
 	static wxString trimString(_T("{};\r\n\t\v "));
 
 	statement.erase(0, statement.find_first_not_of(trimString)); 
 	statement.erase(statement.find_last_not_of(trimString)+1);
+	wxString dbgStmnt = statement;
 
 	// First token is handled sepratly
 	wxString word;
@@ -623,59 +629,111 @@ ExpressionResult Language::ProcessExpression(const wxString& stmt, const wxStrin
 	wxString qualifier;
 
 	std::vector<TagEntry> tags;
-	wxString scopeName = GetScopeName(text);
+	wxString visibleScope = GetScope( text, wxEmptyString );
+	wxString scopeName = GetScopeName(visibleScope);
 	wxLogMessage(wxT("Current scope: [") + scopeName + wxT("]"));
 
-	TagEntry parent;
+	wxString parentTypeName, parentTypeScope;
 	while(NextToken(word, oper, statement))
 	{
 		result = ParseExpression(word);
 		//parsing failed?
 		if(result.m_name.empty())
-			break;
-
-		if(!parent.IsOk())
 		{
-			//no tokens before this, what we need to do now, is find the TagEntry
-			//that corrseponds to the result
-			wxString type_name, type_scope;
-			if(result.m_isaType)
+			wxLogMessage(wxT("Failed to parse expression: ") + word);
+			evaluationSucceeded = false;
+			break;
+		}
+
+		//no tokens before this, what we need to do now, is find the TagEntry
+		//that corrseponds to the result
+		if(result.m_isaType)
+		{
+			//-------------------------------------------
+			// Handle type (usually when casting is found
+			//--------------------------------------------
+
+			typeScope = result.m_scope.empty() ? wxT("<global>") : _U(result.m_scope.c_str());
+			if(oper == wxT("->") || oper == wxT("."))
 			{
-				type_scope = result.m_scope.empty() ? scopeName : _U(result.m_scope.c_str());
-				if(oper == wxT("->") || oper == wxT("."))
-				{
-					wxLogMessage(wxT("Illegal usage of '->', '.' operator on a type :") + _U(result.m_name.c_str()));
-					break;
-				} // if(oper == wxT("->") || oper == wxT("."))  
-				type_name = _U(result.m_name.c_str());
-			} // if(result.m_isaType)  
-			else
+				wxLogMessage(wxT("Illegal usage of '->', '.' operator on a type :") + _U(result.m_name.c_str()));
+				evaluationSucceeded = false;
+				break;
+			} // if(oper == wxT("->") || oper == wxT("."))  
+			typeName = _U(result.m_name.c_str());
+		} // if(result.m_isaType) 
+		else if(result.m_isThis)
+		{
+			//-----------------------------------------
+			// special handle for 'this' keyword
+			//-----------------------------------------
+
+			typeScope = result.m_scope.empty() ? wxT("<global>") : _U(result.m_scope.c_str());
+			if(scopeName == wxT("<global>"))
 			{
-				bool res = TypeFromName(_U(result.m_name.c_str()), text, scopeName, type_name, type_scope);
-				if(!res)
-					break;
+				wxLogMessage(wxT("Illegal use of 'this' keyword outside of valid scope"));
+				evaluationSucceeded = false;
+				break;
+			} // if(typeScope == wxT("<global>")) 
+
+			if(oper == wxT("::"))
+			{
+				wxLogMessage(wxT("Illegal usage of '::' operator on 'this' keyword"));
+				evaluationSucceeded = false;
+				break;
+			} // if(oper == wxT("::"))
+
+			if(result.m_isPtr && oper == wxT("."))
+			{
+				wxLogMessage(wxT("Did u mean to use '->' instead of '.'?"));
+				evaluationSucceeded = false;
+				break;
+			}
+			if(!result.m_isPtr && oper == wxT("->"))
+			{
+				wxLogMessage(wxT("Did u mean to use '.' instead of '->'?"));
+				evaluationSucceeded = false;
+				break;
+			}
+			typeName = scopeName;
+		}
+		else
+		{
+			//-------------------------------------------
+			// found an identifier
+			//--------------------------------------------
+			wxString scopeToSearch(scopeName);
+			if(parentTypeScope.IsEmpty() == false && parentTypeScope != wxT("<global>"))
+			{
+				scopeToSearch = parentTypeScope + wxT("::") + parentTypeName;
+			}
+			else if((parentTypeScope.IsEmpty()|| parentTypeScope == wxT("<global>")) && !parentTypeName.IsEmpty())
+			{
+				scopeToSearch = parentTypeName;
+			}
+
+			bool res = TypeFromName(_U(result.m_name.c_str()), 
+									visibleScope, 
+									scopeToSearch, 
+									parentTypeName.IsEmpty(),
+									typeName,	//output
+									typeScope);	//output
+			if(!res)
+			{
+				evaluationSucceeded = false;
+				break;
 			}
 		}
-	}
+		parentTypeName = typeName;
+		parentTypeScope = typeScope;
+	} // while(NextToken(word, oper, statement))
 
-	/*
-	// Trim whitespaces and such
-	word.erase(0, word.find_first_not_of(trimString)); 
-	word.erase(word.find_last_not_of(trimString)+1);
-	
-	// Make sure that word is a single token
-	wxArrayString delims;
-	delims.Add(_T(" "));
-	delims.Add(_T("\n"));
-	delims.Add(_T("\r\n"));
-
-	StringTokenizer tok(word, delims);
-	word = tok.Last();
-	while( NextToken( word, oper, statement) )
+	if(evaluationSucceeded)
 	{
+		wxLogMessage(wxT("The expression [") + dbgStmnt + wxT("], evaluated into [") + parentTypeScope + wxT("::") + parentTypeName + wxT("]"));
 	}
-	*/
-	return result;
+
+	return evaluationSucceeded;
 }
 
 bool Language::ParseSignature(const wxString &signature, std::vector<std::pair<wxString, wxString> >& args, wxString & trailer)
@@ -1168,54 +1226,151 @@ ExpressionResult Language::ParseExpression(const wxString &in)
 	return result;
 }
 
-bool Language::TypeFromName(const wxString &name, const wxString &text, const wxString &scopeName, wxString &type, wxString &typeScope)
+bool Language::TypeFromName(const wxString &name, 
+							const wxString &text, 
+							const wxString &scopeName, 
+							bool firstToken,
+							wxString &type, 
+							wxString &typeScope)
 {
 	//try local scope
 	VariableList li;
-	const wxCharBuffer buf = _C(text);
-	get_variables(buf.data(), li);
+	FunctionList fooList;
 
-	//search for a full match in the returned list
-	for(VariableList::iterator iter = li.begin(); iter != li.end(); iter++)
-	{
-		Variable var = (*iter);
-		wxString var_name = _U(var.m_name.c_str());
-		if(var_name == name)
-		{
-			type = _U(var.m_type.c_str());
-			typeScope = _U(var.m_typeScope.c_str());
-			return true;
-		}
-	} // for(VariableList::iterator iter = li.begin(); iter != li.end(); iter++)
-	//no match in local scope, try the database
-	
 	//first we try to match the current scope
 	std::vector<TagEntry> tags;
-	TagsManagerST::Get()->GetTags(name, scopeName, tags, ExactMatch);
+	TagsManagerST::Get()->FindByNameAndScope(name, scopeName, tags);
 	if(tags.size() == 1)
 	{
+		TagEntry tag(tags.at(0));
 		//we have a single match!
-		type = tags.at(0).GetName();
-		typeScope = tags.at(0).GetScopeName();
+		if(tag.GetKind() == wxT("function") || tag.GetKind() == wxT("prototype"))
+		{
+			Function foo;
+			if(FunctionFromPattern(tag.GetPattern(), foo))
+			{
+				type = _U(foo.m_returnValue.m_type.c_str());
+				typeScope = foo.m_returnValue.m_typeScope.empty() ? wxT("<global>") : _U(foo.m_returnValue.m_typeScope.c_str());
+				return true;
+			} // if(FunctionFromPattern(tag.GetPattern(), foo))
+			return false;
+		} // if(tag.GetKind() == wxT("function")) 
+		else if(tag.GetKind() == wxT("member") || tag.GetKind() == wxT("variable"))
+		{
+			Variable var;
+			if(VariableFromPattern(tag.GetPattern(), var))
+			{
+				type = _U(var.m_type.c_str());
+				typeScope = var.m_typeScope.empty() ? wxT("<global>") : _U(var.m_typeScope.c_str());
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			type = tag.GetName();
+			typeScope = tag.GetScopeName();
+		}
 		return true;
 	} // if(tags.size() == 1)
-	else if(tags.empty())
+	else 
 	{
-		//no matches found at all, try the global scope
-		TagsManagerST::Get()->GetTags(name, wxT("<global>"), tags, ExactMatch);
-		if(tags.size() == 1)
+		//if list contains more than one entry, check if all entries are of type 'function' or 'prototype'
+		//(they can be mixed). If all entries are of one of these types, test their return value,
+		//if all have the same return value, then we are ok
+		Function foo;
+		wxString tmpType, tmpTypeScope;
+		bool allthesame(true);
+		for(size_t i=0; i<tags.size(); i++)
 		{
-			//we have a single match!
-			type = tags.at(0).GetName();
-			typeScope = tags.at(0).GetScopeName();
+			TagEntry tag(tags.at(i));
+			if(!FunctionFromPattern(tag.GetPattern(), foo))
+			{
+				allthesame = false;
+				break;
+			} // if(!FunctionFromPattern(tag.GetPattern(), foo))
+			
+			tmpType = _U(foo.m_returnValue.m_type.c_str());
+			tmpTypeScope = foo.m_returnValue.m_typeScope.empty() ? wxT("<global>") : _U(foo.m_returnValue.m_typeScope.c_str());
+			if(i > 0 && (tmpType != type || tmpTypeScope != typeScope))
+			{
+				allthesame = false;
+				break;
+			} // if(i > 0 && (tmpType != type || tmpTypeScope != typeScope))
+			type = tmpType;
+			typeScope = tmpTypeScope;
+		}
+
+		if(allthesame && !tags.empty())
+		{
 			return true;
-		} // if(tags.size() == 1)
-		return false;
-	}
-	else
-	{
-		//too much matches
-		wxLogMessage(wxT("Found too many matches for name: ") + name + wxT(" at scope: ") + scopeName);
+		}
+
+		//can we test visible scope?
+		if(firstToken)
+		{
+			const wxCharBuffer buf = _C(text);
+			get_variables(buf.data(), li);
+
+			//search for a full match in the returned list
+			for(VariableList::iterator iter = li.begin(); iter != li.end(); iter++)
+			{
+				Variable var = (*iter);
+				wxString var_name = _U(var.m_name.c_str());
+				if(var_name == name)
+				{
+					type = _U(var.m_type.c_str());
+					typeScope = var.m_typeScope.empty() ? wxT("<global>") : _U(var.m_typeScope.c_str());
+					return true;
+				}
+			} // for(VariableList::iterator iter = li.begin(); iter != li.end(); iter++)
+			//no match in local scope, try the database
+		} // if(firstToken)
+
+		//too many matches or none at all
+		wxLogMessage(wxT("too many matches or none at all for name: ") + name + wxT(" at scope: ") + scopeName);
 		return false;
 	}
 }
+
+
+bool Language::VariableFromPattern(const wxString &in, Variable &var)
+{
+	VariableList li;
+	wxString pattern(in);
+	//we need to extract the return value from the pattern
+	pattern = pattern.BeforeLast(wxT('$'));
+	pattern = pattern.AfterFirst(wxT('^'));
+
+	const wxCharBuffer patbuf = _C(pattern);
+	li.clear();
+	get_variables(patbuf.data(), li);
+	if(li.size() == 1)
+	{
+		var = (*li.begin());
+		return true;
+	} // if(li.size() == 1)
+	return false;
+}
+
+bool Language::FunctionFromPattern(const wxString &in, Function &foo)
+{
+	FunctionList fooList;
+	wxString pattern(in);
+	//we need to extract the return value from the pattern
+	pattern = pattern.BeforeLast(wxT('$'));
+	pattern = pattern.AfterFirst(wxT('^'));
+
+	//a limitiation of the function parser...
+	pattern += wxT(';');
+
+	const wxCharBuffer patbuf = _C(pattern);
+	get_functions(patbuf.data(), fooList);
+	if(fooList.size() == 1)
+	{
+		foo = (*fooList.begin());
+		return true;
+	}
+	return false;
+}
+

@@ -361,19 +361,19 @@ bool LEditor::SaveFile()
 	// point in notifying the parsing thread on, for example, OnCharAdded
 	// event, since the actual file on the disk was not modified
 	//-------------------------------------------------------------------
+	if(TagsManagerST::Get()->IsValidCtagsFile(m_fileName))
+	{
+		ParseRequest *req = new ParseRequest();
+		// Put a request on the parsing thread to update the GUI tree for this file
+		wxFileName fn = TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName();
+		req->dbfile = fn.GetFullPath();
+		// Construct an absolute file name for ctags
+		wxFileName absFile( m_fileName);
+		absFile.MakeAbsolute();
+		req->file = absFile.GetFullPath();
+		ParseThreadST::Get()->Add(req);
+	} // if(TagsManagerST::Get()->IsValidCtagsFile(m_fileName))
 
-	// Put a request on the parsing thread to update the GUI tree for this file
-	wxFileName fn = TagsManagerST::Get()->GetDatabase()->GetDatabaseFileName();
-
-	ParseRequest *req = new ParseRequest();
-	req->dbfile = fn.GetFullPath();
-
-	// Construct an absolute file name for ctags
-	wxFileName absFile( m_fileName);
-	absFile.MakeAbsolute();
-	req->file = absFile.GetFullPath();
-
-	ParseThreadST::Get()->Add(req);
 	return true;
 }
 

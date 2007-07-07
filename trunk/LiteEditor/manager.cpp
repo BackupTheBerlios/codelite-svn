@@ -250,8 +250,6 @@ void Manager::CreateProject(ProjectData &data)
 												 data.m_srcProject->GetSettings()->GetProjectType(), 
 												 errMsg);
 	CHECK_MSGBOX(res);
-
-	TagsManagerST::Get()->CreateProject(data.m_name);
 	//set the compiler type
 	ProjectPtr proj = WorkspaceST::Get()->FindProjectByName(data.m_name, errMsg);
 
@@ -344,8 +342,6 @@ void Manager::AddProject(const wxString & path)
 
 	// Create an entry in the CodeLite database
 	wxFileName fn(path);
-	TagsManagerST::Get()->CreateProject(fn.GetName());
-
 	ProjectPtr p = WorkspaceST::Get()->FindProjectByName(fn.GetName(), errMsg);
 	if( !p ){
 		return;
@@ -391,19 +387,48 @@ bool Manager::RemoveProject(const wxString &name)
 		return false;
 	}
 
+	ProjectPtr proj = GetProject(name);
+
 	wxString errMsg;
 	bool res = WorkspaceST::Get()->RemoveProject(name, errMsg);
 	CHECK_MSGBOX_BOOL(res);
 
-	//  Update the database
-	TagsManagerST::Get()->DeleteProject(name);
-
-	// update gui trees
-
-	// Notify the symbol tree to update the gui
-
+	if(proj)
+	{
+		//remove symbols from the database
+		std::vector<wxFileName> projectFiles;
+		proj->GetFiles(projectFiles, true);
+		TagsManagerST::Get()->DeleteProject(projectFiles);
+		RemoveProjectNameFromOpenFiles(projectFiles);
+	} // if(proj)
+	
 	Frame::Get()->GetWorkspacePane()->GetFileViewTree()->BuildTree();
 	return true;
+}
+
+void Manager::RemoveProjectNameFromOpenFiles(const std::vector<wxFileName> &project_files)
+{
+	//go over all open tabs, if a file belongs to the closed
+	//project, remove the project name from the container editor,
+	//this will pervent the parser thread to parse this file after 
+	//its parent project was removed
+	wxFlatNotebook *book = Frame::Get()->GetNotebook();
+	for(size_t i=0; i<(size_t)book->GetPageCount(); i++)
+	{
+		LEditor *editor = dynamic_cast<LEditor*>(book->GetPage(i));
+		if(editor)
+		{
+			wxString openFileFP = editor->GetFileName().GetFullPath();
+			for(size_t j=0; j<project_files.size(); j++)
+			{
+				if(openFileFP == project_files.at(j).GetFullPath())
+				{
+					editor->SetProject(wxEmptyString);
+					break;
+				} // if(openFileFP == project_files.at(j).GetFullPath())
+			} // for(size_t j=0; j<project_files.size(); j++)
+		}
+	}
 }
 
 wxString Manager::GetActiveProjectName()
@@ -1006,12 +1031,14 @@ void Manager::RetagProject(const wxString &projectName)
  
 void Manager::DoRetagProject(const wxString &projectName)
 {
-	//remove project from database
-	TagsManagerST::Get()->DeleteProject(projectName);
-
 	//now rebuild the project
 	ProjectPtr proj = GetProject(projectName);
 	if( proj ){
+		//remove project from database
+		std::vector<wxFileName> projectFiles;
+		proj->GetFiles(projectFiles, true);
+		TagsManagerST::Get()->DeleteProject(projectFiles);
+
 		//set cursor to busy
 		wxBusyCursor cursor;
 

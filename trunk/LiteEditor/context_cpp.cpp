@@ -336,7 +336,7 @@ void ContextCpp::CodeComplete()
 	}
 }
 
-void ContextCpp::GetWordAndScope(wxString& word, wxString &scope, wxString& scopeName)
+wxString ContextCpp::GetWordUnderCaret()
 {
 	LEditor &rCtrl = GetCtrl();
 	// Get the partial word that we have
@@ -344,23 +344,7 @@ void ContextCpp::GetWordAndScope(wxString& word, wxString &scope, wxString& scop
 	long start = rCtrl.WordStartPosition(pos, true);
 	long end   = rCtrl.WordEndPosition(pos, true);
 
-	word = rCtrl.GetTextRange(start, end);
-	if(word.IsEmpty())
-		return;
-
-	// Get the visible scope: to reduce the overhead of scanning the entire file
-	// we will work on a smaller scope which will be extracted using the following
-	// logic: scope will be from 'start' exprStart, up to the first function that starts from
-	// here and up or start of file of no function was found
-	TagEntry tag;
-
-	int line = 1;
-	if( TagsManagerST::Get()->FunctionByLine(rCtrl.LineFromPosition(start), rCtrl.GetFileName().GetFullPath(), rCtrl.GetProject(), tag) )
-		line = tag.GetLine();
-
-	long scopeStartPos = rCtrl.PositionFromLine(line - 1/* wxScintilla counts line from zero */);
-	scope = rCtrl.GetTextRange(scopeStartPos, start);
-	scopeName = tag.GetScopeName();
+	return rCtrl.GetTextRange(start, end);
 }
 
 void ContextCpp::CompleteWord()
@@ -376,11 +360,12 @@ void ContextCpp::CompleteWord()
 		return;
 
 	// Get the local scope and the word under the cursor
-	GetWordAndScope(word, scope ,scopeName);
+	word = GetWordUnderCaret();
 
 	if(word.IsEmpty())
 		return;
 
+	/*
 	TagsManagerST::Get()->GetTags(word, scopeName, tags, PartialMatch, scope);
 
 	/// Convert the vector to a string delimited
@@ -393,6 +378,7 @@ void ContextCpp::CompleteWord()
 		list.Append(tags[i].GetName() + GetImageString(tags[i]));
 		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
 	}
+	*/
 }
 
 //=============================================================================

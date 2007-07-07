@@ -342,6 +342,9 @@
 				RelativePath=".\cpp_expr_parser.cpp">
 			</File>
 			<File
+				RelativePath=".\cpp_func_parser.cpp">
+			</File>
+			<File
 				RelativePath=".\cpp_lexer.cpp">
 			</File>
 			<File
@@ -352,6 +355,12 @@
 			</File>
 			<File
 				RelativePath=".\expression_result.h">
+			</File>
+			<File
+				RelativePath=".\function.cpp">
+			</File>
+			<File
+				RelativePath=".\function.h">
 			</File>
 			<File
 				RelativePath=".\scope_parser.cpp">
