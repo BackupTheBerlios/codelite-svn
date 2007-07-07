@@ -13,13 +13,20 @@ ExpressionResult::~ExpressionResult()
 
 void ExpressionResult::Print()
 {
-	printf("{m_name:%s, m_isFunc:%s, m_isThis:%s, m_isaType:%s, m_isPtr:%s, m_scope:%s}\n", 
+	printf("%s\n", ToString().c_str());
+}
+
+std::string ExpressionResult::ToString() const
+{
+	char tmp[256];
+	sprintf(tmp, "{m_name:%s, m_isFunc:%s, m_isThis:%s, m_isaType:%s, m_isPtr:%s, m_scope:%s}", 
 				m_name.c_str(), 
 				BOOL_TO_STR(m_isFunc), 
 				BOOL_TO_STR(m_isThis),
 				BOOL_TO_STR(m_isaType),
 				BOOL_TO_STR(m_isPtr),
 				m_scope.c_str());
+	return tmp;
 }
 
 void ExpressionResult::Reset()

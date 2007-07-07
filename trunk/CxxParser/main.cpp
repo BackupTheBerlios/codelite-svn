@@ -4,15 +4,20 @@
 #include "string.h"
 #include "string"
 #include "variable.h"
+#include "function.h"
+#include "expression_result.h"
+
 #include <windows.h>
 
-extern std::string get_scope_name(const std::string &in, bool onlyNamedScope);
+extern std::string get_scope_name(const std::string &in);
 extern void get_variables(const std::string &in, VariableList &li);
-extern void parse_expression(const std::string &in);
+extern ExpressionResult &parse_expression(const std::string &in);
+extern void get_functions(const std::string &in, FunctionList &li);
 
 void testScopeParser(char *buf);
 void testVarParser(char *buf);
 void testExprParser(char *buf);
+void testFuncParser(char *buf);
 char *loadFile(const char *fileName);
 
 int main()
@@ -21,21 +26,38 @@ int main()
 	//print the scope name
 	//testScopeParser(buf);
 	//testVarParser(buf);
-	testExprParser(buf);
+	//testExprParser(buf);
+	testFuncParser(buf);
 	free(buf);
+}
+
+void testFuncParser(char *buf)
+{
+	printf("===== Testing function parser ======\n");
+	time_t start = GetTickCount();
+	FunctionList li;
+	fflush(stdout);
+	get_functions(buf, li);
+	time_t end = GetTickCount();
+	for(FunctionList::iterator iter = li.begin(); iter != li.end(); iter++)
+	{
+		(*iter).Print();
+	}
+	printf("total time: %d\n", end-start);
+	printf("matches found: %d\n", li.size());
 }
 
 void testExprParser(char *buf)
 {
 	printf("===== Testing expression parser ======\n");
-	parse_expression(buf);
+	ExpressionResult res = parse_expression(buf);
 }
 
 void testScopeParser(char *buf)
 {
 	printf("===== Testing Scope parser ======\n");
 	time_t start = GetTickCount();
-	std::string scope = get_scope_name(buf, true);
+	std::string scope = get_scope_name(buf);
 	time_t end = GetTickCount();
 	printf("total time: %d\n", end-start);
 }

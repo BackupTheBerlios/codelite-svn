@@ -120,7 +120,7 @@ external_decl		:	{curr_var.Reset();} variables
 						| 	error { 
 								yyclearin;	//clear lookahead token
 								yyerrok;
-								//printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_scope_text, cl_scope_lineno);
+								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_scope_text, cl_scope_lineno);
 								var_syncParser();
 							}
 						;
@@ -135,38 +135,7 @@ template_parameter	:	const_spec nested_scope_specifier LE_IDENTIFIER special_sta
 								{$$ = $1 + $2 + $3 +$4;}
 							;
 
-variables			: stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ';' 
-						{
-							if(gs_vars)
-							{
-								curr_var.m_name = $4;
-								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
-								gs_vars->push_back(curr_var); 
-								curr_var.Reset();
-							}
-						}
-						| stmnt_starter variable_decl special_star_amp LE_IDENTIFIER '='
-						{
-							if(gs_vars)
-							{
-								curr_var.m_name = $4;
-								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
-								gs_vars->push_back(curr_var); 
-								curr_var.Reset();
-							}
-						}
-						| stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ','
-						{
-							if(gs_vars)
-							{
-								curr_var.m_name = $4;
-								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
-								gs_vars->push_back(curr_var); 
-								curr_var.Reset();
-							}
-						}
-						
-						| stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ')'
+variables			: stmnt_starter variable_decl special_star_amp LE_IDENTIFIER postfix 
 						{
 							if(gs_vars)
 							{
@@ -177,7 +146,12 @@ variables			: stmnt_starter variable_decl special_star_amp LE_IDENTIFIER ';'
 							}
 						}
 						;
-					
+
+postfix: ';'
+		 | ','
+		 | '='
+		 | ')'
+		 ; 
 /* 
 applicable for C++, for cases where a function is declared as
 void scope::foo(){ ... }

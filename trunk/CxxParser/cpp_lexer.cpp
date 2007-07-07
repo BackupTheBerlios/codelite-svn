@@ -798,6 +798,7 @@ char *yytext;
 
 extern std::string cl_scope_lval;
 extern std::string cl_var_lval;
+extern std::string cl_func_lval;
 
 std::vector<std::string> currentScope;
 
@@ -843,6 +844,7 @@ static bool defineFound = false;
 #define RETURN_VAL(x) {\
 								cl_scope_lval = yytext;\
 								cl_var_lval = yytext;\
+								cl_func_lval = yytext;\
 								return(x);}
 
 #define PREPR 1

@@ -10,11 +10,14 @@
     <File Name="cpp_expr_parser.cpp"/>
     <File Name="cpp_expr_lexer.cpp"/>
     <File Name="expression_result.cpp"/>
+    <File Name="function.cpp"/>
+    <File Name="cpp_func_parser.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="incldue">
     <File Name="cpp_lexer.h"/>
     <File Name="variable.h"/>
     <File Name="expression_result.h"/>
+    <File Name="function.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="grammar">
     <File Name="cpp.l"/>
@@ -22,6 +25,7 @@
     <File Name="cpp_variables_grammar.y"/>
     <File Name="expr_grammar.y"/>
     <File Name="expr_lexer.l"/>
+    <File Name="cpp_func_parser.y"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <Configuration Name="Release" CompilerType="gnu g++">
@@ -37,19 +41,20 @@
         <Command Enabled="no">yacc -dl  -t -v -pcl_scope_ cpp_scope_grammar.y</Command>
         <Command Enabled="no">mv y.tab.c scope_parser.cpp</Command>
         <Command Enabled="no">mv y.tab.h cpp_lexer.h</Command>
-        <Command Enabled="no">flex -L  -Pcl_scope_ cpp.l</Command>
-        <Command Enabled="no">mv lex.cl_scope_.c cpp_lexer.cpp</Command>
+        <Command Enabled="yes">flex -L  -Pcl_scope_ cpp.l</Command>
+        <Command Enabled="yes">mv lex.cl_scope_.c cpp_lexer.cpp</Command>
         <Command Enabled="no">yacc -l  -t -v -pcl_var_ cpp_variables_grammar.y</Command>
         <Command Enabled="no">mv y.tab.c var_parser.cpp</Command>
-        <Command Enabled="yes">flex -L  -Pcl_expr_ expr_lexer.l</Command>
-        <Command Enabled="yes">mv lex.cl_expr_.c cpp_expr_lexer.cpp</Command>
-        <Command Enabled="yes">yacc -l  -t -v -pcl_expr_ expr_grammar.y</Command>
-        <Command Enabled="yes">mv y.tab.c cpp_expr_parser.cpp</Command>
+        <Command Enabled="no">flex -L  -Pcl_expr_ expr_lexer.l</Command>
+        <Command Enabled="no">mv lex.cl_expr_.c cpp_expr_lexer.cpp</Command>
+        <Command Enabled="no">yacc -l  -t -v -pcl_expr_ expr_grammar.y</Command>
+        <Command Enabled="no">mv y.tab.c cpp_expr_parser.cpp</Command>
+        <Command Enabled="yes">yacc -l  -t -v -pcl_func_ cpp_func_parser.y</Command>
+        <Command Enabled="yes">mv y.tab.c cpp_func_parser.cpp</Command>
       </PreBuild>
       <PostBuild>
-        <Command Enabled="no">copy scope_parser.cpp ..\CodeLite\.</Command>
-        <Command Enabled="no">copy cpp_lexer.cpp ..\CodeLite\.</Command>
-        <Command Enabled="no">copy cpp_lexer.h ..\CodeLite\.</Command>
+        <Command Enabled="yes">copy *.h ..\CodeLite\.</Command>
+        <Command Enabled="yes">copy *.cpp ..\CodeLite\.</Command>
       </PostBuild>
     </Configuration>
   </Settings>

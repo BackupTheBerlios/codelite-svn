@@ -8,27 +8,32 @@
 #include "vector"
 #include "stdio.h"
 #include "map"
-	
-#define YYDEBUG_LEXER_TEXT (cl_scope_lval) 
+#include "function.h"
+
+#define YYDEBUG_LEXER_TEXT (cl_func_lval) 
 #define YYSTYPE std::string
 #define YYDEBUG 0        /* get the pretty debugging code to compile*/
 
-int cl_scope_parse();
-void cl_scope_error(char *string);
-void syncParser();
+#ifdef yylex
+#undef yylex
+#define yylex cl_scope_lex
+#endif 
+
+int cl_func_parse();
+void cl_func_error(char *string);
+
+static FunctionList *g_funcs = NULL;
+static Function curr_func;
 
 //---------------------------------------------
 // externs defined in the lexer
 //---------------------------------------------
-extern char *cl_scope_text;
+extern char *cl_func_text;
 extern int cl_scope_lex();
 extern bool setLexerInput(const std::string &in);
-extern int cl_scope_lineno;
-extern std::vector<std::string> currentScope;
-extern void printScopeName();	//print the current scope name
-extern void increaseScope();	//increase scope with anonymouse value
-extern std::string getCurrentScope();
+extern int cl_func_lineno;
 extern void cl_scope_lex_clean();
+
 
 /*************** Standard ytab.c continues here *********************/
 %}
@@ -111,19 +116,11 @@ translation_unit	:		/*empty*/
 						| translation_unit external_decl
 						;
 						
-external_decl			:	class_decl	
-						|	enum_decl
-						|	union_decl
-						| 	function_decl
-						|	namespace_decl
-						| 	scope_reducer
-						| 	scope_increaer
-						| 	error { 
-								//printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_scope_text, cl_scope_lineno);
-								syncParser();
-							}
-						;
-						
+external_decl	:	{curr_func.Reset();} function_decl
+					| 	error { 
+						//printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_func_text, cl_func_lineno);
+					}
+					;
 						
 /*templates*/
 template_arg		:	/* empty */	{ $$ = "";}
@@ -141,90 +138,18 @@ template_specifiter	:	LE_CLASS	{ $$ = $1; }
 opt_template_qualifier	: /*empty*/
 							| LE_TEMPLATE '<' template_arg_list '>'	{ $$ = $1 + $2 + $3 + $4;}
 							;
-/*inheritance*/
-derivation_list			:	/*empty*/ {$$ = "";}
-							|	parent_class {$$ = $1;}
-							| 	derivation_list ',' parent_class {$$ = $1 + $2 + $3;}
-							;
 
-parent_class				: 	access_specifier LE_IDENTIFIER	opt_template_specifier {$$ = $1 + " " + $2 + $3;}
-							;
-							
-opt_template_specifier	: /*empty*/	{$$ = "";}
-							| '<' template_parameter_list '>' {$$ = $1 + $2 + $3;}
-							;
-							
-access_specifier			:	/*empty*/	{$$ = "";}
-							|	LE_PUBLIC {$$ = $1;}
-							| 	LE_PRIVATE {$$ = $1;}
-							| 	LE_PROTECTED {$$ = $1;}
-							;
-							
 /* the following rules are for template parameters no declarations! */
 template_parameter_list	: /* empty */		{$$ = "";}
 							| template_parameter	{$$ = $1;}
 							| template_parameter_list ',' template_parameter {$$ = $1 + $2 + $3;}
 							;
 
-template_parameter		:	const_spec nested_scope_specifier LE_IDENTIFIER special_star_amp {$$ = $1 + $2 + $3 +$4;}
+template_parameter	:	const_spec nested_scope_specifier LE_IDENTIFIER special_star_amp {$$ = $1 + $2 + $3 +$4;}
 							;
-/* namespace */
-namespace_decl	:	stmnt_starter LE_NAMESPACE LE_IDENTIFIER '{'		
-						{
-							currentScope.push_back($3);
-						}
-					|	stmnt_starter LE_NAMESPACE '{'		
-						{
-							//anonymouse namespace
-							increaseScope();
-							printScopeName();
-						}
-					;
-opt_class_qualifier 	: /*empty*/{$$ = "";}
-							| LE_MACRO {$$ = $1;}
-							;
-							
-/* the class rule itself */
-class_decl	:	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER '{' 
-				{
-					//increase the scope level
-					currentScope.push_back($5);
-					printScopeName();
-				}
-				
-				| 	stmnt_starter opt_template_qualifier class_keyword opt_class_qualifier LE_IDENTIFIER ':' derivation_list '{' 
-				{
-					//increase the scope level
-					currentScope.push_back($5);
-					printScopeName();
-				}
-				;
 
-scope_reducer		:	'}'	{
-								if(currentScope.empty())
-								{
-									//fatal error!
-									printf("CodeLite: fatal error - cant go beyond global scope!\n");
-								}
-								else
-								{
-									currentScope.pop_back();
-									printScopeName();
-								}
-							}
-					;
-scope_increaer	:	'{' {
-								//increase random scope
-								increaseScope();
-								printScopeName();
-							 }
-
-class_keyword: 	LE_CLASS		{$$ = $1;}
-					|	LE_STRUCT	{$$ = $1;}
-					;
-
-func_name: LE_IDENTIFIER
-		 | LE_OPERATOR any_operator
+func_name: LE_IDENTIFIER {$$ = $1;}
+		 | LE_OPERATOR any_operator {$$ = $1 + $2;}
 		 ;
 
 any_operator:
@@ -262,25 +187,34 @@ any_operator:
         ;
 				
 /* functions */
-function_decl	: 	stmnt_starter opt_template_qualifier virtual_spec const_spec variable_decl nested_scope_specifier func_name '(' {consumeFuncArgList();} const_spec  '{'  					 
+function_decl	: 	stmnt_starter opt_template_qualifier virtual_spec const_spec variable_decl nested_scope_specifier func_name '(' {func_consumeFuncArgList();} const_spec opt_pure_virtual func_postfix  					 
 					{
 						//trim down trailing '::' from scope name
 						$6.erase($6.find_last_not_of(":")+1);
-						currentScope.push_back($6);
-						printScopeName();
+						curr_func.m_name = $7;
+						curr_func.m_scope = $6;
+						if(g_funcs)
+						{
+							g_funcs->push_back(curr_func);
+						}
+						curr_func.Reset();
 					}
-				;
+					;
 
-/* 
-applicable for C++, for cases where a function is declared as
-void scope::foo(){ ... }
-*/
+func_postfix: '{'
+				| ';'
+				;
+				
 nested_scope_specifier		: /*empty*/ {$$ = "";}
 							| nested_scope_specifier scope_specifier {	$$ = $1 + $2;}
 							;
-
-scope_specifier		:	LE_IDENTIFIER LE_CLCL {$$ = $1+ $2;}
-						|	LE_IDENTIFIER  '<' {consumeTemplateDecl();} LE_CLCL {$$ = $1 + $4;}
+							
+opt_pure_virtual 	: /*empty*/
+						| '=' LE_HEXconstant
+						;
+						
+scope_specifier	:	LE_IDENTIFIER LE_CLCL {$$ = $1+ $2;}
+						|	LE_IDENTIFIER  '<' {func_consumeTemplateDecl();} LE_CLCL {$$ = $1 + $4;}
 						;
 
 virtual_spec		:	/* empty */	{$$ = ""; }
@@ -308,52 +242,37 @@ stmnt_starter		:	/*empty*/ {$$ = "";}
 						;
 						
 /** Variables **/
-variable_decl			:	nested_scope_specifier basic_type_name special_star_amp  
-							{$$ = $1 + $2 + $3  ;}
+variable_decl		:	nested_scope_specifier basic_type_name special_star_amp  
+							{
+								$1.erase($1.find_last_not_of(":")+1);
+								curr_func.m_returnValue.m_type = $2;
+								curr_func.m_returnValue.m_typeScope = $1; 
+								curr_func.m_returnValue.m_isPtr = ($3.find("*") != (size_t)-1);
+								$$ = $1 + $2 + $3;
+							}
 						|	nested_scope_specifier LE_IDENTIFIER special_star_amp
-							{$$ = $1 + $2 + $3  ;}
+							{
+								$1.erase($1.find_last_not_of(":")+1);
+								curr_func.m_returnValue.m_type = $2;
+								curr_func.m_returnValue.m_typeScope = $1;
+								curr_func.m_returnValue.m_isPtr = ($3.find("*") != (size_t)-1);
+								$$ = $1 + $2 + $3  ;
+							}
 						| 	nested_scope_specifier LE_IDENTIFIER '<' template_parameter_list '>' special_star_amp 
-							{$$ = $1 + $2 + $3  + $4 + $5 + $6 ;}
-						;
-						
-enum_decl				:	stmnt_starter LE_ENUM LE_IDENTIFIER '{' {currentScope.push_back($3); printScopeName();} enum_arg_list '}' 
-						{	
-							currentScope.pop_back();//reduce the scope
-							printScopeName();
-							printf("found enum: %s, args are: %s\n", $2.c_str(), $5.c_str());
-						}
-						;
-
-enum_optional_assign	:	/*empty*/ {$$ = "";}
-						|	'=' LE_HEXconstant	{$$ = $1 + $2;}
-						|	'='	 LE_OCTALconstant {$$ = $1 + $2;}
-						|	'='	 LE_INTEGERconstant {$$ = $1 + $2;}
-						;
-						
-enum_argument			:	LE_IDENTIFIER	enum_optional_assign {$$ = $1 + $2;}
-						;
-enum_arg_list			:	/*empty*/ {$$ = "";}
-						|	enum_argument	{$$ = $1;}
-						|	enum_arg_list ',' enum_argument {$$ = $1 + $2 + $3;}
-						;
-
-union_decl			:	stmnt_starter LE_UNION LE_IDENTIFIER '{' 
-							{	
-								currentScope.push_back($3);
-								printScopeName();
-								consumeDecl();
-								printScopeName();
+							{
+								$1.erase($1.find_last_not_of(":")+1);
+								curr_func.m_returnValue.m_type = $2;
+								curr_func.m_returnValue.m_typeScope = $1;
+								curr_func.m_returnValue.m_isPtr = ($6.find("*") != (size_t)-1);
+								curr_func.m_returnValue.m_isTemplate = true;
+								curr_func.m_returnValue.m_templateDecl = $4;
+								$$ = $1 + $2 + $3  + $4 + $5 + $6 ;
 							}
 						;
 %%
 void yyerror(char *s) {}
 
-void syncParser(){
-	//move lexer to the next ';' line or scope opening '{'
-	//int ch = cl_scope_lex();
-}
-
-void consumeFuncArgList()
+void func_consumeFuncArgList()
 {
 	int depth = 1;
 	while(depth > 0)
@@ -379,7 +298,7 @@ void consumeFuncArgList()
 /**
  * consume all token until matching closing brace is found
  */
-void consumeDecl()
+void func_consumeDecl()
 {
 	int depth = 1;
 	while(depth > 0)
@@ -394,7 +313,6 @@ void consumeDecl()
 		if(ch == '}')
 		{
 			depth--;
-			if(depth == 0) currentScope.pop_back();//reduce the scope
 			continue;
 		}
 		else if(ch == '{')
@@ -406,7 +324,7 @@ void consumeDecl()
 	
 }
 
-void consumeTemplateDecl()
+void func_consumeTemplateDecl()
 {
 	int depth = 1;
 	while(depth > 0)
@@ -432,17 +350,19 @@ void consumeTemplateDecl()
 }
 
 // return the scope name at the end of the input string
-std::string get_scope_name(const std::string &in)
+void get_functions(const std::string &in, FunctionList &li)
 {
 	if( !setLexerInput(in) )
 	{
-		return "";
+		return;
 	}
 	
+	g_funcs = &li;
+	
 	//call tghe main parsing routine
-	cl_scope_parse();
-	std::string scope = getCurrentScope();
+	cl_func_parse();
+	g_funcs = NULL;
+	
 	//do the lexer cleanup
 	cl_scope_lex_clean();
-	return scope;
 }

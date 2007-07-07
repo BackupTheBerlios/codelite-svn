@@ -18,5 +18,6 @@ public:
 	virtual ~ExpressionResult();
 	void Reset();
 	void Print();
+	std::string ToString() const;
 };
 #endif //EXPRESSION_RESULT_H

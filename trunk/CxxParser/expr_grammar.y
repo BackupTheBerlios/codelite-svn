@@ -132,6 +132,16 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 						result.m_isThis = true;
 						result.Print();
 					}
+				| 	stmnt_starter '*' LE_IDENTIFIER 
+					{
+						$$ = $3;
+						result.m_isaType = false;
+						result.m_name = $$;
+						result.m_isFunc = false;
+						result.m_isThis = false;
+						result.m_isPtr = false;
+						result.Print();
+					}
 				| 	stmnt_starter '(' cast_type ')' special_star_amp LE_IDENTIFIER 
 					{
 						$$ = $3;
@@ -150,19 +160,31 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 						result.m_isThis = false;
 						result.Print();
 					}
-				| 	stmnt_starter nested_scope_specifier LE_IDENTIFIER '(' 
+				| 	stmnt_starter nested_scope_specifier LE_IDENTIFIER optional_lbrace 
 					{
-						expr_FuncArgList();//consume the function parameters
+						if($4.empty() == false)
+						{
+							expr_FuncArgList();//consume the function parameters
+							result.m_isFunc = true;
+						}
+						else
+						{
+							result.m_isFunc = false;
+						}
+						
 						result.m_isaType = false;
 						result.m_name = $3;
-						result.m_isFunc = true;
 						result.m_isThis = false;
 						$2.erase($2.find_last_not_of(":")+1);
 						result.m_scope = $2;
 						result.Print();
 					}
 				;
-
+				
+optional_lbrace: 	/*empty*/ {$$ = "";}
+					|	'(' {$$ = $1;}
+					;
+					
 special_cast 	: 	LE_DYNAMIC_CAST {$$ = $1;}
 					|	LE_STATIC_CAST {$$ = $1;}
 					|	LE_CONST_CAST {$$ = $1;}
@@ -270,14 +292,16 @@ void expr_syncParser(){
 }
 
 // return the scope name at the end of the input string
-void parse_expression(const std::string &in)
+ExpressionResult &parse_expression(const std::string &in)
 {
 	//provide the lexer with new input
 	if( !setExprLexerInput(in) ){
-		return;
+		return result;
 	}
+	
 	printf("parsing...\n");
 	cl_expr_parse();
 	//do the lexer cleanup
 	cl_expr_lex_clean();
+	return result;
 }
