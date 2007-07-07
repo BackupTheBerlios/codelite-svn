@@ -43,6 +43,7 @@ class ContextCpp : public ContextBase {
 
 private:
 	bool TryOpenFile(const wxFileName &fileName);
+	void DisplayCompletionBox(const std::vector<TagEntry> &tags, const wxString &word);
 
 public:
 	ContextCpp(LEditor *container);

@@ -332,7 +332,9 @@ void ContextCpp::CodeComplete()
 	}
 	else
 	{
-		TagsManagerST::Get()->AutoCompleteCandidates(expr, text, candidates);
+		if(TagsManagerST::Get()->AutoCompleteCandidates(expr, text, candidates)){
+			DisplayCompletionBox(candidates, wxEmptyString);
+		}
 	}
 }
 
@@ -379,6 +381,20 @@ void ContextCpp::CompleteWord()
 		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
 	}
 	*/
+}
+
+void ContextCpp::DisplayCompletionBox(const std::vector<TagEntry> &tags, const wxString &word)
+{
+	LEditor &rCtrl = GetCtrl();
+	wxString list;
+	size_t i=0;
+	if( tags.empty() == false )
+	{
+		for(; i<tags.size()-1; i++)
+			list.Append(tags[i].GetName() + GetImageString(tags[i]) + wxT("@"));
+		list.Append(tags[i].GetName() + GetImageString(tags[i]));
+		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
+	}
 }
 
 //=============================================================================

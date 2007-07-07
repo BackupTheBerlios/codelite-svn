@@ -993,13 +993,8 @@ bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& t
 	}
 
 	//load all tags from the database that matches typeName & typeScope
-
-	/*
-	if( tagName.IsEmpty() == false )
-		TagsByParent(tagName, candidates, true);
+	TagsByParent(typeName, candidates, true);
 	return candidates.empty() == false;
-	*/
-	return false;
 }
 
 void TagsManager::GetHoverTip(const wxString & token, const wxString & scope, const wxString & scopeName, bool isFunc, std::vector<wxString> &tips)
@@ -1278,4 +1273,11 @@ void TagsManager::FindByNameAndScope(const wxString &name, const wxString &scope
 
 	// Sort the results base on their name
 	std::sort(tags.begin(), tags.end(), SDescendingSort());	
+}
+
+
+bool TagsManager::GetDerivationList(const wxString &scopeToSearch, std::vector<wxString> &derivationList)
+{
+	derivationList.push_back(scopeToSearch);
+	return true;
 }

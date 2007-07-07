@@ -509,6 +509,14 @@ private:
 	 * \param tmpMap set this to non null if you wishe to have a result map without duplicate entries
 	 */
 	void FilterResults(const std::vector<TagEntry> & src, const wxString & name, std::vector<TagEntry> & target, int flags = PartialMatch, std::map<wxString, TagEntry>* tmpMap = NULL);
+
+	/**
+	 * return the derivation list of type 
+	 * \param scopeToSearch scope
+	 * \param derivationList [output] this array will contain the derivation list
+	 * \return always true
+	 */
+	bool GetDerivationList(const wxString &scopeToSearch, std::vector<wxString> &derivationList);
 };
 
 /// create the singleton typedef
