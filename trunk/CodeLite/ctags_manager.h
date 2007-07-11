@@ -511,12 +511,16 @@ private:
 	void FilterResults(const std::vector<TagEntry> & src, const wxString & name, std::vector<TagEntry> & target, int flags = PartialMatch, std::map<wxString, TagEntry>* tmpMap = NULL);
 
 	/**
-	 * return the derivation list of type 
-	 * \param scopeToSearch scope
-	 * \param derivationList [output] this array will contain the derivation list
-	 * \return always true
+	 *
+	 * \param &path
+	 * \param &derivationList 
+	 * \return 
 	 */
-	bool GetDerivationList(const wxString &scopeToSearch, std::vector<wxString> &derivationList);
+	bool GetDerivationList(const wxString &path, std::vector<wxString> &derivationList);
+
+
+protected:
+	void DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags);
 };
 
 /// create the singleton typedef

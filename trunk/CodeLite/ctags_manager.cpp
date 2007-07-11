@@ -1225,6 +1225,14 @@ void TagsManager::StoreComments(const std::vector<DbRecordPtr> &comments, const 
 
 void TagsManager::FindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags)
 {
+	DoFindByNameAndScope(name, scope, tags);
+
+	// Sort the results base on their name
+	std::sort(tags.begin(), tags.end(), SDescendingSort());	
+}
+
+void TagsManager::DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags)
+{
 	wxString sql;
 	wxString path;
 	
@@ -1259,8 +1267,6 @@ void TagsManager::FindByNameAndScope(const wxString &name, const wxString &scope
 			while( ex_rs.NextRow() )
 			{		
 				// Construct a TagEntry from the rescord set
-				// if duplicate entries are allowed, add them directly to the tags output vector,
-				// else add them to tmpMap (to remove duplicate entries)
 				TagEntry tag(ex_rs);
 				tags.push_back(tag);
 			}
@@ -1270,14 +1276,32 @@ void TagsManager::FindByNameAndScope(const wxString &name, const wxString &scope
 	{
 		wxLogMessage(e.GetMessage());
 	}
-
-	// Sort the results base on their name
-	std::sort(tags.begin(), tags.end(), SDescendingSort());	
 }
 
-
-bool TagsManager::GetDerivationList(const wxString &scopeToSearch, std::vector<wxString> &derivationList)
+bool TagsManager::GetDerivationList(const wxString &path, std::vector<wxString> &derivationList)
 {
-	derivationList.push_back(scopeToSearch);
+	wxString sql;
+	sql << wxT("select * from tags where path='") << path << wxT("' and kind in ('struct', 'class', 'interface')");
+
+	int rowCount(0);
+	try
+	{
+		TagEntry tag;
+		wxSQLite3ResultSet rs = m_pDb->Query(sql);
+		if(rs.NextRow())
+		{
+			tag = TagEntry(rs);
+			derivationList.push_back(tag.GetPath());
+		} // while(rs.NextRow())
+		rs.Finalize();
+		wxString ineherits = tag.GetInherits();
+
+
+	}
+	catch(wxSQLite3Exception &e)
+	{
+		wxLogMessage(e.GetMessage());
+	}
+
 	return true;
 }

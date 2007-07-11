@@ -703,35 +703,23 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 			// found an identifier
 			//--------------------------------------------
 			wxString scopeToSearch(scopeName);
-			std::vector<wxString> derivationList;
-			derivationList.push_back(scopeToSearch);
 			if(parentTypeScope.IsEmpty() == false && parentTypeScope != wxT("<global>"))
 			{
 				scopeToSearch = parentTypeScope + wxT("::") + parentTypeName;
-				derivationList.clear();
-				TagsManagerST::Get()->GetDerivationList(scopeToSearch, derivationList);
 			}
 			else if((parentTypeScope.IsEmpty()|| parentTypeScope == wxT("<global>")) && !parentTypeName.IsEmpty())
 			{
 				scopeToSearch = parentTypeName;
-				derivationList.clear();
-				derivationList.push_back(scopeToSearch);
 			}
 
 			//get the derivation list of the typename
 			bool res(false);
-			
-			for(size_t i=0; i<derivationList.size(); i++)
-			{
-				wxString type_scope = derivationList.at(i);
-				res = TypeFromName(	_U(result.m_name.c_str()), 
-									visibleScope, 
-									type_scope, 
-									parentTypeName.IsEmpty(),
-									typeName,	//output
-									typeScope);	//output
-				if(res) break;
-			} // for(size_t i=0; i<derivationList.size(); i++)
+			res = TypeFromName(	_U(result.m_name.c_str()), 
+				visibleScope, 
+				scopeToSearch, 
+				parentTypeName.IsEmpty(),
+				typeName,	//output
+				typeScope);	//output
 
 			if(!res){
 				evaluationSucceeded = false;
@@ -1268,7 +1256,7 @@ bool Language::TypeFromName(const wxString &name,
 				return true;
 			} // if(FunctionFromPattern(tag.GetPattern(), foo))
 			return false;
-		} // if(tag.GetKind() == wxT("function")) 
+		} // if(tag.GetKind() == wxT("function") || tag.GetKind() == wxT("prototype")) 
 		else if(tag.GetKind() == wxT("member") || tag.GetKind() == wxT("variable"))
 		{
 			Variable var;
