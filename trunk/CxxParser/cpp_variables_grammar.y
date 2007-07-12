@@ -120,7 +120,7 @@ external_decl		:	{curr_var.Reset();} variables
 						| 	error { 
 								yyclearin;	//clear lookahead token
 								yyerrok;
-								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_scope_text, cl_scope_lineno);
+								//printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_scope_text, cl_scope_lineno);
 								var_syncParser();
 							}
 						;

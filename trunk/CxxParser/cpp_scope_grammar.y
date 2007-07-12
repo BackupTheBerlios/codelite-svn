@@ -204,7 +204,7 @@ scope_reducer		:	'}'	{
 								if(currentScope.empty())
 								{
 									//fatal error!
-									printf("CodeLite: fatal error - cant go beyond global scope!\n");
+									//printf("CodeLite: fatal error - cant go beyond global scope!\n");
 								}
 								else
 								{
@@ -320,7 +320,7 @@ enum_decl				:	stmnt_starter LE_ENUM LE_IDENTIFIER '{' {currentScope.push_back($
 						{	
 							currentScope.pop_back();//reduce the scope
 							printScopeName();
-							printf("found enum: %s, args are: %s\n", $2.c_str(), $5.c_str());
+							//printf("found enum: %s, args are: %s\n", $2.c_str(), $5.c_str());
 						}
 						;
 

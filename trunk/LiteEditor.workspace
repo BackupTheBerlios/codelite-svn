@@ -45,6 +45,6 @@
   <Environment>
     <Variable Name="WXSTABLE" Value="D:/Projects/wxWidgets-2.8.4"/>
     <Variable Name="WorkspaceName" Value="LiteEditor"/>
-    <Variable Name="WorkspacePath" Value="/home/sverre/code/CodeLite/trunk"/>
+    <Variable Name="WorkspacePath" Value="C:\Development\C++\LiteEditor"/>
   </Environment>
 </CodeLite_Workspace>

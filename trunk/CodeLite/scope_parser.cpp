@@ -859,7 +859,7 @@ case 48:
 								if(currentScope.empty())
 								{
 									/*fatal error!*/
-									printf("CodeLite: fatal error - cant go beyond global scope!\n");
+									/*printf("CodeLite: fatal error - cant go beyond global scope!\n");*/
 								}
 								else
 								{
@@ -959,7 +959,7 @@ case 108:
 {	
 							currentScope.pop_back();/*reduce the scope*/
 							printScopeName();
-							printf("found enum: %s, args are: %s\n", yyvsp[-5].c_str(), yyvsp[-2].c_str());
+							/*printf("found enum: %s, args are: %s\n", $2.c_str(), $5.c_str());*/
 						}
 break;
 case 109:

@@ -99,7 +99,7 @@ primary_expr		:	{result.Reset();} simple_expr
 						| 	error { 
 								//yyclearin;	//clear lookahead token
 								//yyerrok;
-								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_expr_text, cl_expr_lineno);
+								//printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_expr_text, cl_expr_lineno);
 								expr_syncParser();
 							}
 						;
@@ -111,7 +111,7 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 						result.m_isaType = true;
 						result.m_name = $4;
 						result.m_isFunc = false;
-						result.Print();
+						//result.Print();
 					}
 				| 	stmnt_starter LE_THIS 
 					{
@@ -121,7 +121,7 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 						result.m_isFunc = false;
 						result.m_isThis = true;
 						result.m_isPtr = true;
-						result.Print();
+						//result.Print();
 					}
 				| 	stmnt_starter '*' LE_THIS 
 					{
@@ -130,7 +130,7 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 						result.m_name = $$;
 						result.m_isFunc = false;
 						result.m_isThis = true;
-						result.Print();
+						//result.Print();
 					}
 				| 	stmnt_starter '*' LE_IDENTIFIER 
 					{
@@ -140,7 +140,7 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 						result.m_isFunc = false;
 						result.m_isThis = false;
 						result.m_isPtr = false;
-						result.Print();
+						//result.Print();
 					}
 				| 	stmnt_starter '(' cast_type ')' special_star_amp LE_IDENTIFIER 
 					{
@@ -149,7 +149,7 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 						result.m_name = $$;
 						result.m_isFunc = false;
 						result.m_isThis = false;
-						result.Print();
+						//result.Print();
 					}
 				| 	stmnt_starter '(' '(' cast_type ')' special_star_amp LE_IDENTIFIER ')'
 					{
@@ -158,7 +158,7 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 						result.m_name = $$;
 						result.m_isFunc = false;
 						result.m_isThis = false;
-						result.Print();
+						//result.Print();
 					}
 				| 	stmnt_starter nested_scope_specifier LE_IDENTIFIER optional_lbrace 
 					{
@@ -177,7 +177,7 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 						result.m_isThis = false;
 						$2.erase($2.find_last_not_of(":")+1);
 						result.m_scope = $2;
-						result.Print();
+						//result.Print();
 					}
 				;
 				
@@ -299,7 +299,7 @@ ExpressionResult &parse_expression(const std::string &in)
 		return result;
 	}
 	
-	printf("parsing...\n");
+	//printf("parsing...\n");
 	cl_expr_parse();
 	//do the lexer cleanup
 	cl_expr_lex_clean();

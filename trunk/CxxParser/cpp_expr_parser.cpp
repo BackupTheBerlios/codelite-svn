@@ -422,7 +422,7 @@ ExpressionResult &parse_expression(const std::string &in)
 		return result;
 	}
 	
-	printf("parsing...\n");
+	//printf("parsing...\n");
 	cl_expr_parse();
 	//do the lexer cleanup
 	cl_expr_lex_clean();
@@ -575,7 +575,7 @@ case 5:
 { 
 								/*yyclearin;	//clear lookahead token*/
 								/*yyerrok;*/
-								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_expr_text, cl_expr_lineno);
+								/*printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_expr_text, cl_expr_lineno);*/
 								expr_syncParser();
 							}
 break;
@@ -586,7 +586,7 @@ case 6:
 						result.m_isaType = true;
 						result.m_name = yyvsp[-2];
 						result.m_isFunc = false;
-						result.Print();
+						/*result.Print();*/
 					}
 break;
 case 7:
@@ -597,7 +597,7 @@ case 7:
 						result.m_isFunc = false;
 						result.m_isThis = true;
 						result.m_isPtr = true;
-						result.Print();
+						/*result.Print();*/
 					}
 break;
 case 8:
@@ -607,7 +607,7 @@ case 8:
 						result.m_name = yyval;
 						result.m_isFunc = false;
 						result.m_isThis = true;
-						result.Print();
+						/*result.Print();*/
 					}
 break;
 case 9:
@@ -618,7 +618,7 @@ case 9:
 						result.m_isFunc = false;
 						result.m_isThis = false;
 						result.m_isPtr = false;
-						result.Print();
+						/*result.Print();*/
 					}
 break;
 case 10:
@@ -628,7 +628,7 @@ case 10:
 						result.m_name = yyval;
 						result.m_isFunc = false;
 						result.m_isThis = false;
-						result.Print();
+						/*result.Print();*/
 					}
 break;
 case 11:
@@ -638,7 +638,7 @@ case 11:
 						result.m_name = yyval;
 						result.m_isFunc = false;
 						result.m_isThis = false;
-						result.Print();
+						/*result.Print();*/
 					}
 break;
 case 12:
@@ -658,7 +658,7 @@ case 12:
 						result.m_isThis = false;
 						yyvsp[-2].erase(yyvsp[-2].find_last_not_of(":")+1);
 						result.m_scope = yyvsp[-2];
-						result.Print();
+						/*result.Print();*/
 					}
 break;
 case 13:
