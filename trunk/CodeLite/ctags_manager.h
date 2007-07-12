@@ -213,14 +213,6 @@ public:
 	 * \return tag tree
 	 */
 	TagTreePtr ParseSourceFiles(const std::vector<wxFileName> &fpArr, std::vector<DbRecordPtr> *comments = NULL);
-
-	/**
-	 * Parse a source file for local variables only construct a TagTree.
-	 * This function throws a std::exception*.
-	 * \param scope string containing the scope to parse
-	 * \return a sorted TagEntry vector which must be freed by caller
-	 */	
-	std::vector<TagEntry>* ParseLocals(const wxString& scope);
 	
 	/**
 	 * \brief Set the full path to ctags executable, else TagsManager will use relative path ctags.
@@ -457,24 +449,6 @@ private:
 	 * ctags processes, one for parsing local variables and one for global scope
 	 */
 	void SourceToTags(const wxFileName& source, wxString& tags, clProcess *ctags);
-
-	/**
-	 * Parse tags from memory construct a TagTree. 
-	 * User should use ParseSourceFile, which calls to this function internally.
-	 * This function throws a std::exception*.
-	 * \param tags wxString containing the tags to parse
-	 * \return tag tree
-	 */
-	TagTreePtr ParseTags(const wxString& tags);
-	
-	/**
-	 * Create a vector of tags.
-	 * This function throws a std::exception*.
-	 * \param tags String containing the ctags 
-	 * \param onlyLocals set to true if you wish to receive only local tags
-	 * \return vector of TagEntrys, even if there are no tags vector is returned but with size() == 0
-	 */
-	std::vector<TagEntry>* VectorFromTags(const wxString& tags, bool onlyLocals = true);
 
 	/**
 	 * Construct a tag object from line.

@@ -228,43 +228,6 @@ void TagsManager::TagFromLine(const wxString& line, TagEntry& tag)
 	tag.Create(fileName, name, lineNumber, pattern, kind, extFields);
 }
 
-TagTreePtr TagsManager::ParseTags(const wxString& tags)
-{
-	// Make this call threadsafe
-	wxCriticalSectionLocker locker(m_cs);
-
-	// Load the records and build a language tree
-	TagEntry root;
-	root.SetName(wxT("<ROOT>"));
-
-	TagTreePtr tree( new TagTree(wxT("<ROOT>"), root) );
-
-	const wxCharBuffer data = _C(tags);
-	char* pStart = const_cast<char*>(data.data());
-	char* pEnd = strstr(pStart, "\n");
-	while( pEnd )
-	{
-		TagEntry tag;
-		int len = (pEnd-pStart);
-		char *tagLine = new char[len+1];
-		memset(tagLine, 0, len+1);
-		memcpy(tagLine, pStart, len);
-		wxString line( _U(tagLine) );
-		delete [] tagLine;
-
-		// Construct the tag from the line
-		TagFromLine(line, tag);
-
-		// Add the tag to the tree
-		tree->AddEntry(tag);
-
-		// Get next line
-		pStart = pEnd + 1;
-		pEnd = strstr(pStart, "\n");
-	}
-	return tree;
-}
-
 TagTreePtr TagsManager::ParseSourceFile(const wxFileName& fp, std::vector<DbRecordPtr> *comments)
 {
 	wxString tags;
@@ -351,70 +314,6 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, s
 	}
 	
 	return TagTreePtr( TreeFromTags(tags) );
-}
-
-std::vector<TagEntry>* TagsManager::ParseLocals(const wxString& scope)
-{
-	// Make this call threadsafe
-	wxCriticalSectionLocker locker(m_cs);
-
-	wxString tags;
-
-	if( !m_localCtags )
-	{
-		return NULL;
-	}
-
-	// Put the content into temporary file
-	wxFileName fp(wxGetCwd(), wxT("temp_source_file"));
-	
-	wxFile file(fp.GetFullPath(), wxFile::write);
-	file.Write(scope);
-	file.Close();
-
-	// Convert source file to tags
-	SourceToTags(fp, tags, m_localCtags);	
-
-	wxRemoveFile(fp.GetFullPath());
-
-	// Create a vector from the tags
-	return VectorFromTags(tags);
-}
-
-std::vector<TagEntry>* TagsManager::VectorFromTags(const wxString& tags, bool onlyLocals)
-{
-	std::vector<TagEntry> *vtags = new std::vector<TagEntry>;
-	const wxCharBuffer data = _C(tags);
-	char* pStart = const_cast<char*>(data.data());
-	char* pEnd = strstr(pStart, "\n");
-	while( pEnd )
-	{
-		TagEntry tag;
-
-		// Convert the current pointer to line
-		int len = (pEnd-pStart);
-		char *tagLine = new char[len+1];
-		memset(tagLine, 0, len+1);
-		memcpy(tagLine, pStart, len);
-		wxString line( _U(tagLine) );
-		delete [] tagLine;
-
-		// Construct the tag from the line
-		TagFromLine(line, tag);
-
-		// Only local tags are collected
-		if(onlyLocals && tag.GetKind() == wxT("local"))
-			vtags->push_back(tag);
-
-		// collect all?
-		if(!onlyLocals)
-			vtags->push_back(tag);
-
-		// Get next line
-		pStart = pEnd + 1;
-		pEnd = strstr(pStart, "\n");
-	}
-	return vtags;
 }
 
 //-----------------------------------------------------------
