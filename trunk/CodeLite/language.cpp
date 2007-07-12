@@ -715,12 +715,11 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 			//get the derivation list of the typename
 			bool res(false);
 			res = TypeFromName(	_U(result.m_name.c_str()), 
-				visibleScope, 
-				scopeToSearch, 
-				parentTypeName.IsEmpty(),
-				typeName,	//output
-				typeScope);	//output
-
+								visibleScope, 
+								scopeToSearch, 
+								parentTypeName.IsEmpty(),
+								typeName,	//output
+								typeScope);	//output
 			if(!res){
 				evaluationSucceeded = false;
 				break;
@@ -736,135 +735,6 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 	}
 
 	return evaluationSucceeded;
-}
-
-bool Language::ParseSignature(const wxString &signature, std::vector<std::pair<wxString, wxString> >& args, wxString & trailer)
-{
-	wxString src_string;
-	wxString work_string;
-	int type;
-
-	src_string = signature.AfterFirst(_T('('));
-	if(false == Match(_T('('), work_string, src_string))
-		return false;
-	
-	while((type = m_scanner->yylex()) != 0)
-	{
-		trailer << _U(m_scanner->YYText());
-	}
-	
-	// Break the string into comma sperated tokens
-	std::vector<std::pair<wxString, wxString> > arguments;
-	wxString currArg;
-	wxString identifier;
-
-	const wxCharBuffer scannerText =  _C(work_string);
-	m_scanner->SetText( scannerText.data());
-	bool flag = true;
-
-	while( flag )
-	{
-		type =m_scanner->yylex();
-		if(type == 0) // EOF
-			break;
-	
-		wxString token = _U(m_scanner->YYText());
-		
-		switch(type)
-		{
-		case (int)'<':
-		case (int)'(':
-		case (int)'[':
-		case (int)'{':
-			{
-				// consume everything between the braces
-				wxString tmpStr;
-				if(false == Match(type, tmpStr))
-					return false;
-				break;
-			}
-		case (int)',':
-		case (int)')':
-			{
-				// Add this pair <identifier:argument expression> to the vector
-				std::pair<wxString, wxString> p;
-				p.first = identifier;
-				p.second = currArg;
-				arguments.push_back( p );
-				currArg.Empty();
-				identifier.Empty();
-				
-				if(type == (int)')')
-					flag = false;
-				break;
-			}
-		case (int)'*':
-			{
-				currArg += token;
-				break;
-			}
-		case IDENTIFIER:
-			identifier = token;
-		default:
-			currArg += token;
-			currArg += _T(" ");
-			break;
-		}
-	}
-
-	// arguments contains set of parameters, 
-	if(arguments.empty())
-		return false;
-
-	for(size_t i=0; i<arguments.size(); i++)
-	{
-		std::pair<wxString, wxString> p;
-
-		// debug
-		wxString s1 = arguments[i].second;
-		wxString s2 = arguments[i].first;
-
-		wxString qualifier = GetVarQualifier(arguments[i].first, arguments[i].second);
-
-		if(qualifier.IsEmpty())
-			return false;
-
-		p.second = qualifier;
-		p.first = arguments[i].first;
-		args.push_back(p);
-	}
-	return true;
-}
-
-wxString Language::GetTagQualifier(std::vector<TagEntry> & tags, bool & isPtr )
-{
-	wxString qualifier;
-	wxString tmpQualifer;
-	size_t i=0;
-	
-	if(tags.empty())
-		return wxEmptyString;
-
-	if(tags.size() > 1)
-	{
-		// more than one tag, check that all are of the same kind
-		wxString kind = tags[0].GetKind();
-		for(i=0; i<tags.size(); i++)
-		{
-			if(kind != tags[i].GetKind())
-				return wxEmptyString;
-		}
-	}
-
-	for(i=0; i<tags.size(); i++)
-	{
-		tmpQualifer = Qualifier( tags[i], isPtr );
-		if(tmpQualifer != qualifier && i != 0)
-			return wxEmptyString;
-		qualifier = tmpQualifer;
-	}
-
-	return qualifier;
 }
 
 wxString Language::Qualifier(const TagEntry& tag, bool & isPtr, bool truncateTemplate, wxString *fullQualifier )
@@ -925,166 +795,14 @@ wxString Language::Qualifier(const TagEntry& tag, bool & isPtr, bool truncateTem
 	return qualifier;
 }
 
-wxString Language::GetWordQualifier( const wxString & word, const wxString & scope, const wxString & scopeName, bool & isPtr )
-{
-	std::vector<TagEntry> *localTags(NULL);
-	std::vector<TagEntry> tags;
-	wxString escapedName( word );
-
-	// Support fot 'this' & '*this' keyword
-	if(word == _T("this") || word == _T("*this")) 
-	{
-		if(scopeName.IsEmpty() || scopeName == _T("<global>"))
-		{
-			return wxEmptyString;
-		}
-		TagEntry tag;
-		TagsManagerST::Get()->GetClassTagByName(scopeName, tag);
-		if(tag.IsOk())
-			return tag.GetKind();
-		return wxEmptyString;
-	}
-
-	// If we have local scope, we process it first
-	if( scope.IsEmpty() == false )
-	{
-		// Get a list of tags from the current scope, first remove the non-visible scope from the 
-		// row scope
-		wxString visibleScope = GetScope( scope, wxEmptyString );
-		localTags = TagsManagerST::Get()->ParseLocals( visibleScope );
-		if( !localTags){
-			return wxEmptyString;
-		}
-
-		// filter all non qualified names from the local scope,
-		// consider flags (PartialMatch or ExactMatch)
-		TagsManagerST::Get()->FilterResults( *localTags, word, tags, ExactMatch );
-
-		delete localTags;
-
-		// if we have a single match in the local scope, we use it
-		if( tags.size() == 1)
-			return GetTagQualifier( tags, isPtr );
-	}
-
-	// there are cases where 'name' is a function name (e.g. GetName()), 
-	// if we will use this string, we will not find it in the database, 
-	// since the function signature is kept separatley, so we remove it
-	escapedName = escapedName.BeforeFirst(_T('('));
-	if(escapedName.IsEmpty()) 
-		return wxEmptyString;
-
-	wxString sql;
-	sql << _T("SELECT * FROM TAGS WHERE name='") << escapedName << _T("'");
-	TagsManagerST::Get()->GetTagsBySQL( sql, tags, _T("macro") );
-	return GetTagQualifier( tags, isPtr );
-}
-
 // return hover tip
 void Language::GetHoverTip(const wxString & token, const wxString & scope, const wxString & scopeName, bool isFunc, std::vector<wxString> & tips)
 {
-	std::vector<TagEntry> *localTags(NULL);
-	std::vector<TagEntry> tags1;
-	std::vector<TagEntry> tags2;
-	std::vector<TagEntry> members_tags;
-
-	if( token.IsEmpty() )
-		return;
-
-	// try to get a match in local scope
-	if( scope.IsEmpty() == false )
-	{
-		// Get a list of tags from the current scope, first remove the non-visible scope from the 
-		// row scope
-		wxString visibleScope = GetScope(scope, wxEmptyString);
-		localTags = TagsManagerST::Get()->ParseLocals(visibleScope);
-		if(!localTags){
-			return;
-		}
-
-		// filter all non qualified names from the local scope,
-		FilterResults(*localTags, isFunc, token, tags2);
-
-		// if the tag is a function
-
-		delete localTags;
-
-		if( tags2.size() > 0 )
-		{
-			ConstructTips( tags2, tips );
-			return;
-		}
-	}
-
-	// if scope name is provided, try with the parent members
-	if( scopeName.IsEmpty() == false /*&& scopeName != _T("<global>")*/ )
-	{
-		wxString sql;
-		sql << _T("SELECT * FROM TAGS WHERE parent='") << scopeName << _T("' AND name='") << token << _T("'");
-		TagsManagerST::Get()->GetTagsBySQL(sql, members_tags);
-
-		// filter non matched tags
-		FilterResults(members_tags, isFunc, token, tags2);
-
-		// do we have a match?
-		if( tags2.size() > 0 )
-		{
-			ConstructTips( tags2, tips );
-			return;
-		}
-	}
-
-	// ok, last attempt now: try the database with wide search !
-	wxString sql;
-	sql << _T("SELECT * FROM TAGS WHERE NAME='") << token << _T("' AND KIND != 'project'");
-	TagsManagerST::Get()->GetTagsBySQL( sql, tags1 );
-	FilterResults( tags1, isFunc, token, tags2 );
-
-	// do we have a match?
-	if( tags2.size() > 0 )
-	{
-		ConstructTips( tags2, tips );
-		return;
-	}
-	tips.clear();
-}
-
-void Language::ConstructTips( std::vector<TagEntry> & tags, std::vector<wxString> & tips )
-{
-	for(size_t i=0; i<tags.size() ; i++)
-		tips.push_back( GetStringTip( tags[i] ) );
-}
-
-void Language::FilterResults(const std::vector<TagEntry> & src, bool isFunc, const wxString &name, std::vector<TagEntry> &tags)
-{
-	std::vector<TagEntry> tmptags;
-	for(size_t i=0; i<src.size(); i++)
-	{
-		bool tagKindFunc = (src[i].GetKind() == _T("prototype") || src[i].GetKind() == _T("function"));
-		if( src[i].GetName() == name )
-		{
-			if( isFunc )
-			{
-				if( tagKindFunc )
-					tmptags.push_back( src[i] );
-			}
-			else
-			{
-				// need non functions only
-				if(! tagKindFunc )
-					tmptags.push_back( src[i] );
-			}
-		}
-	}
-
-	// remove duplicate entries
-	std::map<wxString, TagEntry> m;
-	for(size_t i=0; i<tmptags.size(); i++)
-		m[GetStringTip(tmptags[i])] = tmptags[i];
-
-	std::map<wxString, TagEntry>::iterator iter = m.begin();
-	for(; iter != m.end(); iter++)
-		tags.push_back( iter->second );
+	wxUnusedVar(token);
+	wxUnusedVar(scope);
+	wxUnusedVar(scopeName);
+	wxUnusedVar(isFunc);
+	wxUnusedVar(tips);
 }
 
 wxString Language::GetStringTip(TagEntry &tag)

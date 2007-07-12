@@ -73,7 +73,6 @@ public:
 	 * \return visible scope 
 	 */
 	wxString GetScope(const wxString& srcString, const wxString& stopWord);
-
 	
 	/**
 	 * Get the variable qualifier from a given string.
@@ -83,7 +82,6 @@ public:
 	 * \return qualifier
 	 */
 	wxString GetVarQualifier(const wxString& identifier, const wxString& srcString, const bool& bVarIsFunc = false);
-
 
 	/**
 	 * Match closing braces, and return the string in between them. The returned string does not include 
@@ -100,15 +98,6 @@ public:
 	 * \param delimArr delimeter array
 	 */
 	void SetAutoCompDeliemters(const std::vector<wxString>& delimArr);
-
-	/**
-	 * Parse a function signature and return vector of pairs of Qualifier:Identifier
-	 * \param signature signature to parse
-	 * \param args [output] vector of pairs of wxStrings
-	 * \param trailer return the string that contains the trailer of the signature (e.g. const)
-	 * \return true if succeeded, false otherwise
-	 */
-	bool ParseSignature(const wxString &signature, std::vector<std::pair<wxString, wxString> >& args, wxString & trailer);
 
 	/**
 	 * Get a hover tip
@@ -208,48 +197,9 @@ private:
 	 */
 	bool IsPointer(const wxString &qualifier);
 
-	/**
-	 * Get tag qualifier from array of tags. 
-	 * - If tags contains only one qualifer, and it is a function, return its returned value qualifier based on the pattern
-	 * - If tags contains only one qualifer, and it is a member/variable, return its qualifier based on the pattern
-	 * - If the array contains more than one tag and all consist of the same the qualifers and of the same kind - return it.
-	 * - any other case, return empty string
-	 * \param tags array of tags
-	 * \param isPtr set to true of the qualifier is a pointer
-	 * \return tag qualifier or empty string
-	 */
-	wxString GetTagQualifier(std::vector<TagEntry> & tags, bool & isPtr);
-
 	// helper methods
 	wxString Qualifier(const TagEntry& tag, bool & isPtr, bool truncateTemplate = true, wxString *fullQualifier = NULL);
 	
-	/**
-	 * Return word's qualifier searching local database, external database and the local scope
-	 * \param word token 
-	 * \param scope string containing our token
-	 * \param scopeName scope name
-	 * \param isPtr [output] return true if the qualifier is a pointer
-	 * \return qualifier or wxEmptyString
-	 */
-	wxString GetWordQualifier(const wxString & word, const wxString & scope, const wxString & scopeName, bool & isPtr );
-
-	/**
-	 * Construct tips array from vector of tags
-	 * \param tags [input] vector of matched tags
-	 * \param tips [output] vector of formatted tips constructed from the tags
-	 */
-	void ConstructTips( std::vector<TagEntry> & tags, std::vector<wxString> & tips );
-
-	/**
-	 * Second filter function, which removes duplicate entries of prototype & functions
-	 * if isFunc is true, is will also remove any non 'function' 'prototype' entry
-	 * \param src input tags
-	 * \param isFunc requested tag is a function
-	 * \param name tag name
-	 * \param tags [output] filtered tags
-	 */
-	void FilterResults(const std::vector<TagEntry>& src, bool isFunc, const wxString &name, std::vector<TagEntry>& tags);
-
 	/// Return tip string from tag
 	wxString GetStringTip(TagEntry& tag);
 

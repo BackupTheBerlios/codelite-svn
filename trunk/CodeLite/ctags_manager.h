@@ -339,20 +339,11 @@ public:
 	void FindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags);
 
 	/**
-	 * Return list of tags for the code completion (user hit '.'  '->' '::' )
-	 * \param qualifier parent of the memebers
-	 * \param tags [output] list of tags belongs to parent
-	 */
-	void GetMembers(const wxString & qualifier, const wxString & name, std::vector<TagEntry>& tags);
-
-	/**
-	 * Get tags related to parent.
-	 * It's a wrapper for the sql statement: $select * from tags where parent='parent';$
-	 * \param parent Parent 
+	 * Get tags related to a scope.
+	 * \param scope scope to search for members
 	 * \param tags [output] vector of tags
-	 * \param inheritedMembers set to true when you want to retrieve member of base classes
 	 */
-	void TagsByParent(const wxString& parent, std::vector<TagEntry> &tags, bool inheritedMembers = false);
+	void TagsByScope(const wxString& scope, std::vector<TagEntry> &tags);
 
 	/**
 	 * Return autocompletion candidates based on parsing an expression and retrieving its member from the database.
@@ -521,6 +512,7 @@ private:
 
 protected:
 	void DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags);
+	void DoExecuteQueury(const wxString &sql, std::vector<TagEntry> &tags);
 };
 
 /// create the singleton typedef

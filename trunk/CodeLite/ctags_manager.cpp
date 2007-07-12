@@ -688,206 +688,23 @@ bool TagsManager::FunctionByLine(const int lineNo, const wxString& fileName, con
 	return true;
 }
 
-void TagsManager::GetMembers(const wxString & qualifier, const wxString & name, std::vector<TagEntry> & tags)
-{
-	wxString query;
-	std::map<wxString, TagEntry> tmpMap;
-	std::vector<TagEntry> vt;
-
-	// get all tags belongs to this qualifier
-	TagsByParent(qualifier, tags, true);
-
-	// filter out all tags that does not match the name
-	FilterResults(tags, name, vt, ExactMatch, &tmpMap);
-
-	// Fill up the results from the tmporary map into the result
-	// tags vector
-	tags.clear();
-	std::map<wxString, TagEntry>::iterator iter = tmpMap.begin();
-	for(; iter != tmpMap.end(); iter++)
-		tags.push_back(iter->second);
-
-	// Sort the results base on their name
-	std::sort(tags.begin(), tags.end(), SDescendingSort());	
-}
-
-// return list of possibilities for word completion (Ctrl+Space)
-void TagsManager::GetTags(const wxString& name, const wxString& scopeName, std::vector<TagEntry>& tags, int flags, const wxString& scope, bool allowDups)
-{
-	// We need to add a list of entries from the database and add it to the local one
-	wxString query, msg;
-	wxString escapedName(name);
-	std::vector<TagEntry> *localTags(NULL);
-	std::map<wxString, TagEntry> tmpMap;
-
-	// If we have local scope, we process it first
-	if( scope.IsEmpty() == false )
-	{
-		//narrow down the scope
-		wxString visibleScope = LanguageST::Get()->GetScope(scope, wxEmptyString);
-		localTags = TagsManagerST::Get()->ParseLocals(visibleScope);
-		if( !localTags )
-		{
-			return;
-		}
-
-		// filter all non qualified names from the local scope,
-		// consider flags (PartialMatch or ExactMatch)
-		FilterResults(*localTags, name, tags, flags, &tmpMap);
-		
-		delete localTags;
-	}
-
-	wxString nameMatch;
-	// Since '_' (underscore) is a vaild char for C++/C word, 
-	// and it is also a wildcard in databases, we need to set it
-	// with escape
-	escapedName.Replace(wxT("_"), wxT("^_"));
-	nameMatch << wxT(" name like '") << escapedName << wxT("%%' ESCAPE '^'");
-
-	if( scopeName.IsEmpty() == false && scopeName != wxT("<global>"))
-	{
-		wxString parents;
-		parents << wxT(" parent in ('<global>', '") << scopeName << wxT("'");
-
-		// Incase this parent inhertis from other parent, add it to the possible
-		// parents
-		TagEntry tag;
-		wxString ss(scopeName);
-		while( GetClassTagByName(ss, tag) )
-		{
-			if(tag.GetInherits().IsEmpty())
-				break;
-
-			parents << wxT(", '") << tag.GetInherits() << wxT("'");
-			ss = tag.GetInherits();
-		}
-
-		parents << wxT(") ");
-
-		query << wxT("select * from tags where ")
-			  << parents 
-			  << wxT(" and ") << nameMatch
-			  << wxT(" order by name") ;
-	}
-	else
-	{
-		// If no scope is available, search for all classes, namespaces etc and globals
-		query << wxT("select * from tags  where") 
-			  << wxT("(")
-			  << wxT("(kind='struct' or kind='class' or kind='typedef' or kind='namespace' or kind='union' or kind='macro' or kind='variable') OR ")
-			  << wxT("((kind='function' or kind='prototype') AND parent='<global>') ")
-			  << wxT(")")
-			  << wxT(" AND ") << nameMatch
-			  << wxT(" order by name") ;
-	}
-
-	wxSQLite3ResultSet rs = m_pDb->Query(query);
-	
-	wxSQLite3ResultSet ex_rs;
-	if( m_pExternalDb->IsOpen() )
-	{
-		ex_rs = m_pExternalDb->Query(query);
-	}
-
-	// Add the database results
-	try
-	{
-		while( rs.NextRow() )
-		{
-			// Construct a TagEntry from the rescord set
-			// if duplicate entries are allowed, add them directly to the tags output vector,
-			// else add them to tmpMap (to remove duplicate entries)
-			TagEntry tag(rs);
-
-			if( allowDups )
-				tags.push_back(tag);
-			else
-				tmpMap[tag.GetName()] = tag;
-		}
-
-		if( m_pExternalDb->IsOpen() )
-		{
-			// add results from external database to the workspace database
-			while( ex_rs.NextRow() )
-			{		
-				// Construct a TagEntry from the rescord set
-				// if duplicate entries are allowed, add them directly to the tags output vector,
-				// else add them to tmpMap (to remove duplicate entries)
-				TagEntry tag(ex_rs);
-
-				if( allowDups )
-					tags.push_back(tag);
-				else
-					tmpMap[tag.GetName()] = tag;
-			}
-		}
-	}
-	catch( wxSQLite3Exception& e)
-	{
-		wxUnusedVar(e);
-	}
-
-	if(false == allowDups)
-	{
-		// Fill up the results from the tmporary map into the result
-		// tags vector
-		tags.clear();
-		std::map<wxString, TagEntry>::iterator iter = tmpMap.begin();
-		for(; iter != tmpMap.end(); iter++)
-			tags.push_back(iter->second);
-	}
-
-	// Sort the results base on their name
-	std::sort(tags.begin(), tags.end(), SDescendingSort());	
-}
-
-void TagsManager::TagsByParent(const wxString& parent, std::vector<TagEntry> &tags, bool inheritedMembers)
+void TagsManager::TagsByScope(const wxString& scope, std::vector<TagEntry> &tags)
 {
 	wxString sql;
-	wxString tmp_parent(parent);
+	std::vector<wxString> derivationList;
+	//add this scope as well to the derivation list
+	derivationList.push_back(scope);
+	GetDerivationList(scope, derivationList);
 
-	sql << wxT("select * from tags where parent='") << parent << wxT("' order by name;");
-	GetTagsBySQL(sql, tags, wxEmptyString, wxT("~"));	// Skip destructors
-	
-	if( tags.empty() )
-		return;		
-
-	if( inheritedMembers == false )
-		return;
-
-	// Get our parent tags
-	TagEntry tag;
-	while( true )
+	for(size_t i=0; i<derivationList.size(); i++)
 	{
-		if( GetClassTagByName(tmp_parent, tag) )
-		{
-			// Check to see if our parent has inheritance
-			if(tag.GetInherits().IsEmpty() == false)
-			{
-				sql.Empty();
-				sql << wxT("select * from tags where parent='") << tag.GetInherits() << wxT("';") ;
-				GetTagsBySQL(sql, tags, wxEmptyString, wxT("~")); // Skip destructors
-				tmp_parent = tag.GetInherits();
-			}
-			else
-				break;
-		}
-		else
-			break;
-	}
-
-	// Remove duplicate entries
-	std::map<wxString, TagEntry> tagmap;
-	for(size_t i=0; i<tags.size(); i++)
-		tagmap[tags[i].GetName()] = tags[i];
-
-	// copy the map back to the vector
-	tags.clear();
-	std::map<wxString, TagEntry>::iterator iter = tagmap.begin();
-	for(; iter != tagmap.end(); iter++)
-		tags.push_back(iter->second);
-
+		sql.Empty();
+		wxString tmpScope(derivationList.at(i));
+		tmpScope.Replace(wxT("_"), wxT("^_"));
+		tmpScope << wxT("::");
+		sql << wxT("select * from tags where path like '") << tmpScope << wxT("%%' ESCAPE '^'");
+		DoExecuteQueury(sql, tags);
+	} // for(size_t i=0; i<derivationList.size(); i++)
 	// and finally sort the results
 	std::sort(tags.begin(), tags.end(), SAscendingSort());
 }
@@ -993,7 +810,18 @@ bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& t
 	}
 
 	//load all tags from the database that matches typeName & typeScope
-	TagsByParent(typeName, candidates, true);
+	wxString scope;
+	if(typeScope == wxT("<global>"))
+	{
+		scope << typeName;
+	}
+	else
+	{
+		scope << typeScope << wxT("::") << typeName;
+	}
+
+	//this function will retrieve the ineherited tags as well
+	TagsByScope(scope, candidates);
 	return candidates.empty() == false;
 }
 
@@ -1004,6 +832,10 @@ void TagsManager::GetHoverTip(const wxString & token, const wxString & scope, co
 
 clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString & scope, const wxString & scopeName )
 {
+	wxUnusedVar(expr);
+	wxUnusedVar(scope);
+	wxUnusedVar(scopeName);
+
 	// display call tip with function prototype
 	std::vector<wxString> tips;
 	clCallTipPtr ct( new clCallTip(tips) );
@@ -1117,24 +949,6 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 		TagsDatabase db;
 		db.Store(tree, dbName, true);
 	}
-
-	//if( prgDlg )
-	//{
-	//	wxString msg;
-	//	msg << wxT("Updating database this can take a while ...");
-	//	prgDlg->Update(maxVal, msg);
-	//}
-
-	// create a trasaction and insert all info into the database
-	// we dont use m_pExternalDb since it is on memory only, so 
-	// we use a temproary database
-	//if( prgDlg )
-	//{
-	//	wxString msg;
-	//	msg << wxT("Done");
-	//	prgDlg->Update(maxVal+10, msg);
-	//	prgDlg->Destroy();
-	//}
 }
 
 void TagsManager::OpenExternalDatabase(const wxFileName &dbName)
@@ -1234,20 +1048,33 @@ void TagsManager::FindByNameAndScope(const wxString &name, const wxString &scope
 void TagsManager::DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags)
 {
 	wxString sql;
-	wxString path;
-	
 	if(scope == wxT("<global>"))
 	{
-		path << name;
+		sql << wxT("select * from tags where name='") << name << wxT("' and parent='<global>'");
+		DoExecuteQueury(sql, tags);
 	}
 	else
 	{
-		path << scope << wxT("::") << name;
-	}
+		std::vector<wxString> derivationList;
+		derivationList.push_back(scope);
+		GetDerivationList(scope, derivationList);
 
-	sql << wxT("select * from tags where name='") << name << wxT("' and path='") << path << wxT("'");
+		for(size_t i=0; i<derivationList.size(); i++)
+		{
+			sql.Empty();
+			wxString path_;
+			path_ << derivationList.at(i) << wxT("::") << name ;
+
+			sql << wxT("select * from tags where path='") << path_ << wxT("'");
+			DoExecuteQueury(sql, tags);
+		}
+	}
+}
+
+void TagsManager::DoExecuteQueury(const wxString &sql, std::vector<TagEntry> &tags)
+{
 	wxSQLite3ResultSet rs = m_pDb->Query(sql);
-	
+
 	// Add the database results
 	try
 	{
@@ -1282,8 +1109,6 @@ bool TagsManager::GetDerivationList(const wxString &path, std::vector<wxString> 
 {
 	wxString sql;
 	sql << wxT("select * from tags where path='") << path << wxT("' and kind in ('struct', 'class', 'interface')");
-
-	int rowCount(0);
 	try
 	{
 		TagEntry tag;
@@ -1291,12 +1116,24 @@ bool TagsManager::GetDerivationList(const wxString &path, std::vector<wxString> 
 		if(rs.NextRow())
 		{
 			tag = TagEntry(rs);
-			derivationList.push_back(tag.GetPath());
-		} // while(rs.NextRow())
+		}
+
 		rs.Finalize();
-		wxString ineherits = tag.GetInherits();
-
-
+		if(tag.IsOk())
+		{
+			wxString ineheritsList = tag.GetInherits();
+			wxStringTokenizer tok(ineheritsList, wxT(','));
+			while(tok.HasMoreTokens())
+			{
+				wxString inherits = tok.GetNextToken();
+				if(tag.GetScopeName() != wxT("<global>"))
+				{
+					inherits = tag.GetScopeName() + wxT("::") + inherits;
+				}
+				derivationList.push_back(inherits);
+				GetDerivationList(inherits, derivationList);
+			}
+		}
 	}
 	catch(wxSQLite3Exception &e)
 	{

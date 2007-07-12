@@ -366,21 +366,6 @@ void ContextCpp::CompleteWord()
 
 	if(word.IsEmpty())
 		return;
-
-	/*
-	TagsManagerST::Get()->GetTags(word, scopeName, tags, PartialMatch, scope);
-
-	/// Convert the vector to a string delimited
-	wxString list;
-	size_t i=0;
-	if( tags.empty() == false )
-	{
-		for(; i<tags.size()-1; i++)
-			list.Append(tags[i].GetName() + GetImageString(tags[i]) + wxT("@"));
-		list.Append(tags[i].GetName() + GetImageString(tags[i]));
-		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
-	}
-	*/
 }
 
 void ContextCpp::DisplayCompletionBox(const std::vector<TagEntry> &tags, const wxString &word)
