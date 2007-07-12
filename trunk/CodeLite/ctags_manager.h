@@ -183,7 +183,7 @@ public:
 	 * \param name name to search
 	 * \param tags [output] result vector
 	 */
-	void FindSymbol(const wxString& name, std::vector<TagEntry> &tags);
+	void FindSymbol(const wxString& name, std::vector<TagEntryPtr> &tags);
 
 	/**
 	 * ParseTagsFile CTAGS file and construct a TagTree. 
@@ -326,14 +326,14 @@ public:
 	 * \param tags [output] a vector of the results tags
 	 * \return true on success false otherwise
 	 */
-	void FindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags);
+	void FindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags);
 
 	/**
 	 * Get tags related to a scope.
 	 * \param scope scope to search for members
 	 * \param tags [output] vector of tags
 	 */
-	void TagsByScope(const wxString& scope, std::vector<TagEntry> &tags);
+	void TagsByScope(const wxString& scope, std::vector<TagEntryPtr> &tags);
 
 	/**
 	 * Return autocompletion candidates based on parsing an expression and retrieving its member from the database.
@@ -342,7 +342,7 @@ public:
 	 * \param candidates [output] list of TagEntries that can be displayed in Autucompletion box
 	 * \return true if candidates.size() is greater than 0
 	 */
-	bool AutoCompleteCandidates(const wxString& expr, const wxString& text, std::vector<TagEntry> &candidates);
+	bool AutoCompleteCandidates(const wxString& expr, const wxString& text, std::vector<TagEntryPtr> &candidates);
 
 	/**
 	 * Delete all tags related to project
@@ -483,9 +483,9 @@ private:
 
 
 protected:
-	void DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags);
-	void DoExecuteQueury(const wxString &sql, std::vector<TagEntry> &tags);
-	void RemoveDuplicates(std::vector<TagEntry>& src, std::vector<TagEntry>& target);
+	void DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags);
+	void DoExecuteQueury(const wxString &sql, std::vector<TagEntryPtr> &tags);
+	void RemoveDuplicates(std::vector<TagEntryPtr>& src, std::vector<TagEntryPtr>& target);
 };
 
 /// create the singleton typedef

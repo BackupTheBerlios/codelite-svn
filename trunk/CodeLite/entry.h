@@ -6,6 +6,7 @@
 #include "readtags.h"
 #include <wx/string.h>
 #include <map>
+#include "smart_ptr.h"
 
 #ifdef WXMAKINGDLL_CODELITE
 #    define WXDLLIMPEXP_CL WXEXPORT
@@ -263,4 +264,5 @@ private:
 	void UpdatePath(wxString & path);
 };
 
+typedef SmartPtr<TagEntry> TagEntryPtr;
 #endif // CODELITE_ENTRY_H

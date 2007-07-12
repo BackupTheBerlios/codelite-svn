@@ -13,23 +13,23 @@ SymbolsDialog::SymbolsDialog( wxWindow* parent )
 	m_results->InsertColumn(3, wxT("Line"));
 }
 
-void SymbolsDialog::AddSymbol(const TagEntry &tag, bool sel)
+void SymbolsDialog::AddSymbol(const TagEntryPtr &tag, bool sel)
 {
 	wxListItem info;
 	wxString line;
-	line << tag.GetLine();
+	line << tag->GetLine();
 
 	//-------------------------------------------------------
 	// Populate the columns
 	//-------------------------------------------------------
 
 	// Set the item display name
-	info.SetText(tag.GetFullDisplayName());
+	info.SetText(tag->GetFullDisplayName());
 	info.SetColumn(0);
 	if(sel == true){
 		info.SetState(wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
-		m_file = tag.GetFile();
-		m_line = tag.GetLine();
+		m_file = tag->GetFile();
+		m_line = tag->GetLine();
 	}
 	
 	long item = m_results->InsertItem(info);
@@ -37,14 +37,14 @@ void SymbolsDialog::AddSymbol(const TagEntry &tag, bool sel)
 	// Set the item kind
 	info.SetColumn(1);
 	info.SetId(item);
-	info.SetText(tag.GetKind());
+	info.SetText(tag->GetKind());
 	info.SetState(0);
 	m_results->SetItem(info); 
 	
 	// Set the file name
 	info.SetColumn(2);
 	info.SetId(item);
-	info.SetText(tag.GetFile());
+	info.SetText(tag->GetFile());
 	info.SetState(0);
 	m_results->SetItem(info); 
 
@@ -56,7 +56,7 @@ void SymbolsDialog::AddSymbol(const TagEntry &tag, bool sel)
 	m_results->SetItem(info); 
 }
 
-void SymbolsDialog::AddSymbols(const std::vector<TagEntry> &tags, size_t sel)
+void SymbolsDialog::AddSymbols(const std::vector<TagEntryPtr> &tags, size_t sel)
 {
 	for(size_t i=0; i<tags.size(); i++){ AddSymbol(tags[i], sel == i); }
 	m_results->SetColumnWidth(0, wxLIST_AUTOSIZE);

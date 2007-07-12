@@ -30,18 +30,18 @@
 // Descending sorting function
 struct SDescendingSort
 {
-	bool operator()(const TagEntry &rStart, const TagEntry &rEnd)
+	bool operator()(const TagEntryPtr &rStart, const TagEntryPtr &rEnd)
 	{
-		return rStart.GetName().CompareTo(rEnd.GetName()) > 0;
+		return rStart->GetName().CompareTo(rEnd->GetName()) > 0;
 	}
 };
 
 /// Ascending sorting function
 struct SAscendingSort
 {
-	bool operator()(const TagEntry &rStart, const TagEntry &rEnd)
+	bool operator()(const TagEntryPtr &rStart, const TagEntryPtr &rEnd)
 	{
-		return rEnd.GetName().CompareTo(rStart.GetName()) > 0;
+		return rEnd->GetName().CompareTo(rStart->GetName()) > 0;
 	}
 };
 
@@ -599,7 +599,7 @@ bool TagsManager::FunctionByLine(const int lineNo, const wxString& fileName, con
 	return true;
 }
 
-void TagsManager::TagsByScope(const wxString& scope, std::vector<TagEntry> &tags)
+void TagsManager::TagsByScope(const wxString& scope, std::vector<TagEntryPtr> &tags)
 {
 	wxString sql;
 	std::vector<wxString> derivationList;
@@ -719,7 +719,7 @@ bool TagsManager::GetClassTagByName(const wxString& name, TagEntry &tag)
 	return false;
 }
 
-bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& text, std::vector<TagEntry>& candidates)
+bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& text, std::vector<TagEntryPtr>& candidates)
 {
 	candidates.clear();
 	wxString path;
@@ -740,7 +740,7 @@ bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& t
 		scope << typeScope << wxT("::") << typeName;
 
 	//this function will retrieve the ineherited tags as well
-	std::vector<TagEntry> tmpCandidates;
+	std::vector<TagEntryPtr> tmpCandidates;
 	PRINT_START_MESSAGE(wxT("TagsByScope started..."));
 	TagsByScope(scope, tmpCandidates);
 	PRINT_END_MESSAGE(wxT("TagsByScope ended"));
@@ -748,14 +748,14 @@ bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& t
 	return candidates.empty() == false;
 }
 
-void TagsManager::RemoveDuplicates(std::vector<TagEntry>& src, std::vector<TagEntry>& target)
+void TagsManager::RemoveDuplicates(std::vector<TagEntryPtr>& src, std::vector<TagEntryPtr>& target)
 {
 	for(size_t i=0; i<src.size(); i++)
 	{
 		if(i == 0){
 			target.push_back(src.at(0));
 		}else{
-			if(src.at(i).GetName() != target.at(target.size()-1).GetName()){
+			if(src.at(i)->GetName() != target.at(target.size()-1)->GetName()){
 				target.push_back(src.at(i));
 			}
 		}
@@ -783,7 +783,7 @@ clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString & 
 // <<<<<<<<<<<<<<<<<<< Code Completion API END
 //-----------------------------------------------------------------------------
 
-void TagsManager::FindSymbol(const wxString& name, std::vector<TagEntry> &tags)
+void TagsManager::FindSymbol(const wxString& name, std::vector<TagEntryPtr> &tags)
 {
 	wxString query;
 	query << wxT("select * from tags where name='") 
@@ -800,7 +800,7 @@ void TagsManager::FindSymbol(const wxString& name, std::vector<TagEntry> &tags)
 			// Construct a TagEntry from the rescord set
 			// if duplicate entries are allowed, add them directly to the tags output vector,
 			// else add them to tmpMap (to remove duplicate entries)
-			TagEntry tag(rs);
+			TagEntryPtr tag(new TagEntry(rs));
 			tags.push_back(tag);
 		}
 
@@ -810,14 +810,14 @@ void TagsManager::FindSymbol(const wxString& name, std::vector<TagEntry> &tags)
 			rs = m_pExternalDb->Query( query );
 			while( rs.NextRow() )
 			{
-				TagEntry tag(rs);
+				TagEntryPtr tag(new TagEntry(rs));
 				tags.push_back(tag);
 			}
 		}
 	}
 	catch(wxSQLite3Exception &e)
 	{
-		wxUnusedVar(e);
+		wxLogMessage(e.GetMessage());
 	}
 }
 
@@ -974,7 +974,7 @@ void TagsManager::StoreComments(const std::vector<DbRecordPtr> &comments, const 
 	m_pDb->Store( comments, path );
 }
 
-void TagsManager::FindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags)
+void TagsManager::FindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags)
 {
 	DoFindByNameAndScope(name, scope, tags);
 
@@ -982,7 +982,7 @@ void TagsManager::FindByNameAndScope(const wxString &name, const wxString &scope
 	std::sort(tags.begin(), tags.end(), SDescendingSort());	
 }
 
-void TagsManager::DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags)
+void TagsManager::DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags)
 {
 	wxString sql;
 	if(scope == wxT("<global>"))
@@ -1008,7 +1008,7 @@ void TagsManager::DoFindByNameAndScope(const wxString &name, const wxString &sco
 	}
 }
 
-void TagsManager::DoExecuteQueury(const wxString &sql, std::vector<TagEntry> &tags)
+void TagsManager::DoExecuteQueury(const wxString &sql, std::vector<TagEntryPtr> &tags)
 {
 	wxSQLite3ResultSet rs = m_pDb->Query(sql);
 
@@ -1018,7 +1018,7 @@ void TagsManager::DoExecuteQueury(const wxString &sql, std::vector<TagEntry> &ta
 		while( rs.NextRow() )
 		{
 			// Construct a TagEntry from the rescord set
-			TagEntry tag(rs);
+			TagEntryPtr tag(new TagEntry(rs));
 			tags.push_back(tag);
 		}
 
@@ -1031,7 +1031,7 @@ void TagsManager::DoExecuteQueury(const wxString &sql, std::vector<TagEntry> &ta
 			while( ex_rs.NextRow() )
 			{		
 				// Construct a TagEntry from the rescord set
-				TagEntry tag(ex_rs);
+				TagEntryPtr tag(new TagEntry(ex_rs));
 				tags.push_back(tag);
 			}
 		}

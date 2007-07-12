@@ -325,7 +325,7 @@ void ContextCpp::CodeComplete()
 	}
 
 	wxString expr = rCtrl.GetTextRange(start, pos);
-	std::vector<TagEntry> candidates;
+	std::vector<TagEntryPtr> candidates;
 	if( showFuncProto )
 	{
 		//display function tooltip 
@@ -368,7 +368,7 @@ void ContextCpp::CompleteWord()
 		return;
 }
 
-void ContextCpp::DisplayCompletionBox(const std::vector<TagEntry> &tags, const wxString &word)
+void ContextCpp::DisplayCompletionBox(const std::vector<TagEntryPtr> &tags, const wxString &word)
 {
 	LEditor &rCtrl = GetCtrl();
 	wxString list;
@@ -376,8 +376,8 @@ void ContextCpp::DisplayCompletionBox(const std::vector<TagEntry> &tags, const w
 	if( tags.empty() == false )
 	{
 		for(; i<tags.size()-1; i++)
-			list.Append(tags[i].GetName() + GetImageString(tags[i]) + wxT("@"));
-		list.Append(tags[i].GetName() + GetImageString(tags[i]));
+			list.Append(tags[i]->GetName() + GetImageString(*tags[i]) + wxT("@"));
+		list.Append(tags[i]->GetName() + GetImageString(*tags[i]));
 		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
 	}
 }
@@ -402,7 +402,7 @@ void ContextCpp::GotoPreviousDefintion()
 void ContextCpp::GotoDefinition()
 {
 	LEditor &rCtrl = GetCtrl();
-	std::vector<TagEntry> tags;
+	std::vector<TagEntryPtr> tags;
 
 	//	Make sure we are not on a comment section
 	if(IsCommentOrString(rCtrl.GetCurrentPos()))
@@ -444,8 +444,8 @@ void ContextCpp::GotoDefinition()
 	if(tags.size() == 1)
 	{
 		// Just open the file and set the cursor on the match we found
-		wxString projectName = ManagerST::Get()->GetProjectNameByFile(tags[0].GetFile());
-		ManagerST::Get()->OpenFile(tags[0].GetFile(), projectName, tags[0].GetLine()-1);
+		wxString projectName = ManagerST::Get()->GetProjectNameByFile(tags[0]->GetFile());
+		ManagerST::Get()->OpenFile(tags[0]->GetFile(), projectName, tags[0]->GetLine()-1);
 	}
 	else
 	{

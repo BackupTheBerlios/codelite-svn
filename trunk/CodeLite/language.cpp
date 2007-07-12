@@ -958,27 +958,27 @@ bool Language::TypeFromName(const wxString &name,
 	FunctionList fooList;
 
 	//first we try to match the current scope
-	std::vector<TagEntry> tags;
+	std::vector<TagEntryPtr> tags;
 	TagsManagerST::Get()->FindByNameAndScope(name, scopeName, tags);
 	if(tags.size() == 1)
 	{
-		TagEntry tag(tags.at(0));
+		TagEntryPtr tag(tags.at(0));
 		//we have a single match!
-		if(tag.GetKind() == wxT("function") || tag.GetKind() == wxT("prototype"))
+		if(tag->GetKind() == wxT("function") || tag->GetKind() == wxT("prototype"))
 		{
 			Function foo;
-			if(FunctionFromPattern(tag.GetPattern(), foo))
+			if(FunctionFromPattern(tag->GetPattern(), foo))
 			{
 				type = _U(foo.m_returnValue.m_type.c_str());
 				typeScope = foo.m_returnValue.m_typeScope.empty() ? wxT("<global>") : _U(foo.m_returnValue.m_typeScope.c_str());
 				return true;
-			} // if(FunctionFromPattern(tag.GetPattern(), foo))
+			} // if(FunctionFromPattern(tag->GetPattern(), foo))
 			return false;
-		} // if(tag.GetKind() == wxT("function") || tag.GetKind() == wxT("prototype")) 
-		else if(tag.GetKind() == wxT("member") || tag.GetKind() == wxT("variable"))
+		} // if(tag->GetKind() == wxT("function") || tag->GetKind() == wxT("prototype")) 
+		else if(tag->GetKind() == wxT("member") || tag->GetKind() == wxT("variable"))
 		{
 			Variable var;
-			if(VariableFromPattern(tag.GetPattern(), var))
+			if(VariableFromPattern(tag->GetPattern(), var))
 			{
 				type = _U(var.m_type.c_str());
 				typeScope = var.m_typeScope.empty() ? wxT("<global>") : _U(var.m_typeScope.c_str());
@@ -988,8 +988,8 @@ bool Language::TypeFromName(const wxString &name,
 		}
 		else
 		{
-			type = tag.GetName();
-			typeScope = tag.GetScopeName();
+			type = tag->GetName();
+			typeScope = tag->GetScopeName();
 		}
 		return true;
 	} // if(tags.size() == 1)
@@ -1003,8 +1003,8 @@ bool Language::TypeFromName(const wxString &name,
 		bool allthesame(true);
 		for(size_t i=0; i<tags.size(); i++)
 		{
-			TagEntry tag(tags.at(i));
-			if(!FunctionFromPattern(tag.GetPattern(), foo))
+			TagEntryPtr tag(tags.at(i));
+			if(!FunctionFromPattern(tag->GetPattern(), foo))
 			{
 				allthesame = false;
 				break;

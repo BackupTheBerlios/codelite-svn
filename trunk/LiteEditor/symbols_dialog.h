@@ -28,7 +28,7 @@ public:
 	 * \param tag tag to add
 	 * \param sel when set to true, this item will be selected
 	 */
-	void AddSymbol(const TagEntry &tag, bool sel); 
+	void AddSymbol(const TagEntryPtr &tag, bool sel); 
 
 	/**
 	 * A wrapper around the AddSymbol methos that allows
@@ -36,7 +36,7 @@ public:
 	 * \param tags 
 	 * \param sel zero based index to select
 	 */
-	void AddSymbols(const std::vector<TagEntry> &tags, size_t sel);
+	void AddSymbols(const std::vector<TagEntryPtr> &tags, size_t sel);
 
 
 	//---------------------------------------------
