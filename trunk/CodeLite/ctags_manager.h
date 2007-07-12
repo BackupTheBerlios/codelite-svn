@@ -156,9 +156,7 @@ class WXDLLIMPEXP_CL TagsManager : public wxEvtHandler
 	clProcess* m_localCtags;
 	std::map<int, wxString> m_ctagsCmd;
 	
-#ifdef USE_TRACE
 	wxStopWatch m_watch;
-#endif
 	bool m_parseComments;
 	CtagsOptions m_options;
 	std::map<int, clProcess*> m_processes;
@@ -487,6 +485,7 @@ private:
 protected:
 	void DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntry> &tags);
 	void DoExecuteQueury(const wxString &sql, std::vector<TagEntry> &tags);
+	void RemoveDuplicates(std::vector<TagEntry>& src, std::vector<TagEntry>& target);
 };
 
 /// create the singleton typedef

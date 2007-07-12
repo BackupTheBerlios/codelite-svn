@@ -11,9 +11,21 @@
 #include <wx/wfstream.h>
 #include <wx/txtstrm.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
+
+#define PRINT_START_MESSAGE(msg)\
+	{\
+		m_watch = wxStopWatch();\
+		wxString logmsg;\
+		logmsg << msg;\
+		wxLogMessage(logmsg);\
+	}
+
+#define PRINT_END_MESSAGE(msg)\
+	{\
+		wxString logmsg;\
+		logmsg << msg << wxT(" Time elapsed: ") << m_watch.Time();\
+		wxLogMessage(logmsg);\
+	}
 
 // Descending sorting function
 struct SDescendingSort
@@ -595,17 +607,26 @@ void TagsManager::TagsByScope(const wxString& scope, std::vector<TagEntry> &tags
 	derivationList.push_back(scope);
 	GetDerivationList(scope, derivationList);
 
+	//make enough room for max of 500 elements in the vector
+	tags.reserve(500);
+
 	for(size_t i=0; i<derivationList.size(); i++)
 	{
+		PRINT_START_MESSAGE(wxT("TagsByScope::Iterating"));
 		sql.Empty();
 		wxString tmpScope(derivationList.at(i));
 		tmpScope.Replace(wxT("_"), wxT("^_"));
 		tmpScope << wxT("::");
 		sql << wxT("select * from tags where path like '") << tmpScope << wxT("%%' ESCAPE '^'");
 		DoExecuteQueury(sql, tags);
+		PRINT_END_MESSAGE(wxT("TagsByScope::Iterating ended"));
 	} // for(size_t i=0; i<derivationList.size(); i++)
 	// and finally sort the results
+
+	PRINT_START_MESSAGE(wxT("TagsByScope::Sorting"));
 	std::sort(tags.begin(), tags.end(), SAscendingSort());
+	PRINT_END_MESSAGE(wxT("TagsByScope::Sorting ended"));
+
 }
 
 void TagsManager::GetTagsBySQL(const wxString& sql, std::vector<TagEntry> &tags, const wxString &kindToFilter, const wxString& excludePrefix)
@@ -703,25 +724,42 @@ bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& t
 	candidates.clear();
 	wxString path;
 	wxString typeName, typeScope;
+	
+	PRINT_START_MESSAGE(wxT("ProcessExpression started..."));
 	bool res = LanguageST::Get()->ProcessExpression(expr, text, typeName, typeScope);
 	if(!res){
 		return false;
 	}
 
+	PRINT_END_MESSAGE(wxT("Done"));
 	//load all tags from the database that matches typeName & typeScope
 	wxString scope;
 	if(typeScope == wxT("<global>"))
-	{
 		scope << typeName;
-	}
 	else
-	{
 		scope << typeScope << wxT("::") << typeName;
-	}
 
 	//this function will retrieve the ineherited tags as well
-	TagsByScope(scope, candidates);
+	std::vector<TagEntry> tmpCandidates;
+	PRINT_START_MESSAGE(wxT("TagsByScope started..."));
+	TagsByScope(scope, tmpCandidates);
+	PRINT_END_MESSAGE(wxT("TagsByScope ended"));
+	RemoveDuplicates(tmpCandidates, candidates);
 	return candidates.empty() == false;
+}
+
+void TagsManager::RemoveDuplicates(std::vector<TagEntry>& src, std::vector<TagEntry>& target)
+{
+	for(size_t i=0; i<src.size(); i++)
+	{
+		if(i == 0){
+			target.push_back(src.at(0));
+		}else{
+			if(src.at(i).GetName() != target.at(target.size()-1).GetName()){
+				target.push_back(src.at(i));
+			}
+		}
+	}
 }
 
 void TagsManager::GetHoverTip(const wxString & token, const wxString & scope, const wxString & scopeName, bool isFunc, std::vector<wxString> &tips)

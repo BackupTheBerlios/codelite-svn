@@ -98,6 +98,9 @@ void TagsDatabase::CreateSchema()
 		sql = _T("CREATE INDEX IF NOT EXISTS TAGS_NAME on tags(name);");
 		m_db->ExecuteUpdate(sql);
 
+		sql = _T("CREATE INDEX IF NOT EXISTS TAGS_PATH on tags(path);");
+		m_db->ExecuteUpdate(sql);
+
 		sql = _T("CREATE INDEX IF NOT EXISTS TAGS_PARENT on tags(parent);");
 		m_db->ExecuteUpdate(sql);
 
@@ -379,7 +382,9 @@ void TagsDatabase::LoadToMemory(const wxFileName& fn)
 		while( rs.NextRow() )
 		{
 			sql = rs.GetString(0);
-			m_db->ExecuteUpdate( sql );
+			if(sql.Find(wxT("sqlite_sequence")) == wxNOT_FOUND){
+				m_db->ExecuteUpdate( sql );
+			}
 		}
 		budb->Commit();
 		budb->Close();
@@ -391,13 +396,13 @@ void TagsDatabase::LoadToMemory(const wxFileName& fn)
 		m_db->ExecuteUpdate(sql);
 
 		m_db->Begin();
-		sql = _T("insert into tags select project, name, file, line, kind, access, signature, pattern, parent, inherits, path, typeref FROM backup.tags");
+		sql = wxT("insert into tags select id, parentid, name, file, line, kind, access, signature, pattern, parent, inherits, path, typeref FROM backup.tags");
 		m_db->ExecuteUpdate(sql);
 		m_db->Commit();
 	}
 	catch(wxSQLite3Exception& e)
 	{
-		wxUnusedVar(e);
+		wxLogMessage(e.GetMessage());
 	}
 }
 
