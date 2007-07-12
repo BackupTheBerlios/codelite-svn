@@ -655,7 +655,7 @@ void Manager::ShowWorkspacePane(wxString focusWin){
 void Manager::HideOutputPane()
 {
 	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Output"));
-	if( info.IsOk() ){
+	if( info.IsOk() && info.IsShown()){
 		info.Hide();
 		Frame::Get()->GetDockingManager().Update();
 	}
@@ -664,7 +664,7 @@ void Manager::HideOutputPane()
 void Manager::HideWorkspacePane()
 {
 	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Workspace"));
-	if( info.IsOk() ){
+	if( info.IsOk() && info.IsShown()){
 		info.Hide();
 		Frame::Get()->GetDockingManager().Update();
 	}	
@@ -981,8 +981,11 @@ void Manager::SetWorkspaceConfigurationName(const wxString &name)
 void Manager::ShowMainToolbar(bool show)
 {
 	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Standard Toolbar"));
-	if( info.IsOk() ){
-		show ? info.Show() : info.Hide();
+	if(info.IsOk() && show && !info.IsShown()){
+		info.Show();
+		Frame::Get()->GetDockingManager().Update();
+	}else if(info.IsOk() && !show && info.IsShown()){
+		info.Hide();
 		Frame::Get()->GetDockingManager().Update();
 	}
 }
