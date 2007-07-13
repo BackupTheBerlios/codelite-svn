@@ -402,7 +402,7 @@ void ContextCpp::DisplayCompletionBox(const std::vector<TagEntryPtr> &tags, cons
 		rCtrl.AutoCompSetAutoHide(false);
 		rCtrl.AutoCompSetIgnoreCase(true);
 		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
-		rCtrl.AutoCompSetFillUps(wxT(":( .-"));
+		rCtrl.AutoCompSetFillUps(wxT("("));
 	}
 }
 

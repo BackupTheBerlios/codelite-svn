@@ -5,7 +5,6 @@
 #include "cpp_scanner.h"
 #include "y.tab.h"
 #include "singleton.h"
-#include <map>
 #include "entry.h"
 #include <wx/filename.h>
 #include "db_record.h"
@@ -39,13 +38,6 @@ class WXDLLIMPEXP_CL Language
 
 public: 
 	/**
-	 * Test if word is a language reserved word.
-	 * \param word Language token
-	 * \return true if it is a reserved word
-	 */
-	virtual bool IsReservedWord(const wxString &word);
-
-	/**
 	 * Return the visible scope of syntax starting at depth zero.
 	 * 
 	 * For example, given the following pchSrcString:
@@ -73,15 +65,6 @@ public:
 	 * \return visible scope 
 	 */
 	wxString GetScope(const wxString& srcString, const wxString& stopWord);
-	
-	/**
-	 * Get the variable qualifier from a given string.
-	 * \param identifier Identifier
-	 * \param srcString Input string
-	 * \param bVarIsFunc Variable is a function
-	 * \return qualifier
-	 */
-	wxString GetVarQualifier(const wxString& identifier, const wxString& srcString, const bool& bVarIsFunc = false);
 
 	/**
 	 * Match closing braces, and return the string in between them. The returned string does not include 
@@ -119,7 +102,6 @@ public:
 	//==========================================================
 	// New API based on the yacc grammar files
 	//==========================================================
-
 
 	/**
 	 * Evaluate a C++ expression. for example, the following expression: '((wxFlatNotebook*)book)->'
@@ -199,32 +181,14 @@ private:
 	 */
 	bool NextToken(wxString &token, wxString &delim, wxString &srcStr);
 
-	/**
-	 * Test whether the qualifier string contains pointer character ('*')
-	 * \param qualifier qualifier string
-	 * \return true if it contains trailing '*' else false
-	 */
-	bool IsPointer(const wxString &qualifier);
-
-	// helper methods
-	wxString Qualifier(const TagEntry& tag, bool & isPtr, bool truncateTemplate = true, wxString *fullQualifier = NULL);
-	
-	/// Return tip string from tag
-	wxString GetStringTip(TagEntry& tag);
-
 	bool VariableFromPattern(const wxString &pattern, Variable &var);
 	bool FunctionFromPattern(const wxString &pattern, Function &foo);
+
 private:
-	
-	std::map<wxString, int> m_operatorMap;
-	std::map<wxString, int> m_reservedWords;
 	std::map<char, char>    m_braces;
 	std::vector<wxString>	m_delimArr;
 	wxString m_expression;
 	CppScannerPtr m_scanner;
-#ifdef USE_TRACE
-	wxStopWatch m_watch;
-#endif
 };
 
 typedef Singleton<Language> LanguageST;

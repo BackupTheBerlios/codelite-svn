@@ -924,6 +924,8 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 	
 	int maxVal = static_cast<int>(traverser.GetFiles().size());
 	int i = 0;
+
+	std::list<TagTreePtr> trees;
 	for(i=0; i<maxVal; i++)
 	{
 		// Parse all source file, and concatenate them into one big string
@@ -933,16 +935,35 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 		// update the progress bar
 		if( prgDlg ){
 			wxString msg;
-			msg << wxT("File:\n") << curFile.GetFullPath();
+			msg << wxT("Parsing file:\n") << curFile.GetFullPath();
 			prgDlg->Update(i, msg);
 		}
 
+		tags.Clear();
 		SourceToTags(curFile, tags, m_ctags);
 		TagTreePtr tree = TreeFromTags(tags);
-		
-		TagsDatabase db;
-		db.Store(tree, dbName, true);
+		trees.push_back(tree);
+	} // for(i=0; i<maxVal; i++)
+
+
+	if( prgDlg ){
+		prgDlg->Update(maxVal, wxT("Saving symbols to database..."));
 	}
+
+	TagsDatabase db;
+	unsigned int cur = 1;
+	for(std::list<TagTreePtr>::iterator iter = trees.begin(); iter != trees.end(); iter++)
+	{
+		if(prgDlg){
+			wxString msg;
+			msg << wxT("Saving file status: ") << cur << wxT("/") << (unsigned int)trees.size();
+			prgDlg->Update(maxVal, msg);
+		}
+		db.Store((*iter), dbName, true);
+		cur++;
+	} // for(std::list<TagTreePtr>::iterator iter = trees.begin(); iter != trees.end(); iter++)
+	if(prgDlg)
+		prgDlg->Destroy();
 }
 
 void TagsManager::OpenExternalDatabase(const wxFileName &dbName)

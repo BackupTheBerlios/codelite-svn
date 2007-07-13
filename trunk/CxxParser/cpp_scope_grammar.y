@@ -359,7 +359,7 @@ void consumeFuncArgList()
 	while(depth > 0)
 	{
 		int ch = cl_scope_lex();
-		if(ch == EOF)
+		if(ch == 0)
 		{
 			break;
 		}
