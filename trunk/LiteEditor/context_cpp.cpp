@@ -399,7 +399,10 @@ void ContextCpp::DisplayCompletionBox(const std::vector<TagEntryPtr> &tags, cons
 		for(; i<tags.size()-1; i++)
 			list.Append(tags[i]->GetName() + GetImageString(*tags[i]) + wxT("@"));
 		list.Append(tags[i]->GetName() + GetImageString(*tags[i]));
+		rCtrl.AutoCompSetAutoHide(false);
+		rCtrl.AutoCompSetIgnoreCase(true);
 		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
+		rCtrl.AutoCompSetFillUps(wxT(":( .-"));
 	}
 }
 
