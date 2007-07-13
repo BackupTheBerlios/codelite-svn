@@ -155,6 +155,8 @@ public:
 	void SetTreeItemId(wxTreeItemId& hti) { m_hti = hti; }
 
 	wxString GetAccess() const { return GetExtField(_T("access"));}
+	void SetAccess(const wxString &access){m_extFields[wxT("access")] = access;}
+
 	wxString GetSignature() const { return GetExtField(_T("signature")); }
 	wxString GetInherits() const { return GetExtField(_T("inherits")); }
 	wxString GetTyperef() const { return GetExtField(_T("typeref")); }

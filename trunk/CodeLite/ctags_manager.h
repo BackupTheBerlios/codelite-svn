@@ -303,22 +303,6 @@ public:
 	 */
 	bool FunctionByLine(const int lineNo, const wxString& fileName, const wxString& project, TagEntry& tag);
 
-	/**
-	 * Get vector of tags from database by name (or part of it) and scope name.
-	 * this function is mainly used to get list of possibilities for populating the auto completion box
-	 * when user press ctrl+space
-	 * \note Scope name does not include the project name in it.
-	 * \param name Word name (or part of it)
-	 * \param scopeName Scope name to search in
-	 * \param tags [output] resulted tags
-	 * \param scope Add an additional scope to search for, the results from this scope will be added to the 
-	 * results from the database will be converted into TagEntry of kind member with public access
-	 * \param allowDups Allow duplicates in the array of tags. In some cases, such as the code browsing, duplicate tags
-	 * are important, while in cases like auto-completion or word-completion, it is preferred not to have duplicate tags
-	 * default is set to false
-	 */
-	void GetTags(const wxString& name, const wxString& scopeName, std::vector<TagEntry>& tags, int flags = PartialMatch, const wxString& scope = wxEmptyString, bool allowDups = false);
-
 	/** 
 	 * Find symbols by name and scope. 
 	 * \param name symbol name
@@ -336,6 +320,14 @@ public:
 	void TagsByScope(const wxString& scope, std::vector<TagEntryPtr> &tags);
 
 	/**
+	 *	Get tags related to a scope and name (name can be partial name
+	 * \param scope scope to search for members
+	 * \param name partial tag name 
+	 * \param tags [output] vector of tags
+	 */
+	void TagsByScopeAndName(const wxString& scope, const wxString &name, std::vector<TagEntryPtr> &tags);
+
+	/**
 	 * Return autocompletion candidates based on parsing an expression and retrieving its member from the database.
 	 * \param expr Expression to evaluate, can be complex one, such as ((MyClass&)cls).GetName().GetData() ... )
 	 * \param text Scope where the expression is located
@@ -343,6 +335,16 @@ public:
 	 * \return true if candidates.size() is greater than 0
 	 */
 	bool AutoCompleteCandidates(const wxString& expr, const wxString& text, std::vector<TagEntryPtr> &candidates);
+
+	/**
+	 * Return a word completion candidates. this function is used when user hit Ctrl+Space.
+	 * \param expr Expression to evaluate, can be complex one, such as ((MyClass&)cls).GetName().GetData() ... )
+	 * \param text Scope where the expression is located
+	 * \param &word the partial word entered by user
+	 * \param &candidates [output] list of TagEntries that can be displayed in Autucompletion box
+	 * \return true if candidates.size() is greater than 0
+	 */
+	bool WordCompletionCandidates(const wxString& expr, const wxString& text, const wxString &word, std::vector<TagEntryPtr> &candidates);
 
 	/**
 	 * Delete all tags related to project
@@ -375,14 +377,6 @@ public:
 	 * \param excludePrefix if a tag name is starting with this prefix, it will excluded
 	 */
 	void GetTagsBySQL(const wxString& sql, std::vector<TagEntry> &tags, const wxString &kindToFilter = wxEmptyString, const wxString &excludePrefix = wxEmptyString);
-
-	/**
-	 * Get tag by name, if more than one tag exist, return the first one
-	 * \param name tag name
-	 * \param &tag [output] tag
-	 * \return true if match was found, else false
-	 */
-	bool GetClassTagByName(const wxString& name, TagEntry &tag);
 
 	/**
 	 * Get a hover tip. This function is a wrapper around the Language::GetHoverTip.
@@ -486,6 +480,8 @@ protected:
 	void DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags);
 	void DoExecuteQueury(const wxString &sql, std::vector<TagEntryPtr> &tags);
 	void RemoveDuplicates(std::vector<TagEntryPtr>& src, std::vector<TagEntryPtr>& target);
+	void GetGlobalTags(const wxString &name, std::vector<TagEntryPtr> &tags);
+	void GetLocalTags(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags);
 };
 
 /// create the singleton typedef

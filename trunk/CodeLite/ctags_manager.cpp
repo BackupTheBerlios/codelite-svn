@@ -599,6 +599,38 @@ bool TagsManager::FunctionByLine(const int lineNo, const wxString& fileName, con
 	return true;
 }
 
+void TagsManager::TagsByScopeAndName(const wxString& scope, const wxString &name, std::vector<TagEntryPtr> &tags)
+{
+	wxString sql;
+	std::vector<wxString> derivationList;
+	//add this scope as well to the derivation list
+	derivationList.push_back(scope);
+	GetDerivationList(scope, derivationList);
+
+	//make enough room for max of 500 elements in the vector
+	tags.reserve(500);
+	wxString tmpName(name);
+
+	for(size_t i=0; i<derivationList.size(); i++)
+	{
+		PRINT_START_MESSAGE(wxT("TagsByScopeAndName::Iterating"));
+		sql.Empty();
+		wxString tmpScope(derivationList.at(i));
+		tmpScope.Replace(wxT("_"), wxT("^_"));
+		tmpName.Replace(wxT("_"), wxT("^_"));
+
+		tmpScope << wxT("::");
+		sql << wxT("select * from tags where path like '") << tmpScope << wxT("%%' and name like '") << tmpName << wxT("%%' ESCAPE '^'");
+		DoExecuteQueury(sql, tags);
+		PRINT_END_MESSAGE(wxT("TagsByScopeAndName::Iterating ended"));
+	} // for(size_t i=0; i<derivationList.size(); i++)
+	// and finally sort the results
+
+	PRINT_START_MESSAGE(wxT("TagsByScopeAndName::Sorting"));
+	std::sort(tags.begin(), tags.end(), SAscendingSort());
+	PRINT_END_MESSAGE(wxT("TagsByScopeAndName::Sorting ended"));
+}
+
 void TagsManager::TagsByScope(const wxString& scope, std::vector<TagEntryPtr> &tags)
 {
 	wxString sql;
@@ -678,45 +710,51 @@ void TagsManager::GetTagsBySQL(const wxString& sql, std::vector<TagEntry> &tags,
 	}
 }
 
-bool TagsManager::GetClassTagByName(const wxString& name, TagEntry &tag)
+bool TagsManager::WordCompletionCandidates(const wxString& expr, const wxString& text, const wxString &word, std::vector<TagEntryPtr> &candidates)
 {
-	// Note that in this function we are assuming that the first match is our 
-	// tag, if we have more, then we should have return false
+	candidates.clear();
+	wxString path;
+	wxString typeName, typeScope;
 
-	// Get our parent tags
-	wxString sql;
-	sql << wxT("select * from tags where name='") << name << wxT("' and (kind='struct' or kind='class' or kind='union' or kind='typedef') order by name;");
+	//remove the word from the expression
+	wxString expression(expr);
+	expr.EndsWith(word, &expression);
+	
+	// Trim whitespace from right and left
+	static wxString trimString(_T("{};\r\n\t\v "));
 
-	try
-	{
-		wxSQLite3ResultSet rs = m_pDb->Query( sql );
-		if(rs.NextRow())
-		{
-			TagEntry entry(rs);
-			tag = entry;
-			return true;
+	expression.erase(0, expression.find_first_not_of(trimString)); 
+	expression.erase(expression.find_last_not_of(trimString)+1);
+	
+	wxString scope = LanguageST::Get()->GetScope(text, wxEmptyString);
+	wxString scopeName = LanguageST::Get()->GetScopeName(scope);
+	if(expression.IsEmpty()){
+		//collect all the tags from the current scope, and 
+		//from the global scope
+		std::vector<TagEntryPtr> tmpCandidates;
+		GetGlobalTags(word, tmpCandidates);
+		GetLocalTags(word, scope, tmpCandidates);
+		TagsByScope(scopeName, tmpCandidates);
+		RemoveDuplicates(tmpCandidates, candidates);
+	}else{
+		wxString typeName, typeScope;
+		bool res = LanguageST::Get()->ProcessExpression(expression, text, typeName, typeScope);
+		if(!res){
+			return false;
 		}
 
-		// if we are here, it means no match was found in the workspace
-		// database, try the external database
-		if( m_pExternalDb->IsOpen() )
-		{
-			rs = m_pExternalDb->Query( sql );
-			if(rs.NextRow())
-			{
-				TagEntry entry(rs);
-				tag = entry;
-				return true;
-			}
-		}
-	}
-	catch(wxSQLite3Exception &e)
-	{
-		wxUnusedVar(e);
-	}
+		//get all symbols realted to this scope
+		scope = wxT("");
+		if(typeScope == wxT("<global>"))
+			scope << typeName;
+		else
+			scope << typeScope << wxT("::") << typeName;
 
-
-	return false;
+		std::vector<TagEntryPtr> tmpCandidates;
+		TagsByScope(scope, tmpCandidates);
+		RemoveDuplicates(tmpCandidates, candidates);
+	}
+	return true;
 }
 
 bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& text, std::vector<TagEntryPtr>& candidates)
@@ -760,6 +798,25 @@ void TagsManager::RemoveDuplicates(std::vector<TagEntryPtr>& src, std::vector<Ta
 			}
 		}
 	}
+}
+
+void TagsManager::GetGlobalTags(const wxString &name, std::vector<TagEntryPtr> &tags)
+{
+	wxString sql, tmpName;
+	
+	//make enough room for max of 500 elements in the vector
+	tags.reserve(500);
+	tmpName = name;
+	tmpName.Replace(wxT("_"), wxT("^_"));
+	sql << wxT("select * from tags where parent='<global>' and name like '") << tmpName << wxT("%%' ESCAPE '^'");
+	DoExecuteQueury(sql, tags);
+	std::sort(tags.begin(), tags.end(), SAscendingSort());
+}
+
+void TagsManager::GetLocalTags(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags)
+{
+	//collect tags from the current scope text
+	LanguageST::Get()->GetLocalVariables(scope, tags, name);
 }
 
 void TagsManager::GetHoverTip(const wxString & token, const wxString & scope, const wxString & scopeName, bool isFunc, std::vector<wxString> &tips)

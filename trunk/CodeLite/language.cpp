@@ -1094,3 +1094,29 @@ bool Language::FunctionFromPattern(const wxString &in, Function &foo)
 	return false;
 }
 
+void Language::GetLocalVariables(const wxString &in, std::vector<TagEntryPtr> &tags, const wxString &name)
+{
+	VariableList li;
+	Variable var;
+	wxString pattern(in);
+	
+	const wxCharBuffer patbuf = _C(pattern);
+	li.clear();
+	get_variables(patbuf.data(), li);
+	VariableList::iterator iter = li.begin();
+	for(; iter != li.end(); iter++)
+	{
+		var = (*iter);
+		wxString tagName = _U(var.m_name.c_str());
+
+		//if we have name, collect only tags that matches name
+		if(!name.IsEmpty() && !tagName.StartsWith(name))
+			continue;
+
+		TagEntryPtr tag(new TagEntry());
+		tag->SetName(tagName);
+		tag->SetKind(wxT("variable"));
+		tag->SetAccess(wxT("public"));
+		tags.push_back(tag);
+	}
+}

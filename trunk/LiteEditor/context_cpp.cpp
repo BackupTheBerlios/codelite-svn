@@ -352,7 +352,7 @@ wxString ContextCpp::GetWordUnderCaret()
 void ContextCpp::CompleteWord()
 {
 	LEditor &rCtrl = GetCtrl();
-	std::vector<TagEntry> tags;
+	std::vector<TagEntryPtr> tags;
 	wxString scope;
 	wxString scopeName;
 	wxString word;
@@ -361,11 +361,32 @@ void ContextCpp::CompleteWord()
 	if(IsCommentOrString(rCtrl.GetCurrentPos()))
 		return;
 
-	// Get the local scope and the word under the cursor
+	// get the word under the cursor
 	word = GetWordUnderCaret();
 
 	if(word.IsEmpty())
 		return;
+
+	TagsManager *mgr = TagsManagerST::Get();
+
+	//get the current expression
+	int semiColPos = rCtrl.FindString(wxT(";"), 0, false, rCtrl.GetCurrentPos());
+	int lcurlyPos  = rCtrl.FindString(wxT("{"), 0, false, rCtrl.GetCurrentPos());
+	int start;
+	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
+	if(start < 0){
+		start = 0;
+	}
+
+	wxString expr = rCtrl.GetTextRange(start, rCtrl.GetCurrentPos());
+	std::vector<TagEntryPtr> candidates;
+
+	//get the full text of the current page
+	wxString text = rCtrl.GetTextRange(0, rCtrl.GetCurrentPos());
+	if(mgr->WordCompletionCandidates(expr, text, word, candidates))
+	{
+		DisplayCompletionBox(candidates, word);
+	}
 }
 
 void ContextCpp::DisplayCompletionBox(const std::vector<TagEntryPtr> &tags, const wxString &word)

@@ -168,6 +168,15 @@ public:
 						wxString &type, 
 						wxString &typeScope);
 
+	/**
+	 * Collect local variables from given scope text (in) and an optional symbol name
+	 * \param in scope to search for
+	 * \param tags output, since we dont have full information about each token, all local variables returned are of type
+	 *			   'variable' with public access
+	 * \param name optional name to look for (name can be partial).
+	 */
+	void GetLocalVariables(const wxString &in, std::vector<TagEntryPtr> &tags, const wxString &name = wxEmptyString);
+
 private:
 	/**
 	 * Private constructor
