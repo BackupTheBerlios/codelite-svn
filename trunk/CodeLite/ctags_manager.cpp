@@ -31,7 +31,7 @@ struct SDescendingSort
 {
 	bool operator()(const TagEntryPtr &rStart, const TagEntryPtr &rEnd)
 	{
-		return rStart->GetName().CompareTo(rEnd->GetName()) > 0;
+		return rStart->GetName().CmpNoCase(rEnd->GetName()) > 0;
 	}
 };
 
@@ -40,7 +40,7 @@ struct SAscendingSort
 {
 	bool operator()(const TagEntryPtr &rStart, const TagEntryPtr &rEnd)
 	{
-		return rEnd->GetName().CompareTo(rStart->GetName()) > 0;
+		return rEnd->GetName().CmpNoCase(rStart->GetName()) > 0;
 	}
 };
 
