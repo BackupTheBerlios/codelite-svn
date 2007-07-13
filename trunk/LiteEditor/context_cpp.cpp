@@ -120,9 +120,10 @@ void ContextCpp::OnDwellEnd(wxScintillaEvent &event)
 	wxUnusedVar(event);
 }
 
-void ContextCpp::OnDwellStart(wxScintillaEvent &event)
+void ContextCpp::OnDwellStart(wxScintillaEvent &event) 
 {
-	wxUnusedVar(event);
+	std::vector<wxString> tips;
+	TagsManagerST::Get()->GetHoverTip(expr, word, text, tips);
 }
 
 wxString ContextCpp::GetImageString(const TagEntry &entry)
