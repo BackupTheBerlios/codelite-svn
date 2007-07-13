@@ -11,7 +11,7 @@
 #include "singleton.h"
 #include "calltip.h"
 #include "comment.h"
-
+#include "language.h"
 
 #ifdef WXMAKINGDLL_CODELITE
 #    define WXDLLIMPEXP_CL WXEXPORT
@@ -33,12 +33,6 @@ class Language;
 
 #define TagsGlobal 0
 #define TagsLocal  1
-
-enum SearchFlags
-{
-	PartialMatch = 1,
-	ExactMatch = 2
-};
 
 /**
  * \ingroup CodeLite
@@ -293,16 +287,6 @@ public:
 	 */
 	bool IsValidCtagsFile(const wxFileName &filename) const;
 
-	/**
-	 * Return the closest functions' line number from lineNo, the search direction is UP.
-	 * \param lineNo Line number to start from
-	 * \param project Project name
-	 * \param file Source file to search in
-	 * \param tag TagEntry containing the function
-	 * \return true if function was found, else false
-	 */
-	bool FunctionByLine(const int lineNo, const wxString& fileName, const wxString& project, TagEntry& tag);
-
 	/** 
 	 * Find symbols by name and scope. 
 	 * \param name symbol name
@@ -370,23 +354,15 @@ public:
 	void OpenExternalDatabase(const wxFileName &dbName);
 
 	/**
-	 * Get Tags by user sql 
-	 * \param sql sql query
-	 * \param [output] tags 
-	 * \param kindToFilter exclude tag of this kind
-	 * \param excludePrefix if a tag name is starting with this prefix, it will excluded
-	 */
-	void GetTagsBySQL(const wxString& sql, std::vector<TagEntry> &tags, const wxString &kindToFilter = wxEmptyString, const wxString &excludePrefix = wxEmptyString);
-
-	/**
 	 * Get a hover tip. This function is a wrapper around the Language::GetHoverTip.
-	 * \param token the token under the cursor
+	 * \param expr the current expression
+	 * \param word the token under the cursor
 	 * \param scope scope where token was found
 	 * \param scopeName scope name
 	 * \param isFunc is token is a function
 	 * \param tips array of tip strings
 	 */
-	void GetHoverTip(const wxString & token, const wxString & scope, const wxString & scopeName, bool isFunc, std::vector<wxString> & tips);
+	void GetHoverTip(const wxString & expr, const wxString &word, const wxString & text, std::vector<wxString> & tips);
 
 	/**
 	 * Return a function call tip object
@@ -480,8 +456,8 @@ protected:
 	void DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags);
 	void DoExecuteQueury(const wxString &sql, std::vector<TagEntryPtr> &tags);
 	void RemoveDuplicates(std::vector<TagEntryPtr>& src, std::vector<TagEntryPtr>& target);
-	void GetGlobalTags(const wxString &name, std::vector<TagEntryPtr> &tags);
-	void GetLocalTags(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags);
+	void GetGlobalTags(const wxString &name, std::vector<TagEntryPtr> &tags, SearchFlags flags = PartialMatch);
+	void GetLocalTags(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags, SearchFlags flags = PartialMatch);
 };
 
 /// create the singleton typedef

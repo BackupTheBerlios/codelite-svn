@@ -20,6 +20,12 @@
 #    define WXDLLIMPEXP_CL
 #endif
 
+enum SearchFlags
+{
+	PartialMatch = 1,
+	ExactMatch = 2
+};
+
 /**
  * Language, a helper class that parses (currently) C/C++ code. 
  * It conatains all the parsing of small fragments of code, in places where 
@@ -86,11 +92,9 @@ public:
 	 * Get a hover tip
 	 * \param token the token under the cursor
 	 * \param scope scope where token was found
-	 * \param scopeName scope name
-	 * \param isFunc is token is a function
 	 * \param tips array of tip strings
 	 */
-	void GetHoverTip(const wxString & token, const wxString & scope, const wxString & scopeName, bool isFunc, std::vector<wxString> & tips);
+	void GetHoverTip(const wxString & token, const wxString & scope, std::vector<wxString> & tips);
 	
 	/**
 	 * Parse comments from source file
@@ -157,7 +161,7 @@ public:
 	 *			   'variable' with public access
 	 * \param name optional name to look for (name can be partial).
 	 */
-	void GetLocalVariables(const wxString &in, std::vector<TagEntryPtr> &tags, const wxString &name = wxEmptyString);
+	void GetLocalVariables(const wxString &in, std::vector<TagEntryPtr> &tags, const wxString &name = wxEmptyString, SearchFlags flag = PartialMatch);
 
 private:
 	/**

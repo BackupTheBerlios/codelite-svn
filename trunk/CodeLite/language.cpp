@@ -416,13 +416,9 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 }
 
 // return hover tip
-void Language::GetHoverTip(const wxString & token, const wxString & scope, const wxString & scopeName, bool isFunc, std::vector<wxString> & tips)
+void Language::GetHoverTip(const wxString & token, const wxString & scope, std::vector<wxString> & tips)
 {
-	wxUnusedVar(token);
-	wxUnusedVar(scope);
-	wxUnusedVar(scopeName);
-	wxUnusedVar(isFunc);
-	wxUnusedVar(tips);
+
 }
 
 void Language::ParseComments(const wxFileName &fileName, std::vector<DbRecordPtr> *comments)
@@ -673,7 +669,7 @@ bool Language::FunctionFromPattern(const wxString &in, Function &foo)
 	return false;
 }
 
-void Language::GetLocalVariables(const wxString &in, std::vector<TagEntryPtr> &tags, const wxString &name)
+void Language::GetLocalVariables(const wxString &in, std::vector<TagEntryPtr> &tags, const wxString &name, SearchFlags flags)
 {
 	VariableList li;
 	Variable var;
@@ -689,13 +685,20 @@ void Language::GetLocalVariables(const wxString &in, std::vector<TagEntryPtr> &t
 		wxString tagName = _U(var.m_name.c_str());
 
 		//if we have name, collect only tags that matches name
-		if(!name.IsEmpty() && !tagName.StartsWith(name))
+		if(name.IsEmpty())
+			continue;
+
+		if(flags == PartialMatch && !tagName.StartsWith(name))
+			continue;
+
+		if(flags == ExactMatch && tagName != name)
 			continue;
 
 		TagEntryPtr tag(new TagEntry());
 		tag->SetName(tagName);
 		tag->SetKind(wxT("variable"));
 		tag->SetAccess(wxT("public"));
+		tag->SetPattern(_U(var.m_pattern.c_str()));
 		tags.push_back(tag);
 	}
 }

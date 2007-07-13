@@ -3,7 +3,6 @@
 #include <wx/txtstrm.h>
 #include <wx/file.h>
 #include <algorithm>
-#include "language.h"
 #include <wx/progdlg.h>
 #include "dirtraverser.h"
 #include "wx/tokenzr.h"
@@ -575,30 +574,6 @@ bool TagsManager::IsValidCtagsFile(const wxFileName &filename) const
 // >>>>>>>>>>>>>>>>>>>>> Code Completion API START
 //-----------------------------------------------------------------------------
 
-bool TagsManager::FunctionByLine(const int lineNo, const wxString& fileName, const wxString& project, TagEntry& tag)
-{
-	wxString query;
-	query << wxT("select * from tags where line <=") << lineNo << wxT(" AND  project='") << project << wxT("' and file='") << fileName << wxT("' and kind='function' order by line DESC");
-
-	try	
-	{
-		wxSQLite3ResultSet rs = m_pDb->Query( query );
-
-		// Load the records and build a language tree
-		// We need the last record 
-		if( rs.NextRow() )
-			tag = TagEntry(rs);
-			 
-		rs.Finalize();
-	}
-	catch (wxSQLite3Exception& e)
-	{
-		wxUnusedVar(e);
-		return false;
-	}
-	return true;
-}
-
 void TagsManager::TagsByScopeAndName(const wxString& scope, const wxString &name, std::vector<TagEntryPtr> &tags)
 {
 	wxString sql;
@@ -659,55 +634,6 @@ void TagsManager::TagsByScope(const wxString& scope, std::vector<TagEntryPtr> &t
 	std::sort(tags.begin(), tags.end(), SAscendingSort());
 	PRINT_END_MESSAGE(wxT("TagsByScope::Sorting ended"));
 
-}
-
-void TagsManager::GetTagsBySQL(const wxString& sql, std::vector<TagEntry> &tags, const wxString &kindToFilter, const wxString& excludePrefix)
-{
-	wxSQLite3ResultSet rs = m_pDb->Query( sql );
-
-	try{
-		while( rs.NextRow() )
-		{
-			TagEntry entry( rs );
-			if(excludePrefix.IsEmpty() == false && entry.GetName().StartsWith(excludePrefix.GetData()))
-				continue;
-
-			// Do we need filter out a tag by kind?
-			if(entry.GetKind() == kindToFilter)
-				continue;
-
-			tags.push_back( entry );
-		}
-	}
-	catch(wxSQLite3Exception &e)
-	{
-		wxUnusedVar(e);
-	}
-
-	// We have an external database as well, use it
-	if( m_pExternalDb->IsOpen() )
-	{
-		try
-		{
-			rs = m_pExternalDb->Query( sql );
-			while( rs.NextRow() )
-			{
-				TagEntry entry( rs );
-				if(excludePrefix.IsEmpty() == false && entry.GetName().StartsWith(excludePrefix.GetData()))
-					continue;
-
-				// Do we need filter out a tag by kind?
-				if(entry.GetKind() == kindToFilter)
-					continue;
-
-				tags.push_back( entry );
-			}
-		}
-		catch(wxSQLite3Exception &e)
-		{
-			wxUnusedVar(e);
-		}
-	}
 }
 
 bool TagsManager::WordCompletionCandidates(const wxString& expr, const wxString& text, const wxString &word, std::vector<TagEntryPtr> &candidates)
@@ -800,28 +726,79 @@ void TagsManager::RemoveDuplicates(std::vector<TagEntryPtr>& src, std::vector<Ta
 	}
 }
 
-void TagsManager::GetGlobalTags(const wxString &name, std::vector<TagEntryPtr> &tags)
+void TagsManager::GetGlobalTags(const wxString &name, std::vector<TagEntryPtr> &tags, SearchFlags flags)
 {
 	wxString sql, tmpName;
 	
 	//make enough room for max of 500 elements in the vector
 	tags.reserve(500);
 	tmpName = name;
-	tmpName.Replace(wxT("_"), wxT("^_"));
-	sql << wxT("select * from tags where parent='<global>' and name like '") << tmpName << wxT("%%' ESCAPE '^'");
+	if(flags == PartialMatch){
+		tmpName.Replace(wxT("_"), wxT("^_"));
+		sql << wxT("select * from tags where parent='<global>' and name like '") << tmpName << wxT("%%' ESCAPE '^'");
+	}else{
+		sql << wxT("select * from tags where parent='<global>' and name ='") << tmpName << wxT("'");
+	}
 	DoExecuteQueury(sql, tags);
 	std::sort(tags.begin(), tags.end(), SAscendingSort());
 }
 
-void TagsManager::GetLocalTags(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags)
+void TagsManager::GetLocalTags(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags, SearchFlags flags)
 {
 	//collect tags from the current scope text
-	LanguageST::Get()->GetLocalVariables(scope, tags, name);
+	LanguageST::Get()->GetLocalVariables(scope, tags, name, flags);
 }
 
-void TagsManager::GetHoverTip(const wxString & token, const wxString & scope, const wxString & scopeName, bool isFunc, std::vector<wxString> &tips)
+void TagsManager::GetHoverTip(const wxString & expr, const wxString &word, const wxString & text, std::vector<wxString> & tips)
 {
-	LanguageST::Get()->GetHoverTip(token, scope, scopeName, isFunc, tips);
+	wxString path;
+	wxString typeName, typeScope;
+	std::vector<TagEntryPtr> tmpCandidates, candidates;
+
+	//remove the word from the expression
+	wxString expression(expr);
+	expr.EndsWith(word, &expression);
+	
+	// Trim whitespace from right and left
+	static wxString trimString(_T("{};\r\n\t\v "));
+
+	expression.erase(0, expression.find_first_not_of(trimString)); 
+	expression.erase(expression.find_last_not_of(trimString)+1);
+	
+	wxString scope = LanguageST::Get()->GetScope(text, wxEmptyString);
+	wxString scopeName = LanguageST::Get()->GetScopeName(scope);
+	if(expression.IsEmpty()){
+		//collect all the tags from the current scope, and 
+		//from the global scope
+		
+		GetGlobalTags(word, tmpCandidates, ExactMatch);
+		GetLocalTags(word, scope, tmpCandidates, ExactMatch);
+		TagsByScope(scopeName, tmpCandidates);
+		RemoveDuplicates(tmpCandidates, candidates);
+
+		// we now have a list of tags that matches our word
+		for(size_t i=0; i<candidates.size(); i++){
+			tips.push_back(candidates.at(i)->GetPattern());
+		}
+
+	}else{
+		wxString typeName, typeScope;
+		bool res = LanguageST::Get()->ProcessExpression(expression, text, typeName, typeScope);
+		if(!res){
+			return;
+		}
+
+		//get all symbols realted to this scope
+		scope = wxT("");
+		if(typeScope == wxT("<global>"))
+			scope << typeName;
+		else
+			scope << typeScope << wxT("::") << typeName;
+
+		std::vector<TagEntryPtr> tmpCandidates;
+		TagsByScope(scope, tmpCandidates);
+		RemoveDuplicates(tmpCandidates, candidates);
+	}
 }
 
 clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString & scope, const wxString & scopeName )
