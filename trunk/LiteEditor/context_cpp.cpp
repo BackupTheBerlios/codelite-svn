@@ -576,6 +576,7 @@ void ContextCpp::GotoDefinition()
 	BrowseRecord record;
 	record.lineno = rCtrl.LineFromPosition(rCtrl.GetCurrentPos())+1; // scintilla counts from zero, while tagentry from 1
 	record.filename = rCtrl.GetFileName().GetFullPath();
+	record.project = rCtrl.GetProject();
 
 	//if the file is part of the workspace set the project name
 	//else, open it with empty project

@@ -825,6 +825,7 @@ clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString &t
 	std::vector<TagEntryPtr> candidates;
 	wxString path;
 	wxString typeName, typeScope, tmp;
+	std::vector<wxString> tips;
 
 	// Trim whitespace from right and left
 	static wxString trimString(wxT("(){};\r\n\t\v "));
@@ -837,29 +838,39 @@ clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString &t
 	expression.EndsWith(word, &tmp);
 	expression = tmp;
 	
-	PRINT_START_MESSAGE(wxT("ProcessExpression started..."));
-	bool res = LanguageST::Get()->ProcessExpression(expression, text, typeName, typeScope);
-	if(!res){
-		return false;
+	if(expression.IsEmpty())
+	{
+		//we are probably examining a global function, or a scope function
+		PRINT_START_MESSAGE(wxT("GetFunctionTip is called for global or scoped function"));
+		wxString scopeName = LanguageST::Get()->GetScopeName(text);
+		GetGlobalTags(word, candidates, ExactMatch);
+		TagsByScopeAndName(scopeName, word, candidates);
+		GetFunctionTipFromTags(candidates, word, tips);
+	}
+	else
+	{
+		PRINT_START_MESSAGE(wxT("ProcessExpression started..."));
+		bool res = LanguageST::Get()->ProcessExpression(expression, text, typeName, typeScope);
+		if(!res){
+			return false;
+		}
+
+		PRINT_END_MESSAGE(wxT("Done"));
+		//load all tags from the database that matches typeName & typeScope
+		wxString scope;
+		if(typeScope == wxT("<global>"))
+			scope << typeName;
+		else
+			scope << typeScope << wxT("::") << typeName;
+
+		//this function will retrieve the ineherited tags as well
+		std::vector<TagEntryPtr> tmpCandidates;
+		PRINT_START_MESSAGE(wxT("TagsByScopeAndName started..."));
+		TagsByScope(scope, tmpCandidates);
+		PRINT_END_MESSAGE(wxT("TagsByScopeAndName ended"));
+		GetFunctionTipFromTags(tmpCandidates, word, tips);
 	}
 
-	PRINT_END_MESSAGE(wxT("Done"));
-	//load all tags from the database that matches typeName & typeScope
-	wxString scope;
-	if(typeScope == wxT("<global>"))
-		scope << typeName;
-	else
-		scope << typeScope << wxT("::") << typeName;
-
-	//this function will retrieve the ineherited tags as well
-	std::vector<TagEntryPtr> tmpCandidates;
-	PRINT_START_MESSAGE(wxT("TagsByScopeAndName started..."));
-	TagsByScope(scope, tmpCandidates);
-	PRINT_END_MESSAGE(wxT("TagsByScopeAndName ended"));
-
-	std::vector<wxString> tips;
-	GetFunctionTipFromTags(tmpCandidates, word, tips);
-	
 	// display call tip with function prototype
 	clCallTipPtr ct( new clCallTip(tips) );
 	return ct;

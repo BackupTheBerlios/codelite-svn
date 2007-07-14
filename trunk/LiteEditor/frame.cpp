@@ -581,7 +581,15 @@ void Frame::OnUseExternalDatabase(wxCommandEvent& WXUNUSED(event))
 	const wxString ALL(	wxT("Tags Database File (*.db)|*.db|")
 						wxT("All Files (*.*)|*.*"));
 	
-	wxFileDialog *dlg = new wxFileDialog(this, wxT("Select an external database:"), wxEmptyString, wxEmptyString, ALL, wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , wxDefaultPosition);
+	//set the default current directory to the working directory of 
+	//lite editor
+	wxFileDialog *dlg = new wxFileDialog(this, 
+										 wxT("Select an external database:"), 
+										 ManagerST::Get()->GetStarupDirectory(), 
+										 wxEmptyString, 
+										 ALL, 
+										 wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE , 
+										 wxDefaultPosition);
 
 	if (dlg->ShowModal() == wxID_OK)
 	{

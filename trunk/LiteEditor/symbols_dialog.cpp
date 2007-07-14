@@ -30,6 +30,7 @@ void SymbolsDialog::AddSymbol(const TagEntryPtr &tag, bool sel)
 		info.SetState(wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
 		m_file = tag->GetFile();
 		m_line = tag->GetLine();
+		m_project = ManagerST::Get()->GetProjectNameByFile(m_file);
 	}
 	
 	long item = m_results->InsertItem(info);
@@ -73,6 +74,8 @@ void SymbolsDialog::UpdateFileAndLine(wxListEvent &event)
 	info.m_mask = wxLIST_MASK_TEXT;
 
 	if( m_results->GetItem(info) ){
+		if(info.m_text.IsEmpty())
+			return;
 		m_file = info.m_text;
 	}
 
