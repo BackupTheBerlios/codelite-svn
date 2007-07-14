@@ -71,6 +71,7 @@ public:
 private:
 	wxString GetWordUnderCaret();
 	wxString GetImageString(const TagEntry &entry);
+	wxString GetExpression(long pos);
 };
 
 #endif // CONTEXT_CPP_H

@@ -367,11 +367,11 @@ public:
 	/**
 	 * Return a function call tip object
 	 * \param expression expression where the function was found
-	 * \param scope local scope
-	 * \param scopeName scope name
+	 * \param text local scope
+	 * \param word function name
 	 * \return call tip object
 	 */
-	clCallTipPtr GetFunctionTip(const wxString &expression, const wxString &scope, const wxString &scopeName);
+	clCallTipPtr GetFunctionTip(const wxString &expression, const wxString &text, const wxString &word);
 
 	/**
 	 * When parsing files, parse comments as well and store them into database
@@ -434,16 +434,6 @@ private:
 	TagTreePtr TreeFromTags(const wxString& tags);
 
 	/**
-	 * Filter out entries from src vector. The filter is done base on the name & flags
-	 * \param src source vector
-	 * \param name name to search (or partial name of PartialMatch is set)
-	 * \param target [output] output vector
-	 * \param flags comaprison criterion
-	 * \param tmpMap set this to non null if you wishe to have a result map without duplicate entries
-	 */
-	void FilterResults(const std::vector<TagEntry> & src, const wxString & name, std::vector<TagEntry> & target, int flags = PartialMatch, std::map<wxString, TagEntry>* tmpMap = NULL);
-
-	/**
 	 *
 	 * \param &path
 	 * \param &derivationList 
@@ -456,9 +446,11 @@ protected:
 	void DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags);
 	void DoExecuteQueury(const wxString &sql, std::vector<TagEntryPtr> &tags);
 	void RemoveDuplicates(std::vector<TagEntryPtr>& src, std::vector<TagEntryPtr>& target);
+	void RemoveDuplicatesTips(std::vector<TagEntryPtr>& src, std::vector<TagEntryPtr>& target);
 	void GetGlobalTags(const wxString &name, std::vector<TagEntryPtr> &tags, SearchFlags flags = PartialMatch);
 	void GetLocalTags(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags, SearchFlags flags = PartialMatch);
 	void TipsFromTags(const std::vector<TagEntryPtr> &tags, const wxString &word, std::vector<wxString> &tips);
+	void GetFunctionTipFromTags(const std::vector<TagEntryPtr> &tags, const wxString &word, std::vector<wxString> &tips);
 };
 
 /// create the singleton typedef

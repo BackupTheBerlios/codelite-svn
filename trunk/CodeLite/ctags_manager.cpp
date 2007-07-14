@@ -647,7 +647,7 @@ bool TagsManager::WordCompletionCandidates(const wxString& expr, const wxString&
 	expr.EndsWith(word, &expression);
 	
 	// Trim whitespace from right and left
-	static wxString trimString(_T("{};\r\n\t\v "));
+	static wxString trimString(wxT("(){};\r\n\t\v "));
 
 	expression.erase(0, expression.find_first_not_of(trimString)); 
 	expression.erase(expression.find_last_not_of(trimString)+1);
@@ -688,9 +688,14 @@ bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& t
 	candidates.clear();
 	wxString path;
 	wxString typeName, typeScope;
+
+	wxString expression(expr);
+	static wxString trimString(wxT("(){};\r\n\t\v "));
+	expression.erase(0, expression.find_first_not_of(trimString)); 
+	expression.erase(expression.find_last_not_of(trimString)+1);
 	
 	PRINT_START_MESSAGE(wxT("ProcessExpression started..."));
-	bool res = LanguageST::Get()->ProcessExpression(expr, text, typeName, typeScope);
+	bool res = LanguageST::Get()->ProcessExpression(expression, text, typeName, typeScope);
 	if(!res){
 		return false;
 	}
@@ -720,6 +725,20 @@ void TagsManager::RemoveDuplicates(std::vector<TagEntryPtr>& src, std::vector<Ta
 			target.push_back(src.at(0));
 		}else{
 			if(src.at(i)->GetName() != target.at(target.size()-1)->GetName()){
+				target.push_back(src.at(i));
+			}
+		}
+	}
+}
+
+void TagsManager::RemoveDuplicatesTips(std::vector<TagEntryPtr>& src, std::vector<TagEntryPtr>& target)
+{
+	for(size_t i=0; i<src.size(); i++)
+	{
+		if(i == 0){
+			target.push_back(src.at(0));
+		}else{
+			if(src.at(i)->GetSignature() != target.at(target.size()-1)->GetSignature()){
 				target.push_back(src.at(i));
 			}
 		}
@@ -760,7 +779,7 @@ void TagsManager::GetHoverTip(const wxString & expr, const wxString &word, const
 	expr.EndsWith(word, &expression);
 	
 	// Trim whitespace from right and left
-	static wxString trimString(_T("{};\r\n\t\v "));
+	static wxString trimString(wxT("(){};\r\n\t\v "));
 
 	expression.erase(0, expression.find_first_not_of(trimString)); 
 	expression.erase(expression.find_last_not_of(trimString)+1);
@@ -794,21 +813,54 @@ void TagsManager::GetHoverTip(const wxString & expr, const wxString &word, const
 
 		std::vector<TagEntryPtr> tmpCandidates;
 		TagsByScopeAndName(scope, word, tmpCandidates);
-		RemoveDuplicates(tmpCandidates, candidates);
+		RemoveDuplicatesTips(tmpCandidates, candidates);
 
 		// we now have a list of tags that matches our word
 		TipsFromTags(candidates, word, tips);
 	}
 }
 
-clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString & scope, const wxString & scopeName )
+clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString &text, const wxString &word)
 {
-	wxUnusedVar(expr);
-	wxUnusedVar(scope);
-	wxUnusedVar(scopeName);
+	std::vector<TagEntryPtr> candidates;
+	wxString path;
+	wxString typeName, typeScope, tmp;
 
-	// display call tip with function prototype
+	// Trim whitespace from right and left
+	static wxString trimString(wxT("(){};\r\n\t\v "));
+
+	wxString expression(expr);
+	expression.erase(0, expression.find_first_not_of(trimString)); 
+	expression.erase(expression.find_last_not_of(trimString)+1);
+
+	//remove the last token from the expression 
+	expression.EndsWith(word, &tmp);
+	expression = tmp;
+	
+	PRINT_START_MESSAGE(wxT("ProcessExpression started..."));
+	bool res = LanguageST::Get()->ProcessExpression(expression, text, typeName, typeScope);
+	if(!res){
+		return false;
+	}
+
+	PRINT_END_MESSAGE(wxT("Done"));
+	//load all tags from the database that matches typeName & typeScope
+	wxString scope;
+	if(typeScope == wxT("<global>"))
+		scope << typeName;
+	else
+		scope << typeScope << wxT("::") << typeName;
+
+	//this function will retrieve the ineherited tags as well
+	std::vector<TagEntryPtr> tmpCandidates;
+	PRINT_START_MESSAGE(wxT("TagsByScopeAndName started..."));
+	TagsByScope(scope, tmpCandidates);
+	PRINT_END_MESSAGE(wxT("TagsByScopeAndName ended"));
+
 	std::vector<wxString> tips;
+	GetFunctionTipFromTags(tmpCandidates, word, tips);
+	
+	// display call tip with function prototype
 	clCallTipPtr ct( new clCallTip(tips) );
 	return ct;
 }
@@ -953,33 +1005,6 @@ void TagsManager::OpenExternalDatabase(const wxFileName &dbName)
 	m_pExternalDb->LoadToMemory(dbName);
 }
 
-void TagsManager::FilterResults(const std::vector<TagEntry> & src, const wxString & name, std::vector<TagEntry> & target, int flags, std::map<wxString, TagEntry>* tmpMap)
-{
-	size_t i=0;
-	for(i=0; i<src.size(); i++)
-	{
-		TagEntry e(src[i]);
-		if( flags & PartialMatch )
-		{
-			if( name.IsEmpty() == false && e.GetName().StartsWith(name.GetData()) )
-			{
-				target.push_back( e );
-				if( tmpMap )
-					(*tmpMap) [ e.GetName() ] = e;
-			}
-		}
-		else
-		{
-			if( e.GetName() == name )
-			{
-				target.push_back( e );
-				if( tmpMap )
-					(*tmpMap) [ e.GetName() ] = e;
-			}
-		}
-	}
-}
-
 void TagsManager::ParseComments(const bool parse)
 {
 	wxCriticalSectionLocker locker( m_cs );
@@ -1015,7 +1040,7 @@ wxString TagsManager::GetComment(const wxString &file, const int line)
 	}
 	catch( wxSQLite3Exception &e )
 	{
-		wxUnusedVar(e);
+		wxLogMessage(e.GetMessage());
 	}
 
 	return wxEmptyString;
@@ -1158,3 +1183,27 @@ void TagsManager::TipsFromTags(const std::vector<TagEntryPtr> &tags, const wxStr
 	}
 }
 
+void TagsManager::GetFunctionTipFromTags(const std::vector<TagEntryPtr> &tags, const wxString &word, std::vector<wxString> &tips)
+{
+	std::map<wxString, wxString> tipsMap;
+
+	for(size_t i=0; i<tags.size(); i++)
+	{
+		if(tags.at(i)->GetName() != word)
+			continue;
+
+		if(tags.at(i)->GetKind() != wxT("function") && tags.at(i)->GetKind() != wxT("prototype"))
+			continue;
+
+		wxString tip = word;
+		tip << tags.at(i)->GetSignature();
+		//collect each signature only once, we do this by using
+		//map
+		tipsMap[tags.at(i)->GetSignature()] = tip;
+	}
+
+	for(std::map<wxString, wxString>::iterator iter = tipsMap.begin(); iter != tipsMap.end(); iter++)
+	{
+		tips.push_back(iter->second);
+	}
+}

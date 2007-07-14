@@ -148,10 +148,9 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 	if(rCtrl.GetProjectName().IsEmpty())
 		return;
 
-	int start;
 	long pos = event.GetPosition();
 	int  end = rCtrl.WordEndPosition(pos, true);
-	int word_start = rCtrl.WordStartPosition(pos, true);
+	int  word_start = rCtrl.WordStartPosition(pos, true);
 
 	// get the expression we are standing on it
 	if( IsCommentOrString( pos ) )
@@ -159,28 +158,15 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 	
 	// get the token
 	wxString word = rCtrl.GetTextRange(word_start, end);
-
-	// The full expression is obtained by simply searching backwards for 
-	// the first '{' or ';' or SOT
-	int semiColPos = rCtrl.FindString(wxT(";"), 0, false, pos);
-	int lcurlyPos  = rCtrl.FindString(wxT("{"), 0, false, pos);
+	//get the expression we are hovering over
+	wxString expr = GetExpression(end);	
 	// get the full text of the current page
 	wxString text = rCtrl.GetTextRange(0, pos);
-	
-	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
-	if(start < 0){
-		start = 0;
-	}
-	wxString expr = rCtrl.GetTextRange(start, end);
-	//-------------------------------------------------------------
 	// now we are ready to process the scope and build our tips
-	//-------------------------------------------------------------
 	std::vector<wxString> tips;
 	TagsManagerST::Get()->GetHoverTip(expr, word, text, tips);
 
-	//-------------------------------------------------------------
 	// display a tooltip
-	//-------------------------------------------------------------
 	wxString tooltip;
 	if( tips.size() > 0 )
 	{
@@ -378,30 +364,31 @@ void ContextCpp::CodeComplete()
 		return;
 	}
 
-	// The auto-completion functionality needs the following input from user
-	// inorder to try display a auto-completion box:
-	// -the text up till the current position
-	// -the statement (an example of statement: 'm_somemember.getName()->' excluding the '->') 
-	// -an output array that will be populated with possible matches
+	//get expression
+	wxString expr = GetExpression(rCtrl.GetCurrentPos());
 
-	// The full expression is obtained by simply searching backwards for 
-	// the first '{' or ';' or SOT
-	int semiColPos = rCtrl.FindString(wxT(";"), 0, false, rCtrl.GetCurrentPos());
-	int lcurlyPos  = rCtrl.FindString(wxT("{"), 0, false, rCtrl.GetCurrentPos());
-	// get the full text of the current page
+	// get the scope
 	wxString text = rCtrl.GetTextRange(0, rCtrl.GetCurrentPos());
-	
-	int start;
-	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
-	if(start < 0){
-		start = 0;
-	}
 
-	wxString expr = rCtrl.GetTextRange(start, pos);
 	std::vector<TagEntryPtr> candidates;
 	if( showFuncProto )
 	{
+		//for function prototype, the last char entered was '(', this will break
+		//the logic of the Getexpression() method to workaround this, we search for 
+		//expression one char before the current position
+		expr = GetExpression(rCtrl.PositionBefore(rCtrl.GetCurrentPos()));
+
 		//display function tooltip 
+		int word_end = rCtrl.WordEndPosition(end, true);
+		int word_start = rCtrl.WordStartPosition(end, true);
+		
+		// get the token
+		wxString word = rCtrl.GetTextRange(word_start, word_end);
+		m_ct = TagsManagerST::Get()->GetFunctionTip(expr, text, word);
+		if(m_ct && m_ct->Count() > 0){
+			rCtrl.CallTipCancel();
+			rCtrl.CallTipShow(rCtrl.GetCurrentPos(), m_ct->Next());
+		}
 	}
 	else
 	{
@@ -409,6 +396,60 @@ void ContextCpp::CodeComplete()
 			DisplayCompletionBox(candidates, wxEmptyString);
 		}
 	}
+}
+
+wxString ContextCpp::GetExpression(long pos)
+{
+	bool cont(true);
+	int depth(0);
+	LEditor &rCtrl = GetCtrl();
+
+	int position( pos );
+	int at(position);
+
+	while(cont)
+	{
+		wxChar ch = rCtrl.PreviousChar(position, at);
+		position = at;
+		//Eof?
+		if(ch == 0)
+		{
+			at = 0;
+			break;
+		}
+
+		//Comment?
+		if(IsCommentOrString(at))
+			continue;
+
+		switch(ch)
+		{
+		case wxT('{'):
+			cont = false;
+			break;
+		case wxT(';'):
+			cont = false;
+			break;
+		case wxT('('):
+			{
+				if(depth == 0)
+				{
+					cont = false;
+					break;
+				}
+				depth--;
+			}
+			break;
+		case wxT(')'):
+			{
+				depth++;
+			}
+			break;
+		}
+	}
+
+	if(at < 0) at = 0;
+	return rCtrl.GetTextRange(at, pos);
 }
 
 wxString ContextCpp::GetWordUnderCaret()
