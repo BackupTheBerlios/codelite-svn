@@ -371,8 +371,11 @@ std::string getCurrentScope()
 	std::string scope;
 	for(size_t i=0; i<currentScope.size(); i++)
 	{
-		scope += currentScope[i];
-		scope += "::";
+		if(currentScope[i].find("__anon_") == (size_t)-1)
+		{
+			scope += currentScope[i];
+			scope += "::";
+		}
 	}
 	//remove the trailing '::'
 	scope.erase(scope.find_last_not_of(":")+1);

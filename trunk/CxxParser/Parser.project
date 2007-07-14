@@ -38,19 +38,19 @@
         <LibraryPath Value=".\Release"/>
       </Linker>
       <PreBuild>
-        <Command Enabled="yes">yacc -dl  -t -v -pcl_scope_ cpp_scope_grammar.y</Command>
-        <Command Enabled="yes">mv y.tab.c scope_parser.cpp</Command>
-        <Command Enabled="yes">mv y.tab.h cpp_lexer.h</Command>
+        <Command Enabled="no">yacc -dl  -t -v -pcl_scope_ cpp_scope_grammar.y</Command>
+        <Command Enabled="no">mv y.tab.c scope_parser.cpp</Command>
+        <Command Enabled="no">mv y.tab.h cpp_lexer.h</Command>
         <Command Enabled="yes">flex -L  -Pcl_scope_ cpp.l</Command>
         <Command Enabled="yes">mv lex.cl_scope_.c cpp_lexer.cpp</Command>
-        <Command Enabled="yes">yacc -l  -t -v -pcl_var_ cpp_variables_grammar.y</Command>
-        <Command Enabled="yes">mv y.tab.c var_parser.cpp</Command>
-        <Command Enabled="yes">flex -L  -Pcl_expr_ expr_lexer.l</Command>
-        <Command Enabled="yes">mv lex.cl_expr_.c cpp_expr_lexer.cpp</Command>
-        <Command Enabled="yes">yacc -l  -t -v -pcl_expr_ expr_grammar.y</Command>
-        <Command Enabled="yes">mv y.tab.c cpp_expr_parser.cpp</Command>
-        <Command Enabled="yes">yacc -l  -t -v -pcl_func_ cpp_func_parser.y</Command>
-        <Command Enabled="yes">mv y.tab.c cpp_func_parser.cpp</Command>
+        <Command Enabled="no">yacc -l  -t -v -pcl_var_ cpp_variables_grammar.y</Command>
+        <Command Enabled="no">mv y.tab.c var_parser.cpp</Command>
+        <Command Enabled="no">flex -L  -Pcl_expr_ expr_lexer.l</Command>
+        <Command Enabled="no">mv lex.cl_expr_.c cpp_expr_lexer.cpp</Command>
+        <Command Enabled="no">yacc -l  -t -v -pcl_expr_ expr_grammar.y</Command>
+        <Command Enabled="no">mv y.tab.c cpp_expr_parser.cpp</Command>
+        <Command Enabled="no">yacc -l  -t -v -pcl_func_ cpp_func_parser.y</Command>
+        <Command Enabled="no">mv y.tab.c cpp_func_parser.cpp</Command>
       </PreBuild>
       <PostBuild>
         <Command Enabled="yes">copy *.h ..\CodeLite\.</Command>

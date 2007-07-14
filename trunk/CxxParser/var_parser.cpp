@@ -640,6 +640,9 @@ case 19:
 {
 							if(gs_vars)
 							{
+								std::string pattern;
+								curr_var.m_pattern = "/^";
+								curr_var.m_pattern += yyvsp[-4] + " " + yyvsp[-3] + " " + yyvsp[-2] + " " + yyvsp[-1] + " " + yyvsp[0] + "$/";
 								curr_var.m_name = yyvsp[-1];
 								curr_var.m_isPtr = (yyvsp[-2].find("*") != (size_t)-1);
 								gs_vars->push_back(curr_var); 

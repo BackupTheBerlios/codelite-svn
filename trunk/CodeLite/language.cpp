@@ -415,12 +415,6 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 	return evaluationSucceeded;
 }
 
-// return hover tip
-void Language::GetHoverTip(const wxString & token, const wxString & scope, std::vector<wxString> & tips)
-{
-
-}
-
 void Language::ParseComments(const wxFileName &fileName, std::vector<DbRecordPtr> *comments)
 {
 	wxString content;

@@ -139,6 +139,9 @@ variables			: stmnt_starter variable_decl special_star_amp LE_IDENTIFIER postfix
 						{
 							if(gs_vars)
 							{
+								std::string pattern;
+								curr_var.m_pattern = "/^";
+								curr_var.m_pattern += $1 + " " + $2 + " " + $3 + " " + $4 + " " + $5 + "$/";
 								curr_var.m_name = $4;
 								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
 								gs_vars->push_back(curr_var); 

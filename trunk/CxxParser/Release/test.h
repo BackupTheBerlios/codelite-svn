@@ -1,1 +1,12 @@
-const char *NS::String::value() const;
+namespace NS{
+class A
+{
+	void foo();
+}
+}
+
+void NS::A::foo()
+{
+	{
+	}
+}

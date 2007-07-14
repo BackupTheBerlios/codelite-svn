@@ -89,14 +89,6 @@ public:
 	void SetAutoCompDeliemters(const std::vector<wxString>& delimArr);
 
 	/**
-	 * Get a hover tip
-	 * \param token the token under the cursor
-	 * \param scope scope where token was found
-	 * \param tips array of tip strings
-	 */
-	void GetHoverTip(const wxString & token, const wxString & scope, std::vector<wxString> & tips);
-	
-	/**
 	 * Parse comments from source file
 	 * \param name file name 
 	 * \param comments [output] returned vector of comments

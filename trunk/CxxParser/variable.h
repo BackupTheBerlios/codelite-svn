@@ -13,6 +13,7 @@ public:
 	bool				m_isPtr;
 	std::string		m_type;		//as in 'int a;' -> type=int
 	std::string		m_typeScope;//as in 'std::string a;' -> typeScope = std, type=string
+	std::string 	m_pattern;
 	
 public:
 	Variable();

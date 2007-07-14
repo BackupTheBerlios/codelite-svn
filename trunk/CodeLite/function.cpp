@@ -15,6 +15,7 @@ void Function::Reset()
 	m_scope = "";
 	m_returnValue.Reset();
 	m_name = "";
+	m_pattern = "";
 }
 
 void Function::Print()
