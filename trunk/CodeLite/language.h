@@ -46,7 +46,7 @@ public:
 	/**
 	 * Return the visible scope of syntax starting at depth zero.
 	 * 
-	 * For example, given the following pchSrcString:
+	 * For example, given the following srcString:
 	 * \code
 	 * int main()
 	 * {
@@ -66,20 +66,10 @@ public:
 	 * 
 	 * \note The scopes with depth greater then 0 will be removed.
 	 * This function is useful for searching for local members.
-	 * \param pchSrcString Input string
-	 * \param pchStopWord Stop word, the scan will continue until end of string or until stop word is encountered
+	 * \param srcString Input string
 	 * \return visible scope 
 	 */
-	wxString GetScope(const wxString& srcString, const wxString& stopWord);
-
-	/**
-	 * Match closing braces, and return the string in between them. The returned string does not include 
-	 * the open barce itself
-	 * \param ch Open brace ( can be one of '<', '(', '{', '[' )
-	 * \param s Source string
-	 * \return true if matched brace was found
-	 */
-	bool Match(const char& ch, wxString &s, const wxString& sourceString = wxEmptyString);
+	wxString GetScope(const wxString& srcString);
 
 	/**
 	 * Set the language specific auto completion delimeteres, for example: for C++ you should populate

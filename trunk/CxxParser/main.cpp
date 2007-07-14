@@ -24,9 +24,9 @@ int main()
 {
 	char *buf = loadFile("test.h");
 	//print the scope name
-	testScopeParser(buf);
+	//testScopeParser(buf);
 	//testVarParser(buf);
-	//testExprParser(buf);
+	testExprParser(buf);
 	//testFuncParser(buf);
 	free(buf);
 }
@@ -51,6 +51,7 @@ void testExprParser(char *buf)
 {
 	printf("===== Testing expression parser ======\n");
 	ExpressionResult res = parse_expression(buf);
+	res.Print();
 }
 
 void testScopeParser(char *buf)

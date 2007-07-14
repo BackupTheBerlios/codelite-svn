@@ -45,6 +45,7 @@ class WXDLLIMPEXP_CL TagEntry : public DbRecord
 	long	m_position;		///< Position in the document - optional field, not persistent item
 	long	m_id;
 	long	m_parentId;
+	wxString m_scope;
 
 public:
 	/**
@@ -163,6 +164,9 @@ public:
 	
 	int GetPosition() const { return m_position; }
 	void SetPosition(int col) { m_position = col; }
+
+	const wxString &GetScope() const {return m_scope;}
+	void SetScope(const wxString &scope){m_scope = scope;}
 
 	/**
 	 * \return Scope name of the tag.

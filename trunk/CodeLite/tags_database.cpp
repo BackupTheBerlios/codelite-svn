@@ -81,7 +81,7 @@ void TagsDatabase::CreateSchema()
 		sql = _T("PRAGMA default_cache_size = 10000;");
 		m_db->ExecuteUpdate(sql);
 	
-		sql = _T("create  table if not exists tags (ID INTEGER PRIMARY KEY AUTOINCREMENT, PARENTID INTEGER, name string, file string, line integer, kind string, access string, signature string, pattern string, parent string, inherits string, path string, typeref string);");
+		sql = _T("create  table if not exists tags (ID INTEGER PRIMARY KEY AUTOINCREMENT, PARENTID INTEGER, name string, file string, line integer, kind string, access string, signature string, pattern string, parent string, inherits string, path string, typeref string, scope string);");
 		m_db->ExecuteUpdate(sql);
 
 		sql = _T("create  table if not exists comments (comment string, file string, line number);");
@@ -396,7 +396,7 @@ void TagsDatabase::LoadToMemory(const wxFileName& fn)
 		m_db->ExecuteUpdate(sql);
 
 		m_db->Begin();
-		sql = wxT("insert into tags select id, parentid, name, file, line, kind, access, signature, pattern, parent, inherits, path, typeref FROM backup.tags");
+		sql = wxT("insert into tags select id, parentid, name, file, line, kind, access, signature, pattern, parent, inherits, path, typeref, scope FROM backup.tags");
 		m_db->ExecuteUpdate(sql);
 		m_db->Commit();
 	}

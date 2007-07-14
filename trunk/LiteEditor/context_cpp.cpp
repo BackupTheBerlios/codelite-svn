@@ -1,3 +1,4 @@
+#include "precompiled_header.h"
 #include "context_cpp.h"
 #include "editor.h"
 #include "ctags_manager.h"
@@ -148,6 +149,7 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 	if(rCtrl.GetProjectName().IsEmpty())
 		return;
 
+	wxLogMessage(wxT("OnDwellStart - BEGIN"));
 	long pos = event.GetPosition();
 	int  end = rCtrl.WordEndPosition(pos, true);
 	int  word_start = rCtrl.WordStartPosition(pos, true);
@@ -158,6 +160,11 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 	
 	// get the token
 	wxString word = rCtrl.GetTextRange(word_start, end);
+	if(word.IsEmpty()){
+		wxLogMessage(wxT("OnDwellStart - CANCELLED"));
+		return;
+	} // if(word.IsEmpty())
+
 	//get the expression we are hovering over
 	wxString expr = GetExpression(end);	
 	// get the full text of the current page
@@ -178,7 +185,8 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 		rCtrl.CallTipCancel();
 		rCtrl.CallTipShow( event.GetPosition(), tooltip );
 		m_tipKind = TipHover;
-	}
+	} // if( tips.size() > 0 )
+	wxLogMessage(wxT("OnDwellStart - END"));
 }
 
 wxString ContextCpp::GetImageString(const TagEntry &entry)
@@ -387,7 +395,7 @@ void ContextCpp::CodeComplete()
 		m_ct = TagsManagerST::Get()->GetFunctionTip(expr, text, word);
 		if(m_ct && m_ct->Count() > 0){
 			rCtrl.CallTipCancel();
-			rCtrl.CallTipShow(rCtrl.GetCurrentPos(), m_ct->Next());
+			rCtrl.CallTipShow(rCtrl.GetCurrentPos(), m_ct->First());
 		}
 	}
 	else
@@ -449,7 +457,20 @@ wxString ContextCpp::GetExpression(long pos)
 	}
 
 	if(at < 0) at = 0;
-	return rCtrl.GetTextRange(at, pos);
+	wxString expr = rCtrl.GetTextRange(at, pos);
+
+	//remove comments from it
+	CppScanner sc;
+	sc.SetText(_C(expr));
+	wxString expression;
+	int type=0;
+	while( (type = sc.yylex()) != 0 )
+	{
+		wxString token = _U(sc.YYText());
+		expression += token;
+		expression += wxT(" ");
+	} // while( (type = sc.yylex()) != 0 )
+	return expression;
 }
 
 wxString ContextCpp::GetWordUnderCaret()
@@ -487,17 +508,9 @@ void ContextCpp::CompleteWord()
 	TagsManager *mgr = TagsManagerST::Get();
 
 	//get the current expression
-	int semiColPos = rCtrl.FindString(wxT(";"), 0, false, rCtrl.GetCurrentPos());
-	int lcurlyPos  = rCtrl.FindString(wxT("{"), 0, false, rCtrl.GetCurrentPos());
-	int start;
-	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
-	if(start < 0){
-		start = 0;
-	}
+	wxString expr = GetExpression(rCtrl.GetCurrentPos());
 
-	wxString expr = rCtrl.GetTextRange(start, rCtrl.GetCurrentPos());
 	std::vector<TagEntryPtr> candidates;
-
 	//get the full text of the current page
 	wxString text = rCtrl.GetTextRange(0, rCtrl.GetCurrentPos());
 	if(mgr->WordCompletionCandidates(expr, text, word, candidates))

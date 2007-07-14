@@ -26,6 +26,7 @@ TagEntry::TagEntry()
 , m_position(wxNOT_FOUND)
 , m_id(wxNOT_FOUND)
 , m_parentId(wxNOT_FOUND)
+, m_scope(wxEmptyString)
 {
 }
 
@@ -51,6 +52,7 @@ TagEntry& TagEntry::operator=(const TagEntry& rhs)
 	m_path = rhs.m_path;
 	m_hti = rhs.m_hti;
 	m_position = rhs.m_position;
+	m_scope = rhs.m_scope;
 	m_extFields = std::map<wxString, wxString>(rhs.m_extFields);
 	return *this;
 }
@@ -60,6 +62,7 @@ bool TagEntry::operator ==(const TagEntry& rhs)
 	//Note: tree item id is not used in this function!
 	return	
 		m_parentId == rhs.m_parentId &&
+		m_scope == rhs.m_scope &&
 		m_file == rhs.m_file &&
 		m_kind == rhs.m_kind &&
 		m_parent == rhs.m_parent &&
@@ -95,23 +98,41 @@ void TagEntry::Create(const wxString &fileName,
 	
 	// Check if we can get full name (including path)
 	path = GetExtField(wxT("class"));
-	UpdatePath( path ) ;
+	if(!path.IsEmpty()){
+		UpdatePath( path ) ;
+	}else{
+		path = GetExtField(wxT("struct"));
+		if(!path.IsEmpty()){
+			UpdatePath( path ) ;
+		}else{
+			path = GetExtField(wxT("namespace"));
+			if(!path.IsEmpty()){
+				UpdatePath( path ) ;
+			}else{
+				path = GetExtField(wxT("interface"));
+				if(!path.IsEmpty()){
+                    UpdatePath( path ) ;
+				}else{
+					path = GetExtField(wxT("enum"));
+					if(!path.IsEmpty()){
+                        UpdatePath( path ) ;
+					}else{
+                        path = GetExtField(wxT("union"));
+						if(!path.IsEmpty()){
+                            UpdatePath( path ) ;
+						}
+					}
+				}
+			}
+		}
+	}
 
-	path = GetExtField(wxT("interface"));
-	UpdatePath( path ) ;
-
-	path = GetExtField(wxT("struct"));
-	UpdatePath( path ) ;
-
-	path = GetExtField(wxT("union"));
-	UpdatePath( path ) ;
-
-	path = GetExtField(wxT("namespace"));
-	UpdatePath( path ) ;
-
-	path = GetExtField(wxT("enum"));
-	UpdatePath( path ) ;
-
+	if(!path.IsEmpty()){
+		SetScope(path);
+	}else{
+		SetScope(wxT("<global>"));
+	}
+	
 	// If there is no path, path is set to name
 	if( GetPath().IsEmpty() )
 		SetPath( GetName() );
@@ -207,6 +228,7 @@ TagEntry::TagEntry(wxSQLite3ResultSet& rs)
 	m_extFields[wxT("inherits")] = rs.GetString(10);
 	m_path = rs.GetString(11);
 	m_extFields[wxT("typeref")] = rs.GetString(12);
+	m_scope = rs.GetString(13);
 	m_position = wxNOT_FOUND;
 }
 
@@ -235,6 +257,7 @@ int TagEntry::Store(wxSQLite3Statement& insertPerepareStmnt)
 		insertPerepareStmnt.Bind(10, GetInherits());
 		insertPerepareStmnt.Bind(11, GetPath());
 		insertPerepareStmnt.Bind(12, GetTyperef());
+		insertPerepareStmnt.Bind(13, GetScope());
 		insertPerepareStmnt.ExecuteUpdate();
 		insertPerepareStmnt.Reset();
 
@@ -270,6 +293,7 @@ int TagEntry::Update(wxSQLite3Statement& updatePerepareStmnt)
 		updatePerepareStmnt.Bind(10, GetKind());
 		updatePerepareStmnt.Bind(11, GetSignature());
 		updatePerepareStmnt.Bind(12, GetPath());
+		updatePerepareStmnt.Bind(13, GetScope());
 		updatePerepareStmnt.ExecuteUpdate();
 		updatePerepareStmnt.Reset();
 	}
@@ -303,7 +327,8 @@ int TagEntry::Delete(wxSQLite3Statement &deletePreparedStmnt)
 
 wxString TagEntry::GetScopeName() const
 {
-	wxString path(GetPath());
+	return GetScope();
+/*	wxString path(GetPath());
 
 	// Is this is a global tag?
 	if(GetParent() == wxT("<global>"))
@@ -323,7 +348,7 @@ wxString TagEntry::GetScopeName() const
 			return scopeName;
 		}
 		return wxEmptyString;
-	}
+	}*/
 }
 
 wxString TagEntry::GetKind() const {
@@ -355,7 +380,6 @@ void TagEntry::UpdatePath(wxString & path)
 		name += GetName();
 		SetPath(name);
 	}
-	path.Empty();
 }
 
 wxString TagEntry::TypeFromTyperef() const
@@ -414,11 +438,10 @@ wxString TagEntry::GetDeleteOneStatement()
 
 wxString TagEntry::GetUpdateOneStatement()
 {
-	return wxT("UPDATE TAGS SET ParentId=?, Name=?, File=?, Line=?, Access=?, Pattern=?, Parent=?, Inherits=?, Typeref=? WHERE Kind=? AND Signature=? AND Path=?");
+	return wxT("UPDATE TAGS SET ParentId=?, Name=?, File=?, Line=?, Access=?, Pattern=?, Parent=?, Inherits=?, Typeref=?, Scope=? WHERE Kind=? AND Signature=? AND Path=?");
 }
 
 wxString TagEntry::GetInsertOneStatement()
 {
-	return wxT("INSERT INTO TAGS VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");	
+	return wxT("INSERT INTO TAGS VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");	
 }
-

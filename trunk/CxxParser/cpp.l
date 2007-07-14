@@ -97,44 +97,19 @@ horizontal_white [ ]|{h_tab}
 
 %x PREPR
 %x WRAP_PREP
+%x CPP_COMMENT
+%x C_COMMENT
 
 %%
 
 "/*" {
-	/* Handle C-Style comment */
-	register int c;
-	for ( ; ; )
-	{
-		while ( (c = yyinput()) != '*' && c != EOF )
-		{
-			; /* eat up text of comment */
-		}
-		if ( c == '*' )
-		{
-			while ( (c = yyinput()) == '*' )
-			{
-				;
-			}
-			if ( c == '/' )
-			{
-				break; /* found the end */
-			}
-		}
-		if ( c == EOF )
-		{
-			break;
-		}
-	}
+			BEGIN C_COMMENT;
      }
 
 "//" {
-	register int c;
-	while((c = yyinput()) != '\n' && c != EOF)
-	{
-		;
-	}
+			BEGIN CPP_COMMENT;
      }
-
+     
 {horizontal_white}+     {
 			WHITE_RETURN(' ');
 			}
@@ -316,7 +291,11 @@ reinterpret_cast 	{CPP_KEYWORD_RETURN(LE_REINTERPRET_CAST);}
 						}
 					}
 <WRAP_PREP>.	{}					
-<PREPR>.			{}					
+<PREPR>.			{}		
+<CPP_COMMENT>\n {BEGIN INITIAL;}
+<CPP_COMMENT>.	 {}
+<C_COMMENT>"*/" {BEGIN INITIAL;}
+<C_COMMENT>.	  {}
 %%
 
 bool isaTYPE(char *string)

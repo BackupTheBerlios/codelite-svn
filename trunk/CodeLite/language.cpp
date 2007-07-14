@@ -51,7 +51,7 @@ Language::~Language()
 }
 
 /// Return the visible scope until pchStopWord is encountered
-wxString Language::GetScope(const wxString& srcString, const wxString& stopWord)
+wxString Language::GetScope(const wxString& srcString)
 {
 	std::vector<wxString> scope_stack;
 	wxString currScope;
@@ -88,18 +88,6 @@ wxString Language::GetScope(const wxString& srcString, const wxString& stopWord)
 
 		// For debug purposes
 		wxString word = _U(m_scanner->YYText());
-
-		// If stop word is provided try to Match it
-		if(stopWord.IsEmpty() == false)
-		{
-			if(stopWord == _U(m_scanner->YYText()))
-			{
-				currScope += _T(" ");
-				currScope += _U(m_scanner->YYText());
-				scope_stack.push_back(currScope);
-				break;
-			}
-		}
 		switch(type)
 		{
 		case (int)'{':
@@ -152,93 +140,6 @@ wxString Language::GetScope(const wxString& srcString, const wxString& stopWord)
 	}
 
 	return srcString;
-}
-
-/// Match the closing brace for ch
-bool Language::Match(const char& ch, wxString &s, const wxString& sourceString)
-{
-	std::map<char, char>::iterator iter = m_braces.find(ch);
-	if( iter == m_braces.end() )
-		return false;
-
-	char chFindChar = iter->second;
-
-	std::stack<char> bs; // braces stack
-	int type(0);
-
-	bs.push(ch);
-
-	if(sourceString.IsEmpty() == false)
-	{
-		m_scanner->Reset();
-
-		// Set the scanner text
-		const wxCharBuffer text = _C(sourceString);
-		m_scanner->SetText( text.data() );
-	}
-
-	while(true)
-	{
-		type = m_scanner->yylex();
-		if(type == 0)
-		{
-			return false;
-		}
-
-		switch( type )
-		{
-		case '<':
-		case '[':
-		case '{':
-		case '(':
-			{
-				// Increase the depth
-				bs.push(static_cast<char>(type));
-
-				// Update the closing brace incase it is different 
-				chFindChar = m_braces.find(static_cast<char>(type))->second;
-				s += _U(m_scanner->YYText());
-
-				// Remove the space
-				s.erase(s.find_last_not_of(_T(" "))+1);
-				break;
-			}
-		case '>':
-		case ')':
-		case ']':
-		case '}':
-			{
-				if(type == chFindChar)
-				{
-					// Redeuce the nesting depth
-					bs.pop();
-			
-					// Remove the space
-					s.erase(s.find_last_not_of(_T(" "))+1);
-					s += _U(m_scanner->YYText());
-
-					// Do we have more barces to close?
-					if(bs.empty())
-						return true;
-
-					// More braces to match, update the chFindChar
-					chFindChar = m_braces.find(bs.top())->second;
-					break;
-				}
-				else
-					// We find a closing brace that does not match the last 
-					// open one 
-					return false;
-			}
-		default:
-			{
-				s += _U(m_scanner->YYText());
-				s += _T(" ");	
-				break;
-			}
-		}
-					
-	}
 }
 
 bool Language::NextToken(wxString &token, wxString &delim, wxString &srcStr)
@@ -307,7 +208,7 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 	wxString qualifier;
 
 	std::vector<TagEntry> tags;
-	wxString visibleScope = GetScope( text, wxEmptyString );
+	wxString visibleScope = GetScope(text);
 	wxString scopeName = GetScopeName(visibleScope);
 	wxLogMessage(wxT("Current scope: [") + scopeName + wxT("]"));
 

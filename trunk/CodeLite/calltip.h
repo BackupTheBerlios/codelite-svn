@@ -25,7 +25,7 @@
 class WXDLLIMPEXP_CL clCallTip
 {
 	std::vector<wxString> m_tips;
-	std::vector<wxString>::size_type m_curr;
+	int m_curr;
 
 public:
 	/**
@@ -70,10 +70,17 @@ public:
 	wxString Prev() ;
 
 	/**
+	 * return the first tip
+	 */
+	wxString First();
+
+	/**
 	 * Return number of tips stored in this object
 	 * \return number of tips
 	 */
-	std::vector<wxString>::size_type Count() const;
+	int Count() const;
+private:
+	wxString TipAt(int at); 
 };
 
 typedef SmartPtr<clCallTip> clCallTipPtr;

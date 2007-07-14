@@ -590,12 +590,8 @@ void TagsManager::TagsByScopeAndName(const wxString& scope, const wxString &name
 	{
 		PRINT_START_MESSAGE(wxT("TagsByScopeAndName::Iterating"));
 		sql.Empty();
-		wxString tmpScope(derivationList.at(i));
-		tmpScope.Replace(wxT("_"), wxT("^_"));
 		tmpName.Replace(wxT("_"), wxT("^_"));
-
-		tmpScope << wxT("::");
-		sql << wxT("select * from tags where path like '") << tmpScope << wxT("%%' and name like '") << tmpName << wxT("%%' ESCAPE '^'");
+		sql << wxT("select * from tags where scope='") << derivationList.at(i) << wxT("' and name like '") << tmpName << wxT("%%' ESCAPE '^'");
 		DoExecuteQueury(sql, tags);
 		PRINT_END_MESSAGE(wxT("TagsByScopeAndName::Iterating ended"));
 	} // for(size_t i=0; i<derivationList.size(); i++)
@@ -622,9 +618,7 @@ void TagsManager::TagsByScope(const wxString& scope, std::vector<TagEntryPtr> &t
 		PRINT_START_MESSAGE(wxT("TagsByScope::Iterating"));
 		sql.Empty();
 		wxString tmpScope(derivationList.at(i));
-		tmpScope.Replace(wxT("_"), wxT("^_"));
-		tmpScope << wxT("::");
-		sql << wxT("select * from tags where path like '") << tmpScope << wxT("%%' ESCAPE '^'");
+		sql << wxT("select * from tags where scope='") << tmpScope << wxT("'");
 		DoExecuteQueury(sql, tags);
 		PRINT_END_MESSAGE(wxT("TagsByScope::Iterating ended"));
 	} // for(size_t i=0; i<derivationList.size(); i++)
@@ -639,20 +633,22 @@ void TagsManager::TagsByScope(const wxString& scope, std::vector<TagEntryPtr> &t
 bool TagsManager::WordCompletionCandidates(const wxString& expr, const wxString& text, const wxString &word, std::vector<TagEntryPtr> &candidates)
 {
 	candidates.clear();
-	wxString path;
+	wxString path, tmp;
 	wxString typeName, typeScope;
 
 	//remove the word from the expression
 	wxString expression(expr);
-	expr.EndsWith(word, &expression);
 	
 	// Trim whitespace from right and left
 	static wxString trimString(wxT("(){};\r\n\t\v "));
 
 	expression.erase(0, expression.find_first_not_of(trimString)); 
 	expression.erase(expression.find_last_not_of(trimString)+1);
+	tmp = expression;
+	expression.EndsWith(word, &tmp);
+	expression = tmp;
 	
-	wxString scope = LanguageST::Get()->GetScope(text, wxEmptyString);
+	wxString scope = LanguageST::Get()->GetScope(text);
 	wxString scopeName = LanguageST::Get()->GetScopeName(scope);
 	if(expression.IsEmpty()){
 		//collect all the tags from the current scope, and 
@@ -660,7 +656,7 @@ bool TagsManager::WordCompletionCandidates(const wxString& expr, const wxString&
 		std::vector<TagEntryPtr> tmpCandidates;
 		GetGlobalTags(word, tmpCandidates);
 		GetLocalTags(word, scope, tmpCandidates);
-		TagsByScope(scopeName, tmpCandidates);
+		TagsByScopeAndName(scopeName, word, tmpCandidates);
 		RemoveDuplicates(tmpCandidates, candidates);
 	}else{
 		wxString typeName, typeScope;
@@ -771,20 +767,22 @@ void TagsManager::GetLocalTags(const wxString &name, const wxString &scope, std:
 void TagsManager::GetHoverTip(const wxString & expr, const wxString &word, const wxString & text, std::vector<wxString> & tips)
 {
 	wxString path;
-	wxString typeName, typeScope;
+	wxString typeName, typeScope, tmp;
 	std::vector<TagEntryPtr> tmpCandidates, candidates;
 
 	//remove the word from the expression
 	wxString expression(expr);
-	expr.EndsWith(word, &expression);
 	
 	// Trim whitespace from right and left
 	static wxString trimString(wxT("(){};\r\n\t\v "));
 
 	expression.erase(0, expression.find_first_not_of(trimString)); 
 	expression.erase(expression.find_last_not_of(trimString)+1);
-	
-	wxString scope = LanguageST::Get()->GetScope(text, wxEmptyString);
+	tmp = expression;
+	expression.EndsWith(word, &tmp);
+	expression = tmp;
+
+	wxString scope = LanguageST::Get()->GetScope(text);
 	wxString scopeName = LanguageST::Get()->GetScopeName(scope);
 	if(expression.IsEmpty()){
 		//collect all the tags from the current scope, and 

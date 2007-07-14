@@ -25,6 +25,25 @@ clCallTip& clCallTip::operator =(const clCallTip& rhs)
 	return *this;
 }
 
+wxString clCallTip::First()
+{
+	m_curr = 0;
+	if(m_tips.empty())
+		return wxEmptyString;
+	return TipAt(0);
+}
+
+wxString clCallTip::TipAt(int at)
+{
+	wxString tip;
+	if( m_tips.size() > 1 )
+		tip << _T("\n\001 ") << static_cast<int>(m_curr)+1 << _T(" of ") << static_cast<int>(m_tips.size()) << _T(" \002 ")
+			<< m_tips.at(at) << _T("\n");
+	else
+		tip << _T("\n") << m_tips.at( 0 ) << _T("\n");
+	return tip;
+}
+
 wxString clCallTip::Next() 
 {
 	// format a tip string and return it
@@ -32,16 +51,12 @@ wxString clCallTip::Next()
 	if( m_tips.empty() )
 		return wxEmptyString;
 
-	if( m_curr >= m_tips.size() )
-		m_curr = 0;
-
-	if( m_tips.size() > 1 )
-		tip << _T("\n\001 ") << static_cast<int>(m_curr)+1 << _T(" of ") << static_cast<int>(m_tips.size()) << _T(" \002 ")
-			<< m_tips.at( m_curr ) << _T("\n");
-	else
-		tip << _T("\n") << m_tips.at( m_curr ) << _T("\n");
 	m_curr++;
-	return tip;
+	if( m_curr >= (int)m_tips.size() ){
+		m_curr = 0;
+	} // if( m_curr >= m_tips.size() )
+
+	return TipAt(m_curr);
 }
 
 wxString clCallTip::Prev() 
@@ -50,21 +65,15 @@ wxString clCallTip::Prev()
 	wxString tip;
 	if( m_tips.empty() )
 		return wxEmptyString;
-
-	if( m_tips.size() > 1 )
-		tip << _T("\n\001 ") << static_cast<int>(m_curr)+1 << _T(" of ") << static_cast<int>(m_tips.size()) << _T(" \002 ")
-		<< m_tips.at( m_curr ) << _T("\n");
-	else
-		tip << _T("\n") << m_tips.at( m_curr ) << _T("\n");
-
-	if( m_curr == 0 )
-		m_curr = m_tips.size() - 1;
-	else
-		m_curr--;
-	return tip;
+	
+	m_curr--;
+	if(m_curr < 0){
+		m_curr = (int)m_tips.size()-1;
+	}
+	return TipAt(m_curr);
 }
 
-std::vector<wxString>::size_type clCallTip::Count() const
+int clCallTip::Count() const
 {
-	return m_tips.size();
+	return (int)m_tips.size();
 }
