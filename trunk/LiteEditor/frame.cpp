@@ -660,7 +660,9 @@ void Frame::OnFileClosing(wxFlatNotebookEvent &event)
 	else
 	{
 		//update the symbol view 
-		GetWorkspacePane()->DeleteSymbolTree(editor->GetFileName());
+		if(!editor->GetProject().IsEmpty()){
+			GetWorkspacePane()->DeleteSymbolTree(editor->GetFileName());
+		}
 	}
 	event.Skip();
 }
@@ -673,8 +675,11 @@ void Frame::OnPageChanged(wxFlatNotebookEvent &event)
 		return;
 	}
 	
-	//update the symbol view as well
-	GetWorkspacePane()->DisplaySymbolTree(editor->GetFileName());
+	//update the symbol view as well in case we are in a workspace context
+	if(!editor->GetProject().IsEmpty()){
+		GetWorkspacePane()->DisplaySymbolTree(editor->GetFileName());
+	}
+
 	editor->SetActive();
 	event.Skip();
 }

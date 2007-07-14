@@ -451,6 +451,11 @@ public:
 	*/ 	
 	void ImportFromMakefile(const wxString &path);
 
+	/**
+	 * Return the active editor or NULL if none
+	 */
+	LEditor *GetActiveEditor() const;
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

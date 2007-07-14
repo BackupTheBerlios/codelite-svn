@@ -697,6 +697,7 @@ void Language::GetLocalVariables(const wxString &in, std::vector<TagEntryPtr> &t
 		TagEntryPtr tag(new TagEntry());
 		tag->SetName(tagName);
 		tag->SetKind(wxT("variable"));
+		tag->SetParent(wxT("<local>"));
 		tag->SetAccess(wxT("public"));
 		tag->SetPattern(_U(var.m_pattern.c_str()));
 		tags.push_back(tag);

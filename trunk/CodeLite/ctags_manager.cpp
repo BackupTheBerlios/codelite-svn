@@ -773,14 +773,11 @@ void TagsManager::GetHoverTip(const wxString & expr, const wxString &word, const
 		
 		GetGlobalTags(word, tmpCandidates, ExactMatch);
 		GetLocalTags(word, scope, tmpCandidates, ExactMatch);
-		TagsByScope(scopeName, tmpCandidates);
+		TagsByScopeAndName(scopeName, word, tmpCandidates);
 		RemoveDuplicates(tmpCandidates, candidates);
 
 		// we now have a list of tags that matches our word
-		for(size_t i=0; i<candidates.size(); i++){
-			tips.push_back(candidates.at(i)->GetPattern());
-		}
-
+		TipsFromTags(candidates, word, tips);
 	}else{
 		wxString typeName, typeScope;
 		bool res = LanguageST::Get()->ProcessExpression(expression, text, typeName, typeScope);
@@ -796,8 +793,11 @@ void TagsManager::GetHoverTip(const wxString & expr, const wxString &word, const
 			scope << typeScope << wxT("::") << typeName;
 
 		std::vector<TagEntryPtr> tmpCandidates;
-		TagsByScope(scope, tmpCandidates);
+		TagsByScopeAndName(scope, word, tmpCandidates);
 		RemoveDuplicates(tmpCandidates, candidates);
+
+		// we now have a list of tags that matches our word
+		TipsFromTags(candidates, word, tips);
 	}
 }
 
@@ -1134,3 +1134,27 @@ bool TagsManager::GetDerivationList(const wxString &path, std::vector<wxString> 
 
 	return true;
 }
+
+void TagsManager::TipsFromTags(const std::vector<TagEntryPtr> &tags, const wxString &word, std::vector<wxString> &tips)
+{
+	for(size_t i=0; i<tags.size(); i++)
+	{
+		if(tags.at(i)->GetName() != word)
+			continue;
+
+		wxString tip = tags.at(i)->GetPattern();
+		
+		//remove the pattern perfix and suffix
+		tip = tip.AfterFirst(wxT('^'));
+		tip = tip.BeforeLast(wxT('$'));
+		
+		// Trim whitespace from right and left
+		static wxString trimString(wxT("{};\r\n\t\v "));
+
+		tip.erase(0, tip.find_first_not_of(trimString)); 
+		tip.erase(tip.find_last_not_of(trimString)+1);
+
+		tips.push_back(tip);
+	}
+}
+

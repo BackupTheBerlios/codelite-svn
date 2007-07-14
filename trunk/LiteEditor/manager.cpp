@@ -140,7 +140,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 	}
 
 	//update the symbol tree
-	if(updTree)
+	if(updTree && !editor->GetProject().IsEmpty())
 		Frame::Get()->GetWorkspacePane()->BuildSymbolTree(fileName);
 
 	editor->SetProject( projectName );
@@ -1200,4 +1200,20 @@ void Manager::ImportFromMakefile(const wxString &path)
 	}
 	
 	return;
+}
+
+LEditor *Manager::GetActiveEditor() const
+{
+	wxFlatNotebook *book = Frame::Get()->GetNotebook();
+	if(!book)
+	{
+		return NULL;
+	}
+
+	int selected = book->GetSelection();
+	if(selected == wxNOT_FOUND)
+		return NULL;
+
+	LEditor *editor = dynamic_cast<LEditor*>(book->GetPage(selected));
+	return editor;
 }

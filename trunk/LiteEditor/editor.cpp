@@ -98,7 +98,7 @@ void LEditor::SetProperties()
 	
 	OptionsConfigPtr options = EditorConfigST::Get()->GetOptions();
 
-	SetMouseDwellTime(200);
+	SetMouseDwellTime(500);
 	SetProperty(wxT("fold"), wxT("1"));
 	SetProperty(wxT("fold.html"), wxT("1"));
 	SetProperty(wxT("styling.within.preprocessor"), wxT("1"));

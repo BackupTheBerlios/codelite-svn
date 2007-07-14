@@ -10,6 +10,12 @@
 #include "language.h"
 #include "browse_record.h"
 
+#define VALIDATE_PROJECT()\
+	if(rCtrl.GetProject().IsEmpty())\
+	{\
+		return;\
+	}
+
 //Images initialization
 wxBitmap ContextCpp::m_classBmp = wxNullBitmap;
 wxBitmap ContextCpp::m_structBmp = wxNullBitmap;
@@ -117,13 +123,76 @@ ContextBase *ContextCpp::NewInstance(LEditor *container){
 
 void ContextCpp::OnDwellEnd(wxScintillaEvent &event)
 {
-	wxUnusedVar(event);
+	LEditor &rCtrl = GetCtrl();
+	rCtrl.CallTipCancel();
+	m_tipKind = TipNone;
+	event.Skip();
 }
 
 void ContextCpp::OnDwellStart(wxScintillaEvent &event) 
 {
+	LEditor &rCtrl = GetCtrl();
+
+	VALIDATE_PROJECT();
+
+	//before we start, make sure we are the visible window
+	Manager *mgr = ManagerST::Get();
+	if(mgr->GetActiveEditor() != &rCtrl)
+	{
+		wxLogMessage(wxT("OnDwellStart cancelled - we are no longer the active tab"));
+		event.Skip();
+		return;
+	} // if(mgr->GetActiveEditor() != &rCtrl)
+
+	// Handle dewell only if a project is opened
+	if(rCtrl.GetProjectName().IsEmpty())
+		return;
+
+	int start;
+	long pos = event.GetPosition();
+	int  end = rCtrl.WordEndPosition(pos, true);
+	int word_start = rCtrl.WordStartPosition(pos, true);
+
+	// get the expression we are standing on it
+	if( IsCommentOrString( pos ) )
+		return;
+	
+	// get the token
+	wxString word = rCtrl.GetTextRange(word_start, end);
+
+	// The full expression is obtained by simply searching backwards for 
+	// the first '{' or ';' or SOT
+	int semiColPos = rCtrl.FindString(wxT(";"), 0, false, pos);
+	int lcurlyPos  = rCtrl.FindString(wxT("{"), 0, false, pos);
+	// get the full text of the current page
+	wxString text = rCtrl.GetTextRange(0, pos);
+	
+	semiColPos > lcurlyPos ? start = semiColPos : start = lcurlyPos;
+	if(start < 0){
+		start = 0;
+	}
+	wxString expr = rCtrl.GetTextRange(start, end);
+	//-------------------------------------------------------------
+	// now we are ready to process the scope and build our tips
+	//-------------------------------------------------------------
 	std::vector<wxString> tips;
 	TagsManagerST::Get()->GetHoverTip(expr, word, text, tips);
+
+	//-------------------------------------------------------------
+	// display a tooltip
+	//-------------------------------------------------------------
+	wxString tooltip;
+	if( tips.size() > 0 )
+	{
+		tooltip << tips[0];
+		for( size_t i=1; i<tips.size(); i++ )
+			tooltip << wxT("\n") << tips[i];
+
+		// cancel any old calltip and display the new one
+		rCtrl.CallTipCancel();
+		rCtrl.CallTipShow( event.GetPosition(), tooltip );
+		m_tipKind = TipHover;
+	}
 }
 
 wxString ContextCpp::GetImageString(const TagEntry &entry)
@@ -263,6 +332,9 @@ void ContextCpp::OnCallTipClick(wxScintillaEvent &event)
 void ContextCpp::CodeComplete()
 {
 	LEditor &rCtrl = GetCtrl();
+
+	VALIDATE_PROJECT();
+
 	long pos = rCtrl.GetCurrentPos();
 	bool showFuncProto = false;
 
@@ -353,6 +425,9 @@ wxString ContextCpp::GetWordUnderCaret()
 void ContextCpp::CompleteWord()
 {
 	LEditor &rCtrl = GetCtrl();
+
+	VALIDATE_PROJECT();
+
 	std::vector<TagEntryPtr> tags;
 	wxString scope;
 	wxString scopeName;
@@ -427,6 +502,9 @@ void ContextCpp::GotoPreviousDefintion()
 void ContextCpp::GotoDefinition()
 {
 	LEditor &rCtrl = GetCtrl();
+
+	VALIDATE_PROJECT();
+
 	std::vector<TagEntryPtr> tags;
 
 	//	Make sure we are not on a comment section
