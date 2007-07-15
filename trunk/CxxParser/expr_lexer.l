@@ -247,7 +247,7 @@ reinterpret_cast 		{CPP_KEYWORD_RETURN(LE_REINTERPRET_CAST);}
 "|="						{NAMEDOP_RETURN(LE_ORassign);}
 "..."						{NAMEDOP_RETURN(LE_ELLIPSIS);}
 <<EOF>> 					{	
-								printf("found EOF\n");
+//								printf("found EOF\n");
 								yyterminate();
 							}
 .							{return yytext[0];}

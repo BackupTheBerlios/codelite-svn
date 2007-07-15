@@ -135,12 +135,12 @@
   <Dependencies/>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
-      <General OutputFile="../../lib/gcc/libwxscintilla.so" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="..\..\lib\gcc\libwxscintilla.a" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);;">
         <IncludePath Value="."/>
-        <IncludePath Value="./include"/>
-        <IncludePath Value="src/scintilla/include"/>
-        <IncludePath Value="src/scintilla/src"/>
+        <IncludePath Value=".\include"/>
+        <IncludePath Value="src\scintilla\include"/>
+        <IncludePath Value="src\scintilla\src"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="SCI_LEXER"/>
         <Preprocessor Value="LINK_LEXERS"/>
@@ -150,7 +150,7 @@
       <Linker Required="yes" Options="-O0;$(shell wx-config --libs ---debug=no)">
         <LibraryPath Value="."/>
         <LibraryPath Value="$(IntermediateDirectory)"/>
-        <LibraryPath Value="../../lib/gcc"/>
+        <LibraryPath Value="..\..\lib\gcc"/>
         <Library Value="wxmsw28_gcc_custom.so"/>
         <Library Value="Gdi32.so"/>
       </Linker>

@@ -22,16 +22,16 @@
   <Dependencies/>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
-      <General OutputFile="../../lib/gcc/libwxflatnotebook.so" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="..\..\lib\gcc\libwxflatnotebook.a" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);">
         <IncludePath Value="."/>
-        <IncludePath Value="./include"/>
+        <IncludePath Value=".\include"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXMAKINGDLL_FNB"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
       <Linker Required="yes" Options="-O2 $(shell wx-config --libs);">
-        <LibraryPath Value="../lib/gcc"/>
+        <LibraryPath Value="..\lib\gcc"/>
         <Library Value="wxmsw28_gcc_custom.so"/>
       </Linker>
       <PreBuild/>

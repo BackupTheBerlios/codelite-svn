@@ -23,7 +23,7 @@
       <Project Name="LiteEditor" ConfigName="ReleaseANSI"/>
       <Project Name="CodeLite" ConfigName="ReleaseANSI"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release ANSI" Selected="no">
+    <WorkspaceConfiguration Name="Release ANSI" Selected="yes">
       <Project Name="wxsqlite3" ConfigName="ReleaseANSIStaticLibrary"/>
       <Project Name="wxscintilla" ConfigName="ReleaseANSIStaticLibrary"/>
       <Project Name="wxflatnotebook" ConfigName="ReleaseANSIStaticLibrary"/>
@@ -32,7 +32,7 @@
       <Project Name="LiteEditor" ConfigName="ReleaseANSIStaticLibrary"/>
       <Project Name="CodeLite" ConfigName="ReleaseANSIStaticLibrary"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release Unicode" Selected="yes">
+    <WorkspaceConfiguration Name="Release Unicode" Selected="no">
       <Project Name="wxsqlite3" ConfigName="ReleaseUnicode"/>
       <Project Name="wxscintilla" ConfigName="ReleaseUnicode"/>
       <Project Name="wxflatnotebook" ConfigName="ReleaseUnicode"/>

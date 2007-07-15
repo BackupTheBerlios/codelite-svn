@@ -2617,11 +2617,11 @@ void printScopeName()
 {
 	if(currentScope.empty())
 	{
-		printf("%d: current scope is global scope\n", cl_scope_lineno );
+		//printf("%d: current scope is global scope\n", cl_scope_lineno );
 	}
 	else
 	{
-		printf("%d: current scope is %s\n", cl_scope_lineno, getCurrentScope().c_str());
+		//printf("%d: current scope is %s\n", cl_scope_lineno, getCurrentScope().c_str());
 	}
 }
 

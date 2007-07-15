@@ -1612,7 +1612,7 @@ case YY_STATE_EOF(WRAP_PREP):
 case YY_STATE_EOF(CPP_COMMENT):
 case YY_STATE_EOF(C_COMMENT):
 {	
-								printf("found EOF\n");
+//								printf("found EOF\n");
 								yyterminate();
 							}
 	YY_BREAK
