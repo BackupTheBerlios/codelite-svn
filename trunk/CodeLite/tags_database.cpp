@@ -98,6 +98,9 @@ void TagsDatabase::CreateSchema()
 		sql = _T("CREATE INDEX IF NOT EXISTS TAGS_NAME on tags(name);");
 		m_db->ExecuteUpdate(sql);
 
+		sql = _T("CREATE INDEX IF NOT EXISTS TAGS_SCOPE on tags(scope);");
+		m_db->ExecuteUpdate(sql);
+
 		sql = _T("CREATE INDEX IF NOT EXISTS TAGS_PATH on tags(path);");
 		m_db->ExecuteUpdate(sql);
 
