@@ -129,6 +129,18 @@ public:
 	 */
 	void SaveLexers();
 
+	/**
+	 * get an array of recently opened files
+	 * \param files  [output] a place holder for the output
+	 */
+	void GetRecentlyOpenedFies(wxArrayString &files);
+
+	/**
+	 * get an array of recently opened files
+	 * \param files  list of files to save
+	 */
+	void SetRecentlyOpenedFies(const wxArrayString &files);
+
 private:
 	EditorConfig();
 	virtual ~EditorConfig();

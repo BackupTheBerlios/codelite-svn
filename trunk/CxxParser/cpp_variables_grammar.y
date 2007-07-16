@@ -23,6 +23,8 @@ int  cl_var_parse();
 void syncParser();
 
 static VariableList *gs_vars = NULL;
+static std::vector<std::string> gs_names;
+
 Variable curr_var;
 
 //---------------------------------------------
@@ -116,7 +118,7 @@ translation_unit	:		/*empty*/
 						| translation_unit external_decl
 						;
 						
-external_decl		:	{curr_var.Reset();} variables	
+external_decl		:	{curr_var.Reset(); gs_names.clear();} variables	
 						| 	error { 
 								yyclearin;	//clear lookahead token
 								yyerrok;
@@ -135,35 +137,50 @@ template_parameter	:	const_spec nested_scope_specifier LE_IDENTIFIER special_sta
 								{$$ = $1 + $2 + $3 +$4;}
 							;
 
-variables			: stmnt_starter variable_decl special_star_amp LE_IDENTIFIER postfix 
+variables			: stmnt_starter variable_decl special_star_amp variable_name_list postfix 
 						{
 							if(gs_vars)
 							{
+								Variable var;
 								std::string pattern;
 								curr_var.m_pattern = "/^";
-								curr_var.m_pattern += $1 + " " + $2 + " " + $3 + " " + $4 + " " + $5 + "$/";
-								curr_var.m_name = $4;
+								curr_var.m_pattern += $1 + " " + $2 + " " + $3 + " " + $4 + "$/";
 								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
-								gs_vars->push_back(curr_var); 
+								for(size_t i=0; i< gs_names.size(); i++)
+								{
+									//create new variable for every variable name found
+									var = curr_var;
+									var.m_name = gs_names.at(i);
+									gs_vars->push_back(var); 
+								}
 								curr_var.Reset();
+								gs_names.clear();
 							}
 						}
 						;
-
+						
+variable_name_list: LE_IDENTIFIER {gs_names.push_back($1);}
+						| variable_name_list ',' LE_IDENTIFIER 
+						{ 
+							//collect all the names
+							gs_names.push_back($3);
+							$$ = $1 + $2 + " " + $3;
+						}
+						;
 postfix: ';'
-		 | ','
 		 | '='
 		 | ')'
+		 | '(' { $$ = $1 + var_consumeFuncArgList();} 
 		 ; 
 /* 
 applicable for C++, for cases where a function is declared as
 void scope::foo(){ ... }
 */
-scope_specifier		:	LE_IDENTIFIER LE_CLCL {$$ = $1+ $2;}
-						|	LE_IDENTIFIER  '<' {var_consumeTemplateDecl();} LE_CLCL {$$ = $1 + $4; }
+scope_specifier	:	LE_IDENTIFIER LE_CLCL {$$ = $1+ $2;}
+						|	LE_IDENTIFIER  '<' {var_consumeTemplateDecl();} LE_CLCL {$$ = $1 + $4;}
 						;
 
-nested_scope_specifier		: /*empty*/ {$$ = "";}
+nested_scope_specifier: /*empty*/ {$$ = "";}
 							| nested_scope_specifier scope_specifier {	$$ = $1 + $2;}
 							;
 
@@ -188,6 +205,7 @@ stmnt_starter		:	/*empty*/ {$$ = "";}
 						| '(' { $$ = "(";}
 						| '}' { $$ = "}";}
 						| ':' { $$ = ":";}	//e.g. private: std::string m_name;
+						| '=' { $$ = "=";}
 						;
 						
 /** Variables **/
@@ -219,8 +237,9 @@ variable_decl		:	const_spec basic_type_name
 void yyerror(char *s) {}
 
 
-void var_consumeFuncArgList()
+std::string var_consumeFuncArgList()
 {
+	std::string consumedData;
 	int depth = 1;
 	while(depth > 0)
 	{
@@ -231,6 +250,7 @@ void var_consumeFuncArgList()
 			break;
 		}
 		
+		consumedData += cl_scope_text;
 		if(ch == ')')
 		{
 			depth--;
@@ -242,6 +262,7 @@ void var_consumeFuncArgList()
 			continue;
 		}
 	}
+	return consumedData;
 }
 
 void var_consumeTemplateDecl()

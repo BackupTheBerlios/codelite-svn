@@ -122,3 +122,13 @@ void XmlUtils::SetNodeContent(wxXmlNode *node, const wxString &text)
 	node->AddChild( contentNode );
 }
 
+void XmlUtils::RemoveChildren(wxXmlNode *node)
+{
+	wxXmlNode *child = node->GetChildren();
+	while(child){
+		wxXmlNode *nextChild = child->GetNext();
+		node->RemoveChild(child);
+		delete child;
+		child = nextChild;
+	}
+}

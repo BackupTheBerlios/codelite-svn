@@ -9,6 +9,23 @@ Variable::~Variable()
 {
 }
 
+Variable::Variable(const Variable &src)
+{
+	*this = src;
+}
+
+Variable & Variable::operator =(const Variable &src)
+{
+	m_type = src.m_type;
+	m_templateDecl = src.m_templateDecl;
+	m_name = src.m_name;
+	m_isTemplate = src.m_isTemplate;
+	m_isPtr = src.m_isPtr;
+	m_typeScope = src.m_typeScope;
+	m_pattern = src.m_pattern;
+	return *this;
+}
+
 void Variable::Reset()
 {
 	m_type = "";

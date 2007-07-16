@@ -70,6 +70,12 @@ public:
 	 * \param defaultValue default value to return if no property exist
 	 */
 	static bool ReadBool(wxXmlNode *node, const wxString &propName, bool defaultValue = false);
+	
+	/**
+	 * Remove all children of xml node
+	 * \param node xml node
+	 */
+	static void RemoveChildren(wxXmlNode *node);
 
 };
 

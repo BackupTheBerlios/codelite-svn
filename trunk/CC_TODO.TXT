@@ -1,1 +1,6 @@
-Done
+1. When inside a class/namespace scope, and typing CLASS:: -> CC does not work.
+2. Currently, typing ')' cacnells any open call tip, the cancellation should occur only if depth is zero!
+4. Add doxygen comment to context menu
+5. Call tip disappears too fast
+6. Hitting down & up arrows hides the calltip, incase there are multiple choices for it, it should be stay active and rotate between options
+7. Mark matching brace when caret is near an open/close brace

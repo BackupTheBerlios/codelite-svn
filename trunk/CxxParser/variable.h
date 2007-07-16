@@ -19,6 +19,12 @@ public:
 	Variable();
 	virtual ~Variable();
 
+	//copy ctor
+	Variable(const Variable& src);
+	
+	//operator = 
+	Variable& operator=(const Variable& src);
+	
 	//clear the class content
 	void Reset();
 	

@@ -1217,3 +1217,7 @@ LEditor *Manager::GetActiveEditor() const
 	LEditor *editor = dynamic_cast<LEditor*>(book->GetPage(selected));
 	return editor;
 }
+
+void Manager::GetRecentlyOpenedFiles(wxArrayString &files)
+{
+}

@@ -456,6 +456,11 @@ public:
 	 */
 	LEditor *GetActiveEditor() const;
 
+	/**
+	 *return a list for the recently opened file
+	 */ 
+	void GetRecentlyOpenedFiles(wxArrayString &files);
+	
 protected:
 	Manager(void);
 	virtual ~Manager(void);
