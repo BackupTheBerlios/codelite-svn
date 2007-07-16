@@ -19,24 +19,6 @@
     <Variable Name="WorkspacePath" Value="C:\Development\C++\LiteEditor"/>
   </Environment>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Release ASNI DLL" Selected="yes">
-      <Project Name="wxsqlite3" ConfigName="ReleaseANSI"/>
-      <Project Name="wxscintilla" ConfigName="ReleaseANSI"/>
-      <Project Name="wxflatnotebook" ConfigName="ReleaseANSI"/>
-      <Project Name="sqlite3" ConfigName="ReleaseANSI"/>
-      <Project Name="plugin_sdk" ConfigName="ReleaseANSI"/>
-      <Project Name="LiteEditor" ConfigName="ReleaseANSI"/>
-      <Project Name="CodeLite" ConfigName="ReleaseANSI"/>
-    </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release ANSI" Selected="no">
-      <Project Name="wxsqlite3" ConfigName="ReleaseANSIStaticLibrary"/>
-      <Project Name="wxscintilla" ConfigName="ReleaseANSIStaticLibrary"/>
-      <Project Name="wxflatnotebook" ConfigName="ReleaseANSIStaticLibrary"/>
-      <Project Name="sqlite3" ConfigName="ReleaseANSIStaticLibrary"/>
-      <Project Name="plugin_sdk" ConfigName="ReleaseANSIStaticLibrary"/>
-      <Project Name="LiteEditor" ConfigName="ReleaseANSIStaticLibrary"/>
-      <Project Name="CodeLite" ConfigName="ReleaseANSIStaticLibrary"/>
-    </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release Unicode" Selected="no">
       <Project Name="wxsqlite3" ConfigName="ReleaseUnicode"/>
       <Project Name="wxscintilla" ConfigName="ReleaseUnicode"/>
@@ -45,6 +27,15 @@
       <Project Name="plugin_sdk" ConfigName="ReleaseUnicode"/>
       <Project Name="LiteEditor" ConfigName="ReleaseUnicode"/>
       <Project Name="CodeLite" ConfigName="ReleaseUnicode"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release ANSI (Windows)" Selected="yes">
+      <Project Name="wxsqlite3" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="wxscintilla" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="wxflatnotebook" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="sqlite3" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="plugin_sdk" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="LiteEditor" ConfigName="ReleaseANSIStaticLibrary"/>
+      <Project Name="CodeLite" ConfigName="ReleaseANSIStaticLibrary"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>
