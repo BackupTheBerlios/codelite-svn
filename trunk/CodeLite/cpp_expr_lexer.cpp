@@ -1397,14 +1397,13 @@ YY_RULE_SETUP
 case 73:
 YY_RULE_SETUP
 {
-							NUMERICAL_RETURN(LE_CHARACTERconstant);
-							}
+			NUMERICAL_RETURN(LE_CHARACTERconstant);
+			}
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
 {
-							LITERAL_RETURN(LE_STRINGliteral);
-							}
+			LITERAL_RETURN(LE_STRINGliteral);}
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
@@ -1612,9 +1611,9 @@ case YY_STATE_EOF(WRAP_PREP):
 case YY_STATE_EOF(CPP_COMMENT):
 case YY_STATE_EOF(C_COMMENT):
 {	
-//								printf("found EOF\n");
-								yyterminate();
-							}
+							//reset lexer
+							yyterminate();
+						}
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
@@ -1623,27 +1622,27 @@ YY_RULE_SETUP
 case 126:
 YY_RULE_SETUP
 { 
-							defineFound = false;
-							BEGIN INITIAL;
-							}
+						defineFound = false;
+						BEGIN INITIAL;
+					}
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
 {
-							BEGIN WRAP_PREP;
-							}
+						BEGIN WRAP_PREP;
+					}
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
 {
-							defineFound = true;
-							}
+						defineFound = true;
+					}
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
 {
-							BEGIN PREPR;
-							}
+						BEGIN PREPR;
+					}
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
@@ -1669,7 +1668,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
-{}
+{}		
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
@@ -2596,6 +2595,7 @@ void cl_expr_lex_clean()
 /*******************************************************************/
 bool setExprLexerInput(const std::string &in) 
 {
+	BEGIN INITIAL;
 	yy_scan_string(in.c_str());
 	
 	//update the working file name

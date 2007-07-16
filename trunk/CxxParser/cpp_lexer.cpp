@@ -2656,6 +2656,7 @@ std::string getCurrentScope()
 /*******************************************************************/
 bool setLexerInput(const std::string &in) 
 {
+	BEGIN INITIAL;
 	yy_scan_string(in.c_str());
 	
 	//update the working file name

@@ -97,9 +97,10 @@ translation_unit	:		/*empty*/
 						
 primary_expr		:	{result.Reset();} simple_expr	
 						| 	error { 
-								//yyclearin;	//clear lookahead token
-								//yyerrok;
-								//printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_expr_text, cl_expr_lineno);
+								yyclearin;	//clear lookahead token
+								yyerrok;
+								fprintf(stderr, "CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_expr_text, cl_expr_lineno);
+								fflush(stderr);
 								expr_syncParser();
 							}
 						;
@@ -294,6 +295,7 @@ void expr_syncParser(){
 // return the scope name at the end of the input string
 ExpressionResult &parse_expression(const std::string &in)
 {
+	result.Reset();
 	//provide the lexer with new input
 	if( !setExprLexerInput(in) ){
 		return result;
@@ -303,5 +305,6 @@ ExpressionResult &parse_expression(const std::string &in)
 	cl_expr_parse();
 	//do the lexer cleanup
 	cl_expr_lex_clean();
+	
 	return result;
 }

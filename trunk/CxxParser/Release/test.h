@@ -1,2 +1,2 @@
-wxXmlNode *node = new wxXmlNode;
-std::vector<std::string> str, str2;
+#ifndef FILE_HISTORY_H  define FILE_HISTORY_H  include "wx/docview" 
+this
