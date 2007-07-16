@@ -1220,4 +1220,20 @@ LEditor *Manager::GetActiveEditor() const
 
 void Manager::GetRecentlyOpenedFiles(wxArrayString &files)
 {
+	EditorConfig *cfg = EditorConfigST::Get();
+	cfg->GetRecentlyOpenedFies(files);
+}
+
+void Manager::AddToRecentlyOpenedFiles(const wxString &fileName)
+{
+	//get list recently opened files
+	wxArrayString files;
+	EditorConfig *cfg = EditorConfigST::Get();
+	cfg->GetRecentlyOpenedFies(files);
+	
+	if(files.Index(fileName) == wxNOT_FOUND){
+		//the file does not exist, add it and save the list
+		files.Add(fileName);
+		cfg->SetRecentlyOpenedFies(files);
+	}
 }

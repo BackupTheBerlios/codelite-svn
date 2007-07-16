@@ -640,7 +640,7 @@ bool TagsManager::WordCompletionCandidates(const wxString& expr, const wxString&
 	wxString expression(expr);
 	
 	// Trim whitespace from right and left
-	static wxString trimString(wxT("(){};\r\n\t\v "));
+	static wxString trimString(wxT("!<>=(){};\r\n\t\v "));
 
 	expression.erase(0, expression.find_first_not_of(trimString)); 
 	expression.erase(expression.find_last_not_of(trimString)+1);

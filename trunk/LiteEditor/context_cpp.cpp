@@ -433,8 +433,7 @@ wxString ContextCpp::GetExpression(long pos)
 		switch(ch)
 		{
 		case wxT('{'):
-			cont = false;
-			break;
+		case wxT('='):
 		case wxT(';'):
 			cont = false;
 			break;

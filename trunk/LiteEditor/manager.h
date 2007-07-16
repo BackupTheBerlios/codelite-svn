@@ -460,6 +460,11 @@ public:
 	 *return a list for the recently opened file
 	 */ 
 	void GetRecentlyOpenedFiles(wxArrayString &files);
+
+	/**
+	 * add single file to the recently opened files
+	 */ 
+	void AddToRecentlyOpenedFiles(const wxString &fileName);
 	
 protected:
 	Manager(void);
