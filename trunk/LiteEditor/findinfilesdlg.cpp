@@ -210,6 +210,12 @@ void FindInFilesDialog::ConnectEvents()
 	m_matchCase->Connect(wxID_ANY, wxEVT_COMMAND_CHECKBOX_CLICKED , wxCommandEventHandler(FindInFilesDialog::OnClick), NULL, this);
 	m_matchWholeWord->Connect(wxID_ANY, wxEVT_COMMAND_CHECKBOX_CLICKED , wxCommandEventHandler(FindInFilesDialog::OnClick), NULL, this);
 	m_regualrExpression->Connect(wxID_ANY, wxEVT_COMMAND_CHECKBOX_CLICKED , wxCommandEventHandler(FindInFilesDialog::OnClick), NULL, this);
+	ConnectCharEvent(this, FindInFilesDialog::OnCharEvent);
+}
+
+void FindInFilesDialog::OnCharEvent(wxKeyEvent &event)
+{
+	event.Skip();
 }
 
 void FindInFilesDialog::SendEvent(wxEventType type)

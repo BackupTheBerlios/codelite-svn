@@ -215,10 +215,6 @@ void FindReplaceDialog::OnKeyDown(wxKeyEvent &event)
 		// Set the updated flags
 		m_data.SetFlags(flags);
 		event.Skip(false);
-	}else if(event.GetKeyCode() == WXK_ESCAPE){
-		//hide the dialog
-		Hide();
-		event.Skip(false);
 	}else{ 
 		//skip event
 		event.Skip();

@@ -83,6 +83,11 @@ public:
 	 */
 	wxAuiManager& GetDockingManager() { return m_mgr; }
 
+	/**
+	 * return the find in files dialog pointer
+	 */
+	FindInFilesDialog *GetFindInFilesDlg(){return m_findInFilesDlg;}
+
 private:
 	// make our frame's constructor private
 	Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style = wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX | wxCAPTION | wxSYSTEM_MENU | wxRESIZE_BORDER | wxCLIP_CHILDREN, const wxString& name = wxT("Main Frame"));

@@ -69,10 +69,11 @@ protected:
 	void ConnectEvents();
 	void OnClick(wxCommandEvent &event);
 	void SendEvent(wxEventType type);
-
+	
 
 	DECLARE_EVENT_TABLE()
 	void OnClose(wxCloseEvent &event);
+	void OnCharEvent(wxKeyEvent &event);
 };
 
 #endif // FIND_IN_FILES_DLG_H
