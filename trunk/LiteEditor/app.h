@@ -18,7 +18,6 @@ protected:
 
 private:
 	DECLARE_EVENT_TABLE()
-	void OnKeyDown(wxKeyEvent &event);
 };
 
 #endif // LITEEDITOR_APP_H

@@ -14,6 +14,7 @@ DEFINE_EVENT_TYPE(wxEVT_FRD_BOOKMARKALL)
 
 BEGIN_EVENT_TABLE(FindReplaceDialog, wxDialog)
 EVT_CLOSE(FindReplaceDialog::OnClose)
+EVT_CHAR_HOOK(FindReplaceDialog::OnKeyDown)
 END_EVENT_TABLE()
 
 FindReplaceDialog::FindReplaceDialog() 
@@ -215,17 +216,25 @@ void FindReplaceDialog::OnKeyDown(wxKeyEvent &event)
 		// Set the updated flags
 		m_data.SetFlags(flags);
 		event.Skip(false);
-	}else{ 
-		//skip event
-		event.Skip();
-	}
+		return;
+	} // if(event.GetKeyCode() == WXK_RETURN)
+	
+	if(event.GetKeyCode() == WXK_ESCAPE){ 
+		//hide the find/replace dialog
+		if(IsShown()){
+			Hide();
+			event.Skip(false);
+			return;
+		}
+	} // if(event.GetKeyCode() == WXK_ESCAPE)
+	event.Skip();
 }
 
 void FindReplaceDialog::ConnectEvents()
 {
 	// Connect buttons
-	ConnectKeyDown(m_findString, FindReplaceDialog::OnKeyDown);
-	ConnectKeyDown(m_replaceString, FindReplaceDialog::OnKeyDown);
+	//ConnectKeyDown(m_findString, FindReplaceDialog::OnKeyDown);
+	//ConnectKeyDown(m_replaceString, FindReplaceDialog::OnKeyDown);
 
 	m_find->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(FindReplaceDialog::OnClick), NULL, this);
 	m_replace->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(FindReplaceDialog::OnClick), NULL, this);

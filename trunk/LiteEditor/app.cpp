@@ -6,7 +6,6 @@
 #include "macros.h"
 
 BEGIN_EVENT_TABLE(App, wxApp)
-EVT_KEY_DOWN(App::OnKeyDown)
 END_EVENT_TABLE()
 
 IMPLEMENT_APP(App)
@@ -91,20 +90,5 @@ bool App::OnInit()
 
 int App::OnExit(){
 	return 0;
-}
-
-void App::OnKeyDown(wxKeyEvent &event)
-{
-	//hide the find in files dialog
-	FindInFilesDialog *dlg = Frame::Get()->GetFindInFilesDlg();
-	if(dlg && dlg->IsShown()){
-		dlg->Hide();
-	}
-	//hide the find/replace dialog
-	FindReplaceDialog *frdlg = LEditor::GetFindReplaceDialog();
-	if(frdlg && frdlg->IsShown()){
-		frdlg->Hide();
-	}
-	event.Skip();
 }
 

@@ -17,6 +17,7 @@ DEFINE_EVENT_TYPE(wxEVT_FIF_CLOSE)
 
 BEGIN_EVENT_TABLE(FindInFilesDialog, wxDialog)
 EVT_CLOSE(FindInFilesDialog::OnClose)
+EVT_CHAR_HOOK(FindInFilesDialog::OnCharEvent)
 END_EVENT_TABLE()
 
 FindInFilesDialog::FindInFilesDialog() 
@@ -210,11 +211,13 @@ void FindInFilesDialog::ConnectEvents()
 	m_matchCase->Connect(wxID_ANY, wxEVT_COMMAND_CHECKBOX_CLICKED , wxCommandEventHandler(FindInFilesDialog::OnClick), NULL, this);
 	m_matchWholeWord->Connect(wxID_ANY, wxEVT_COMMAND_CHECKBOX_CLICKED , wxCommandEventHandler(FindInFilesDialog::OnClick), NULL, this);
 	m_regualrExpression->Connect(wxID_ANY, wxEVT_COMMAND_CHECKBOX_CLICKED , wxCommandEventHandler(FindInFilesDialog::OnClick), NULL, this);
-	ConnectCharEvent(this, FindInFilesDialog::OnCharEvent);
 }
 
 void FindInFilesDialog::OnCharEvent(wxKeyEvent &event)
 {
+	if(event.GetKeyCode() == WXK_ESCAPE){
+		Hide();
+	}
 	event.Skip();
 }
 
