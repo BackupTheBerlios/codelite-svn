@@ -155,7 +155,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_CLOSE(Frame::OnClose)
 	EVT_TIMER(wxID_ANY, Frame::OnTimer)
 	EVT_MENU_RANGE(RecentFilesSubMenuID, RecentFilesSubMenuID + 10, Frame::OnRecentFile)
-	EVT_UPDATE_UI_RANGE(RecentFilesSubMenuID, RecentFilesSubMenuID + 10, Frame::OnRecentFileUI)
+	EVT_MENU_RANGE(RecentWorkspaceSubMenuID, RecentWorkspaceSubMenuID + 10, Frame::OnRecentWorkspace)
 
 END_EVENT_TABLE()
 Frame* Frame::m_theFrame = NULL;
@@ -258,6 +258,7 @@ void Frame::CreateGUIControls(void)
 	EditorConfigST::Get()->Load();
 	CreateViewAsSubMenu();
 	CreateRecentlyOpenedFilesMenu();
+	CreateRecentlyOpenedWorkspacesMenu();
 	BuildSettingsConfigST::Get()->Load();
 
 	//start ctags process
@@ -1228,9 +1229,9 @@ void Frame::CreateRecentlyOpenedFilesMenu()
 {
 	wxArrayString files;
 	Manager *mgr = ManagerST::Get();
-	mgr->GetRecentlyOpenedFiles(files);
 	FileHistory &hs = mgr->GetRecentlyOpenedFilesClass();
-	
+	mgr->GetRecentlyOpenedFiles(files);
+
 	int idx = GetMenuBar()->FindMenu(wxT("File"));
 	if(idx != wxNOT_FOUND){
 		wxMenu *menu = GetMenuBar()->GetMenu(idx);
@@ -1252,6 +1253,34 @@ void Frame::CreateRecentlyOpenedFilesMenu()
 	}
 }
 
+void Frame::CreateRecentlyOpenedWorkspacesMenu()
+{
+	wxArrayString files;
+	Manager *mgr = ManagerST::Get();
+	FileHistory &hs = mgr->GetRecentlyOpenedWorkspacesClass();
+	mgr->GetRecentlyOpenedWorkspaces(files);
+
+	int idx = GetMenuBar()->FindMenu(wxT("File"));
+	if(idx != wxNOT_FOUND){
+		wxMenu *menu = GetMenuBar()->GetMenu(idx);
+		wxMenu *submenu = NULL;
+		wxMenuItem *item = menu->FindItem(XRCID("recent_workspaces"));
+		if(item){
+			submenu = item->GetSubMenu();
+		}
+		
+		if(submenu){
+			for(size_t i=0; i<files.GetCount(); i++){
+				hs.AddFileToHistory(files.Item(i));
+			}
+			//set this menu as the recent file menu
+			hs.SetBaseId(RecentWorkspaceSubMenuID+1);
+			hs.UseMenu(submenu);
+			hs.AddFilesToMenu();
+		}
+	}
+}
+
 void Frame::OnRecentFile(wxCommandEvent &event)
 {
 	size_t idx = event.GetId() - (RecentFilesSubMenuID+1);
@@ -1262,11 +1291,21 @@ void Frame::OnRecentFile(wxCommandEvent &event)
 	fh.GetFiles(files);
 
 	if(idx < files.GetCount()){
-		mgr->OpenFile(files.Item(idx), wxEmptyString);
+		wxString projectName = mgr->GetProjectNameByFile(files.Item(idx));
+		mgr->OpenFile(files.Item(idx), projectName);
 	}
 }
 
-void Frame::OnRecentFileUI(wxUpdateUIEvent &event)
+void Frame::OnRecentWorkspace(wxCommandEvent &event)
 {
-	event.Enable(true);
+	size_t idx = event.GetId() - (RecentWorkspaceSubMenuID+1);
+	Manager *mgr = ManagerST::Get();
+	FileHistory &fh = mgr->GetRecentlyOpenedWorkspacesClass();
+
+	wxArrayString files;
+	fh.GetFiles(files);
+
+	if(idx < files.GetCount()){
+		mgr->OpenWorkspace(files.Item(idx));
+	}
 }

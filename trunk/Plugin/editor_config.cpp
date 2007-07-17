@@ -260,3 +260,44 @@ void EditorConfig::SetRecentlyOpenedFies(const wxArrayString &files)
 	//save the data to disk
 	m_doc->Save(m_fileName.GetFullPath());
 }
+
+
+void EditorConfig::GetRecentlyOpenedWorkspaces(wxArrayString &files)
+{
+	//find the root node of the recent files
+	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("RecentWorkspaces"));
+	if(node)
+	{
+		wxXmlNode *child = node->GetChildren();
+		while(child){
+			if(child->GetName() == wxT("File")){
+				wxString fileName = XmlUtils::ReadString(child, wxT("Name"));
+				files.Add(fileName);
+			}
+			child = child->GetNext();
+		}
+	}
+}
+
+void EditorConfig::SetRecentlyOpenedWorkspaces(const wxArrayString &files)
+{
+	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("RecentWorkspaces"));
+	if(node == NULL){
+		//create new entry in the configuration file
+		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("RecentWorkspaces"));
+		m_doc->GetRoot()->AddChild(node);
+	}else{
+		//remove old children
+		XmlUtils::RemoveChildren(node);
+	}
+	
+	for(size_t i=0; i<files.GetCount(); i++)
+	{
+		wxXmlNode *child = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("File"));
+		child->AddProperty(wxT("Name"), files.Item(i));
+		node->AddChild(child);
+	}
+	
+	//save the data to disk
+	m_doc->Save(m_fileName.GetFullPath());
+}

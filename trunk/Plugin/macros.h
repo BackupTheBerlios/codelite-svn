@@ -76,5 +76,6 @@ const wxString SEARCH_IN_PROJECT   = wxT("Active Project");
 
 #define viewAsSubMenuID 23499
 #define RecentFilesSubMenuID 23600
+#define RecentWorkspaceSubMenuID 23650
 
 #endif // MACROS_H

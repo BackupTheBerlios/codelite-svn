@@ -37,7 +37,8 @@ class Manager : public wxEvtHandler
 	CompileRequest *m_compileRequest;
 	AsyncExeCmd *m_asyncExeCmd;
 	FileHistory m_recentFiles;
-	
+	FileHistory m_recentWorkspaces;
+
 public:
 	/*!
 	 * \brief
@@ -459,20 +460,39 @@ public:
 	LEditor *GetActiveEditor() const;
 
 	/**
-	 *return a list for the recently opened file
-	 */ 
-	void GetRecentlyOpenedFiles(wxArrayString &files);
-
-	/**
 	 * add single file to the recently opened files
 	 */ 
 	void AddToRecentlyOpenedFiles(const wxString &fileName);
 	
 	/**
-	 * set the menu to be used with the recently opened files
+	 * return the FileHistory object that holds the recently opened
+	 * files data
 	 */
 	FileHistory &GetRecentlyOpenedFilesClass() {return m_recentFiles;}
+
+	/**
+	 * add workspace file to the recently opened workspaces
+	 */ 
+	void AddToRecentlyOpenedWorkspaces(const wxString &fileName);
 	
+	/**
+	 * return the FileHistory object that holds the recently opened
+	 * workspace data
+	 */
+	FileHistory &GetRecentlyOpenedWorkspacesClass() {return m_recentWorkspaces;}
+
+	/**
+	 * Return list of recently opened files from the configuration file
+	 * \param files [output]
+	 */
+	void GetRecentlyOpenedFiles(wxArrayString &files);
+
+	/**
+	 * Return list of recently opened workspaces from the configuration file
+	 * \param files [output] 
+	 */
+	void GetRecentlyOpenedWorkspaces(wxArrayString &files);
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);

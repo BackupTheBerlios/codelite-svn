@@ -107,6 +107,7 @@ private:
 	void ViewPane(const wxString &paneName, wxCommandEvent &event);
 	void CreateViewAsSubMenu();
     void CreateRecentlyOpenedFilesMenu();
+	void CreateRecentlyOpenedWorkspacesMenu();
 
 protected:
 	//----------------------------------------------------
@@ -181,7 +182,7 @@ protected:
 	void OnUpdateSymbols(SymbolTreeEvent &event);
 
 	void OnRecentFile(wxCommandEvent &event);
-	void OnRecentFileUI(wxUpdateUIEvent &event);
+	void OnRecentWorkspace(wxCommandEvent &event);
 
 	// Any class wishing to process wxWindows events must use this macro
 	DECLARE_EVENT_TABLE()

@@ -141,6 +141,18 @@ public:
 	 */
 	void SetRecentlyOpenedFies(const wxArrayString &files);
 
+	/**
+	 * get an array of recently opened workspaces
+	 * \param files  [output] a place holder for the output
+	 */
+	void GetRecentlyOpenedWorkspaces(wxArrayString &files);
+
+	/**
+	 * get an array of recently opened workspaces
+	 * \param files  list of files to save
+	 */
+	void SetRecentlyOpenedWorkspaces(const wxArrayString &files);
+
 private:
 	EditorConfig();
 	virtual ~EditorConfig();

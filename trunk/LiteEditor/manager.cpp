@@ -289,6 +289,9 @@ void Manager::OpenWorkspace(const wxString &path)
 
 	//Update the configuration choice on the toolbar
 	DoUpdateConfigChoiceControl();
+
+	//update the 'Recent Workspace' history
+	AddToRecentlyOpenedWorkspaces(path);
 }
 
 void Manager::DoUpdateConfigChoiceControl()
@@ -1221,12 +1224,6 @@ LEditor *Manager::GetActiveEditor() const
 	return editor;
 }
 
-void Manager::GetRecentlyOpenedFiles(wxArrayString &files)
-{
-	EditorConfig *cfg = EditorConfigST::Get();
-	cfg->GetRecentlyOpenedFies(files);
-}
-
 void Manager::AddToRecentlyOpenedFiles(const wxString &fileName)
 {
 	//get list recently opened files
@@ -1242,3 +1239,29 @@ void Manager::AddToRecentlyOpenedFiles(const wxString &fileName)
 	} // if(files.Index(fileName) == wxNOT_FOUND)
 }
 
+void Manager::AddToRecentlyOpenedWorkspaces(const wxString &fileName)
+{
+	//get list recently opened files
+	wxArrayString files;
+	EditorConfig *cfg = EditorConfigST::Get();
+	cfg->GetRecentlyOpenedWorkspaces(files);
+	
+	if(files.Index(fileName) == wxNOT_FOUND){
+		//the file does not exist, add it and save the list
+		files.Add(fileName);
+		cfg->SetRecentlyOpenedWorkspaces(files);
+		m_recentWorkspaces.AddFileToHistory(fileName);
+	} // if(files.Index(fileName) == wxNOT_FOUND)
+}
+
+void Manager::GetRecentlyOpenedFiles(wxArrayString &files)
+{
+	EditorConfig *cfg = EditorConfigST::Get();
+	cfg->GetRecentlyOpenedFies(files);
+}
+
+void Manager::GetRecentlyOpenedWorkspaces(wxArrayString &files)
+{
+	EditorConfig *cfg = EditorConfigST::Get();
+	cfg->GetRecentlyOpenedWorkspaces(files);
+}
