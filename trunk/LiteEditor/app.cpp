@@ -3,6 +3,7 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/sysopt.h>
 #include "manager.h"
+#include "macros.h"
 
 BEGIN_EVENT_TABLE(App, wxApp)
 END_EVENT_TABLE()
@@ -33,6 +34,20 @@ bool App::OnInit()
 
 	InitXmlResource();
 	//wxLog::EnableLogging(false);
+	wxString homeDir = wxGetHomeDir();
+
+	//set the current directory to the hoemdirectory
+	homeDir << PATH_SEP << wxT(".liteeditor");
+	//make sure that this directory exist
+	if(!wxFileName::DirExists(homeDir))
+	{
+#ifdef __WXGTK__
+	wxMkDir(homeDir.ToAscii(), 0777);
+#else
+	wxMkDir(homeDir);
+#endif
+	}
+	::wxSetWorkingDirectory(homeDir);
 
 	// Load all of the XRC files that will be used. You can put everything
     // into one giant XRC file if you wanted, but then they become more

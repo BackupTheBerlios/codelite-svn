@@ -2,6 +2,7 @@
 #include <wx/xml/xml.h>
 #include "xmlutils.h"
 #include "dirtraverser.h"
+#include <wx/ffile.h>
 
 EditorConfig::EditorConfig()
 {
@@ -17,6 +18,15 @@ bool EditorConfig::Load()
 {
 	m_fileName = wxFileName(wxT("config/liteeditor.xml"));
 	m_fileName.MakeAbsolute();
+
+	if(!m_fileName.FileExists()){
+		//create a new empty file with this name so the load function will not 
+		//fail
+		wxFFile file(m_fileName.GetFullPath(), wxT("a"));
+		if(file.IsOpened()){
+			file.Close();
+		}
+	} // if(!m_fileName.FileExists())
 
 	//load the main configuration file
 	if(!m_doc->Load(m_fileName.GetFullPath())){
