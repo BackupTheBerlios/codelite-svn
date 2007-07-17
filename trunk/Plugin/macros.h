@@ -75,5 +75,6 @@ const wxString SEARCH_IN_PROJECT   = wxT("Active Project");
 #define viewAsMenuItemMaxID  23500+100
 
 #define viewAsSubMenuID 23499
+#define RecentFilesSubMenuID 23600
 
 #endif // MACROS_H

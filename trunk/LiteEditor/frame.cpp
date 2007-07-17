@@ -154,6 +154,8 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(XRCID("import_from_makefile"), Frame::OnImportMakefileUI)
 	EVT_CLOSE(Frame::OnClose)
 	EVT_TIMER(wxID_ANY, Frame::OnTimer)
+	EVT_MENU_RANGE(RecentFilesSubMenuID, RecentFilesSubMenuID + 10, Frame::OnRecentFile)
+	EVT_UPDATE_UI_RANGE(RecentFilesSubMenuID, RecentFilesSubMenuID + 10, Frame::OnRecentFileUI)
 
 END_EVENT_TABLE()
 Frame* Frame::m_theFrame = NULL;
@@ -255,6 +257,7 @@ void Frame::CreateGUIControls(void)
 	// Initialise editor configuration files
 	EditorConfigST::Get()->Load();
 	CreateViewAsSubMenu();
+	CreateRecentlyOpenedFilesMenu();
 	BuildSettingsConfigST::Get()->Load();
 
 	//start ctags process
@@ -1218,4 +1221,44 @@ void Frame::OnUpdateSymbols(SymbolTreeEvent &event)
 	SymbolTree *tree = GetWorkspacePane()->GetSymbolTree();
 	if(tree)
 		tree->UpdateSymbols(event);
+}
+
+
+void Frame::CreateRecentlyOpenedFilesMenu()
+{
+	wxArrayString files;
+	Manager *mgr = ManagerST::Get();
+	mgr->GetRecentlyOpenedFiles(files);
+	FileHistory &hs = mgr->GetRecentlyOpenedFilesClass();
+	
+	int idx = GetMenuBar()->FindMenu(wxT("File"));
+	if(idx != wxNOT_FOUND){
+		wxMenu *menu = GetMenuBar()->GetMenu(idx);
+		wxMenu *submenu = NULL;
+		wxMenuItem *item = menu->FindItem(XRCID("recent_files"));
+		if(item){
+			submenu = item->GetSubMenu();
+		}
+		
+		if(submenu){
+
+			for(size_t i=0; i<files.GetCount(); i++){
+				hs.AddFileToHistory(files.Item(i));
+			}
+			//set this menu as the recent file menu
+			hs.SetBaseId(RecentFilesSubMenuID);
+			hs.UseMenu(submenu);
+			hs.AddFilesToMenu();
+		}
+	}
+}
+
+void Frame::OnRecentFile(wxCommandEvent &event)
+{
+	size_t idx = event.GetId() - RecentFilesSubMenuID;
+}
+
+void Frame::OnRecentFileUI(wxUpdateUIEvent &event)
+{
+	event.Enable(true);
 }

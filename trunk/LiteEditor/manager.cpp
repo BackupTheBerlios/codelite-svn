@@ -1237,3 +1237,4 @@ void Manager::AddToRecentlyOpenedFiles(const wxString &fileName)
 		cfg->SetRecentlyOpenedFies(files);
 	}
 }
+

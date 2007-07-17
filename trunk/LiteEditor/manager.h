@@ -18,6 +18,7 @@
 #include "compile_request.h"
 #include "clean_request.h"
 #include "wx/event.h"
+#include "filehistory.h"
 
 class wxFrame;
 class LEditor;
@@ -35,7 +36,8 @@ class Manager : public wxEvtHandler
 	CleanRequest *m_cleanRequest;
 	CompileRequest *m_compileRequest;
 	AsyncExeCmd *m_asyncExeCmd;
-
+	FileHistory m_recentFiles;
+	
 public:
 	/*!
 	 * \brief
@@ -465,6 +467,11 @@ public:
 	 * add single file to the recently opened files
 	 */ 
 	void AddToRecentlyOpenedFiles(const wxString &fileName);
+	
+	/**
+	 * set the menu to be used with the recently opened files
+	 */
+	FileHistory &GetRecentlyOpenedFilesClass() {return m_recentFiles;}
 	
 protected:
 	Manager(void);
