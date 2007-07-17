@@ -53,7 +53,14 @@
                 <help>Close All Files</help>
             </object> 
             
-            <object class="wxMenuItem" name="wxID_SEPARATOR"/>            
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+            
+            <object class="wxMenu" name="recent_files">
+				<label>&amp;Recent Files</label>
+				<style>wxMENU_TEAROFF</style>
+            </object>            
+            
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>     
             <!-- we use wxID_EXIT name here to get the default menu item stock icon -->
             <object class="wxMenuItem" name="wxID_EXIT">
                 <label>E&amp;xit\tAlt-X</label>

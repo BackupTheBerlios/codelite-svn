@@ -143,6 +143,9 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 	if(updTree && !editor->GetProject().IsEmpty())
 		Frame::Get()->GetWorkspacePane()->BuildSymbolTree(fileName);
 
+	//update the 'Recent file' history
+	AddToRecentlyOpenedFiles(fileName.GetFullPath());
+
 	editor->SetProject( projectName );
 	editor->SetFocus ();
 	editor->SetSCIFocus (true);
@@ -1235,6 +1238,7 @@ void Manager::AddToRecentlyOpenedFiles(const wxString &fileName)
 		//the file does not exist, add it and save the list
 		files.Add(fileName);
 		cfg->SetRecentlyOpenedFies(files);
-	}
+		m_recentFiles.AddFileToHistory(fileName);
+	} // if(files.Index(fileName) == wxNOT_FOUND)
 }
 

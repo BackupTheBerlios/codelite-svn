@@ -1241,12 +1241,11 @@ void Frame::CreateRecentlyOpenedFilesMenu()
 		}
 		
 		if(submenu){
-
 			for(size_t i=0; i<files.GetCount(); i++){
 				hs.AddFileToHistory(files.Item(i));
 			}
 			//set this menu as the recent file menu
-			hs.SetBaseId(RecentFilesSubMenuID);
+			hs.SetBaseId(RecentFilesSubMenuID+1);
 			hs.UseMenu(submenu);
 			hs.AddFilesToMenu();
 		}
@@ -1255,7 +1254,16 @@ void Frame::CreateRecentlyOpenedFilesMenu()
 
 void Frame::OnRecentFile(wxCommandEvent &event)
 {
-	size_t idx = event.GetId() - RecentFilesSubMenuID;
+	size_t idx = event.GetId() - (RecentFilesSubMenuID+1);
+	Manager *mgr = ManagerST::Get();
+	FileHistory &fh = mgr->GetRecentlyOpenedFilesClass();
+
+	wxArrayString files;
+	fh.GetFiles(files);
+
+	if(idx < files.GetCount()){
+		mgr->OpenFile(files.Item(idx), wxEmptyString);
+	}
 }
 
 void Frame::OnRecentFileUI(wxUpdateUIEvent &event)
