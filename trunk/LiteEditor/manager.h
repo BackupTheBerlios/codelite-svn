@@ -414,6 +414,12 @@ public:
 	void SetExternalDatabase(const wxFileName &dbname);
 
 	/** 
+	 * close the currenlty open extern database
+	 * and free all its resources
+	 */
+	void CloseExternalDatabase();
+
+	/** 
 	 * return list of files that are part of the workspace
 	 */
 	void GetWorkspaceFiles(std::vector<wxFileName> &files, bool absPath = false);

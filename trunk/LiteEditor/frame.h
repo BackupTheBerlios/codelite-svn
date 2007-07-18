@@ -131,6 +131,7 @@ protected:
 	void OnDeleteProject(wxCommandEvent& event);
 	void OnBuildExternalDatabase(wxCommandEvent& event);
 	void OnUseExternalDatabase(wxCommandEvent& event);
+	void OnCloseExternalDatabase(wxCommandEvent& event);
 	void OnParseComments(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
 	void OnFileNew(wxCommandEvent &event);

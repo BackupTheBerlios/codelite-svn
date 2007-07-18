@@ -353,6 +353,11 @@ public:
 	 */
 	void OpenExternalDatabase(const wxFileName &dbName);
 
+	/** 
+	 * close external database and free all its resources
+	 */
+	void CloseExternalDatabase();
+	
 	/**
 	 * Get a hover tip. This function is a wrapper around the Language::GetHoverTip.
 	 * \param expr the current expression

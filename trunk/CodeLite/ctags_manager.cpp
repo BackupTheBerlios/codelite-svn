@@ -1216,3 +1216,13 @@ void TagsManager::GetFunctionTipFromTags(const std::vector<TagEntryPtr> &tags, c
 		tips.push_back(iter->second);
 	}
 }
+
+void TagsManager::CloseExternalDatabase()
+{
+	//close the database by simply deleting it and creating new
+	//empty one
+	if(m_pExternalDb){
+		delete m_pExternalDb;
+		m_pExternalDb = new TagsDatabase(true);
+	}
+}

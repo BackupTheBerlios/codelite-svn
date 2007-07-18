@@ -146,6 +146,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 
 	EVT_MENU(XRCID("create_ext_database"), Frame::OnBuildExternalDatabase)
 	EVT_MENU(XRCID("open_ext_database"), Frame::OnUseExternalDatabase)
+	EVT_MENU(XRCID("close_ext_database"), Frame::OnCloseExternalDatabase)
 	EVT_MENU(XRCID("find_resource"), Frame::OnFindResource)
 	EVT_UPDATE_UI(XRCID("find_resource"), Frame::OnWorkspaceOpen)
 
@@ -578,6 +579,11 @@ void Frame::OnBuildExternalDatabase(wxCommandEvent& WXUNUSED(event))
 	}
 
 	dlg->Destroy();
+}
+
+void Frame::OnCloseExternalDatabase(wxCommandEvent& WXUNUSED(event))
+{
+	ManagerST::Get()->CloseExternalDatabase();
 }
 
 void Frame::OnUseExternalDatabase(wxCommandEvent& WXUNUSED(event))

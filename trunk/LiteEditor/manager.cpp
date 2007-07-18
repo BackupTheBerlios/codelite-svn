@@ -1265,3 +1265,12 @@ void Manager::GetRecentlyOpenedWorkspaces(wxArrayString &files)
 	EditorConfig *cfg = EditorConfigST::Get();
 	cfg->GetRecentlyOpenedWorkspaces(files);
 }
+
+void Manager::CloseExternalDatabase()
+{
+	TagsManager *mgr = TagsManagerST::Get();
+	mgr->CloseExternalDatabase();
+	//remove the entry from the status bar
+	Frame::Get()->GetStatusBar()->SetStatusText(wxEmptyString, 2);
+
+}
