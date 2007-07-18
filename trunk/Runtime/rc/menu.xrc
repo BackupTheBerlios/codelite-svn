@@ -264,12 +264,16 @@
                 <label>&amp;Options...</label>
             </object>
             
+				<object class="wxMenuItem" name="wxID_SEPARATOR"/>    
             <object class="wxMenuItem" name="create_ext_database">
                 <label>&amp;Create external tags database...</label>
             </object>
             
             <object class="wxMenuItem" name="open_ext_database">
-                <label>&amp;Open external tags database...</label>
+                <label>O&amp;pen external tags database...</label>
+            </object>
+            <object class="wxMenuItem" name="close_ext_database">
+                <label>Clos&amp;e external tags database</label>
             </object>
         </object>
         
