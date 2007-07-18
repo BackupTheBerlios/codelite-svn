@@ -30,5 +30,7 @@
     <Property Id="24" Name="SGML entity" Bold="no" Face="" Colour="#000000" Size="10"/>
     <Property Id="25" Name="SGML comment" Bold="no" Face="" Colour="#000000" Size="10"/>
     <Property Id="26" Name="SGML block" Bold="no" Face="" Colour="#000000" Size="10"/>
+	<Property Id="34" Name="Brace match" Bold="yes" Face="" Colour="black" Size="10"/>
+    <Property Id="35" Name="Brace bad match" Bold="yes" Face="" Colour="red" Size="10"/>
   </Properties>
 </Lexer>

@@ -35,5 +35,7 @@
     <Property Id="29" Name="StringQR" Bold="no" Face="" Colour="#800080" Size="10"/>
     <Property Id="30" Name="StringQW" Bold="no" Face="" Colour="#800080" Size="10"/>
     <Property Id="31" Name="PODVerb" Bold="no" Face="" Colour="#800080" Size="10"/>
+	<Property Id="34" Name="Brace match" Bold="yes" Face="" Colour="black" Size="10"/>
+    <Property Id="35" Name="Brace bad match" Bold="yes" Face="" Colour="red" Size="10"/>
   </Properties>
 </Lexer>

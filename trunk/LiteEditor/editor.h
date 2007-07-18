@@ -242,6 +242,7 @@ private:
 	void SetLineNumberWidth();
 	bool SaveToFile(const wxFileName &fileName);
 	void BraceMatch(const bool& bSelRegion);
+	void BraceMatch(long pos);
 
 	// Conevert FindReplaceDialog flags to wxSCI flags
 	int  GetSciSearchFlag(const FindReplaceData &data);

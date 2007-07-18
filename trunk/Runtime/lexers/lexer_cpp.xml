@@ -20,5 +20,7 @@
     <Property Id="17" Name="Doxygen keyword" Bold="no" Face="" Colour="blue" Size="10"/>
     <Property Id="18" Name="Doxygen keyword error" Bold="no" Face="" Colour="rgb(255,0,0)" Size="10"/>
     <Property Id="19" Name="Global class" Bold="no" Face="" Colour="medium blue" Size="10"/>
+<Property Id="34" Name="Brace match" Bold="yes" Face="" Colour="black" Size="10"/>
+    <Property Id="35" Name="Brace bad match" Bold="yes" Face="" Colour="red" Size="10"/>
   </Properties>
 </Lexer>

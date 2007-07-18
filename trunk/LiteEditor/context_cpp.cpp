@@ -67,7 +67,8 @@ ContextCpp::ContextCpp(LEditor *container)
 		
 		wxFont font(size, wxFONTFAMILY_TELETYPE, wxNORMAL, bold ? wxBOLD : wxNORMAL);
 		//font.SetFaceName(face);
-
+		
+		int id = st.GetId();
 		rCtrl.StyleSetFont(st.GetId(), font);
 		rCtrl.StyleSetSize(st.GetId(), (*iter).GetFontSize());
 		rCtrl.StyleSetForeground(st.GetId(), (*iter).GetFgColour());

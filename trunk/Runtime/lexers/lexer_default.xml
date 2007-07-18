@@ -4,5 +4,7 @@
   <Extensions></Extensions>
   <Properties>
     <Property Id="0" Name="Default" Bold="no" Face="Courier New" Colour="#000000" Size="10"/>
+<Property Id="34" Name="Brace match" Bold="yes" Face="" Colour="black" Size="10"/>
+    <Property Id="35" Name="Brace bad match" Bold="yes" Face="" Colour="red" Size="10"/>
   </Properties>
 </Lexer>

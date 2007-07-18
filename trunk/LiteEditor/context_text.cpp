@@ -28,17 +28,17 @@ ContextText::ContextText(LEditor *container)
 	rCtrl.StyleClearAll();
 
 	std::list<StyleProperty>::iterator iter = styles.begin();
-	if(iter != styles.end()){
+	for(iter != styles.end(); iter != styles.end(); iter++)
+	{
 		int size = (*iter).GetFontSize();
 		wxString face = (*iter).GetFaceName();
 		bool bold = (*iter).IsBold();
 
 		wxFont font(size, wxFONTFAMILY_TELETYPE, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
-		//font.SetFaceName(face);
 
-		rCtrl.StyleSetFont(0, font);
-		rCtrl.StyleSetSize(0, (*iter).GetFontSize());
-		rCtrl.StyleSetForeground(0, (*iter).GetFgColour());
+		rCtrl.StyleSetFont((*iter).GetId(), font);
+		rCtrl.StyleSetSize((*iter).GetId(), (*iter).GetFontSize());
+		rCtrl.StyleSetForeground((*iter).GetId(), (*iter).GetFgColour());
 	}
 }
 

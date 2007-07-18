@@ -4,3 +4,4 @@
 5. Call tip disappears too fast
 6. Hitting down & up arrows hides the calltip, incase there are multiple choices for it, it should be stay active and rotate between options
 7. Mark matching brace when caret is near an open/close brace
+8. change compiler regular expressions default values

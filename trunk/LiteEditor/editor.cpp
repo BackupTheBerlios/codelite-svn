@@ -258,11 +258,9 @@ void LEditor::SetProperties()
 	SetTabWidth(8);
 	SetIndent(8);
 
-	StyleSetBold(wxSCI_STYLE_BRACELIGHT, true);
-	
 	StyleSetBackground(wxSCI_STYLE_LINENUMBER, wxT("WHITE"));
 	StyleSetForeground(wxSCI_STYLE_LINENUMBER, wxColour(0, 63, 125));
-
+	
 	// Indentation guidelines
 	SetIndentationGuides(options->GetShowIndentationGuidelines());
 }
@@ -324,7 +322,46 @@ void LEditor::OnCharAdded(wxScintillaEvent& event)
 
 void LEditor::OnSciUpdateUI(wxScintillaEvent &event)
 {
-	wxUnusedVar(event);
+	// Get current position
+	long pos = GetCurrentPos();
+
+	if((GetCharAt(pos) == '{' ||
+		GetCharAt(pos) == '[' ||
+		GetCharAt(pos) == '<' ||
+		GetCharAt(pos) == '(')
+		&& !m_context->IsCommentOrString(pos))
+	{
+		BraceMatch((long)pos);
+	}
+	else
+	if((GetCharAt(PositionBefore(pos)) == '{' ||
+		GetCharAt(PositionBefore(pos)) == '<' ||
+		GetCharAt(PositionBefore(pos)) == '[' ||
+		GetCharAt(PositionBefore(pos)) == '(') && !m_context->IsCommentOrString(PositionBefore(pos)))
+	{
+		BraceMatch((long)PositionBefore(pos));
+	}
+	else
+	if((GetCharAt(pos) == '}' ||
+		GetCharAt(pos) == ']' ||
+		GetCharAt(pos) == '>' ||
+		GetCharAt(pos) == ')') && !m_context->IsCommentOrString(pos))
+	{
+		BraceMatch((long)pos);
+	}
+	else
+	if((GetCharAt(PositionBefore(pos)) == '}' ||
+		GetCharAt(PositionBefore(pos)) == '>' ||
+		GetCharAt(PositionBefore(pos)) == ']' ||
+		GetCharAt(PositionBefore(pos)) == ')') && !m_context->IsCommentOrString(PositionBefore(pos)))
+	{
+		BraceMatch((long)PositionBefore(pos));
+	}
+	else
+	{
+		wxScintilla::BraceHighlight(wxSCI_INVALID_POSITION, wxSCI_INVALID_POSITION);
+	}
+	event.Skip();
 }
 
 void LEditor::OnMarginClick(wxScintillaEvent& event)
@@ -731,6 +768,21 @@ void LEditor::MatchBraceAndSelect(bool selRegion)
 	}
 }
 
+void LEditor::BraceMatch(long pos)
+{
+	// Check if we have a match
+	long endPos = wxScintilla::BraceMatch(pos);
+	if(endPos != wxSCI_INVALID_POSITION)
+	{
+		// Highlight indent guide if exist
+		wxScintilla::BraceHighlight(pos, endPos);
+	}
+	else
+	{
+		wxScintilla::BraceBadLight(pos);
+	}
+}
+
 void LEditor::BraceMatch(const bool& bSelRegion)
 {
 	// Check if we have a match
@@ -1121,3 +1173,4 @@ void LEditor::SwapFiles()
 {
 	m_context->SwapFiles(m_fileName);
 }
+

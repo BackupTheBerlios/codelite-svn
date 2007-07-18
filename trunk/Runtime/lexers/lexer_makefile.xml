@@ -10,5 +10,7 @@
     <Property Id="4" Name="Operator" Bold="no" Face="" Colour="#FF0000" Size="10"/>
     <Property Id="5" Name="Target" Bold="no" Face="" Colour="#FF0000" Size="10"/>
     <Property Id="6" Name="ID End Of Line" Bold="no" Face="" Colour="#FF0000" Size="10"/>
+	<Property Id="34" Name="Brace match" Bold="yes" Face="" Colour="black" Size="10"/>
+    <Property Id="35" Name="Brace bad match" Bold="yes" Face="" Colour="red" Size="10"/>  
   </Properties>
 </Lexer>
