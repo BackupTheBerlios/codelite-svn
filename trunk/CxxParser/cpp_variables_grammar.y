@@ -122,7 +122,7 @@ external_decl		:	{curr_var.Reset(); gs_names.clear();} variables
 						| 	error { 
 								yyclearin;	//clear lookahead token
 								yyerrok;
-								//printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_scope_text, cl_scope_lineno);
+								printf("CodeLite: syntax error, unexpected token '%s' found at line %d \n", cl_scope_text, cl_scope_lineno);
 								var_syncParser();
 							}
 						;
@@ -160,18 +160,18 @@ variables			: stmnt_starter variable_decl special_star_amp variable_name_list po
 						;
 						
 variable_name_list: LE_IDENTIFIER {gs_names.push_back($1);}
-						| variable_name_list ',' LE_IDENTIFIER 
+						/*| variable_name_list ',' LE_IDENTIFIER 
 						{ 
 							//collect all the names
 							gs_names.push_back($3);
 							$$ = $1 + $2 + " " + $3;
-						}
+						}*/
 						;
 postfix: ';'
 		 | '='
 		 | ')'
+		 | ','  
 		 | '(' { $$ = $1 + var_consumeFuncArgList();} 
-		 | ',' 
 		 ; 
 /* 
 applicable for C++, for cases where a function is declared as
@@ -207,7 +207,6 @@ stmnt_starter		:	/*empty*/ {$$ = "";}
 						| '}' { $$ = "}";}
 						| ':' { $$ = ":";}	//e.g. private: std::string m_name;
 						| '=' { $$ = "=";}
-						| ',' { $$ = ",";}	//e.g (int argc, char **argv)
 						;
 						
 /** Variables **/

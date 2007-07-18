@@ -20,7 +20,7 @@
 //cpp_variables_grammar.y
 //expr_garmmar.y
 
-extern std::string get_scope_name(const std::string &in);
+extern std::string get_scope_name(const std::string &in, std::string &lastFuncName, std::string &lastFuncSignature);
 extern ExpressionResult &parse_expression(const std::string &in);
 extern void get_variables(const std::string &in, VariableList &li);
 extern void get_functions(const std::string &in, FunctionList &li);
@@ -203,13 +203,11 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 	// First token is handled sepratly
 	wxString word;
 	wxString oper;
-	wxString str;
-	wxString left;
-	wxString qualifier;
+	wxString lastFuncSig;
 
 	std::vector<TagEntry> tags;
 	wxString visibleScope = GetScope(text);
-	wxString scopeName = GetScopeName(visibleScope);
+	wxString scopeName = GetScopeName(visibleScope, NULL, &lastFuncSig);
 	wxLogMessage(wxT("Current scope: [") + scopeName + wxT("]"));
 
 	wxString parentTypeName, parentTypeScope;
@@ -295,6 +293,7 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 			bool res(false);
 			res = TypeFromName(	_U(result.m_name.c_str()), 
 								visibleScope, 
+								lastFuncSig, 
 								scopeToSearch, 
 								parentTypeName.IsEmpty(),
 								typeName,	//output
@@ -399,13 +398,24 @@ void Language::ParseComments(const wxFileName &fileName, std::vector<DbRecordPtr
 	m_scanner->Reset();
 }
 
-wxString Language::GetScopeName(const wxString &in)
+wxString Language::GetScopeName(const wxString &in, wxString *lastFuncName, wxString *lastFuncSignature)
 {
+	std::string lastFunc, lastFuncSig;
+
 	const wxCharBuffer buf = _C(in);
-	std::string scope_name = get_scope_name(buf.data());
+	std::string scope_name = get_scope_name(buf.data(), lastFunc, lastFuncSig);
 	wxString scope = _U(scope_name.c_str());
-	if(scope.IsEmpty())
+	if(lastFuncName){
+		*lastFuncName = _U(lastFunc.c_str());
+	}
+	
+	if(lastFuncSignature){
+		*lastFuncSignature = _U(lastFuncSig.c_str());
+	}
+
+	if(scope.IsEmpty()){
 		scope = wxT("<global>");
+	}
 	return scope;
 }
 
@@ -418,6 +428,7 @@ ExpressionResult Language::ParseExpression(const wxString &in)
 
 bool Language::TypeFromName(const wxString &name, 
 							const wxString &text, 
+							const wxString &extraScope, 
 							const wxString &scopeName, 
 							bool firstToken,
 							wxString &type, 
@@ -500,7 +511,9 @@ bool Language::TypeFromName(const wxString &name,
 		if(firstToken)
 		{
 			const wxCharBuffer buf = _C(text);
+			const wxCharBuffer buf2 = _C(extraScope);
 			get_variables(buf.data(), li);
+			get_variables(buf2.data(), li);
 
 			//search for a full match in the returned list
 			for(VariableList::iterator iter = li.begin(); iter != li.end(); iter++)

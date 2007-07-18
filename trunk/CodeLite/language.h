@@ -107,7 +107,7 @@ public:
 	 * \param in input string
 	 * \return scope name or empty string
 	 */
-	wxString GetScopeName(const wxString &in);
+	wxString GetScopeName(const wxString &in, wxString *lastFuncName = NULL, wxString *lastFuncSignature = NULL);
 
 	/**
 	 * parse an expression and return the result. this functions uses 
@@ -131,6 +131,7 @@ public:
 	 */
 	bool TypeFromName(	const wxString &name, 
 						const wxString &text, 
+						const wxString &extraScope, 
 						const wxString &scopeName, 
 						bool firstToken,
 						wxString &type, 

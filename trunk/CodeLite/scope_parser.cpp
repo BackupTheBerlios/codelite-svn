@@ -511,8 +511,6 @@ void consumeFuncArgList()
 		//keep the function signature
 		gs_lastFunctionSignature += cl_scope_text;
 		gs_lastFunctionSignature += " ";
-		
-		printf("%s\n", gs_lastFunctionSignature.c_str());
 		if(ch == ')')
 		{
 			depth--;
@@ -897,6 +895,12 @@ case 50:
 break;
 case 51:
 {yyval = yyvsp[0];}
+break;
+case 52:
+{yyval = yyvsp[0];}
+break;
+case 53:
+{yyval = yyvsp[-1];}
 break;
 case 85:
 {consumeFuncArgList();}

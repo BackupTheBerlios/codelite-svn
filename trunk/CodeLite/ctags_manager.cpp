@@ -648,14 +648,16 @@ bool TagsManager::WordCompletionCandidates(const wxString& expr, const wxString&
 	expression.EndsWith(word, &tmp);
 	expression = tmp;
 	
+	wxString funcSig;
 	wxString scope = LanguageST::Get()->GetScope(text);
-	wxString scopeName = LanguageST::Get()->GetScopeName(scope);
+	wxString scopeName = LanguageST::Get()->GetScopeName(scope, NULL, &funcSig);
 	if(expression.IsEmpty()){
 		//collect all the tags from the current scope, and 
 		//from the global scope
 		std::vector<TagEntryPtr> tmpCandidates;
 		GetGlobalTags(word, tmpCandidates);
 		GetLocalTags(word, scope, tmpCandidates);
+		GetLocalTags(word, funcSig, tmpCandidates);
 		TagsByScopeAndName(scopeName, word, tmpCandidates);
 		RemoveDuplicates(tmpCandidates, candidates);
 	}else{
@@ -835,7 +837,10 @@ clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString &t
 	//remove the last token from the expression 
 	expression.EndsWith(word, &tmp);
 	expression = tmp;
-	
+	if(word.IsEmpty()){
+		return NULL;
+	}
+
 	if(expression.IsEmpty())
 	{
 		//we are probably examining a global function, or a scope function

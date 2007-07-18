@@ -226,8 +226,8 @@ class_keyword: 	LE_CLASS		{$$ = $1;}
 					|	LE_STRUCT	{$$ = $1;}
 					;
 
-func_name: LE_IDENTIFIER
-		 | LE_OPERATOR any_operator
+func_name: LE_IDENTIFIER {$$ = $1;}
+		 | LE_OPERATOR any_operator {$$ = $1;}
 		 ;
 
 any_operator:
@@ -374,8 +374,6 @@ void consumeFuncArgList()
 		//keep the function signature
 		gs_lastFunctionSignature += cl_scope_text;
 		gs_lastFunctionSignature += " ";
-		
-		printf("%s\n", gs_lastFunctionSignature.c_str());
 		if(ch == ')')
 		{
 			depth--;

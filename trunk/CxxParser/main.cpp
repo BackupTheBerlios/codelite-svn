@@ -24,8 +24,8 @@ int main()
 {
 	char *buf = loadFile("test.h");
 	//print the scope name
-	testScopeParser(buf);
-	//testVarParser(buf);
+	//testScopeParser(buf);
+	testVarParser(buf);
 	//testExprParser(buf);
 	//testFuncParser(buf);
 	free(buf);
@@ -69,6 +69,7 @@ void testScopeParser(char *buf)
 	printf("total time: %d\n", end-start);
 	printf("scope name=%s\n", scope.c_str());
 	printf("Last function seen:%s signature:%s\n", lastFuncName.c_str(), lastFuncSig.c_str());
+	testVarParser((char*)lastFuncSig.c_str());
 }
 
 void testVarParser(char *buf)
