@@ -10,7 +10,7 @@ class Function
 public:
 	std::string 	m_name;
 	std::string		m_scope;					//functions' scope
-	std::string 	m_pattern;
+	std::string 	m_signature;
 	Variable 		m_returnValue;
 	
 public:

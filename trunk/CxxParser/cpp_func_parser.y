@@ -274,6 +274,8 @@ void yyerror(char *s) {}
 
 void func_consumeFuncArgList()
 {
+	curr_func.m_signature = "(";
+	
 	int depth = 1;
 	while(depth > 0)
 	{
@@ -282,6 +284,9 @@ void func_consumeFuncArgList()
 		{
 			break;
 		}
+		
+		curr_func.m_signature += cl_func_lval;
+		curr_func.m_signature += " ";
 		if(ch == ')')
 		{
 			depth--;

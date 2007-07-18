@@ -9,7 +9,7 @@
 
 #include <windows.h>
 
-extern std::string get_scope_name(const std::string &in);
+extern std::string get_scope_name(const std::string &in, std::string &lastFuncName, std::string &lastFuncSignature);
 extern void get_variables(const std::string &in, VariableList &li);
 extern ExpressionResult &parse_expression(const std::string &in);
 extern void get_functions(const std::string &in, FunctionList &li);
@@ -24,9 +24,9 @@ int main()
 {
 	char *buf = loadFile("test.h");
 	//print the scope name
-	//testScopeParser(buf);
+	testScopeParser(buf);
 	//testVarParser(buf);
-	testExprParser(buf);
+	//testExprParser(buf);
 	//testFuncParser(buf);
 	free(buf);
 }
@@ -41,8 +41,12 @@ void testFuncParser(char *buf)
 	time_t end = GetTickCount();
 	for(FunctionList::iterator iter = li.begin(); iter != li.end(); iter++)
 	{
-		(*iter).Print();
+		//test the var parser on the function argument list:
+		Function f = (*iter);
+		f.Print();
+		testVarParser((char*)f.m_signature.c_str());
 	}
+	
 	printf("total time: %d\n", end-start);
 	printf("matches found: %d\n", li.size());
 }
@@ -54,13 +58,17 @@ void testExprParser(char *buf)
 	res.Print();
 }
 
+
 void testScopeParser(char *buf)
 {
+	std::string lastFuncName, lastFuncSig;
 	printf("===== Testing Scope parser ======\n");
 	time_t start = GetTickCount();
-	std::string scope = get_scope_name(buf);
+	std::string scope = get_scope_name(buf, lastFuncName, lastFuncSig);
 	time_t end = GetTickCount();
 	printf("total time: %d\n", end-start);
+	printf("scope name=%s\n", scope.c_str());
+	printf("Last function seen:%s signature:%s\n", lastFuncName.c_str(), lastFuncSig.c_str());
 }
 
 void testVarParser(char *buf)

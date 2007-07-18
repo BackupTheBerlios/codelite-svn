@@ -17,6 +17,9 @@ int cl_scope_parse();
 void cl_scope_error(char *string);
 void syncParser();
 
+static std::string gs_lastFunction;
+static std::string gs_lastFunctionSignature;
+
 //---------------------------------------------
 // externs defined in the lexer
 //---------------------------------------------
@@ -264,6 +267,9 @@ any_operator:
 /* functions */
 function_decl	: 	stmnt_starter opt_template_qualifier virtual_spec const_spec variable_decl nested_scope_specifier func_name '(' {consumeFuncArgList();} const_spec  '{'  					 
 					{
+						//keep this function name
+						gs_lastFunction = $7;
+						
 						//trim down trailing '::' from scope name
 						$6.erase($6.find_last_not_of(":")+1);
 						currentScope.push_back($6);
@@ -355,6 +361,7 @@ void syncParser(){
 
 void consumeFuncArgList()
 {
+	gs_lastFunctionSignature = "(";
 	int depth = 1;
 	while(depth > 0)
 	{
@@ -363,6 +370,12 @@ void consumeFuncArgList()
 		{
 			break;
 		}
+		
+		//keep the function signature
+		gs_lastFunctionSignature += cl_scope_text;
+		gs_lastFunctionSignature += " ";
+		
+		printf("%s\n", gs_lastFunctionSignature.c_str());
 		if(ch == ')')
 		{
 			depth--;
@@ -432,8 +445,11 @@ void consumeTemplateDecl()
 }
 
 // return the scope name at the end of the input string
-std::string get_scope_name(const std::string &in)
+std::string get_scope_name(const std::string &in, std::string &lastFuncName, std::string &lastFuncSignature)
 {
+	gs_lastFunction.clear();
+	gs_lastFunctionSignature.clear();
+	
 	if( !setLexerInput(in) )
 	{
 		return "";
@@ -444,5 +460,9 @@ std::string get_scope_name(const std::string &in)
 	std::string scope = getCurrentScope();
 	//do the lexer cleanup
 	cl_scope_lex_clean();
+	
+	//set the last function seen values
+	lastFuncName = gs_lastFunction;
+	lastFuncSignature = gs_lastFunctionSignature;
 	return scope;
 }

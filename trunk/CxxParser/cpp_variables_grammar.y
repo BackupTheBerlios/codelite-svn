@@ -134,7 +134,7 @@ parameter_list	: /* empty */		{$$ = "";}
 							;
 
 template_parameter	:	const_spec nested_scope_specifier LE_IDENTIFIER special_star_amp 
-								{$$ = $1 + $2 + $3 +$4;}
+								{$$ = $1 + " " + $2 + " " + $3 +$4;}
 							;
 
 variables			: stmnt_starter variable_decl special_star_amp variable_name_list postfix 
@@ -171,6 +171,7 @@ postfix: ';'
 		 | '='
 		 | ')'
 		 | '(' { $$ = $1 + var_consumeFuncArgList();} 
+		 | ',' 
 		 ; 
 /* 
 applicable for C++, for cases where a function is declared as
@@ -196,7 +197,7 @@ star_list			: 	/*empty*/		{$$ = ""; }
 						|	star_list '*'	{$$ = $1 + $2;}
 						;
 
-special_star_amp		:	star_list amp_item { $$ = $1 + $2; }
+special_star_amp	:	star_list amp_item { $$ = $1 + $2; }
 						;
 
 stmnt_starter		:	/*empty*/ {$$ = "";}
@@ -206,25 +207,26 @@ stmnt_starter		:	/*empty*/ {$$ = "";}
 						| '}' { $$ = "}";}
 						| ':' { $$ = ":";}	//e.g. private: std::string m_name;
 						| '=' { $$ = "=";}
+						| ',' { $$ = ",";}	//e.g (int argc, char **argv)
 						;
 						
 /** Variables **/
 variable_decl		:	const_spec basic_type_name   
 						{
-							$$ = $1 + $2;
+							$$ = $1 + " " + $2;
 							$2.erase($2.find_last_not_of(":")+1);
 							curr_var.m_type = $2;
 						}
 						|	const_spec nested_scope_specifier LE_IDENTIFIER 
 						{
-							$$ = $1 + $2 + $3;
+							$$ = $1 + " " + $2 + $3;
 							$2.erase($2.find_last_not_of(":")+1);
 							curr_var.m_typeScope = $2;
 							curr_var.m_type = $3;
 						}
 						| 	const_spec nested_scope_specifier LE_IDENTIFIER '<' parameter_list '>'  
 						{
-							$$ = $1 + $2 + $3 + $4 + $5 + $6;
+							$$ = $1 + " " + $2 + $3 + " " + $4 + " " + $5 + " " + $6;
 							$2.erase($2.find_last_not_of(":")+1);
 							curr_var.m_typeScope = $2;
 							curr_var.m_type = $3;
@@ -251,6 +253,7 @@ std::string var_consumeFuncArgList()
 		}
 		
 		consumedData += cl_scope_text;
+		consumedData += " ";
 		if(ch == ')')
 		{
 			depth--;
