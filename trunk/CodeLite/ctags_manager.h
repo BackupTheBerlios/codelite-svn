@@ -395,6 +395,14 @@ public:
 	 * \param file file name
 	 */
 	wxString GetComment(const wxString &file, const int line);
+
+	/**
+	 * Generate doxygen based on file & line
+	 * \param line line number
+	 * \param file file name
+	 */
+	wxString GenerateDoxygenComment(const wxString &file, const int line);
+
 protected:
 
 	/**

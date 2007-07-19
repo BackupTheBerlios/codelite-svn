@@ -25,6 +25,7 @@ class ContextCpp : public ContextBase {
 	};
 
 	TipKind m_tipKind;
+	wxMenu *m_rclickMenu;
 
 	//images used by the C++ context
 	static wxBitmap m_classBmp;
@@ -48,7 +49,7 @@ private:
 public:
 	ContextCpp(LEditor *container);
 	virtual ~ContextCpp();
-	ContextCpp() : ContextBase(wxT("C++")) {};
+	ContextCpp();
 	virtual ContextBase *NewInstance(LEditor *container);
 
 	virtual void CompleteWord();
@@ -60,13 +61,18 @@ public:
 	virtual	bool IsCommentOrString(long pos);
 
 	//override swapfiles features
-	virtual bool IsSwapFilesEnabled() const {return true;}
 	virtual void SwapFiles(const wxFileName &fileName);
 
 	//Event handlers
 	virtual void OnDwellEnd(wxScintillaEvent &event);
 	virtual void OnCallTipClick(wxScintillaEvent &event);
 	virtual void OnDwellStart(wxScintillaEvent &event);
+	
+	//Capture menu events
+	//return this context specific right click menu
+	virtual wxMenu *GetMenu(){return m_rclickMenu;}
+	virtual void OnSwapFiles(wxCommandEvent &event);
+	virtual void OnInsertDoxyComment(wxCommandEvent &event);
 
 private:
 	wxString GetWordUnderCaret();
@@ -75,3 +81,4 @@ private:
 };
 
 #endif // CONTEXT_CPP_H
+

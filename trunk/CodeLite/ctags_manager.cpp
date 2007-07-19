@@ -1231,3 +1231,8 @@ void TagsManager::CloseExternalDatabase()
 		m_pExternalDb = new TagsDatabase(true);
 	}
 }
+
+wxString TagsManager::GenerateDoxygenComment(const wxString &file, const int line)
+{
+	return wxEmptyString;
+}

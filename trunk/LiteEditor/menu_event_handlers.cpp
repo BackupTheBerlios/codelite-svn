@@ -27,9 +27,8 @@ void EditHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 		editor->SelectAll();
 	}else if(event.GetId() == wxID_DUPLICATE){
 		editor->LineDuplicate();
-	}else if(event.GetId() == XRCID("swap_files")){
-		editor->SwapFiles();
 	}
+	event.Skip();
 }
 
 void EditHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
@@ -50,8 +49,6 @@ void EditHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 		event.Enable(editor && editor->GetLength() > 0);
 	}else if(event.GetId() == wxID_DUPLICATE){
 		event.Enable(true);
-	}else if(event.GetId() == XRCID("swap_files")){
-		event.Enable(editor->IsSwapFilesEnabled());
 	}else{
 		event.Enable(false);
 	}

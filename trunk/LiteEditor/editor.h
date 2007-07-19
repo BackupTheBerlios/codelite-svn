@@ -155,16 +155,6 @@ public:
 	 */
 	ContextBasePtr GetContext() const { return m_context; }
 
-	/**
-	 * Swap header / impl files
-	 */
-	void SwapFiles();
-
-	/**
-	 * is swap functionaliy available
-	 */
-	bool IsSwapFilesEnabled() const;
-
 	// Bookmark API
 	//-----------------------------------------
 

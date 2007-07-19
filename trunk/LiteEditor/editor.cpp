@@ -73,6 +73,8 @@ LEditor::LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxSt
 
 void LEditor::RestoreDefaults()
 {
+	//the order is important, SetSyntaxHighlight must be called before SetProperties
+	//do not change it
 	SetSyntaxHighlight();
 	SetProperties();
 }
@@ -84,18 +86,12 @@ void LEditor::SetSyntaxHighlight()
 
 LEditor::~LEditor()
 {
-	if(m_rightClickMenu)
-		delete m_rightClickMenu;
 }
 
 /// Setup some scintilla properties
 void LEditor::SetProperties()
 {
-	//load menu
-	if(m_rightClickMenu)
-		delete m_rightClickMenu;
-	m_rightClickMenu = wxXmlResource::Get()->LoadMenu(wxT("editor_right_click"));
-	
+	m_rightClickMenu = m_context->GetMenu();
 	OptionsConfigPtr options = EditorConfigST::Get()->GetOptions();
 
 	SetMouseDwellTime(500);
@@ -252,11 +248,15 @@ void LEditor::SetProperties()
 	AutoCompSetSeparator(static_cast<int>('@'));	// set the separator to be non valid language wxChar
 	AutoCompSetChooseSingle(true);					// If only one match, insert it automatically
 	AutoCompSetIgnoreCase(true);
-	//AutoCompSetCancelAtStart(false);
-	//AutoCompSetDropRestOfWord(false);
+	AutoCompSetCancelAtStart(false);
+	AutoCompSetDropRestOfWord(false);
 
 	SetTabWidth(8);
 	SetIndent(8);
+
+	//if no right click menu is provided by the context, use scintilla default
+	//right click menu
+	UsePopUp(m_rightClickMenu ? false : true);
 
 	StyleSetBackground(wxSCI_STYLE_LINENUMBER, wxT("WHITE"));
 	StyleSetForeground(wxSCI_STYLE_LINENUMBER, wxColour(0, 63, 125));
@@ -1160,17 +1160,8 @@ void LEditor::Create(const wxFileName &fileName, const wxString &project)
 
 void LEditor::OnContextMenu(wxContextMenuEvent &event)
 {
-	wxUnusedVar(event);
-	PopupMenu(m_rightClickMenu);
+	if(m_rightClickMenu){
+		PopupMenu(m_rightClickMenu);
+	}
+	event.Skip();
 }
-
-bool LEditor::IsSwapFilesEnabled() const
-{
-	return m_context->IsSwapFilesEnabled();
-}
-
-void LEditor::SwapFiles()
-{
-	m_context->SwapFiles(m_fileName);
-}
-

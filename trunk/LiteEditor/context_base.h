@@ -20,7 +20,8 @@ class LEditor;
  * \author Eran
  *
  */
-class ContextBase {
+class ContextBase : public wxEvtHandler
+{
 protected:
 	LEditor *m_container;
 	wxString m_name;
@@ -57,10 +58,11 @@ public:
 	virtual void OnDwellEnd(wxScintillaEvent & WXUNUSED(event)) = 0;
 	virtual void OnCallTipClick(wxScintillaEvent& WXUNUSED(event)) = 0;
 	virtual void OnDwellStart(wxScintillaEvent & WXUNUSED(event)) = 0;
-	virtual void SwapFiles(const wxFileName & WXUNUSED(fileName)){};
-	virtual bool IsSwapFilesEnabled() const { return false; }
-};
-typedef SmartPtr<ContextBase> ContextBasePtr;
 
+	//override this method if you wish to provide context based right click menu
+	virtual wxMenu *GetMenu() {return NULL;}
+};
+
+typedef SmartPtr<ContextBase> ContextBasePtr;
 #endif // CONTEXT_BASE_H
 

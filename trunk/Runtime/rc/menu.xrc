@@ -321,6 +321,9 @@
 		<object class="wxMenuItem" name="swap_files">
             <label>Swap .h &lt;-&gt; .cpp</label>
         </object>
+        <object class="wxMenuItem" name="insert_doxy_comment">
+            <label>Insert Do&amp;xygen Comment</label>
+        </object>
         <object class="wxMenuItem" name="wxID_SEPARATOR"/>
 		<object class="wxMenuItem" name="wxID_UNDO">
             <label>Undo\tCtrl+Z</label>

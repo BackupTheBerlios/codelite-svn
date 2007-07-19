@@ -35,6 +35,7 @@ wxBitmap ContextCpp::m_enumBmp = wxNullBitmap;
 ContextCpp::ContextCpp(LEditor *container)
 : ContextBase(container)
 , m_tipKind(TipNone)
+, m_rclickMenu(NULL)
 {
 	//-----------------------------------------------
 	// Load laguage settings from configuration file
@@ -111,10 +112,25 @@ ContextCpp::ContextCpp(LEditor *container)
 	rCtrl.RegisterImage(11, m_functionProtectedeBmp);
 	rCtrl.RegisterImage(12, m_macroBmp);
 	rCtrl.RegisterImage(13, m_enumBmp);
+
+	//load the context menu from the resource manager
+	m_rclickMenu = wxXmlResource::Get()->LoadMenu(wxT("editor_right_click"));
+	m_rclickMenu->Connect(XRCID("swap_files"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(ContextCpp::OnSwapFiles), NULL, this);
+	m_rclickMenu->Connect(XRCID("insert_doxy_comment"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(ContextCpp::OnInsertDoxyComment), NULL, this);
 }
+
+ContextCpp::ContextCpp()
+: ContextBase(wxT("C++")) 
+, m_rclickMenu(NULL)
+{}
 
 ContextCpp::~ContextCpp()
 {
+	if(m_rclickMenu)
+	{
+		delete m_rclickMenu;
+		m_rclickMenu = NULL;
+	}
 }
 
 ContextBase *ContextCpp::NewInstance(LEditor *container){
@@ -666,4 +682,25 @@ bool ContextCpp::TryOpenFile(const wxFileName &fileName)
 		}
 	}
 	return false;
+}
+
+//-----------------------------------------------
+// Menu event handlers
+//-----------------------------------------------
+void ContextCpp::OnSwapFiles(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	SwapFiles(GetCtrl().GetFileName());
+}
+
+void ContextCpp::OnInsertDoxyComment(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	//get the current line text
+	LEditor &editor = GetCtrl();
+	int lineno = editor.LineFromPosition(editor.GetCurrentPos());
+
+	//get doxygen comment based on file and line 
+	TagsManager *mgr = TagsManagerST::Get();
+	wxString comment = mgr->GenerateDoxygenComment(editor.GetFileName().GetFullPath(), lineno);
 }
