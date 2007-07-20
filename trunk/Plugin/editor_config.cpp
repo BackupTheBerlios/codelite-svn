@@ -311,3 +311,32 @@ void EditorConfig::SetRecentlyOpenedWorkspaces(const wxArrayString &files)
 	//save the data to disk
 	m_doc->Save(m_fileName.GetFullPath());
 }
+
+bool EditorConfig::WriteObject(const wxString &name, SerializedObject *obj)
+{
+	Archive arch;
+	
+	//create new xml node for this object
+	wxXmlNode *child = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("ArchiveObject"));
+	m_doc->GetRoot()->AddChild(child);
+	child->AddProperty(wxT("Name"), name);
+	
+	arch.SetXmlNode(child);
+	//serialize the object into the archive
+	obj->Serialize(arch);
+	//save the archive
+	return m_doc->Save(m_fileName.GetFullPath());
+}
+
+bool EditorConfig::ReadObject(const wxString &name, SerializedObject *obj)
+{
+	//find the object node in the xml file
+	wxXmlNode *node = XmlUtils::FindNodeByName(m_doc->GetRoot(), wxT("ArchiveObject"), name);
+	if(node){
+		Archive arch;
+		arch.SetXmlNode(node);
+		obj->DeSerialize(arch);
+		return true;
+	}
+	return false;
+}

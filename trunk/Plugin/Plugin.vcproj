@@ -204,6 +204,12 @@
 		<Filter
 			Name="Common">
 			<File
+				RelativePath=".\archive.cpp">
+			</File>
+			<File
+				RelativePath=".\archive.h">
+			</File>
+			<File
 				RelativePath=".\async_executable_cmd.cpp">
 			</File>
 			<File
@@ -217,6 +223,9 @@
 			</File>
 			<File
 				RelativePath=".\regex_processor.h">
+			</File>
+			<File
+				RelativePath=".\serialized_object.h">
 			</File>
 			<File
 				RelativePath=".\xmlutils.cpp">

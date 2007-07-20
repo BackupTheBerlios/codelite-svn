@@ -8,6 +8,7 @@
 #include "lexer_configuration.h"
 #include "optionsconfig.h"
 #include "map"
+#include "serialized_object.h"
 
 #ifdef WXMAKINGDLL_LE_SDK
 #    define WXDLLIMPEXP_LE_SDK WXEXPORT
@@ -153,6 +154,20 @@ public:
 	 */
 	void SetRecentlyOpenedWorkspaces(const wxArrayString &files);
 
+	/**
+	 * \brief write an archived object to the xml configuration
+	 * \param name object name
+	 * \param arch the archived object container
+	 */
+	bool WriteObject(const wxString &name, SerializedObject *obj);
+	
+	/**
+	 * \brief read an archived object from the configuration
+	 * \param name object to read
+	 * \param arch [output]
+	 */
+	bool ReadObject(const wxString &name, SerializedObject *obj);
+	
 private:
 	EditorConfig();
 	virtual ~EditorConfig();

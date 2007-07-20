@@ -58,6 +58,7 @@ bool FindInFilesDialog::Create(wxWindow* parent,
 	GetSizer()->SetMinSize(wxSize(600, 300));
 	GetSizer()->SetSizeHints(this);
 	Centre();
+	m_findString->SetFocus();
 	return true;
 }
 
@@ -217,6 +218,7 @@ void FindInFilesDialog::OnCharEvent(wxKeyEvent &event)
 {
 	if(event.GetKeyCode() == WXK_ESCAPE){
 		Hide();
+		return;
 	}
 	event.Skip();
 }
