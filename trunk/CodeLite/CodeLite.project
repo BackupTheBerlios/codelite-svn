@@ -22,6 +22,7 @@
     <File Name="cl_process.cpp"/>
     <File Name="scope_parser.cpp"/>
     <File Name="cpp_lexer.cpp"/>
+    <File Name="cpp_comment_creator.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Header Files">
     <File Name="y.tab.h"/>
@@ -53,6 +54,8 @@
     <File Name="unistd.h"/>
     <File Name="worker_thread.h"/>
     <File Name="cpp_lexer.h"/>
+    <File Name="comment_creator.h"/>
+    <File Name="cpp_comment_creator.h"/>
   </VirtualDirectory>
   <Dependencies/>
   <VirtualDirectory Name="GeneratedFiles">

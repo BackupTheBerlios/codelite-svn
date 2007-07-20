@@ -24,7 +24,7 @@
 #include "macros.h"
 
 ///////////////////////////////////////////////////////////////////////////
-
+ 
 DependenciesDlg::DependenciesDlg( wxWindow* parent, const wxString &projectName, int id, wxString title, wxPoint pos, wxSize size, int style ) 
 : wxDialog( parent, id, title, pos, size, style )
 , m_projectName(projectName)
