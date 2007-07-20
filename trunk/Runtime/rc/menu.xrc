@@ -16,7 +16,7 @@
                 <help>Create an empty new file</help>
             </object>
             <object class="wxMenuItem" name="wxID_OPEN">
-                <label>&amp;Open File...\tCtrl+O</label>
+                <label>&amp;Open File...\tCtrl+O</label> 
                 <help>Open an existing file</help>
             </object>
 
@@ -319,7 +319,7 @@
     
     <object class="wxMenu" name="editor_right_click">
 		<object class="wxMenuItem" name="swap_files">
-            <label>Swap .h &lt;-&gt; .cpp</label>
+            <label>Swap Header/Implementation file</label>
         </object>
         <object class="wxMenuItem" name="insert_doxy_comment">
             <label>Insert Do&amp;xygen Comment</label>

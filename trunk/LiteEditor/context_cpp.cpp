@@ -10,6 +10,7 @@
 #include "algorithm"
 #include "language.h"
 #include "browse_record.h"
+#include "wx/tokenzr.h"
 
 #define VALIDATE_PROJECT()\
 	if(rCtrl.GetProject().IsEmpty())\
@@ -703,4 +704,26 @@ void ContextCpp::OnInsertDoxyComment(wxCommandEvent &event)
 	//get doxygen comment based on file and line 
 	TagsManager *mgr = TagsManagerST::Get();
 	wxString comment = mgr->GenerateDoxygenComment(editor.GetFileName().GetFullPath(), lineno);
+	
+	int lineStartPos = editor.PositionFromLine(lineno);
+
+	//keep the page idnetation level
+	int indentSize = editor.GetIndent();
+	int indent = editor.GetLineIndentation(lineno);
+	if(editor.GetTabIndents()){
+		indent = indent / indentSize;
+	}
+
+	wxStringTokenizer tkz(comment, wxT("\n"));
+	comment.Clear();
+	while(tkz.HasMoreTokens())
+	{
+		for(int i=0; i<indent; i++)
+			comment << wxT("\t");
+		comment << tkz.NextToken() << wxT("\n");
+	}
+	editor.InsertText(lineStartPos, comment);
+	//since we just inserted a text to the document, we force a save on the 
+	//document, or else the parser will lose sync with the database
+	editor.SaveFile();
 }

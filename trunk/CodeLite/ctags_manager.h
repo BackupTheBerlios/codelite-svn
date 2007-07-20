@@ -464,6 +464,7 @@ protected:
 	void GetLocalTags(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags, SearchFlags flags = PartialMatch);
 	void TipsFromTags(const std::vector<TagEntryPtr> &tags, const wxString &word, std::vector<wxString> &tips);
 	void GetFunctionTipFromTags(const std::vector<TagEntryPtr> &tags, const wxString &word, std::vector<wxString> &tips);
+	wxString DoCreateDoxygenComment(TagEntryPtr tag);
 };
 
 /// create the singleton typedef

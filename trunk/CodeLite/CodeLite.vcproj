@@ -198,6 +198,9 @@
 				RelativePath=".\comment.cpp">
 			</File>
 			<File
+				RelativePath=".\cpp_comment_creator.cpp">
+			</File>
+			<File
 				RelativePath=".\cpp_scanner.cpp">
 			</File>
 			<File
@@ -258,6 +261,12 @@
 			</File>
 			<File
 				RelativePath=".\comment.h">
+			</File>
+			<File
+				RelativePath=".\comment_creator.h">
+			</File>
+			<File
+				RelativePath=".\cpp_comment_creator.h">
 			</File>
 			<File
 				RelativePath=".\cpp_scanner.h">

@@ -9,7 +9,7 @@
 #include "wx/filename.h"
 #include <wx/wfstream.h>
 #include <wx/txtstrm.h>
-
+#include "cpp_comment_creator.h"
 
 #define PRINT_START_MESSAGE(msg)\
 	{\
@@ -1234,5 +1234,23 @@ void TagsManager::CloseExternalDatabase()
 
 wxString TagsManager::GenerateDoxygenComment(const wxString &file, const int line)
 {
+	if(m_pDb->IsOpen())
+	{
+		wxString sql;
+		sql << wxT("select * from tags where file='") << file << wxT("' and line=") << line + 1;
+		std::vector<TagEntryPtr> tags;
+		DoExecuteQueury(sql, tags);
+		if(tags.empty() || tags.size() > 1)
+			return wxEmptyString;
+
+		//create a doxygen comment from the tag
+		return DoCreateDoxygenComment(tags.at(0));
+	}
 	return wxEmptyString;
+}
+
+wxString TagsManager::DoCreateDoxygenComment(TagEntryPtr tag)
+{
+	CppCommentCreator commentCreator(tag);
+	return commentCreator.CreateComment();
 }

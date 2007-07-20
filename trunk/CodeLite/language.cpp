@@ -593,14 +593,12 @@ void Language::GetLocalVariables(const wxString &in, std::vector<TagEntryPtr> &t
 		wxString tagName = _U(var.m_name.c_str());
 
 		//if we have name, collect only tags that matches name
-		if(name.IsEmpty())
-			continue;
-
-		if(flags == PartialMatch && !tagName.StartsWith(name))
-			continue;
-
-		if(flags == ExactMatch && tagName != name)
-			continue;
+		if(!name.IsEmpty()){
+			if(flags == PartialMatch && !tagName.StartsWith(name))
+				continue;
+			if(flags == ExactMatch && tagName != name)
+				continue;
+		}
 
 		TagEntryPtr tag(new TagEntry());
 		tag->SetName(tagName);

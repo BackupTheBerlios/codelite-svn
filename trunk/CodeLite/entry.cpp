@@ -290,10 +290,10 @@ int TagEntry::Update(wxSQLite3Statement& updatePerepareStmnt)
 		updatePerepareStmnt.Bind(7, GetParent());
 		updatePerepareStmnt.Bind(8, GetInherits());
 		updatePerepareStmnt.Bind(9, GetTyperef());
-		updatePerepareStmnt.Bind(10, GetKind());
-		updatePerepareStmnt.Bind(11, GetSignature());
-		updatePerepareStmnt.Bind(12, GetPath());
-		updatePerepareStmnt.Bind(13, GetScope());
+		updatePerepareStmnt.Bind(10, GetScope());
+		updatePerepareStmnt.Bind(11, GetKind());
+		updatePerepareStmnt.Bind(12, GetSignature());
+		updatePerepareStmnt.Bind(13, GetPath());
 		updatePerepareStmnt.ExecuteUpdate();
 		updatePerepareStmnt.Reset();
 	}
