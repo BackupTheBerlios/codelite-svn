@@ -12,8 +12,8 @@
 #include "browse_record.h"
 #include "wx/tokenzr.h"
 
-#define VALIDATE_PROJECT()\
-	if(rCtrl.GetProject().IsEmpty())\
+#define VALIDATE_PROJECT(ctrl)\
+	if(ctrl.GetProject().IsEmpty())\
 	{\
 		return;\
 	}
@@ -150,7 +150,7 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 {
 	LEditor &rCtrl = GetCtrl();
 
-	VALIDATE_PROJECT();
+	VALIDATE_PROJECT(rCtrl);
 
 	//before we start, make sure we are the visible window
 	Manager *mgr = ManagerST::Get();
@@ -343,7 +343,7 @@ void ContextCpp::CodeComplete()
 {
 	LEditor &rCtrl = GetCtrl();
 
-	VALIDATE_PROJECT();
+	VALIDATE_PROJECT(rCtrl);
 
 	long pos = rCtrl.GetCurrentPos();
 	bool showFuncProto = false;
@@ -503,7 +503,7 @@ void ContextCpp::CompleteWord()
 {
 	LEditor &rCtrl = GetCtrl();
 
-	VALIDATE_PROJECT();
+	VALIDATE_PROJECT(rCtrl);
 
 	std::vector<TagEntryPtr> tags;
 	wxString scope;
@@ -572,7 +572,7 @@ void ContextCpp::GotoDefinition()
 {
 	LEditor &rCtrl = GetCtrl();
 
-	VALIDATE_PROJECT();
+	VALIDATE_PROJECT(rCtrl);
 
 	std::vector<TagEntryPtr> tags;
 
@@ -697,14 +697,20 @@ void ContextCpp::OnSwapFiles(wxCommandEvent &event)
 void ContextCpp::OnInsertDoxyComment(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	//get the current line text
 	LEditor &editor = GetCtrl();
+
+	VALIDATE_PROJECT(editor);
+
+	//get the current line text
 	int lineno = editor.LineFromPosition(editor.GetCurrentPos());
 
 	//get doxygen comment based on file and line 
 	TagsManager *mgr = TagsManagerST::Get();
 	wxString comment = mgr->GenerateDoxygenComment(editor.GetFileName().GetFullPath(), lineno);
-	
+	//do we have a comment?
+	if(comment.IsEmpty())
+		return;
+
 	int lineStartPos = editor.PositionFromLine(lineno);
 
 	//keep the page idnetation level
@@ -725,5 +731,10 @@ void ContextCpp::OnInsertDoxyComment(wxCommandEvent &event)
 	editor.InsertText(lineStartPos, comment);
 	//since we just inserted a text to the document, we force a save on the 
 	//document, or else the parser will lose sync with the database
-	editor.SaveFile();
+	//but avoid saving it, if it not part of the workspace
+	wxString project = ManagerST::Get()->GetProjectNameByFile(editor.GetFileName().GetFullPath());
+	if(project.IsEmpty() == false)
+	{
+		editor.SaveFile();
+	}
 }
