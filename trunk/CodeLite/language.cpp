@@ -204,6 +204,7 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 	wxString word;
 	wxString oper;
 	wxString lastFuncSig;
+	wxString accumulatedScope;
 
 	std::vector<TagEntry> tags;
 	wxString visibleScope = GetScope(text);
@@ -236,9 +237,9 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 				wxLogMessage(wxT("Illegal usage of '->', '.' operator on a type :") + _U(result.m_name.c_str()));
 				evaluationSucceeded = false;
 				break;
-			} // if(oper == wxT("->") || oper == wxT("."))  
+			} 
 			typeName = _U(result.m_name.c_str());
-		} // if(result.m_isaType) 
+		}
 		else if(result.m_isThis)
 		{
 			//-----------------------------------------
@@ -251,8 +252,7 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 				wxLogMessage(wxT("Illegal use of 'this' keyword outside of valid scope"));
 				evaluationSucceeded = false;
 				break;
-			} // if(typeScope == wxT("<global>")) 
-
+			} 
 			if(oper == wxT("::"))
 			{
 				wxLogMessage(wxT("Illegal usage of '::' operator on 'this' keyword"));
@@ -289,6 +289,41 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 				scopeToSearch = parentTypeName;
 			}
 
+			//--------------------------------------------------------------------------------------------
+			//keep the scope that we searched so far. The accumumlated scope
+			//are used for types, for scenarios like:
+			//void Box::GetWidth()
+			//{
+			//	Rectangle::
+			//
+			//trying to process the above code, will yield searching Rectangle inside Box scope, since we are
+			//inside Box's GetWidth() function.
+			//the correct behavior shuold be searching for Rectangle in the global scope.
+			//to correct this, we do special handling for Qualifier followed by coloon:colon operator (::)
+			if(accumulatedScope.IsEmpty() == false)
+			{
+				if(accumulatedScope == wxT("<global>"))
+				{
+					accumulatedScope = scopeToSearch;
+				}
+				else
+				{
+					accumulatedScope << wxT("::");
+					accumulatedScope << scopeToSearch;
+				}
+			}
+			else
+			{
+				accumulatedScope << wxT("<global>");
+			}
+
+			if(oper == wxT("::"))
+			{
+				//if the operator was something like 'Qualifier::', it is safe to assume 
+				//that the secope to be searched is the full expression
+				scopeToSearch = accumulatedScope;
+			}
+			
 			//get the derivation list of the typename
 			bool res(false);
 			res = TypeFromName(	_U(result.m_name.c_str()), 

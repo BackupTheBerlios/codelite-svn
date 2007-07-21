@@ -606,7 +606,7 @@ void LEditor::OnUpdateUI(wxUpdateUIEvent &event)
 // Misc functions
 //-----------------------------------------------------------------------
 
-wxChar LEditor::PreviousChar(const int& pos, int &foundPos)
+wxChar LEditor::PreviousChar(const int& pos, int &foundPos, bool wantWhitespace)
 {
 	wxChar ch = 0;
 	long curpos = PositionBefore( pos );
@@ -621,6 +621,14 @@ wxChar LEditor::PreviousChar(const int& pos, int &foundPos)
 		ch = GetCharAt( curpos );
 		if(ch == _T('\t') || ch == _T(' ') || ch == _T('\r') || ch == _T('\v') || ch == _T('\n'))
 		{
+			//if the caller is intrested in whitepsaces, 
+			//simply return it
+			if(wantWhitespace)
+			{
+				foundPos = curpos;
+				return ch;
+			}
+
 			long tmpPos = curpos;
 			curpos = PositionBefore( curpos );
 			if(curpos == 0 && tmpPos == curpos)

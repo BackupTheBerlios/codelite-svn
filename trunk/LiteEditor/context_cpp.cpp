@@ -433,7 +433,7 @@ wxString ContextCpp::GetExpression(long pos)
 
 	while(cont)
 	{
-		wxChar ch = rCtrl.PreviousChar(position, at);
+		wxChar ch = rCtrl.PreviousChar(position, at, true);
 		position = at;
 		//Eof?
 		if(ch == 0)
@@ -448,12 +448,28 @@ wxString ContextCpp::GetExpression(long pos)
 
 		switch(ch)
 		{
+			//if we found a whitespace, we handle it only if depth is zero
+		case wxT(' '):
+		case wxT('\n'):
+		case wxT('\v'):
+		case wxT('\t'):
+		case wxT('\r'):
+			{
+				if(depth == 0)
+				{
+					cont = false;
+					break;
+				}
+			}
+			break;		
 		case wxT('{'):
 		case wxT('='):
 		case wxT(';'):
 			cont = false;
 			break;
 		case wxT('('):
+		case wxT('<'):
+		case wxT('['):
 			{
 				if(depth == 0)
 				{
@@ -464,6 +480,8 @@ wxString ContextCpp::GetExpression(long pos)
 			}
 			break;
 		case wxT(')'):
+		case wxT('>'):
+		case wxT(']'):
 			{
 				depth++;
 			}
