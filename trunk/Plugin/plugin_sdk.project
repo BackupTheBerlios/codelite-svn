@@ -30,7 +30,6 @@
     <File Name="VariableLexer.cpp"/>
     <File Name="variable.tab.cpp"/>
     <File Name="variable.yy.cpp"/>
-    <File Name="filehistory.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Header Files">
     <File Name="async_executable_cmd.h"/>
@@ -64,7 +63,6 @@
     <File Name="TargetLexer.h"/>
     <File Name="VariableLexer.h"/>
     <File Name="variable.yy.h"/>
-    <File Name="filehistory.h"/>
   </VirtualDirectory>
   <Dependencies/>
   <Settings Type="Static Library">
