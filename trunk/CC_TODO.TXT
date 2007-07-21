@@ -1,7 +1,3 @@
-o When inside a class/namespace scope, and typing CLASS:: -> CC does not work.
 o Currently, typing ')' cacnells any open call tip, the cancellation should occur only if depth is zero!
 o Call tip disappears too fast
 o Hitting down & up arrows hides the calltip, incase there are multiple choices for it, it should be stay active and rotate between options
-o Doxygen comment - add \return value to Function comments
-o GetExpression(), should consider spaces, for example: return m_root --> expression should be m_root and not "return m_root", this can be done 
-  by checking nested levels of braces ( '(', '<', '(' and '[' )
