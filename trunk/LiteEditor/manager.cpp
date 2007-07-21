@@ -82,8 +82,10 @@ bool Manager::IsWorkspaceOpen() const
 void Manager::OpenFile(const wxString &file_name, const wxString &projectName, int lineno, long position)
 {
 	wxFileName fileName(file_name);
+	wxString projName(projectName);
 	wxFlatNotebook *notebook = Frame::Get()->GetNotebook();
 	bool updTree = false;
+	bool fileWasOpenedInNB(false);
 
 	//make sure that the notebook is visible
 	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Editor"));
@@ -103,6 +105,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 			if( editor->GetFileName() == fileName.GetFullPath() )
 			{
 				notebook ->SetSelection( nCount );
+				fileWasOpenedInNB = true;
 				break;
 			}
 			editor = NULL;
@@ -123,7 +126,12 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 		notebook ->Freeze();
 		// create new instance from pool
 		editor = EditorCreatorST::Get()->NewInstance();
-		editor->Create(fileName, projectName);
+
+		//try to match project name to the file
+		if(projectName.IsEmpty()){
+			projName = GetProjectNameByFile(fileName.GetFullPath());
+		}
+		editor->Create(fileName, projName);
 
 		notebook ->AddPage(editor, fileName.GetFullName(), true);
 		notebook ->Thaw();
@@ -136,7 +144,9 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 		editor->GotoLine( lineno );
 		editor->SetCaretAt( position );
 	} else {
-		editor->GotoLine( lineno );
+		if(!(fileWasOpenedInNB && lineno == wxNOT_FOUND)){
+			editor->GotoLine( lineno );
+		}
 	}
 
 	//update the symbol tree
@@ -146,7 +156,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 	//update the 'Recent file' history
 	AddToRecentlyOpenedFiles(fileName.GetFullPath());
 
-	editor->SetProject( projectName );
+	editor->SetProject( projName );
 	editor->SetFocus ();
 	editor->SetSCIFocus (true);
 }

@@ -242,7 +242,7 @@
 			</object>
 
 			<object class="wxMenuItem" name="build_active_project">
-                <label>&amp;Build Project\tCtrl+B</label>
+                <label>&amp;Build Project\tF7</label>
             </object>
             <object class="wxMenuItem" name="clean_active_project">
                 <label>&amp;Clean Project</label>
