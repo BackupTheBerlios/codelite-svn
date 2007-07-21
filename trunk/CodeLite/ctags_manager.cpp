@@ -1182,7 +1182,20 @@ void TagsManager::TipsFromTags(const std::vector<TagEntryPtr> &tags, const wxStr
 			continue;
 
 		wxString tip = tags.at(i)->GetPattern();
-		
+		wxString comment;
+
+		//handle comments
+		if(GetCtagsOptions().GetParseComments()){
+			int      lineno   = tags.at(i)->GetLine();
+			wxString filename = tags.at(i)->GetFile();
+			if(lineno != wxNOT_FOUND && filename.IsEmpty() == false){
+				comment = GetComment(filename, lineno);
+				if(comment.IsEmpty() == false){
+					comment << wxT("\n");
+				}
+			}
+		}
+
 		//remove the pattern perfix and suffix
 		tip = tip.AfterFirst(wxT('^'));
 		tip = tip.BeforeLast(wxT('$'));
@@ -1193,6 +1206,7 @@ void TagsManager::TipsFromTags(const std::vector<TagEntryPtr> &tags, const wxStr
 		tip.erase(0, tip.find_first_not_of(trimString)); 
 		tip.erase(tip.find_last_not_of(trimString)+1);
 
+		tip.Prepend(comment);
 		tips.push_back(tip);
 	}
 }

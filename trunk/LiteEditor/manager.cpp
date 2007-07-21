@@ -112,6 +112,13 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 		}
 	}
 
+	//even in cases were a porject name is empty, we try 
+	//to match a project name to the actual file. otherwise, CC may not work
+	//since it depends on a valid project name in the editor
+	if(projectName.IsEmpty()){
+		projName = GetProjectNameByFile(fileName.GetFullPath());
+	}
+
 	if( !editor )
 	{
 		/// Open the file and read the text
@@ -126,11 +133,6 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 		notebook ->Freeze();
 		// create new instance from pool
 		editor = EditorCreatorST::Get()->NewInstance();
-
-		//try to match project name to the file
-		if(projectName.IsEmpty()){
-			projName = GetProjectNameByFile(fileName.GetFullPath());
-		}
 		editor->Create(fileName, projName);
 
 		notebook ->AddPage(editor, fileName.GetFullName(), true);
