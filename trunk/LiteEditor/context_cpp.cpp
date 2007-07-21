@@ -32,6 +32,7 @@ wxBitmap ContextCpp::m_functionPublicBmp = wxNullBitmap;
 wxBitmap ContextCpp::m_functionProtectedeBmp = wxNullBitmap;
 wxBitmap ContextCpp::m_macroBmp = wxNullBitmap;
 wxBitmap ContextCpp::m_enumBmp = wxNullBitmap;
+wxBitmap ContextCpp::m_enumeratorBmp = wxNullBitmap;
 
 ContextCpp::ContextCpp(LEditor *container)
 : ContextBase(container)
@@ -96,6 +97,8 @@ ContextCpp::ContextCpp(LEditor *container)
 
 		m_enumBmp = wxXmlResource::Get()->LoadBitmap(wxT("enum"));
 		m_enumBmp.SetMask(new wxMask(m_enumBmp, wxColor(0, 128, 128)));
+
+		m_enumeratorBmp = wxXmlResource::Get()->LoadBitmap(wxT("enumerator"));
 	}
 
 	//register the images
@@ -113,11 +116,14 @@ ContextCpp::ContextCpp(LEditor *container)
 	rCtrl.RegisterImage(11, m_functionProtectedeBmp);
 	rCtrl.RegisterImage(12, m_macroBmp);
 	rCtrl.RegisterImage(13, m_enumBmp);
+	rCtrl.RegisterImage(14, m_enumeratorBmp);
 
 	//load the context menu from the resource manager
 	m_rclickMenu = wxXmlResource::Get()->LoadMenu(wxT("editor_right_click"));
 	m_rclickMenu->Connect(XRCID("swap_files"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(ContextCpp::OnSwapFiles), NULL, this);
 	m_rclickMenu->Connect(XRCID("insert_doxy_comment"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(ContextCpp::OnInsertDoxyComment), NULL, this);
+	m_rclickMenu->Connect(XRCID("comment_selection"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(ContextCpp::OnCommentSelection), NULL, this);
+	m_rclickMenu->Connect(XRCID("comment_line"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(ContextCpp::OnCommentLine), NULL, this);
 }
 
 ContextCpp::ContextCpp()
@@ -242,6 +248,12 @@ wxString ContextCpp::GetImageString(const TagEntry &entry)
 
 	if(entry.GetKind() == wxT("macro"))
 		return wxT("?12");
+
+	if(entry.GetKind() == wxT("enum"))
+		return wxT("?13");
+
+	if(entry.GetKind() == wxT("enumerator"))
+		return wxT("?14");
 
 	return wxEmptyString;
 }
@@ -755,4 +767,35 @@ void ContextCpp::OnInsertDoxyComment(wxCommandEvent &event)
 	{
 		editor.SaveFile();
 	}
+}
+
+void ContextCpp::OnCommentSelection(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	LEditor &editor = GetCtrl();
+	int start = editor.GetSelectionStart();
+	int end   = editor.GetSelectionEnd();
+
+	if(start == end)
+		return;
+
+	//createa C block comment
+	editor.BeginUndoAction();
+	editor.InsertText(start, wxT("/*"));
+	editor.InsertText(editor.PositionAfter(editor.PositionAfter(end)), wxT("*/"));
+	editor.EndUndoAction();
+}
+
+void ContextCpp::OnCommentLine(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	LEditor &editor = GetCtrl();
+	
+	int lineno = editor.LineFromPosition(editor.GetCurrentPos());
+	int start  = editor.PositionFromLine(lineno);
+
+	//createa C block comment
+	editor.BeginUndoAction();
+	editor.InsertText(start, wxT("//"));
+	editor.EndUndoAction();
 }

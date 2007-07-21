@@ -325,6 +325,13 @@
             <label>Insert Do&amp;xygen Comment</label>
         </object>
         <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+        <object class="wxMenuItem" name="comment_selection">
+            <label>Comment &amp;Selection</label>
+        </object>
+        <object class="wxMenuItem" name="comment_line">
+            <label>Comment &amp;Line</label>
+        </object>
+        <object class="wxMenuItem" name="wxID_SEPARATOR"/>
 		<object class="wxMenuItem" name="wxID_UNDO">
             <label>Undo\tCtrl+Z</label>
         </object>

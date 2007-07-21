@@ -41,6 +41,7 @@ class ContextCpp : public ContextBase {
 	static wxBitmap m_functionProtectedeBmp;
 	static wxBitmap m_macroBmp;
 	static wxBitmap m_enumBmp;
+	static wxBitmap m_enumeratorBmp;
 
 private:
 	bool TryOpenFile(const wxFileName &fileName);
@@ -73,7 +74,9 @@ public:
 	virtual wxMenu *GetMenu(){return m_rclickMenu;}
 	virtual void OnSwapFiles(wxCommandEvent &event);
 	virtual void OnInsertDoxyComment(wxCommandEvent &event);
-
+	virtual void OnCommentSelection(wxCommandEvent &event);
+	virtual void OnCommentLine(wxCommandEvent &event);
+	
 private:
 	wxString GetWordUnderCaret();
 	wxString GetImageString(const TagEntry &entry);

@@ -41,6 +41,9 @@ wxImageList* CreateSymbolTreeImages()
 	bmp = wxXmlResource::Get()->LoadBitmap(_T("enum"));				   // 13
 	bmp.SetMask(new wxMask(bmp, wxColor(0, 128, 128)));
 	images->Add(bmp);
+	
+	bmp = wxXmlResource::Get()->LoadBitmap(wxT("enumerator"));
+	images->Add(bmp);
 
 	return images;
 }

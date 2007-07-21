@@ -6,6 +6,7 @@
     <object class="wxBitmap" name="member_protected">res/member_protected.png</object>  
     <object class="wxBitmap" name="member_private">res/member_private.png</object>    
     <object class="wxBitmap" name="enum">res/enum.xpm</object>  
+    <object class="wxBitmap" name="enumerator">res/enumee.xpm</object>  
     <object class="wxBitmap" name="class">res/class.png</object>  
     <object class="wxBitmap" name="typedef">res/typedef.xpm</object>     
     <object class="wxBitmap" name="project">res/cubes_blue.png</object>
