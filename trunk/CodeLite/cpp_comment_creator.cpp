@@ -48,6 +48,7 @@ wxString CppCommentCreator::FunctionComment()
 	comment << wxT(" * \\brief \n");
 	for(size_t i=0; i<tags.size(); i++)
 		comment << wxT(" * \\param ") << tags.at(i)->GetName() << wxT("\n");
+	comment << wxT(" * \\return \n");
 	comment << wxT(" */\n");
 	return comment;
 }
