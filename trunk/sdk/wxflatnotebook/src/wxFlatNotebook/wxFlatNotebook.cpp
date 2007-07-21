@@ -1234,7 +1234,6 @@ void wxPageContainer::DoDeletePage(size_t page)
 {
 	// Remove the page from the vector
 	wxFlatNotebook* book = (wxFlatNotebook*)GetParent();
-	m_pagesInfoVec.RemoveAt(page);
 
 	// Armel Asselin's patch
 	int newActivePageIndex = m_iActivePage, newPreviousPageIndex = m_iPreviousActivePage;
@@ -1258,6 +1257,7 @@ void wxPageContainer::DoDeletePage(size_t page)
 		newActivePageIndex = newPreviousPageIndex;
  	}
 
+	m_pagesInfoVec.RemoveAt(page);
 	m_iActivePage = newActivePageIndex;
 	m_iPreviousActivePage = newPreviousPageIndex;
 	if (m_iActivePage == m_iPreviousActivePage)
