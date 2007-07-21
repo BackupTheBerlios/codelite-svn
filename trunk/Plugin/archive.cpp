@@ -18,9 +18,6 @@ void Archive::WriteArrayString(const wxString &name, const wxArrayString &arr)
 	}
 	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("wxArrayString"));
 	m_root->AddChild(node);
-	
-	wxString count;
-	count << arr.GetCount();
 	node->AddProperty(wxT("Name"), name);
 	
 	//add an entry for each wxString in the array
@@ -143,7 +140,7 @@ void Archive::WriteSimple(int value, const wxString &typeName, const wxString &n
 	wxString propValue;
 	propValue << value;
 	
-	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("typeName"));
+	wxXmlNode *node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, typeName);
 	m_root->AddChild(node);
 	node->AddProperty(wxT("Value"), propValue);
 	node->AddProperty(wxT("Name"), name);

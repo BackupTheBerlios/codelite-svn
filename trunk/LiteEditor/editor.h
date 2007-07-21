@@ -61,6 +61,9 @@ class WXDLLIMPEXP_LE LEditor : public wxScintilla
 	static std::map<wxString, int> ms_bookmarkShapes;
 
 public:
+	static FindReplaceData &GetFindReplaceData(){return m_findReplaceData;}
+
+public:
 	/// Construct a LEditor object
 	LEditor(wxWindow* parent, wxWindowID id, const wxSize& size, const wxString& fileName, const wxString& project, bool hidden = false);
 

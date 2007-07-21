@@ -251,14 +251,15 @@ void EditorConfig::GetRecentlyOpenedFies(wxArrayString &files)
 void EditorConfig::SetRecentlyOpenedFies(const wxArrayString &files)
 {
 	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("RecentFiles"));
-	if(node == NULL){
-		//create new entry in the configuration file
-		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("RecentFiles"));
-		m_doc->GetRoot()->AddChild(node);
-	}else{
-		//remove old children
-		XmlUtils::RemoveChildren(node);
+	if(node){
+		wxXmlNode *root = m_doc->GetRoot();
+		root->RemoveChild(node);
+		delete node;
 	}
+
+	//create new entry in the configuration file
+	node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("RecentFiles"));
+	m_doc->GetRoot()->AddChild(node);
 	
 	for(size_t i=0; i<files.GetCount(); i++)
 	{
@@ -292,15 +293,15 @@ void EditorConfig::GetRecentlyOpenedWorkspaces(wxArrayString &files)
 void EditorConfig::SetRecentlyOpenedWorkspaces(const wxArrayString &files)
 {
 	wxXmlNode *node = XmlUtils::FindFirstByTagName(m_doc->GetRoot(), wxT("RecentWorkspaces"));
-	if(node == NULL){
-		//create new entry in the configuration file
-		node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("RecentWorkspaces"));
-		m_doc->GetRoot()->AddChild(node);
-	}else{
-		//remove old children
-		XmlUtils::RemoveChildren(node);
+	if(node){
+		wxXmlNode *root = m_doc->GetRoot();
+		root->RemoveChild(node);
+		delete node;
 	}
-	
+
+	node = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("RecentWorkspaces"));
+	m_doc->GetRoot()->AddChild(node);
+
 	for(size_t i=0; i<files.GetCount(); i++)
 	{
 		wxXmlNode *child = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("File"));
@@ -316,11 +317,18 @@ bool EditorConfig::WriteObject(const wxString &name, SerializedObject *obj)
 {
 	Archive arch;
 	
+	wxXmlNode *child = XmlUtils::FindNodeByName(m_doc->GetRoot(), wxT("ArchiveObject"), name);
+	if(child){
+		wxXmlNode *n = m_doc->GetRoot();
+		n->RemoveChild(child);
+		delete child;
+	} // if(child)
+
 	//create new xml node for this object
-	wxXmlNode *child = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("ArchiveObject"));
+	child = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, wxT("ArchiveObject"));
 	m_doc->GetRoot()->AddChild(child);
 	child->AddProperty(wxT("Name"), name);
-	
+
 	arch.SetXmlNode(child);
 	//serialize the object into the archive
 	obj->Serialize(arch);

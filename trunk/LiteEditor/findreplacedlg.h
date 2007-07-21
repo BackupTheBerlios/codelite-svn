@@ -2,6 +2,7 @@
 #define FIND_REPLACE_DLG_H
 
 #include "wx/dialog.h"
+#include "serialized_object.h"
 
 class wxTextCtrl;
 class wxCheckBox;
@@ -30,7 +31,7 @@ DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE, wxEVT_FRD_REPLACE, -1)
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE, wxEVT_FRD_REPLACEALL, -1)
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE, wxEVT_FRD_BOOKMARKALL, -1)
 
-class FindReplaceData 
+class FindReplaceData : public SerializedObject
 {
 	wxArrayString m_replaceString;
 	wxArrayString m_findString;
@@ -116,9 +117,23 @@ public:
 		m_replaceString.Insert(str, 0);
 	}
 	
+
+	//implement the serialization API
+	void Serialize(Archive &arch){
+		arch.WriteArrayString(wxT("m_findString"), m_findString);
+		arch.WriteArrayString(wxT("m_replaceString"), m_replaceString);
+		arch.WriteLong(wxT("m_flags"), (long)m_flags);
+	}
+
+	void DeSerialize(Archive &arch){
+		arch.ReadArrayString(wxT("m_findString"), m_findString);
+		arch.ReadArrayString(wxT("m_replaceString"), m_replaceString);
+		arch.ReadLong(wxT("m_flags"), (long&)m_flags);
+	}
 };
 
 class wxStaticText;
+class wxComboBox;
 
 class FindReplaceDialog : public wxDialog
 {
@@ -127,8 +142,8 @@ class FindReplaceDialog : public wxDialog
 	FindReplaceData m_data;
 
 	// Options
-	wxTextCtrl *m_findString;
-	wxTextCtrl *m_replaceString;
+	wxComboBox *m_findString;
+	wxComboBox *m_replaceString;
 	wxCheckBox *m_matchCase;
 	wxCheckBox *m_matchWholeWord;
 	wxCheckBox *m_regualrExpression;
@@ -174,7 +189,7 @@ public:
 
 	// Set the replacements message
 	void SetReplacementsMessage(const wxString &msg);
-	void SetFindReplaceData(const FindReplaceData& data);
+	void SetFindReplaceData(FindReplaceData& data);
 
 protected:
 	void CreateGUIControls();

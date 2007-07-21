@@ -76,7 +76,7 @@ void FindInFilesDialog::CreateGUIControls()
 	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Find What:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	mainSizer->Add(itemStaticText, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5 );
 
-	m_findString = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1));
+	m_findString = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1));
 	mainSizer->Add(m_findString, 0, wxALL | wxEXPAND, 5 );
 
 	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Look In:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
@@ -128,7 +128,6 @@ void FindInFilesDialog::CreateGUIControls()
 
 	mainSizer->Add(new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL), 0, wxEXPAND );
 	mainSizer->Add(btnSizer, 0, wxEXPAND|wxALL, 5);
-
 	
 	SetData(m_data);
 	m_findString->SetSelection(-1, -1); // select all
@@ -138,10 +137,26 @@ void FindInFilesDialog::CreateGUIControls()
 void FindInFilesDialog::SetData(FindReplaceData &data)
 {
 	//sets the previous values
+	m_findString->Clear();
+	m_findString->Append(data.GetFindStringArr());
 	m_findString->SetValue(data.GetFindString());
 	m_matchCase->SetValue(data.GetFlags() & wxFRD_MATCHCASE ? true : false);
 	m_matchWholeWord->SetValue(data.GetFlags() & wxFRD_MATCHWHOLEWORD ? true : false);
 	m_regualrExpression->SetValue(data.GetFlags() & wxFRD_REGULAREXPRESSION ? true : false);
+}
+
+void FindInFilesDialog::DoSearch()
+{
+	SearchData data;
+	data.SetFindString(m_data.GetFindString());
+	data.SetMatchCase( (m_data.GetFlags() & wxFRD_MATCHCASE) != 0);
+	data.SetMatchWholeWord((m_data.GetFlags() & wxFRD_MATCHWHOLEWORD) != 0);
+	data.SetRegularExpression((m_data.GetFlags() & wxFRD_REGULAREXPRESSION) != 0);
+	data.SetRootDir(m_dirPicker->GetPath());
+	data.SetExtensions(m_fileTypes->GetValue());
+
+	// Convert file types to array
+	SearchThreadST::Get()->PerformSearch(data);
 }
 
 void FindInFilesDialog::OnClick(wxCommandEvent &event)
@@ -153,18 +168,7 @@ void FindInFilesDialog::OnClick(wxCommandEvent &event)
 	if(btnClicked == m_stop){
 		SearchThreadST::Get()->StopSearch();
 	} else if(btnClicked == m_find){
-
-		SearchData data;
-		data.SetFindString(m_data.GetFindString());
-		data.SetMatchCase( (m_data.GetFlags() & wxFRD_MATCHCASE) != 0);
-		data.SetMatchWholeWord((m_data.GetFlags() & wxFRD_MATCHWHOLEWORD) != 0);
-		data.SetRegularExpression((m_data.GetFlags() & wxFRD_REGULAREXPRESSION) != 0);
-		data.SetRootDir(m_dirPicker->GetPath());
-		data.SetExtensions(m_fileTypes->GetValue());
-
-		// Convert file types to array
-		SearchThreadST::Get()->PerformSearch(data);
-
+		DoSearch();		
 	} else if(btnClicked == m_cancel){
 		// Hide the dialog
 		Hide();
@@ -218,6 +222,10 @@ void FindInFilesDialog::OnCharEvent(wxKeyEvent &event)
 {
 	if(event.GetKeyCode() == WXK_ESCAPE){
 		Hide();
+		return;
+	} 
+	else if(event.GetKeyCode() == WXK_RETURN || event.GetKeyCode() == WXK_NUMPAD_ENTER){
+		DoSearch();
 		return;
 	}
 	event.Skip();

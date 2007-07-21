@@ -2,6 +2,7 @@
 #include <wx/gbsizer.h>
 #include <wx/textctrl.h>  
 #include <wx/checkbox.h>
+#include <wx/combobox.h>
 #include <wx/button.h> 
 #include <wx/stattext.h>
 #include "macros.h"
@@ -71,16 +72,16 @@ void FindReplaceDialog::CreateGUIControls()
 	hMainSzier->Add(btnSizer, 1, wxALL, 5);
 
 	wxStaticText* itemStaticText;
-	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Find What:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
+	itemStaticText = new wxStaticText( this, wxID_STATIC, wxT("Find What:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	gbSizer->Add(itemStaticText, wxGBPosition(0, 0), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
-	m_findString = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), wxTE_PROCESS_ENTER);
+	m_findString = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1));
 	gbSizer->Add(m_findString, wxGBPosition(0, 1), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
-	itemStaticText = new wxStaticText( this, wxID_STATIC, _("Replace With:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
+	itemStaticText = new wxStaticText( this, wxID_STATIC, wxT("Replace With:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	gbSizer->Add(itemStaticText, wxGBPosition(1, 0), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
-	m_replaceString = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), wxTE_PROCESS_ENTER);
+	m_replaceString = new wxComboBox(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1));
 	gbSizer->Add(m_replaceString, wxGBPosition(1, 1), wxDefaultSpan, wxALL | wxEXPAND, 5 );
 
 	wxStaticBoxSizer *sz = new wxStaticBoxSizer(wxVERTICAL, this, wxT("Options"));
@@ -126,10 +127,16 @@ void FindReplaceDialog::CreateGUIControls()
 	SetFindReplaceData(m_data);
 }
 
-void FindReplaceDialog::SetFindReplaceData(const FindReplaceData &data)
+void FindReplaceDialog::SetFindReplaceData(FindReplaceData &data)
 {
+	m_findString->Clear();
+	m_findString->Append(data.GetFindStringArr());
 	m_findString->SetValue(data.GetFindString());
+
+	m_replaceString->Clear();
+	m_replaceString->Append(data.GetReplaceStringArr());
 	m_replaceString->SetValue(data.GetReplaceString());
+
 	m_matchCase->SetValue(data.GetFlags() & wxFRD_MATCHCASE ? true : false);
 	m_matchWholeWord->SetValue(data.GetFlags() & wxFRD_MATCHWHOLEWORD ? true : false);
 	m_regualrExpression->SetValue(data.GetFlags() & wxFRD_REGULAREXPRESSION ? true : false);
@@ -207,7 +214,7 @@ void FindReplaceDialog::OnClose(wxCloseEvent &event)
 }
 void FindReplaceDialog::OnKeyDown(wxKeyEvent &event)
 {
-	if(event.GetKeyCode() == WXK_RETURN){
+	if(event.GetKeyCode() == WXK_RETURN || event.GetKeyCode() == WXK_NUMPAD_ENTER){
 		// start the search
 		size_t flags = m_data.GetFlags();
 		m_data.SetFindString( m_findString->GetValue() );
@@ -233,9 +240,6 @@ void FindReplaceDialog::OnKeyDown(wxKeyEvent &event)
 void FindReplaceDialog::ConnectEvents()
 {
 	// Connect buttons
-	//ConnectKeyDown(m_findString, FindReplaceDialog::OnKeyDown);
-	//ConnectKeyDown(m_replaceString, FindReplaceDialog::OnKeyDown);
-
 	m_find->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(FindReplaceDialog::OnClick), NULL, this);
 	m_replace->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(FindReplaceDialog::OnClick), NULL, this);
 	m_replaceAll->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(FindReplaceDialog::OnClick), NULL, this);

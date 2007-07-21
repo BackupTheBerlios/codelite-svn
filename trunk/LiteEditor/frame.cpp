@@ -259,6 +259,9 @@ void Frame::CreateGUIControls(void)
 	CreateRecentlyOpenedFilesMenu();
 	CreateRecentlyOpenedWorkspacesMenu();
 	BuildSettingsConfigST::Get()->Load();
+	//load dialog properties
+	EditorConfigST::Get()->ReadObject(wxT("FindInFilesData"), &m_data);
+	EditorConfigST::Get()->ReadObject(wxT("FindAndReplaceData"), &LEditor::GetFindReplaceData());
 
 	//start ctags process
 	TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
@@ -478,6 +481,13 @@ void Frame::OnClose(wxCloseEvent& event)
 	EditorConfigST::Get()->SaveNotebookStyle(wxT("OutputPane"), m_outputPane->GetNotebook()->GetWindowStyleFlag());
 	EditorConfigST::Get()->SaveNotebookStyle(wxT("WorkspacePane"), m_workspacePane->GetNotebook()->GetWindowStyleFlag());
 	EditorConfigST::Get()->SaveLexers();
+	//save the 'find and replace' information
+	if(m_findInFilesDlg){
+		EditorConfigST::Get()->WriteObject(wxT("FindInFilesData"), &(m_findInFilesDlg->GetData()));	
+	}
+	if(LEditor::GetFindReplaceDialog()){
+		EditorConfigST::Get()->WriteObject(wxT("FindAndReplaceData"), &(LEditor::GetFindReplaceDialog()->GetData()));
+	}
 	event.Skip();
 }
 

@@ -22,7 +22,7 @@ class FindInFilesDialog : public wxDialog
 	FindReplaceData m_data;
 
 	// Options
-	wxTextCtrl *m_findString;
+	wxComboBox *m_findString;
 	wxCheckBox *m_matchCase;
 	wxCheckBox *m_matchWholeWord;
 	wxCheckBox *m_regualrExpression;
@@ -69,7 +69,7 @@ protected:
 	void ConnectEvents();
 	void OnClick(wxCommandEvent &event);
 	void SendEvent(wxEventType type);
-	
+	void DoSearch();
 
 	DECLARE_EVENT_TABLE()
 	void OnClose(wxCloseEvent &event);
