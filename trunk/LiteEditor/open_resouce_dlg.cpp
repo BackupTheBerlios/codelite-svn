@@ -22,6 +22,9 @@
 #include "manager.h"
 
 ///////////////////////////////////////////////////////////////////////////
+BEGIN_EVENT_TABLE(OpenResourceDlg, wxDialog)
+EVT_CHAR_HOOK(OpenResourceDlg::OnCharHook)
+END_EVENT_TABLE()
 
 OpenResourceDlg::OpenResourceDlg( wxWindow* parent, int id, wxString title, wxPoint pos, wxSize size, int style ) 
 : wxDialog( parent, id, title, pos, size, style )
@@ -89,7 +92,6 @@ void OpenResourceDlg::ConnectEvents()
 	ConnectButton(m_button2, OpenResourceDlg::OnButtonCancel);
 	ConnectButton(m_btnOk, OpenResourceDlg::OnButtonOK);
 	m_listShortNames->Connect(wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler(OpenResourceDlg::OnItemActivated), NULL, this);
-	m_textResourceName->Connect(wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(OpenResourceDlg::OnEnterHit), NULL, this);
 	Connect(m_timer->GetId(), wxEVT_TIMER, wxTimerEventHandler(OpenResourceDlg::OnTimer), NULL, this);
 }
 
@@ -159,15 +161,25 @@ bool OpenResourceDlg::UpdateFileName()
 	return true;
 }
 
-
-void OpenResourceDlg::OnEnterHit(wxCommandEvent &event)
+void OpenResourceDlg::OnCharHook(wxKeyEvent &event)
 {
-	wxUnusedVar(event);
-	if(m_listShortNames->GetCount() == 1){
-		m_listShortNames->SetSelection(0);
-		if(UpdateFileName()){
-			EndModal(wxID_OK);
-			return;
+	if(event.GetKeyCode() == WXK_RETURN || event.GetKeyCode() == WXK_NUMPAD_ENTER)
+	{
+		if(m_listShortNames->GetSelection() != wxNOT_FOUND)
+		{
+			if(UpdateFileName()){
+				EndModal(wxID_OK);
+				return;
+			}
+		}
+		else if(m_listShortNames->GetCount() == 1)
+		{
+			m_listShortNames->SetSelection(0);
+			if(UpdateFileName()){
+				EndModal(wxID_OK);
+				return;
+			}
 		}
 	}
+	event.Skip();
 }

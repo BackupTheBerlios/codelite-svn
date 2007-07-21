@@ -57,8 +57,10 @@ protected:
 	//------------------------------------
 	// Event handlers
 	//------------------------------------
-	void OnClick(wxCommandEvent &event);
-	void OnListItemSelected(wxListEvent &event);
+	DECLARE_EVENT_TABLE();
+	virtual void OnClick(wxCommandEvent &event);
+	virtual void OnListItemSelected(wxListEvent &event);
+	virtual void OnCharHook(wxKeyEvent &event);
 	
 private:
 	void ConnectEvents();

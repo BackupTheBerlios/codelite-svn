@@ -28,6 +28,10 @@ static const wxString FileTypeAny = wxT("Any File");
 
 ///////////////////////////////////////////////////////////////////////////
 
+BEGIN_EVENT_TABLE(NewItemDlg, wxDialog)
+EVT_CHAR_HOOK(NewItemDlg::OnCharHook)
+END_EVENT_TABLE()
+
 NewItemDlg::NewItemDlg( wxWindow* parent, wxString cwd, int id, wxString title, wxPoint pos, wxSize size, int style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	m_cwd = cwd;
@@ -220,4 +224,12 @@ void NewItemDlg::OnListItemSelected(wxListEvent &event)
 	m_fileTypeValue = event.GetText();
 }
 
+void NewItemDlg::OnCharHook(wxKeyEvent &event)
+{
+	if(event.GetKeyCode() == WXK_RETURN || event.GetKeyCode() == WXK_NUMPAD_ENTER)
+	{
+		DoCreateFile();
+	}
+	event.Skip();
+}
 

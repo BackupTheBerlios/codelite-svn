@@ -37,7 +37,6 @@ protected:
 	void ConnectEvents();
 	bool UpdateFileName();
 	void OnTimer(wxTimerEvent &event);
-	void OnEnterHit(wxCommandEvent &event);
 
 protected:
 	wxPanel* mainPanel;
@@ -52,6 +51,9 @@ public:
 	OpenResourceDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Open Resource:"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 653,393 ), int style = wxDEFAULT_DIALOG_STYLE );
 	virtual ~OpenResourceDlg();
 	const wxString& GetFileName() const { return m_fileName; }
+
+	DECLARE_EVENT_TABLE();
+	virtual void OnCharHook(wxKeyEvent &event);
 };
 
 #endif //__open_resouce_dlg__

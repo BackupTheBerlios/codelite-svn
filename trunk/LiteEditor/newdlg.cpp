@@ -289,3 +289,4 @@ ProjectPtr NewDlg::FindProject(const wxString &name)
 	}
 	return NULL;
 }
+
