@@ -44,6 +44,11 @@ struct SAscendingSort
 	}
 };
 
+struct tagParseResult {
+	TagTreePtr tree;
+	std::vector<DbRecordPtr> *comments;
+};
+
 //------------------------------------------------------------------------------
 // CtagsOptions
 //------------------------------------------------------------------------------
@@ -968,7 +973,7 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 	int maxVal = static_cast<int>(traverser.GetFiles().size());
 	int i = 0;
 
-	std::list<TagTreePtr> trees;
+	std::list<tagParseResult> trees;
 	for(i=0; i<maxVal; i++)
 	{
 		// Parse all source file, and concatenate them into one big string
@@ -983,11 +988,18 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 		}
 
 		tags.Clear();
-		SourceToTags(curFile, tags, m_ctags);
-		TagTreePtr tree = TreeFromTags(tags);
-		trees.push_back(tree);
-	} // for(i=0; i<maxVal; i++)
-
+		tagParseResult result;
+		if(GetParseComments())
+		{
+			result.comments = new std::vector<DbRecordPtr>();
+			result.tree = ParseSourceFile(curFile, result.comments);
+		}
+		else
+		{
+			result.tree = ParseSourceFile(curFile);
+		}
+		trees.push_back(result);
+	}
 
 	if( prgDlg ){
 		prgDlg->Update(maxVal, wxT("Saving symbols to database..."));
@@ -995,14 +1007,29 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 
 	TagsDatabase db;
 	unsigned int cur = 1;
-	for(std::list<TagTreePtr>::iterator iter = trees.begin(); iter != trees.end(); iter++)
+	for(std::list<tagParseResult>::iterator iter = trees.begin(); iter != trees.end(); iter++)
 	{
 		if(prgDlg){
 			wxString msg;
 			msg << wxT("Saving file status: ") << cur << wxT("/") << (unsigned int)trees.size();
 			prgDlg->Update(maxVal, msg);
 		}
-		db.Store((*iter), dbName, true);
+		db.Store((*iter).tree, dbName, true);
+		if(GetParseComments())
+		{
+			// drop all old entries from this file
+			try
+			{
+				db.Store(*(*iter).comments, dbName, true);
+			}
+			catch( wxSQLite3Exception & e)
+			{
+				wxLogMessage(e.GetMessage());
+			}
+
+			//free the vector
+			delete (*iter).comments;
+		}
 		cur++;
 	} // for(std::list<TagTreePtr>::iterator iter = trees.begin(); iter != trees.end(); iter++)
 	if(prgDlg)
@@ -1185,7 +1212,7 @@ void TagsManager::TipsFromTags(const std::vector<TagEntryPtr> &tags, const wxStr
 		wxString comment;
 
 		//handle comments
-		if(GetCtagsOptions().GetParseComments()){
+		if(GetParseComments()){
 			int      lineno   = tags.at(i)->GetLine();
 			wxString filename = tags.at(i)->GetFile();
 			if(lineno != wxNOT_FOUND && filename.IsEmpty() == false){

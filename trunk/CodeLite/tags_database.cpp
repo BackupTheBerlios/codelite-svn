@@ -107,6 +107,12 @@ void TagsDatabase::CreateSchema()
 		sql = _T("CREATE INDEX IF NOT EXISTS TAGS_PARENT on tags(parent);");
 		m_db->ExecuteUpdate(sql);
 
+		sql = _T("CREATE INDEX IF NOT EXISTS COMMENTS_FILE on COMMENTS(file);");
+		m_db->ExecuteUpdate(sql);
+
+		sql = _T("CREATE INDEX IF NOT EXISTS COMMENTS_LINE on COMMENTS(line);");
+		m_db->ExecuteUpdate(sql);
+
 		sql = _T("create table if not exists tags_version (version string);");
 		m_db->ExecuteUpdate(sql);
 
@@ -398,10 +404,18 @@ void TagsDatabase::LoadToMemory(const wxFileName& fn)
 		sql << _T("ATTACH DATABASE '") << fn.GetFullPath() << _T("' as backup");
 		m_db->ExecuteUpdate(sql);
 
+		//copy tags table
 		m_db->Begin();
 		sql = wxT("insert into tags select id, parentid, name, file, line, kind, access, signature, pattern, parent, inherits, path, typeref, scope FROM backup.tags");
 		m_db->ExecuteUpdate(sql);
 		m_db->Commit();
+		
+		//copy comments table
+		m_db->Begin();
+		sql = wxT("insert into comments select comment, file, line FROM backup.comments");
+		m_db->ExecuteUpdate(sql);
+		m_db->Commit();
+		
 	}
 	catch(wxSQLite3Exception& e)
 	{
