@@ -1,1 +1,1 @@
-(wxArrayString arr, wxString mystring)
+map()

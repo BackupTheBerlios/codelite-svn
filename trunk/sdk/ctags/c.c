@@ -1436,7 +1436,13 @@ static void analyzeIdentifier (tokenInfo *const token)
 		! isIgnoreToken (name, &parensToo, &replacement))
 	{
 		if (replacement != NULL)
+		{
+			//Eran Ifrah: in case we have replacement string, replace the 
+			//token's name as well
+			vStringDelete(token->name);
+			token->name = vStringNewInit(replacement);
 			token->keyword = analyzeKeyword (replacement);
+		}
 		else
 			token->keyword = analyzeKeyword (vStringValue (token->name));
 

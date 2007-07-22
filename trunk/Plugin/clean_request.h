@@ -10,6 +10,12 @@
 #    define WXDLLIMPEXP_LE_SDK
 #endif // WXMAKINGDLL_LE_SDK
 
+/**
+ * \class CleanRequest
+ * \brief 
+ * \author Eran
+ * \date 07/22/07
+ */
 class WXDLLIMPEXP_LE_SDK CleanRequest : public CompilerAction {
 	wxString m_project;
 

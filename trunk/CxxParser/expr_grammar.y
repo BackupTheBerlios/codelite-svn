@@ -161,18 +161,8 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 						result.m_isThis = false;
 						//result.Print();
 					}
-				| 	stmnt_starter nested_scope_specifier LE_IDENTIFIER optional_lbrace 
+				| 	stmnt_starter nested_scope_specifier LE_IDENTIFIER optinal_postifx 
 					{
-						if($4.empty() == false)
-						{
-							expr_FuncArgList();//consume the function parameters
-							result.m_isFunc = true;
-						}
-						else
-						{
-							result.m_isFunc = false;
-						}
-						
 						result.m_isaType = false;
 						result.m_name = $3;
 						result.m_isThis = false;
@@ -182,8 +172,19 @@ simple_expr	:	stmnt_starter special_cast '<' cast_type '>' '('
 					}
 				;
 				
-optional_lbrace: 	/*empty*/ {$$ = "";}
-					|	'(' {$$ = $1;}
+optinal_postifx: 	/*empty*/ {$$ = "";}
+					|	'(' 
+					{
+						$$ = $1; 
+						expr_FuncArgList();
+						result.m_isFunc = true;
+					}
+					|  '<' 
+					{
+						$$ = $1;
+						expr_consumeTemplateDecl(); 
+						result.m_isFunc = false;
+					}
 					;
 					
 special_cast 	: 	LE_DYNAMIC_CAST {$$ = $1;}

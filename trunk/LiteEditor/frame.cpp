@@ -569,6 +569,10 @@ void Frame::OnBuildExternalDatabase(wxCommandEvent& WXUNUSED(event))
 	{
 		// get output file name from user
 		wxString db = GetStringFromUser(wxT("Insert database name:"));
+		TrimString(db);
+		if(db.IsEmpty()){
+			return;
+		}
 
 		// Get the dirname
 		wxString path = dlg->GetPath();

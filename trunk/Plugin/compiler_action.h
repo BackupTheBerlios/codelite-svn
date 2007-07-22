@@ -18,6 +18,12 @@ DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE_SDK, wxEVT_BUILD_ADDLINE, wxID_ANY)
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE_SDK, wxEVT_BUILD_STARTED, wxID_ANY)
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_LE_SDK, wxEVT_BUILD_ENDED, wxID_ANY)
 
+/**
+ * \class CompilerAction
+ * \brief 
+ * \author Eran
+ * \date 07/22/07
+ */
 class WXDLLIMPEXP_LE_SDK CompilerAction : public wxEvtHandler, public ThreadRequest {
 protected:
 	clProcess *m_proc;
@@ -49,11 +55,19 @@ public:
 		m_timer = new wxTimer(this);
 	};
 	
+	/**
+	 * \brief 
+	 * \return 
+	 */
 	virtual ~CompilerAction()
 	{
 		delete m_timer;
 	};
 	
+	/**
+	 * \brief 
+	 * \return 
+	 */
 	virtual void Process() = 0;
 
 	void AppendLine(const wxString &line);

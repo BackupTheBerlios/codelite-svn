@@ -4,7 +4,7 @@
     <Option Name="Macros"/>
     <Option Name="Language">C++</Option>
     <Option Name="FileSpec">*.cpp;*.c;*.cxx;*.cc;*.h;*.hpp</Option>
-    <Option Name="ParseComments">yes</Option>
+    <Option Name="ParseComments">no</Option>
   </Ctags>
   <Project Name="Parser" Path="Parser.project" Active="Yes"/>
   <BuildMatrix>
