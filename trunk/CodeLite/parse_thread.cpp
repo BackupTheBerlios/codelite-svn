@@ -113,7 +113,14 @@ void ParseThread::ProcessRequest(ThreadRequest * request)
 		deletedItems[i].second.Delete(deleteStmt);
 
 	for(i=0; i<newItems.size(); i++)
-		newItems[i].second.Store(insertStmt);
+	{
+		if(newItems[i].second.Store(insertStmt) == TagExist){
+			//dont try add it to the gui tree, since we failed to add it to the 
+			//database, this means that it will probably always appear as new item
+			//and will cause a bug in the symbol tree
+			newItems[i].second.SetKind(wxT("<unknown>")); //this will mark this item as not valid
+		}
+	}
 
 	for(i=0; i<modifiedItems.size(); i++)
 		modifiedItems[i].second.Update(updateStmt);

@@ -343,7 +343,7 @@ void SymbolTree::AddSymbols(SymbolTreeEvent& event)
 	for(size_t i=0; i<items.size(); i++)
 	{
 		TagEntry data = items.at(i).second;
-		if(m_tree)
+		if(m_tree && data.IsOk())
 		{
 			TagNode *node = m_tree->AddEntry(data);
 			if(node)
