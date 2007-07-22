@@ -313,6 +313,7 @@ void Manager::OpenWorkspace(const wxString &path)
 
 	//close all open files
 	Frame::Get()->GetNotebook()->DeleteAllPages();
+	Frame::Get()->GetNotebook()->Refresh();
 }
 
 void Manager::DoUpdateConfigChoiceControl()
