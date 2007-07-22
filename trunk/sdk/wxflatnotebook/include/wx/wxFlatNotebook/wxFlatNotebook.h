@@ -735,7 +735,7 @@ public:
 	 * Get the previous selected tab, wxNOT_FOUND if none
 	 * \return index of previous selected tab
 	 */
-	int GetPreviousSelection() const { return m_iPreviousActivePage; }
+	int GetPreviousSelection() const;// { return m_iPreviousActivePage; }
 
 	/**
 	 * Draw a tab preview 
@@ -845,7 +845,13 @@ protected:
 	\param page - page index
 	*/
 	virtual bool CanFitToScreen(size_t page);
+	
+	void PushPageHistory(int page);
 
+	//remove page from the history by its value
+	//after the page removal, all items in the history 
+	//are updated if needed
+	void PopPageHistory(int page);
 
 protected:
 
@@ -875,7 +881,8 @@ private:
 	/// holds the button id in case a left click is done on one of them
 	int m_nLeftClickZone;
 
-	int m_iPreviousActivePage;
+	//int m_iPreviousActivePage;
+	wxArrayInt m_history;
 	int m_nArrowDownButtonStatus;
 
 	/// Customize menu
