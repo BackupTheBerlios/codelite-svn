@@ -208,6 +208,8 @@ public:
 	*/
 	int GetPreviousSelection() const;
 
+	const wxArrayInt &GetBrowseHistory() const;
+
 	/// Returns tab header inclination angle of specified page
 	/**
 	\param page_index - page index

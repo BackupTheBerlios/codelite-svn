@@ -168,6 +168,11 @@ int wxFlatNotebook::GetPreviousSelection() const
 	return m_pages->GetPreviousSelection();
 }
 
+const wxArrayInt &wxFlatNotebook::GetBrowseHistory() const
+{
+	return m_pages->m_history;
+}
+
 bool wxFlatNotebook::AddPage(wxWindow* window, const wxString& caption, const bool selected, const int imgindex)
 {
 	return InsertPage(m_windows.GetCount(), window, caption, selected, imgindex);
@@ -203,12 +208,10 @@ bool wxFlatNotebook::InsertPage(size_t index, wxWindow* page, const wxString& te
 	if(index <= m_windows.GetCount())
 	{
 		m_windows.Insert(page, index);
-		wxLogTrace(wxTraceMask(), wxT("New page inserted. Index = %i"), index);
 	}
 	else
 	{
 		m_windows.Add(page);
-		wxLogTrace(wxTraceMask(), wxT("New page appended. Index = %i"), index);
 	}
 
 	if( !m_pages->InsertPage(index, page, text, bSelected, imgindex) )
@@ -774,16 +777,21 @@ void wxPageContainer::OnPaint(wxPaintEvent & event)
 
 void wxPageContainer::PopPageHistory(int page)
 {
-	int tabIdx;
+	int tabIdx(wxNOT_FOUND);
 	int where = m_history.Index(page);
-	if(where != wxNOT_FOUND){
+	while(where != wxNOT_FOUND){
 		tabIdx = m_history.Item(where);
 		m_history.Remove(page);
+		//remove all appearances of this page
+		where = m_history.Index(page);
+	}
 
-		//update values 
+	//update values 
+	if(tabIdx != wxNOT_FOUND){
 		for(size_t i=0; i<m_history.size(); i++){
-			if(m_history.Item(i) > tabIdx){
-				m_history.Item(i)--;
+			int &tt = m_history.Item(i);
+			if(tt > tabIdx){
+				tt--;
 			}
 		}
 	}
@@ -791,6 +799,9 @@ void wxPageContainer::PopPageHistory(int page)
 
 void wxPageContainer::PushPageHistory(int page)
 {
+	if(page == wxNOT_FOUND)
+		return;
+
 	int where = m_history.Index(page);
 	if(where != wxNOT_FOUND){
 		m_history.Remove(page);
@@ -818,7 +829,7 @@ bool wxPageContainer::InsertPage(size_t index, wxWindow* /*page*/, const wxStrin
 	if(select)
 	{
 		PushPageHistory(m_iActivePage);
-		m_iActivePage = (int)m_pagesInfoVec.GetCount();
+		m_iActivePage = (int)index;
 	}
 	wxPageInfo pgInfo(text, imgindex);
 	m_pagesInfoVec.Insert(pgInfo, index);
@@ -1237,6 +1248,7 @@ void wxPageContainer::DoSetSelection(size_t page)
 	{
 		FNB_LOG_MSG( wxT("Tab ") << (int)page << wxT(" is visible"));
 	}
+	PushPageHistory((int)page);
 	Refresh();
 }
 
@@ -1269,24 +1281,26 @@ void wxPageContainer::DoDeletePage(size_t page)
 	// Remove the page from the vector
 	wxFlatNotebook* book = (wxFlatNotebook*)GetParent();
 
-	PopPageHistory(page);
+	PopPageHistory((int)page);
 
 	// same thing with the active page
 	if (m_iActivePage > (int)page || (int)page >= m_pagesInfoVec.Count()){
 		m_iActivePage -= 1;
 	}else if (m_iActivePage == (int)page){
 		m_iActivePage = GetPreviousSelection();
-		PopPageHistory(m_iActivePage);
+		//PopPageHistory(m_iActivePage);
  	}
-
+	
 	m_pagesInfoVec.RemoveAt(page);
-	// Refresh the tabs
-	if(m_iActivePage >= 0)
-	{
-		book->SetForceSelection(true);
-		book->SetSelection(m_iActivePage);
-		book->SetForceSelection(false);
+
+	if(m_iActivePage == wxNOT_FOUND && m_pagesInfoVec.Count() > 0){
+		m_iActivePage = 0;
 	}
+
+	// Refresh the tabs
+	book->SetForceSelection(true);
+	book->SetSelection(m_iActivePage);
+	book->SetForceSelection(false);
 
 	if(m_pagesInfoVec.empty())
 	{
