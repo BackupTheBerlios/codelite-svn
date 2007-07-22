@@ -183,7 +183,7 @@ const wxString Manager::GetPageTitle(wxWindow *page)
 	}
 }
 
-void Manager::SaveAll()
+void Manager::SaveAll(bool includeUntitled)
 {
 	wxFlatNotebook *book = Frame::Get()->GetNotebook();
 	size_t count = book->GetPageCount();
@@ -194,7 +194,13 @@ void Manager::SaveAll()
 		if( !editor )
 			continue;
 		
-		if( editor->GetModify() ) 
+		//if 'includeUntitled' is not true, dont save new documents that have
+		//not been saved to disk yet
+		if(!includeUntitled && editor->GetFileName().GetFullPath().StartsWith(wxT("Untitled"))){
+			continue;
+		}
+		
+		if(editor->GetModify()) 
 		{
 			editor->SaveFile();
 		}
@@ -304,6 +310,9 @@ void Manager::OpenWorkspace(const wxString &path)
 
 	//update the 'Recent Workspace' history
 	AddToRecentlyOpenedWorkspaces(path);
+
+	//close all open files
+	Frame::Get()->GetNotebook()->DeleteAllPages();
 }
 
 void Manager::DoUpdateConfigChoiceControl()
@@ -910,8 +919,9 @@ void Manager::BuildProject(const wxString &projectName)
 	if( m_compileRequest ){
 		delete m_compileRequest;
 	}
-	//save all files before compiling
-	SaveAll();
+
+	//save all files before compiling, but dont saved new documents
+	SaveAll(false);
 
 	m_compileRequest = new CompileRequest(GetMainFrame(), projectName);
 	m_compileRequest->Process();

@@ -94,7 +94,7 @@ public:
 	 * \brief
 	 * Save all open documents
 	 */	
-	void SaveAll();
+	void SaveAll(bool includeUntitled = true);
 
 	/*!
 	 * \brief
