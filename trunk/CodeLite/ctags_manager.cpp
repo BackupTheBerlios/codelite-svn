@@ -1167,37 +1167,31 @@ bool TagsManager::GetDerivationList(const wxString &path, std::vector<wxString> 
 {
 	wxString sql;
 	sql << wxT("select * from tags where path='") << path << wxT("' and kind in ('struct', 'class', 'interface')");
-	try
-	{
-		TagEntry tag;
-		wxSQLite3ResultSet rs = m_pDb->Query(sql);
-		if(rs.NextRow())
-		{
-			tag = TagEntry(rs);
-		}
 
-		rs.Finalize();
-		if(tag.IsOk())
+	std::vector<TagEntryPtr> tags;
+	TagEntryPtr tag;
+	DoExecuteQueury(sql, tags);
+	if(tags.size() == 1){
+		tag = tags.at(0);
+	}else{
+		return false;
+	}
+
+	if(tag && tag->IsOk())
+	{
+		wxString ineheritsList = tag->GetInherits();
+		wxStringTokenizer tok(ineheritsList, wxT(','));
+		while(tok.HasMoreTokens())
 		{
-			wxString ineheritsList = tag.GetInherits();
-			wxStringTokenizer tok(ineheritsList, wxT(','));
-			while(tok.HasMoreTokens())
+			wxString inherits = tok.GetNextToken();
+			if(tag->GetScopeName() != wxT("<global>"))
 			{
-				wxString inherits = tok.GetNextToken();
-				if(tag.GetScopeName() != wxT("<global>"))
-				{
-					inherits = tag.GetScopeName() + wxT("::") + inherits;
-				}
-				derivationList.push_back(inherits);
-				GetDerivationList(inherits, derivationList);
+				inherits = tag->GetScopeName() + wxT("::") + inherits;
 			}
+			derivationList.push_back(inherits);
+			GetDerivationList(inherits, derivationList);
 		}
 	}
-	catch(wxSQLite3Exception &e)
-	{
-		wxLogMessage(e.GetMessage());
-	}
-
 	return true;
 }
 
