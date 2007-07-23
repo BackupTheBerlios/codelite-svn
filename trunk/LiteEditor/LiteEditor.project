@@ -50,6 +50,8 @@
     <File Name="symbols_dialog_base.cpp"/>
     <File Name="open_resouce_dlg.cpp"/>
     <File Name="filehistory.cpp"/>
+    <File Name="open_type_dlg.h"/>
+    <File Name="open_type_dlg.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Header Files">
     <File Name="workspace_pane.h"/>
