@@ -493,6 +493,8 @@ wxString ContextCpp::GetExpression(long pos)
 			{
 				if(depth == 0)
 				{
+					//dont include this token 
+					at = rCtrl.PositionAfter(at);
 					cont = false;
 					break;
 				}
