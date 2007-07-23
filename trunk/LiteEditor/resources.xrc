@@ -51,4 +51,7 @@
 	<object class="wxBitmap" name="word_wrap">res/wrap_arrow.png</object>
 	<object class="wxBitmap" name="output_win">res/output_win.png</object>
 	<object class="wxBitmap" name="debug_window">res/debug_windows.png</object>
+	<object class="wxBitmap" name="open_resource">res/open_resource.png</object>
+	<object class="wxBitmap" name="open_type">res/open_type.png</object>
+	
 </resource>

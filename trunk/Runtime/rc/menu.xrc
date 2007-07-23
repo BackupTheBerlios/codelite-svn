@@ -137,11 +137,19 @@
 				<label>&amp;Workspace Pane\tCtrl+Shift+W</label>
 				<checkable>1</checkable>
 			</object>
-			<object class="wxMenuItem" name="show_toolbar">
-				<label>&amp;Show ToolBar</label>
+            <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+			<object class="wxMenuItem" name="show_std_toolbar">
+				<label>Show Stan&amp;dard ToolBar</label>
 				<checkable>1</checkable>
 			</object>
-
+			<object class="wxMenuItem" name="show_search_toolbar">
+				<label>Show &amp;Search ToolBar</label>
+				<checkable>1</checkable>
+			</object>
+			<object class="wxMenuItem" name="show_build_toolbar">
+				<label>Show &amp;Build ToolBar</label>
+				<checkable>1</checkable>
+			</object>
 			<object class="wxMenuItem" name="wxID_SEPARATOR"/>
             <object class="wxMenuItem" name="toggle_panes">
                 <label>&amp;Maximize Editing Area...\tCtrl+M</label>
@@ -160,7 +168,9 @@
             <object class="wxMenuItem" name="find_resource">
                 <label>Find Resource...\tCtrl+Shift+R</label>
             </object>
-
+            <object class="wxMenuItem" name="find_type">
+                <label>Find Type...\tCtrl+Shift+T</label>
+            </object>
 			<object class="wxMenuItem" name="find_in_files">
                 <label>Find In Files...\tCtrl+Shift+F</label>
             </object>

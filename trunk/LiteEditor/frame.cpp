@@ -114,8 +114,12 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("complete_word"), Frame::OnCompleteWord)
 	EVT_MENU(XRCID("tags_options"), Frame::OnCtagsOptions)
 	EVT_MENU(XRCID("workspace_pane"), Frame::OnViewWorkspacePane)
-	EVT_MENU(XRCID("show_toolbar"), Frame::OnViewToolbar)
-	EVT_UPDATE_UI(XRCID("show_toolbar"), Frame::OnViewToolbarUI)
+	EVT_MENU(XRCID("show_std_toolbar"), Frame::OnViewToolbar)
+	EVT_UPDATE_UI(XRCID("show_std_toolbar"), Frame::OnViewToolbarUI)
+	EVT_MENU(XRCID("show_build_toolbar"), Frame::OnViewToolbar)
+	EVT_UPDATE_UI(XRCID("show_build_toolbar"), Frame::OnViewToolbarUI)
+	EVT_MENU(XRCID("show_search_toolbar"), Frame::OnViewToolbar)
+	EVT_UPDATE_UI(XRCID("show_search_toolbar"), Frame::OnViewToolbarUI)
 	EVT_MENU(XRCID("output_pane"), Frame::OnViewOutputPane)
 	EVT_UPDATE_UI(XRCID("output_pane"), Frame::OnViewOutputPaneUI)
 	EVT_UPDATE_UI(XRCID("workspace_pane"), Frame::OnViewWorkspacePaneUI)
@@ -147,6 +151,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("close_ext_database"), Frame::OnCloseExternalDatabase)
 	EVT_MENU(XRCID("find_resource"), Frame::OnFindResource)
 	EVT_UPDATE_UI(XRCID("find_resource"), Frame::OnWorkspaceOpen)
+	EVT_UPDATE_UI(XRCID("find_type"), Frame::OnWorkspaceOpen)
 
 	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
 	EVT_MENU(XRCID("import_from_makefile"), Frame::OnImportMakefile)
@@ -358,7 +363,9 @@ wxString Frame::GetViewAsLanguageById(int id) const
 
 void Frame::CreateToolbars()
 {
+	//----------------------------------------------
 	//create the standard toolbar
+	//----------------------------------------------
 	wxToolBar *tb = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_FLAT | wxTB_NODIVIDER);
 	tb->AddTool(wxID_NEW, wxT("New"), wxXmlResource::Get()->LoadBitmap(wxT("page_new")), wxT("New File (Ctrl+N)"));
 	tb->AddTool(wxID_OPEN, wxT("Open"), wxXmlResource::Get()->LoadBitmap(wxT("page_open")), wxT("Open File (Ctrl+O)"));
@@ -376,19 +383,30 @@ void Frame::CreateToolbars()
 	tb->AddSeparator();
 	tb->AddTool(wxID_UNDO, wxT("Undo"), wxXmlResource::Get()->LoadBitmap(wxT("undo")), wxT("Undo (Ctrl+Z)"));
 	tb->AddTool(wxID_REDO, wxT("Redo"), wxXmlResource::Get()->LoadBitmap(wxT("redo")), wxT("Redo (Ctrl+Y)"));
-	
 	tb->AddSeparator();
 	tb->AddTool(XRCID("toggle_bookmark"), wxT("Toggle Bookmark"), wxXmlResource::Get()->LoadBitmap(wxT("bookmark")), wxT("Toggle Bookmark (Ctrl+F2)"));
 	tb->AddTool(XRCID("next_bookmark"), wxT("Next Bookmark"), wxXmlResource::Get()->LoadBitmap(wxT("bookmark_previous")), wxT("Next Bookmark (F2)"));
 	tb->AddTool(XRCID("previous_bookmark"), wxT("Previous Bookmark"), wxXmlResource::Get()->LoadBitmap(wxT("bookmark_next")), wxT("Previous Bookmark (Shift+F2)"));
 	tb->AddTool(XRCID("removeall_bookmarks"), wxT("Remove All Bookmarks"), wxXmlResource::Get()->LoadBitmap(wxT("bookmark_remove_all")), wxT("Remove All Bookmarks"));
-	
-	tb->AddSeparator();
+	tb->Realize();
+	m_mgr.AddPane(tb, wxAuiPaneInfo().Name(wxT("Standard Toolbar")).LeftDockable(true).RightDockable(true).Caption(wxT("Standard")).ToolbarPane().Top());
+
+	//----------------------------------------------
+	//create the standard toolbar
+	//----------------------------------------------
+	tb = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_FLAT | wxTB_NODIVIDER);
 	tb->AddTool(wxID_FIND, wxT("Find and Replace"), wxXmlResource::Get()->LoadBitmap(wxT("find_and_replace")), wxT("Find And Replace (Ctrl+F)"));
 	tb->AddTool(XRCID("find_in_files"), wxT("Find In Files"), wxXmlResource::Get()->LoadBitmap(wxT("find_in_files")), wxT("Find In Files (Ctrl+Shift+F)"));
-	
 	tb->AddSeparator();
+	tb->AddTool(XRCID("find_resource"), wxT("Find Resource In Workspace"), wxXmlResource::Get()->LoadBitmap(wxT("open_resource")), wxT("Find Resource In Workspace (Ctrl+Shift+R)"));
+	tb->AddTool(XRCID("find_type"), wxT("Find Type In Workspace"), wxXmlResource::Get()->LoadBitmap(wxT("open_type")), wxT("Find Type In Workspace (Ctrl+Shift+T)"));
+	tb->Realize();
+	m_mgr.AddPane(tb, wxAuiPaneInfo().Name(wxT("Search Toolbar")).LeftDockable(true).RightDockable(true).Caption(wxT("Search")).ToolbarPane().Top());
 
+	//----------------------------------------------
+	//create the build toolbar
+	//----------------------------------------------
+	tb = new wxToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_FLAT | wxTB_NODIVIDER);
 	wxArrayString choices;
 	m_workspaceConfig = new wxComboBox(tb, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, choices, wxCB_READONLY);
 	m_workspaceConfig->Enable(false);
@@ -401,9 +419,8 @@ void Frame::CreateToolbars()
 	tb->AddTool(XRCID("clean_active_project"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("clean")), wxT("Clean Active Project"));
 	tb->AddTool(XRCID("stop_active_project_build"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("stop_build")), wxT("Stop Current Build"));
 	tb->AddTool(XRCID("execute_no_debug"), wxEmptyString, wxXmlResource::Get()->LoadBitmap(wxT("execute")), wxT("Run Active Project (Ctrl+F5)"));
-
 	tb->Realize();
-	m_mgr.AddPane(tb, wxAuiPaneInfo().Name(wxT("Standard Toolbar")).LeftDockable(true).RightDockable(true).Caption(wxT("Standard")).ToolbarPane().Top());
+	m_mgr.AddPane(tb, wxAuiPaneInfo().Name(wxT("Build Toolbar")).LeftDockable(true).RightDockable(true).Caption(wxT("Build")).ToolbarPane().Top());
 }
 
 void Frame::OnQuit(wxCommandEvent& WXUNUSED(event))
@@ -937,17 +954,29 @@ void Frame::OnViewWorkspacePane(wxCommandEvent &event)
 	ViewPane(wxT("Workspace"), event);
 }
 
-void Frame::OnViewToolbar(wxCommandEvent &event)
-{
-	ViewPane(wxT("Standard Toolbar"), event);
-}
-
 void Frame::OnViewWorkspacePaneUI(wxUpdateUIEvent &event){
 	ViewPaneUI(wxT("Workspace"), event);
 }
 
+void Frame::OnViewToolbar(wxCommandEvent &event)
+{
+	if(event.GetId() == XRCID("show_std_toolbar")){
+		ViewPane(wxT("Standard Toolbar"), event);
+	}else if(event.GetId() == XRCID("show_search_toolbar")){
+		ViewPane(wxT("Search Toolbar"), event);
+	}else if(event.GetId() == XRCID("show_build_toolbar")){
+		ViewPane(wxT("Build Toolbar"), event);
+	}
+}
+
 void Frame::OnViewToolbarUI(wxUpdateUIEvent &event){
-	ViewPaneUI(wxT("Standard Toolbar"), event);
+	if(event.GetId() == XRCID("show_std_toolbar")){
+		ViewPaneUI(wxT("Standard Toolbar"), event);
+	}else if(event.GetId() == XRCID("show_search_toolbar")){
+		ViewPaneUI(wxT("Search Toolbar"), event);
+	}else if(event.GetId() == XRCID("show_build_toolbar")){
+		ViewPaneUI(wxT("Build Toolbar"), event);
+	}
 }
 
 void Frame::OnViewOutputPaneUI(wxUpdateUIEvent &event){
