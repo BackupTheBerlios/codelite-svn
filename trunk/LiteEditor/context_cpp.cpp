@@ -382,16 +382,24 @@ void ContextCpp::CodeComplete()
 		if(rCtrl.PreviousChar(pos1, pos2) == '-')
 		{
 			rCtrl.PreviousChar(pos2, end);
-			break;
 		}
+		else
+		{
+			return;
+		}
+		break;
 	case ':':
 		// Check previous character if is ':'
 		// We open drop box as well
 		if(rCtrl.PreviousChar(pos1, pos2) == wxT(':'))
 		{
 			rCtrl.PreviousChar(pos2, end);
-			break;
 		}
+		else
+		{
+			return;
+		}
+		break;
 	case '(':
 		showFuncProto = true;
 		rCtrl.PreviousChar(pos1, end);

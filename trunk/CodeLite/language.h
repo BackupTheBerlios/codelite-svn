@@ -158,15 +158,13 @@ private:
 	virtual ~Language();
 
 	/**
-	 * Return the next token and the delimiter found
+	 * Return the next token and the delimiter found, the source string is taken from the 
+	 * m_tokenScanner member of this class
 	 * \param token next token
 	 * \param delim delimiter found
-	 * \param srcStr source string. Note that this function write/delete to the src string
-	 * so pass a copy of the original string. same source string should be passed to this function 
-	 * to get the next token
 	 * \return true if token was found false otherwise
 	 */
-	bool NextToken(wxString &token, wxString &delim, wxString &srcStr);
+	bool NextToken(wxString &token, wxString &delim);
 
 	bool VariableFromPattern(const wxString &pattern, Variable &var);
 	bool FunctionFromPattern(const wxString &pattern, Function &foo);
@@ -176,6 +174,7 @@ private:
 	std::vector<wxString>	m_delimArr;
 	wxString m_expression;
 	CppScannerPtr m_scanner;
+	CppScannerPtr m_tokenScanner;
 };
 
 typedef Singleton<Language> LanguageST;

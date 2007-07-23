@@ -29,7 +29,8 @@ extern void get_functions(const std::string &in, FunctionList &li);
 
 Language::Language()
 : m_expression(wxEmptyString)
-, m_scanner( new CppScanner() )
+, m_scanner(new CppScanner())
+, m_tokenScanner(new CppScanner())
 {
 	// Initialise the braces map
 	m_braces['<'] = '>';
@@ -142,42 +143,44 @@ wxString Language::GetScope(const wxString& srcString)
 	return srcString;
 }
 
-bool Language::NextToken(wxString &token, wxString &delim, wxString &srcStr)
+bool Language::NextToken(wxString &token, wxString &delim)
 {
-	if(srcStr.IsEmpty())
-		return false;
-
-	if(m_delimArr.empty())
-		return false;
-
-	// Find the closest delimiter
-	int pos(-1);
-	for(size_t i=0; i<m_delimArr.size(); i++)
+	int type(0);
+	int depth(0);
+	while( (type = m_tokenScanner->yylex()) != 0 )
 	{
-		int curPos(0);
-		curPos = srcStr.Find(m_delimArr[i].GetData());
-		
-		// two conditions:
-		// 1. the new operator was found and it is closer to begin of string, we replace the match
-		// 2. operator was found and it is the first time we have a match
-		if((curPos < pos && curPos >=0 ) || (pos < 0 && curPos >= 0))
+		switch(type)
 		{
-			pos = curPos;
-			delim = m_delimArr[i];
+		case CLCL:
+		case wxT('.'):
+		case lexARROW:
+			if(depth == 0){
+				delim = _U(m_tokenScanner->YYText());
+				return true;
+			}else{
+				token << wxT(" ") << _U(m_tokenScanner->YYText());
+			}
+			break;
+		case wxT('<'):
+		case wxT('['):
+		case wxT('('):
+		case wxT('{'):
+			depth++;
+			token << wxT(" ") << _U(m_tokenScanner->YYText());
+			break;
+		case wxT('>'):
+		case wxT(']'):
+		case wxT(')'):
+		case wxT('}'):
+			depth--;
+			token << wxT(" ") << _U(m_tokenScanner->YYText());
+			break;
+		default:
+			token << wxT(" ") << _U(m_tokenScanner->YYText());
+			break;
 		}
 	}
-
-
-	if(pos <= 0)
-	{
-		token = srcStr;
-		srcStr.Empty();
-		return true;
-	}
-
-	token = srcStr.Mid(0, pos);
-	srcStr.Remove(0, pos + delim.Length());
-	return true;
+	return false;
 }
 
 void Language::SetAutoCompDeliemters(const std::vector<wxString> &delimArr)
@@ -212,7 +215,9 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 	wxLogMessage(wxT("Current scope: [") + scopeName + wxT("]"));
 
 	wxString parentTypeName, parentTypeScope;
-	while(NextToken(word, oper, statement))
+	//get next token using the tokenscanner object
+	m_tokenScanner->SetText(_C(statement));
+	while(NextToken(word, oper))
 	{
 		result = ParseExpression(word);
 		//parsing failed?
@@ -340,7 +345,7 @@ bool Language::ProcessExpression(const wxString& stmt, const wxString& text,
 		}
 		parentTypeName = typeName;
 		parentTypeScope = typeScope;
-	} // while(NextToken(word, oper, statement))
+	}
 
 	if(evaluationSucceeded)
 	{
