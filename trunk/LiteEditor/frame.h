@@ -173,6 +173,7 @@ protected:
 	void OnOutputWindowEvent(wxCommandEvent &event);
 	void OnFileCloseAll(wxCommandEvent &event);
 	void OnFindResource(wxCommandEvent &event);
+	void OnFindType(wxCommandEvent &event);
 	void OnImportMakefile(wxCommandEvent &event);
 	void OnImportMakefileUI(wxUpdateUIEvent &event);
 

@@ -878,6 +878,12 @@ clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString &t
 //-----------------------------------------------------------------------------
 // <<<<<<<<<<<<<<<<<<< Code Completion API END
 //-----------------------------------------------------------------------------
+void TagsManager::OpenType(std::vector<TagEntryPtr> &tags)
+{
+	wxString sql;
+	sql << wxT("select * from tags where kind in ('class', 'namespace', 'struct', 'union', 'enum', 'typedef') order by name DESC");
+	DoExecuteQueury(sql, tags);
+}
 
 void TagsManager::FindSymbol(const wxString& name, std::vector<TagEntryPtr> &tags)
 {

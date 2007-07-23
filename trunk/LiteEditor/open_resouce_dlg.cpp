@@ -123,6 +123,7 @@ void OpenResourceDlg::OnTimer(wxTimerEvent &event)
 	m_listShortNames->Clear();
 	for(size_t i=0; i<tmpArr.GetCount(); i++)
 		m_listShortNames->Append(tmpArr.Item(i));
+	m_listShortNames->Select(0);
 	Thaw();
 }
 

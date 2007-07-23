@@ -402,6 +402,13 @@ public:
 	 */
 	wxString GenerateDoxygenComment(const wxString &file, const int line);
 
+	/**
+	 * Load all types from database. 'Type' is one of:
+	 * class, namespace, struct, union, enum, macro, typedef
+	 * \param &tags 
+	 */
+	void OpenType(std::vector<TagEntryPtr> &tags);
+
 protected:
 
 	/**

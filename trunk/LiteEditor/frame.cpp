@@ -27,6 +27,7 @@
 #include "async_executable_cmd.h"
 #include "close_all_dlg.h"
 #include "open_resouce_dlg.h"
+#include "open_type_dlg.h"
 #include "workspace_pane.h"
 
 //----------------------------------------------------------------
@@ -152,6 +153,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("find_resource"), Frame::OnFindResource)
 	EVT_UPDATE_UI(XRCID("find_resource"), Frame::OnWorkspaceOpen)
 	EVT_UPDATE_UI(XRCID("find_type"), Frame::OnWorkspaceOpen)
+	EVT_MENU(XRCID("find_type"), Frame::OnFindType)
 
 	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
 	EVT_MENU(XRCID("import_from_makefile"), Frame::OnImportMakefile)
@@ -1214,6 +1216,20 @@ void Frame::OnFileCloseAll(wxCommandEvent &event)
 	}
 }
 
+void Frame::OnFindType(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	OpenTypeDlg *dlg = new OpenTypeDlg(this);
+	if(dlg->ShowModal() == wxID_OK)
+	{
+		TagEntryPtr tag = dlg->GetSelectedTag();
+		if(tag && tag->IsOk()){
+			wxString projectName = ManagerST::Get()->GetProjectNameByFile(tag->GetFile());
+			ManagerST::Get()->OpenFile(tag->GetFile(), projectName, tag->GetLine()-1);
+		}
+	}
+	dlg->Destroy();
+}
 
 void Frame::OnFindResource(wxCommandEvent &event)
 {
