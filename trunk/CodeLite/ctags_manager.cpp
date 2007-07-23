@@ -111,14 +111,10 @@ wxString CtagsOptions::ToString() const
 TagsManager::TagsManager() : wxEvtHandler()
 , m_ctagsPath(wxT("ctags-le"))
 , m_ctags(NULL)
-, m_localCtags(NULL)
 , m_parseComments(false)
 {
 	m_pDb = new TagsDatabase();
 	m_pExternalDb = new TagsDatabase(true);	// use it as memory database
-
-	// Initialise ctags command pattern
-	m_ctagsCmd[TagsLocal] =  wxT("  --fields=aKmSsnit --c-kinds=+l --C++-kinds=+l  --filter=yes --filter-terminator=\"<<EOF>>\" ");
 	m_ctagsCmd[TagsGlobal] =  wxT("  --fields=aKmSsnit --c-kinds=+p --C++-kinds=+p --filter=yes --filter-terminator=\"<<EOF>>\"  ");
 }  
 
@@ -128,10 +124,7 @@ TagsManager::~TagsManager()
 	delete m_pExternalDb;
 
 	if(m_ctags)	m_ctags->Disconnect(m_ctags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
-	if(m_localCtags) m_localCtags->Disconnect(m_localCtags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
-
-	// terminate ctags processes
-	if(m_localCtags) m_localCtags->Terminate();
+	// terminate ctags process
 	if(m_ctags) m_ctags->Terminate();
 }
 
@@ -418,22 +411,20 @@ clProcess *TagsManager::StartCtagsProcess(int kind)
 	m_processes[process->GetPid()] = process;
 
 	if( process->GetPid() <= 0 ){
-		kind == TagsGlobal ? m_ctags = NULL : m_localCtags = NULL;
+		m_ctags = NULL;
 		return NULL;
 	}
 
 	// attach the termination event to the tags manager class
 	process->Connect(process->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
-	kind == TagsGlobal ? m_ctags = process : m_localCtags = process;
+	m_ctags = process;
 	return process;
 }
 
 void TagsManager::RestartCtagsProcess(int kind)
 {
 	clProcess *oldProc(NULL);
-	if(kind == TagsLocal){
-		oldProc = m_localCtags;
-	} else if(kind == TagsGlobal){
+	if(kind == TagsGlobal){
 		oldProc = m_ctags;
 	}
 

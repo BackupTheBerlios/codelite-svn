@@ -27,7 +27,6 @@ class WorkspacePane;
  */
 class Frame : public wxFrame
 {
-	bool m_restartCtags;
 	wxFlatNotebook *m_notebook;
 	static Frame* m_theFrame;
 	wxAuiManager m_mgr;

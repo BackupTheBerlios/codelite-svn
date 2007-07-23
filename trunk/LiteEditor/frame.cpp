@@ -161,7 +161,6 @@ Frame* Frame::m_theFrame = NULL;
 
 Frame::Frame(wxWindow *pParent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 : wxFrame(pParent, id, title, pos, size, style, name)
-, m_restartCtags(true)
 , m_findInFilesDlg(NULL)
 
 {
@@ -265,7 +264,6 @@ void Frame::CreateGUIControls(void)
 
 	//start ctags process
 	TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
-	TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
 
 	//--------------------------------------------------------------------------------------
 	// Start the parsing thread, the parsing thread and the SymbolTree (or its derived)

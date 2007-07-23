@@ -856,11 +856,8 @@ void LEditor::DoFindAndReplace()
 	//if there is a selection, set it
 	if(GetSelectedText().IsEmpty() == false)
 	{
-		//if this string does not exist in the array dont add it
-		if(m_findReplaceDlg->GetData().GetFindStringArr().Index(GetSelectedText()) == wxNOT_FOUND)
-		{
-			m_findReplaceDlg->GetData().GetFindStringArr().Add(GetSelectedText());
-		}
+		//if this string does not exist in the array add it
+		m_findReplaceDlg->GetData().SetFindString(GetSelectedText());
 	}
 	m_findReplaceDlg->Show();
 }

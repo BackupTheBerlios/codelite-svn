@@ -147,7 +147,6 @@ class WXDLLIMPEXP_CL TagsManager : public wxEvtHandler
 
 	wxFileName m_ctagsPath;
 	clProcess* m_ctags;
-	clProcess* m_localCtags;
 	std::map<int, wxString> m_ctagsCmd;
 	
 	wxStopWatch m_watch;
