@@ -6,13 +6,15 @@ body {
 }
 
 table.main-table {
+	width: 80%;
+	height: 100%;
+	border: 1px solid ButtonShadow;
 	border-collapse: collapse;
 }
 
 div.top-bar {
 	font-family: verdana,arial,helvetica,sans-serif;
-	width: 70%;
-	border: thin solid ButtonShadow;
+	border: 1px solid ButtonShadow;
 	margin: 2px;
 	font-size: 12px;
 	background-color: #ADBAD6; 
@@ -28,7 +30,7 @@ a.toolbar-item {
 	margin: 10px;
 	color: ButtonText;
 	padding: 8px 8px 8px 8px;
-	border: thin solid #ADBAD6;
+	border: 1px solid #ADBAD6;
 }
 
 a.toolbar-item:hover {
@@ -39,10 +41,10 @@ a.toolbar-item:hover {
 	margin: 10px; 
 	color: ButtonText;
 	padding: 8px 8px 8px 8px;
-	border-right: thin solid ButtonShadow;
-	border-bottom: thin solid ButtonShadow;
-	border-left: thin solid white;
-	border-top: thin solid white;
+	border-right: 1px solid ButtonShadow;
+	border-bottom: 1px solid ButtonShadow;
+	border-left: 1px solid white;
+	border-top: 1px solid white;
 }
 
 a.toolbar-item:visited {
@@ -57,16 +59,42 @@ a.toolbar-item:visited {
 
 div.main-panel {
 	margin: 10px;
-	width: 70%;
 	background-color: white; 
 	color: ButtonText ;
-	height: 90%;
+	height: 100%;
+}
+
+div.code-section {
+	margin: 5px;
+	font-size: 12px;
+	background-color: #E8E8FF; 
+	color: ButtonText ;
+	font-family: Courier New;
 }
 
 ul.one {
 	list-style: square inside url('images/arrow.png');
 }
 
-ul.second {
-	list-style: square inside url('images/arrow.png');
+ul.check-list {
+	list-style: square inside url('images/check.png');
+}
+
+img.screenshot {
+	border: 1px sold ButtonShadow;
+}
+
+img.rotation-arrow {
+	
+}
+
+img.rotation-arrow:hover {
+	cursor: pointer;
+}
+
+div.image-container {
+	margin: 5px;
+	background-color: white; 
+	color: ButtonText ;
+	overflow: hidden;
 }

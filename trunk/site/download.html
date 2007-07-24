@@ -4,34 +4,59 @@
 <head>
 </head>
 <body>
-<table align="middle" class="main-table">
+<table align="center" class="main-table" >
 <tr>
 <td>
 <div class="top-bar">
-	<a class="toolbar-item" href="index.html">About</a>
+	<a class="toolbar-item" href="index.html">Home</a>
 	<a class="toolbar-item" href="download.html">Download</a>
-	<a class="toolbar-item" href="url">Screenshots</a>
+	<a class="toolbar-item" href="screenshots.html">Screenshots</a>
 	<a class="toolbar-item" href="url">Documentation</a>
 	<a class="toolbar-item" href="url">FAQ</a>
 </div>
 <div class="main-panel">
-	<h2>Download page</h2>
-	<h3>Windows users</h3>
+	<h1>Download Page</h1>
+	<h2>Windows users</h2>
 	<p>
-	I am currently providing a weekly build for LiteEditor built on windows XP SP2, including all required DLLs. 
-	To download the zip file, follow this link (NOTE: always select the most recent build) 
+	I am currently providing a weekly build for LiteEditor using Windows XP SP2, including all the required DLLs. 
+	To download the zip file, follow this link:
 	<a href="https://developer.berlios.de/project/showfiles.php?group_id=7258">Download LiteEditor</a>
-	no installer is provided, so please make sure you read the <strong>INSTALL</strong> document located inside the zip file.
+	no installer is provided, so please make sure you read the INSTALL document located inside the zip file.
 	</p>
-	<h3>Linux users</h3>
+	<h2>Linux users</h2>
 	<p>
 	For Linux users, I suggest downloading the sources from the SVN and building it using makefile.
-	Dependencies:
-	<ul>
-		<li>wxWidgets 2.8.X (see here for more information <a href="http://www.wxwidgets.org/downloads/">wxWidgets Web Site</a>)</li>
 	</p>
+	<p>
+	Below is a list of the dependencies that LiteEditor requires:
+	<ul class="check-list">
+		<li>wxWidgets 2.8.X (wxWidgets can be obtained from here: <a href="http://www.wxwidgets.org/downloads/">wxWidgets Web Site</a>)</li>
+		<li>'wx-config' tool is located somewhere in your path (after installing wxWidgets, it should be there), to test it, type: <div class="code-section">which wx-config</div></li>
+	</ul>
+	</p>
+	<p>
+	<h3>How to build &amp; install LiteEditor?</h3>
 	Download the sources using SVN client:
-	
+	<div class="code-section">
+	svn checkout svn://svn.berlios.de/codelite/trunk
+	</div>
+	<br>
+	From within the trunk directory, type:
+	<div class="code-section">
+	make -f makefile.linux type=release
+	<br>
+	make -f makefile.linux install
+	</div>
+	<br>
+	<br>
+	The makefile argument 'type' can accept any of the following values, depends on the build configuration you used for wxWidgets:
+	<ul class="one">
+		<li>release_unicode</li>
+		<li>release</li>
+		<li>debug_unicode</li>
+		<li>debug</li>
+	</ul>
+	</p>
 </div>
 </td>
 </tr>
