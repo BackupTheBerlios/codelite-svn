@@ -1,0 +1,72 @@
+body { 
+	font-family: verdana,arial,helvetica,sans-serif;
+	font-size: 12px;
+	color: #E4F1E9; 
+	margin: 0px; 
+}
+
+table.main-table {
+	border-collapse: collapse;
+}
+
+div.top-bar {
+	font-family: verdana,arial,helvetica,sans-serif;
+	width: 70%;
+	border: thin solid ButtonShadow;
+	margin: 2px;
+	font-size: 12px;
+	background-color: #ADBAD6; 
+	color: ButtonText ;
+	padding: 10px 10px 10px 10px;
+	
+}
+
+a.toolbar-item {
+	font-family: verdana,arial,helvetica,sans-serif;
+	font-size: 12px;
+	text-decoration: none; 
+	margin: 10px;
+	color: ButtonText;
+	padding: 8px 8px 8px 8px;
+	border: thin solid #ADBAD6;
+}
+
+a.toolbar-item:hover {
+	font-family: verdana,arial,helvetica,sans-serif;
+	font-size: 12px;
+	background-color: #E8E8FF; 
+	text-decoration: none; 
+	margin: 10px; 
+	color: ButtonText;
+	padding: 8px 8px 8px 8px;
+	border-right: thin solid ButtonShadow;
+	border-bottom: thin solid ButtonShadow;
+	border-left: thin solid white;
+	border-top: thin solid white;
+}
+
+a.toolbar-item:visited {
+	font-family: verdana,arial,helvetica,sans-serif;
+	font-size: 12px;
+	text-decoration: none; 
+	margin: 10px;
+	color: ButtonText;
+	padding: 9px 9px 9px 9px;
+	border-top: 1px black;
+}
+
+div.main-panel {
+	margin: 10px;
+	width: 70%;
+	background-color: white; 
+	color: ButtonText ;
+	height: 90%;
+}
+
+ul.one {
+	list-style: square inside url('images/arrow.png');
+}
+
+ul.second {
+	list-style: square inside url('images/arrow.png');
+}
