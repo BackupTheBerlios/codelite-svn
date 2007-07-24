@@ -33,7 +33,7 @@ bool App::OnInit()
 	wxImage::AddHandler( new wxXPMHandler );
 
 	InitXmlResource();
-	//wxLog::EnableLogging(false);
+	wxLog::EnableLogging(false);
 	wxString homeDir = wxGetHomeDir();
 
 	//set the current directory to the hoemdirectory

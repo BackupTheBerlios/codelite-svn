@@ -18,6 +18,8 @@
 class CommentCreator
 {
 public:
+	CommentCreator(){}
+	virtual ~CommentCreator(){}
 	virtual wxString CreateComment() = 0;
 };
 #endif //COMMENT_CREATOT_H

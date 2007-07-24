@@ -13,6 +13,8 @@
 class SerializedObject
 {
 public:
+	SerializedObject(){}
+	virtual ~SerializedObject(){}
 	virtual void Serialize(Archive &arch) = 0;
 	virtual void DeSerialize(Archive &arch) = 0;
 };

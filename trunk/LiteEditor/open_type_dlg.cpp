@@ -21,6 +21,7 @@
 #include "ctags_manager.h"
 #include <wx/xrc/xmlres.h>
 #include "macros.h"
+#include "wx/imaglist.h"
 
 BEGIN_EVENT_TABLE(OpenTypeDlg, wxDialog)
 EVT_TIMER(wxID_ANY, OpenTypeDlg::OnTimer)
@@ -96,6 +97,7 @@ void OpenTypeDlg::Init()
 {
 	m_listTypes->InsertColumn(0, wxT("Symbol"));
 	TagsManagerST::Get()->OpenType(m_tags);
+	this->m_textTypeName->SetFocus();
 }
 
 void OpenTypeDlg::OnTimer(wxTimerEvent &event)
