@@ -15,7 +15,7 @@ public:
 protected:
 	virtual bool OnInit();
 	virtual int OnExit();
-
+ 
 private:
 	DECLARE_EVENT_TABLE()
 };

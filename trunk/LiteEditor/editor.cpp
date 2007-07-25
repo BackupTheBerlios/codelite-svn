@@ -20,7 +20,7 @@
 #undef EVT_SCI_CALLTIP_CLICK
 #define EVT_SCI_CALLTIP_CLICK(id, fn)          DECLARE_EVENT_TABLE_ENTRY (wxEVT_SCI_CALLTIP_CLICK,          id, wxID_ANY, (wxObjectEventFunction) (wxEventFunction)  wxStaticCastEvent( wxScintillaEventFunction, & fn ), (wxObject *) NULL),
 #endif 
-
+ 
 BEGIN_EVENT_TABLE(LEditor, wxScintilla)
 EVT_SCI_CHARADDED(wxID_ANY, LEditor::OnCharAdded)
 EVT_SCI_MARGINCLICK(wxID_ANY, LEditor::OnMarginClick)
@@ -30,6 +30,7 @@ EVT_SCI_DWELLEND(wxID_ANY, LEditor::OnDwellEnd)
 EVT_SCI_MODIFIED(wxID_ANY, LEditor::OnModified)
 EVT_SCI_UPDATEUI(wxID_ANY, LEditor::OnSciUpdateUI)
 EVT_CONTEXT_MENU(LEditor::OnContextMenu)
+EVT_MENU(XRCID("save"), LEditor::OnSave)
 
 // Find and replace dialog
 EVT_COMMAND(wxID_ANY, wxEVT_FRD_FIND_NEXT, LEditor::OnFindDialog)
@@ -894,6 +895,7 @@ void LEditor::OnFindDialog(wxCommandEvent& event)
 	{
 		MarkAll();
 	}
+	event.Skip();
 }
 
 void LEditor::FindNext(const FindReplaceData &data)
@@ -1174,3 +1176,10 @@ void LEditor::OnContextMenu(wxContextMenuEvent &event)
 	}
 	event.Skip();
 }
+ 
+void LEditor::OnSave(wxCommandEvent &event)
+{
+	wxMessageBox(wxT("Received command event"));
+	event.Skip();
+}
+

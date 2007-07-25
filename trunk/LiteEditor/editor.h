@@ -251,6 +251,7 @@ private:
 	void OnSciUpdateUI(wxScintillaEvent &event);
 	void OnFindDialog(wxCommandEvent &event);
 	void OnContextMenu(wxContextMenuEvent &event);
+	void OnSave(wxCommandEvent &event);
 };
 
 #endif // LITEEDITOR_EDITOR_H

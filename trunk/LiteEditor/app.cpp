@@ -2,8 +2,8 @@
 #include <wx/image.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/sysopt.h>
-#include "manager.h"
-#include "macros.h"
+#include "manager.h" 
+#include "macros.h" 
 
 BEGIN_EVENT_TABLE(App, wxApp)
 END_EVENT_TABLE()
@@ -13,7 +13,7 @@ IMPLEMENT_APP(App)
 extern void InitXmlResource();
 App::App(void)
 : m_pMainFrame(NULL)
-{
+{ 
 }
 
 App::~App(void)

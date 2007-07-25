@@ -160,6 +160,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 
 	editor->SetProject( projName );
 	editor->SetActive();
+	Frame::Get()->SetFocus();
 }
 
 void Manager::SetPageTitle(wxWindow *page, const wxString &name)

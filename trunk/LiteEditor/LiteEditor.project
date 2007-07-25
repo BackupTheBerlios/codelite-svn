@@ -111,6 +111,10 @@
     <Project Name="wxscintilla"/>
     <Project Name="plugin_sdk"/>
   </Dependencies>
+  <VirtualDirectory Name="Dialogs">
+    <File Name="open_type_dlg.cpp"/>
+    <File Name="open_type_dlg.h"/>
+  </VirtualDirectory>
   <Settings Type="Executable">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
       <General OutputFile="..\lib\gcc\LiteEditor" IntermediateDirectory=".\Release" Command="LiteEditor" CommandArguments="" WorkingDirectory="..\lib\gcc"/>
@@ -173,7 +177,7 @@
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
-      <General OutputFile="../Runtime/LiteEditorU" IntermediateDirectory="./ReleaseUnicode" Command="LiteEditorU" CommandArguments="" WorkingDirectory="../Runtime"/>
+      <General OutputFile="../Runtime/LiteEditorU" IntermediateDirectory="./ReleaseUnicode" Command="gdb LiteEditorU" CommandArguments="" WorkingDirectory="../Runtime"/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --unicode=yes);">
         <IncludePath Value="."/>
         <IncludePath Value="../CodeLite"/>
@@ -199,8 +203,4 @@
       <PostBuild/>
     </Configuration>
   </Settings>
-  <VirtualDirectory Name="Dialogs">
-    <File Name="open_type_dlg.cpp"/>
-    <File Name="open_type_dlg.h"/>
-  </VirtualDirectory>
 </CodeLite_Project>

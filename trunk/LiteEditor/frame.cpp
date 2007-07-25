@@ -50,7 +50,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE_LE, Frame::OnNewDlgCreate)
 	EVT_MENU(wxID_CLOSE_ALL, Frame::OnFileCloseAll)
 	EVT_MENU(wxID_EXIT, Frame::OnQuit)
-	EVT_MENU(wxID_SAVE, Frame::OnSave)
+	EVT_MENU(XRCID("save"), Frame::OnSave)
 	EVT_MENU(wxID_SAVEAS, Frame::OnSaveAs)
 	EVT_MENU(XRCID("about"), Frame::OnAbout)
 	EVT_MENU(wxID_NEW, Frame::OnFileNew)
@@ -82,7 +82,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("new_project"), Frame::OnProjectNewProject)
 	EVT_MENU(XRCID("switch_to_workspace"), Frame::OnSwitchWorkspace)
 	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
-	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(XRCID("save"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CLOSE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CLOSE_ALL, Frame::OnFileExistUpdateUI)
@@ -212,7 +212,9 @@ void Frame::CreateGUIControls(void)
 
 	// tell wxAuiManager to manage this frame
 	m_mgr.SetManagedWindow(this);
-	//m_mgr.SetFlags(m_mgr.GetFlags() | wxAUI_MGR_ALLOW_ACTIVE_PANE);
+#ifdef __WXGTK__	
+	m_mgr.SetFlags(m_mgr.GetFlags() | wxAUI_MGR_ALLOW_ACTIVE_PANE);
+#endif
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_PANE_BORDER_SIZE, 1);
 	m_mgr.GetArtProvider()->SetMetric(wxAUI_DOCKART_SASH_SIZE, 6);
@@ -373,7 +375,7 @@ void Frame::CreateToolbars()
 	tb->AddTool(wxID_OPEN, wxT("Open"), wxXmlResource::Get()->LoadBitmap(wxT("page_open")), wxT("Open File (Ctrl+O)"));
 	tb->AddTool(wxID_REFRESH, wxT("Reload"), wxXmlResource::Get()->LoadBitmap(wxT("refresh")), wxT("Reload File (Ctrl+R)"));
 	tb->AddSeparator();
-	tb->AddTool(wxID_SAVE, wxT("Save"), wxXmlResource::Get()->LoadBitmap(wxT("page_save")), wxT("Save (Ctrl+S)"));
+	tb->AddTool(XRCID("save"), wxT("Save"), wxXmlResource::Get()->LoadBitmap(wxT("page_save")), wxT("Save (Ctrl+S)"));
 	tb->AddTool(wxID_SAVEAS, wxT("Save As"), wxXmlResource::Get()->LoadBitmap(wxT("save_as")), wxT("Save As"));
 	tb->AddTool(XRCID("save_all"), wxT("Save All"), wxXmlResource::Get()->LoadBitmap(wxT("save_all")), wxT("Save All"));
 	tb->AddSeparator();
