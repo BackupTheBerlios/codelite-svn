@@ -662,8 +662,7 @@ void Frame::OnFileNew(wxCommandEvent &event)
 
 	m_notebook->AddPage(editor, fileName.GetFullName(), true);
 	m_notebook->Thaw();
-	editor->SetFocus ();
-	editor->SetSCIFocus(true);
+	editor->SetActive();
 }
 
 void Frame::OnFileOpen(wxCommandEvent & WXUNUSED(event))

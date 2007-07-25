@@ -176,9 +176,7 @@ void GotoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 			return;
 		}
 	}
-
-	editor->SetSCIFocus(true);
-    editor->SetFocus ();
+	editor->SetActive();
 }
 
 void GotoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)

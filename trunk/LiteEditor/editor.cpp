@@ -829,7 +829,7 @@ void LEditor::SetActive()
 	}
 
 	SetFocus();
-	SetSCIFocus(true);
+	//SetSCIFocus(true);
 }
 
 // Popup a Find/Replace dialog

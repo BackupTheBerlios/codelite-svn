@@ -159,8 +159,7 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 	AddToRecentlyOpenedFiles(fileName.GetFullPath());
 
 	editor->SetProject( projName );
-	editor->SetFocus ();
-	editor->SetSCIFocus (true);
+	editor->SetActive();
 }
 
 void Manager::SetPageTitle(wxWindow *page, const wxString &name)
