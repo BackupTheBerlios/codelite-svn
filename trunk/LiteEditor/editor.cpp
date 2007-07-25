@@ -828,7 +828,7 @@ void LEditor::SetActive()
 		m_findReplaceDlg->SetEventOwner(GetEventHandler());
 	}
 
-	SetFocus();
+	//SetFocus();
 	//SetSCIFocus(true);
 }
 

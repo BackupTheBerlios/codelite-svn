@@ -33,6 +33,7 @@ void EditHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 
 void EditHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
+	event.Skip();
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 
 	if(event.GetId() == wxID_COPY){
@@ -59,6 +60,7 @@ void EditHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 //------------------------------------
 void BraceMatchHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
+	event.Skip();
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	if( !editor ){
 		return;
@@ -75,6 +77,7 @@ void BraceMatchHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &e
 {
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	event.Enable(editor &&editor->GetLength() > 0);
+	event.Skip();
 }
 
 
@@ -83,7 +86,7 @@ void BraceMatchHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &e
 //------------------------------------
 void FindReplaceHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
-	wxUnusedVar(event);
+	event.Skip();
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	if( !editor ){
 		return;
@@ -115,7 +118,7 @@ void FindReplaceHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &ev
 
 void FindReplaceHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
-	wxUnusedVar(event);
+	event.Skip();
 	wxUnusedVar(owner);
 }
 
@@ -125,7 +128,7 @@ void FindReplaceHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &
 
 void GotoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
-	wxUnusedVar(event);
+	event.Skip();
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	if( !editor ){
 		return;
@@ -181,7 +184,7 @@ void GotoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 
 void GotoHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
-	wxUnusedVar(event);
+	event.Skip();
 	wxUnusedVar(owner);
 }
 
@@ -204,12 +207,13 @@ void BookmarkHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event
 	} else if(event.GetId() == XRCID("removeall_bookmarks")){
 		editor->DelAllMarkers();
 	}
+	event.Skip();
 }
 
 void BookmarkHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
 	wxUnusedVar(owner);
-	wxUnusedVar(event);
+	event.Skip();
 }
 
 
@@ -218,6 +222,7 @@ void BookmarkHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &eve
 //------------------------------------
 void GotoDefinitionHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
+	event.Skip();
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	if( !editor ){
 		return;
@@ -228,10 +233,12 @@ void GotoDefinitionHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent 
 	} else if(event.GetId() == XRCID("goto_previous_definition")){
 		editor->GotoPreviousDefintion();
 	}
+	
 }
 
 void GotoDefinitionHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
+	event.Skip();
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	if(event.GetId() == XRCID("goto_previous_definition")){
 		event.Enable(editor && editor->CanGotoPreviousDefintion());
@@ -246,6 +253,7 @@ void GotoDefinitionHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEven
 
 void ViewAsHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
+	event.Skip();
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	if( !editor ){
 		return;
@@ -259,6 +267,7 @@ void ViewAsHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 
 void ViewAsHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
+	event.Skip();
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	if( !editor ){
 		return;
@@ -276,6 +285,7 @@ void ViewAsHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event
 
 void WordWrapHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &event)
 {
+	event.Skip();
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	if( !editor ){
 		event.Enable(false);
@@ -288,6 +298,7 @@ void WordWrapHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &eve
 
 void WordWrapHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
+	event.Skip();
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	if( !editor ){
 		return;
