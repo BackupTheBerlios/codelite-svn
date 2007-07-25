@@ -30,8 +30,8 @@ TagsDatabase::~TagsDatabase()
 
 void TagsDatabase::OpenDatabase(const wxFileName& fileName)
 {
-	if(m_memDb)
-		return;
+//	if(m_memDb)
+//		return;
 
 	if(m_fileName == fileName)
 		return;

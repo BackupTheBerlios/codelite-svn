@@ -1040,7 +1040,8 @@ void TagsManager::OpenExternalDatabase(const wxFileName &dbName)
 		return;
 
 	// load it to memory
-	m_pExternalDb->LoadToMemory(dbName);
+	//m_pExternalDb->LoadToMemory(dbName);
+	m_pExternalDb->OpenDatabase(dbName);
 }
 
 void TagsManager::ParseComments(const bool parse)
