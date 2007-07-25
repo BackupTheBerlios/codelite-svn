@@ -49,31 +49,32 @@ window.attachEvent("onload", correctPNG);
 <script type="text/javascript">
 var images = new Array()
 var helpString = new Array()
-var current = 8;
+var current = 0;
+var max = 8
 
 //fill the array with the images we have
-images[0] = "images/auto_comp_one.png"
-helpString[0] = "LiteEditor's using CodeLite to display context help"
-images[1] = "images/build_dialog.png"
-helpString[1] = "Build settings dialog"
-images[2] = "images/doxy_menu.png"
-helpString[2] = "C++ context menu"
-images[3] = "images/find_symbol_dialog.png"
-helpString[3] = "Easy find symbol in the workspace using the 'Find Symbol'"
-images[4] = "images/function_tip_with_comment.png"
-helpString[4] = "CodeLite's comment hover tips!"
-images[5] = "images/open_resource_dlg.png"
-helpString[5] = "Easy find resource in the workspace using the 'Find Resource' dialog"
-images[6] = "images/open_type_dlg.png"
-helpString[6] = "Easy find type (class, namespace, struct, union and typedefs) in the workspace using the 'Find Type' dialog"
-images[7] = "images/outline_view.png"
-helpString[7] = "File's outline tree"
-images[8] = "images/editor_general.png"
-helpString[8] = "The editor, general look"
+images[0] = "images/editor_general.png"
+helpString[0] = "The editor, general look"
+images[1] = "images/auto_comp_one.png"
+helpString[1] = "LiteEditor's using CodeLite to display context help"
+images[2] = "images/build_dialog.png"
+helpString[2] = "Build settings dialog"
+images[3] = "images/doxy_menu.png"
+helpString[3] = "C++ context menu"
+images[4] = "images/find_symbol_dialog.png"
+helpString[4] = "Easy find symbol in the workspace using the 'Find Symbol'"
+images[5] = "images/function_tip_with_comment.png"
+helpString[5] = "CodeLite's comment hover tips!"
+images[6] = "images/open_resource_dlg.png"
+helpString[6] = "Easy find resource in the workspace using the 'Find Resource' dialog"
+images[7] = "images/open_type_dlg.png"
+helpString[7] = "Easy find type (class, namespace, struct, union and typedefs) in the workspace using the 'Find Type' dialog"
+images[8] = "images/options.png"
+helpString[8] = "Syntax highlight configuration tab"
 
 function onNextImage(){
 	current++;
-	if(current > 8)
+	if(current > max)
 		current = 0
 	document.getElementById('curr_img_id').src = images[current]
 	document.getElementById('help-string').innerHTML = '<text>' + helpString[current] + '</text>'
@@ -82,7 +83,7 @@ function onNextImage(){
 function onPreviousImage(){
 	current--;
 	if(current < 0)
-		current = 8
+		current = max
 	document.getElementById('curr_img_id').src = images[current]
 	document.getElementById('help-string').innerHTML = '<text>' + helpString[current] + '</text>'
 }
