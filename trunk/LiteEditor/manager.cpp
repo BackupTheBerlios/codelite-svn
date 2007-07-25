@@ -664,6 +664,11 @@ void Manager::ShowOutputPane(wxString focusWin){
 	}
 }
 
+/**
+ * \brief 
+ * \param focusWin
+ * \return 
+ */
 void Manager::ShowWorkspacePane(wxString focusWin){
 	// make the output pane visible
 	wxAuiPaneInfo &info = Frame::Get()->GetDockingManager().GetPane(wxT("Workspace"));
