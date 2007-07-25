@@ -218,4 +218,4 @@ install:
 	@\cp -pr Runtime/rc/*.xrc $(HOME)/".liteeditor/rc/"
 	@\cp -pr Runtime/templates/*.project $(HOME)/".liteeditor/templates/"
 	@\cp -pr Runtime/lexers/*.xml $(HOME)/".liteeditor/lexers/"
-	
+	@chmod -R 777 $(HOME)/".liteeditor"
