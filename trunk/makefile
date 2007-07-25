@@ -10,7 +10,6 @@
 ##
 ## Read BuildInfo.txt for more information
  
- 
 ## 
 ## Set default build set
 ## as ANSI-deubg
@@ -22,7 +21,7 @@ DEBUG= -g
 EXE_NAME=LiteEditorD
 
 ##
-## Override default settings by typing: make -f makefile.linux type=[release | release_unicode | debug_unicode]
+## Override default settings by typing: make type=[release | release_unicode | debug_unicode]
 ##
 ifeq ($(type), release)
 EXE_NAME=LiteEditorR
@@ -98,7 +97,7 @@ sqlite_objects2 := $(addprefix $(SQLITE_OBJ_DIR)/, $(addsuffix .o, $(basename $(
 sqlite_objects = $(sqlite_objects1) $(sqlite_objects2) 
 
 ## our main build target
-build : pre_build pre_comp CodeLite Scintilla SQLite wxFlatNotebook SDK LiteEditor
+build : pre_build pre_comp CodeLite Scintilla SQLite wxFlatNotebook SDK LiteEditor ctags 
 
 CodeLite: code_lite_msg $(lib_cpp_objects) $(lib_c_objects)
 	ar rcu $(OUTPUT_DIR)/libcodelite$(EXT).a $(lib_cpp_objects)  $(lib_c_objects) 
@@ -118,6 +117,9 @@ wxFlatNotebook: wxFlatNotebook_msg
 SDK: sdk_msg
 	cd Plugin/ && $(MAKE)
 
+ctags: ctags_msg
+	cd sdk/ctags/ && $(MAKE)
+	
 LiteEditor: lite_editor_msg $(precompiled_headers) $(sample_cpp_objects) 
 	$(CMP) -o Runtime/$(EXE_NAME) $(sample_cpp_objects) $(LINK_FLAGS)
 
@@ -153,6 +155,10 @@ pre_build:
 	test -d  $(SCI_OBJ_DIR) || mkdir $(SCI_OBJ_DIR)
 	test -d  $(SQLITE_OBJ_DIR) || mkdir $(SQLITE_OBJ_DIR)
 
+ctags_msg:
+	@echo ----------------------------------------------------------
+	@echo Building ctags-le 
+	@echo ---------------------------------------------------------- 
 
 code_lite_msg:
 	@echo ----------------------------------------------------------
@@ -192,3 +198,24 @@ clean:
 	$(RM) precompiled_header.h.gch
 	cd sdk/wxflatnotebook/build/wxFlatNotebook/ && $(MAKE) clean
 	cd Plugin/ && $(MAKE) clean
+
+install:
+	@echo installing LiteEditor
+	@\rm -f /usr/local/bin/LiteEditor
+	@echo copying Runtime/$(EXE_NAME) to /usr/local/bin/
+	@cp Runtime/$(EXE_NAME) /usr/local/bin/
+	@ln -s /usr/local/bin/$(EXE_NAME) /usr/local/bin/LiteEditor
+	@echo cp Runtime/le_dos2unix.sh /usr/local/bin/
+	@cp Runtime/le_dos2unix.sh /usr/local/bin/
+	@echo copying ctags-le to /usr/local/bin
+	@cp sdk/ctags/ctags-le /usr/local/bin/
+	@echo $(HOME)
+	@mkdir -p $(HOME)/".liteeditor/config/"
+	@mkdir -p $(HOME)/".liteeditor/rc/"
+	@mkdir -p $(HOME)/".liteeditor/templates/"
+	@mkdir -p $(HOME)/".liteeditor/lexers/"
+	@\cp -pr Runtime/config/*.xml $(HOME)/".liteeditor/config/"
+	@\cp -pr Runtime/rc/*.xrc $(HOME)/".liteeditor/rc/"
+	@\cp -pr Runtime/templates/*.project $(HOME)/".liteeditor/templates/"
+	@\cp -pr Runtime/lexers/*.xml $(HOME)/".liteeditor/lexers/"
+	
