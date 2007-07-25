@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Workspace Name="LiteEditor" Database="./LiteEditor.tags">
   <Ctags>
-    <Option Name="Macros">WXUNUSED,wxT,WXMAKINGDLL,WXUSINGDLL,WXMAKINGDLL_FNB,WXUSINGDLL_FNB</Option>
+    <Option Name="Macros">WXUNUSED,wxT,WXMAKINGDLL,WXUSINGDLL,WXMAKINGDLL_FNB,WXUSINGDLL_FNB,WXDLLEXPORT,WXDLLIMPEXP_CORE,WXDLLIMPORT</Option>
     <Option Name="Language">C++</Option>
     <Option Name="FileSpec">*.cpp;*.c;*.cxx;*.cc;*.h;*.hpp</Option>
     <Option Name="ParseComments">yes</Option>
@@ -13,11 +13,6 @@
   <Project Name="plugin_sdk" Path="Plugin/plugin_sdk.project" Active="No"/>
   <Project Name="LiteEditor" Path="LiteEditor/LiteEditor.project" Active="Yes"/>
   <Project Name="sqlite3" Path="sqlite3/sqlite3.project"/>
-  <Environment>
-    <Variable Name="WXSTABLE" Value="D:/Projects/wxWidgets-2.8.4"/>
-    <Variable Name="WorkspaceName" Value="LiteEditor"/>
-    <Variable Name="WorkspacePath" Value="/home/eran/development/lite_editor/trunk"/>
-  </Environment>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Release Unicode" Selected="yes">
       <Project Name="wxsqlite3" ConfigName="ReleaseUnicode"/>
@@ -38,4 +33,9 @@
       <Project Name="CodeLite" ConfigName="ReleaseANSIStaticLibrary"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
+  <Environment>
+    <Variable Name="WXSTABLE" Value="D:/Projects/wxWidgets-2.8.4"/>
+    <Variable Name="WorkspaceName" Value="LiteEditor"/>
+    <Variable Name="WorkspacePath" Value="C:\Development\C++\LiteEditor"/>
+  </Environment>
 </CodeLite_Workspace>
