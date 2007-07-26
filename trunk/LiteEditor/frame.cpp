@@ -936,13 +936,20 @@ void Frame::OnNewDlgCreate(wxCommandEvent &event)
 void Frame::OnCtagsOptions(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	CtagsOptionsDlg *dlg = new CtagsOptionsDlg(this);
+	/*CtagsOptionsDlg *dlg = new CtagsOptionsDlg(this);
 
 	if(dlg->ShowModal() == wxID_OK){
 		// update the ctags options
 		TagsManagerST::Get()->SetCtagsOptions(dlg->GetCtagsOptions());
 		ManagerST::Get()->SetWorkspaceCtagsOptions(dlg->GetCtagsOptions());
 		TagsManagerST::Get()->ParseComments(dlg->GetCtagsOptions().GetParseComments());
+	}
+	dlg->Destroy();
+	*/
+	TagsOptionsDlg *dlg = new TagsOptionsDlg(this, m_tagsOptionsData);
+	if(dlg->ShowModal() == wxID_OK)
+	{
+		m_tagsOptionsData = dlg->GetData();
 	}
 	dlg->Destroy();
 }

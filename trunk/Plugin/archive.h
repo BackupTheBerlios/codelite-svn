@@ -3,6 +3,7 @@
 
 #include "wx/string.h"
 #include <wx/arrstr.h>
+#include "wx/filename.h"
 
 class wxXmlNode;
 
@@ -30,23 +31,27 @@ public:
 	//--------------------
 	// Write API
 	//--------------------
-	void WriteInt(const wxString &name, int value);
-	void WriteBool(const wxString &name, bool value);
-	void WriteLong(const wxString &name, long value);
-	void WriteString(const wxString &name, const wxString &str);
-	void WriteArrayString(const wxString &name, const wxArrayString &arr);
+	void Write(const wxString &name, int value);
+	void Write(const wxString &name, bool value);
+	void Write(const wxString &name, long value);
+	void Write(const wxString &name, const wxString &str);
+	void Write(const wxString &name, const wxArrayString &arr);
+	void Write(const wxString &name, const wxFileName &fileName);
+	void Write(const wxString &name, size_t value);
 
 	//--------------------
 	// Read API
 	//--------------------
-	void ReadInt(const wxString &name, int &value);
-	void ReadBool(const wxString &name, bool &value);
-	void ReadLong(const wxString &name, long &value);
-	void ReadString(const wxString &name, wxString &value);
-	void ReadArrayString(const wxString &name, wxArrayString &arr);
-	
+	void Read(const wxString &name, int &value);
+	void Read(const wxString &name, bool &value);
+	void Read(const wxString &name, long &value);
+	void Read(const wxString &name, wxString &value);
+	void Read(const wxString &name, wxArrayString &arr);
+	void Read(const wxString &name, wxFileName &fileName);
+	void Read(const wxString &name, size_t &value);
+
 private:	
-	void WriteSimple(int value, const wxString &typeName, const wxString &name);
-	void ReadSimple(int &value, const wxString &typeName, const wxString &name);
+	void WriteSimple(long value, const wxString &typeName, const wxString &name);
+	void ReadSimple(long &value, const wxString &typeName, const wxString &name);
 };
 #endif //ARCHIVE_H

@@ -160,7 +160,7 @@ void OpenTypeDlg::OnCharHook(wxKeyEvent &event)
 	{
 		TryOpenAndEndModal();
 	}
-	event.Skip();
+	event.Skip(); 
 }
 
 void OpenTypeDlg::TryOpenAndEndModal()
@@ -186,4 +186,5 @@ void OpenTypeDlg::OnItemActivated(wxListEvent &event)
 {
 	wxUnusedVar(event);
 	TryOpenAndEndModal();
+	
 }

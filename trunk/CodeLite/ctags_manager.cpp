@@ -114,7 +114,7 @@ TagsManager::TagsManager() : wxEvtHandler()
 , m_parseComments(false)
 {
 	m_pDb = new TagsDatabase();
-	m_pExternalDb = new TagsDatabase(true);	// use it as memory database
+	m_pExternalDb = new TagsDatabase();
 	m_ctagsCmd[TagsGlobal] =  wxT("  --fields=aKmSsnit --c-kinds=+p --C++-kinds=+p --filter=yes --filter-terminator=\"<<EOF>>\"  ");
 }  
 
@@ -1261,7 +1261,7 @@ void TagsManager::CloseExternalDatabase()
 	//empty one
 	if(m_pExternalDb){
 		delete m_pExternalDb;
-		m_pExternalDb = new TagsDatabase(true);
+		m_pExternalDb = new TagsDatabase();
 	}
 }
 

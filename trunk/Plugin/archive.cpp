@@ -11,7 +11,7 @@ Archive::~Archive()
 {
 }
 
-void Archive::WriteArrayString(const wxString &name, const wxArrayString &arr)
+void Archive::Write(const wxString &name, const wxArrayString &arr)
 {
 	if(!m_root){
 		return;
@@ -29,7 +29,7 @@ void Archive::WriteArrayString(const wxString &name, const wxArrayString &arr)
 	}
 }
 
-void Archive::ReadArrayString(const wxString &name, wxArrayString &arr)
+void Archive::Read(const wxString &name, wxArrayString &arr)
 {
 	if(!m_root){
 		return;
@@ -49,7 +49,7 @@ void Archive::ReadArrayString(const wxString &name, wxArrayString &arr)
 	}
 }
 
-void Archive::WriteInt(const wxString &name, int value)
+void Archive::Write(const wxString &name, int value)
 {
 	if(!m_root){
 		return;
@@ -58,54 +58,53 @@ void Archive::WriteInt(const wxString &name, int value)
 	WriteSimple(value, wxT("int"), name);
 }
 
-void Archive::ReadInt(const wxString &name, int &value)
+void Archive::Read(const wxString &name, int &value)
 {
 	if(!m_root){
 		return;
 	}
-	
-	ReadSimple(value, wxT("int"), name);
+
+	long v;
+	ReadSimple(v, wxT("int"), name);
+	value = v;
 }
 
-void Archive::WriteLong(const wxString &name, long value)
+void Archive::Write(const wxString &name, long value)
 {
 	if(!m_root){
 		return; 
 	}
-	WriteSimple((int)value, wxT("long"), name);
+	WriteSimple(value, wxT("long"), name);
 }
 
-void Archive::ReadLong(const wxString &name, long &value)
+void Archive::Read(const wxString &name, long &value)
 {
 	if(!m_root){
 		return; 
 	}
-	
-	int intValue;
-	ReadSimple(intValue, wxT("long"), name);
-	value = intValue;
+	ReadSimple(value, wxT("long"), name);
 }
 
-void Archive::WriteBool(const wxString &name, bool value)
+void Archive::Write(const wxString &name, bool value)
 {
 	if(!m_root){
 		return;
 	}
-	WriteSimple((int)value, wxT("bool"), name); 
+	WriteSimple(value ? 1 : 0, wxT("bool"), name); 
 }
 
-void Archive::ReadBool(const wxString &name, bool &value)
+void Archive::Read(const wxString &name, bool &value)
 {
 	if(!m_root){
 		return; 
 	}
 	
-	int intValue;
-	ReadSimple(intValue, wxT("bool"), name);
-	intValue  == 0 ? value = false : value = true;
+	long v;
+	ReadSimple(v, wxT("bool"), name);
+	v  == 0 ? value = false : value = true;
 }
 
-void Archive::WriteString(const wxString &name, const wxString &str)
+void Archive::Write(const wxString &name, const wxString &str)
 {
 	if(!m_root){
 		return;
@@ -116,7 +115,7 @@ void Archive::WriteString(const wxString &name, const wxString &str)
 	node->AddProperty(wxT("Name"), name);
 }
 
-void Archive::ReadString(const wxString &name, wxString &value)
+void Archive::Read(const wxString &name, wxString &value)
 {
 	if(!m_root){
 		return;
@@ -127,12 +126,36 @@ void Archive::ReadString(const wxString &name, wxString &value)
 	}
 }
 
+void Archive::Read(const wxString &name, size_t &value)
+{
+	long v = 0;
+	Read(name, v);
+	value = v;
+}
+
+void Archive::Read(const wxString &name, wxFileName &fileName)
+{
+	wxString value;
+	Read(name, value);
+	fileName = wxFileName(value);
+}
+
+void Archive::Write(const wxString &name, size_t value)
+{
+	Write(name, (long)value);
+}
+
+void Archive::Write(const wxString &name, const wxFileName &fileName)
+{
+	Write(name, fileName.GetFullPath());
+}
+
 void Archive::SetXmlNode(wxXmlNode *node)
 {
 	m_root = node;
 }
 
-void Archive::WriteSimple(int value, const wxString &typeName, const wxString &name)
+void Archive::WriteSimple(long value, const wxString &typeName, const wxString &name)
 {
 	if(!m_root)
 		return;
@@ -146,7 +169,7 @@ void Archive::WriteSimple(int value, const wxString &typeName, const wxString &n
 	node->AddProperty(wxT("Name"), name);
 }
 
-void Archive::ReadSimple(int &value, const wxString &typeName, const wxString &name)
+void Archive::ReadSimple(long &value, const wxString &typeName, const wxString &name)
 {
 	if(!m_root)
 		return;

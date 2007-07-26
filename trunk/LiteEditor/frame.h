@@ -16,6 +16,7 @@
 #include "wx/choice.h"
 #include "wx/timer.h"
 #include "parse_thread.h"
+#include "tags_options_dlg.h"
 
 // forward decls
 class TagEntry;
@@ -39,7 +40,7 @@ class Frame : public wxFrame
 	wxTimer *m_timer;
 	std::map<int, wxString> m_viewAsMap;
 	wxMenu *m_tabRightClickMenu;
-	
+	TagsOptionsData m_tagsOptionsData;
 
 public:	
 	// the access method to the singleton frame is by using the Get method

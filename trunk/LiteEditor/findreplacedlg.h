@@ -120,15 +120,15 @@ public:
 
 	//implement the serialization API
 	void Serialize(Archive &arch){
-		arch.WriteArrayString(wxT("m_findString"), m_findString);
-		arch.WriteArrayString(wxT("m_replaceString"), m_replaceString);
-		arch.WriteLong(wxT("m_flags"), (long)m_flags);
+		arch.Write(wxT("m_findString"), m_findString);
+		arch.Write(wxT("m_replaceString"), m_replaceString);
+		arch.Write(wxT("m_flags"), (long)m_flags);
 	}
 
 	void DeSerialize(Archive &arch){
-		arch.ReadArrayString(wxT("m_findString"), m_findString);
-		arch.ReadArrayString(wxT("m_replaceString"), m_replaceString);
-		arch.ReadLong(wxT("m_flags"), (long&)m_flags);
+		arch.Read(wxT("m_findString"), m_findString);
+		arch.Read(wxT("m_replaceString"), m_replaceString);
+		arch.Read(wxT("m_flags"), (long&)m_flags);
 	}
 };
 

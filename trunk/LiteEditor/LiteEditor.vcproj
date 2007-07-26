@@ -508,6 +508,12 @@
 			<File
 				RelativePath=".\symbols_dialog_base.h">
 			</File>
+			<File
+				RelativePath=".\tags_options_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\tags_options_dlg.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Trees">
