@@ -949,7 +949,12 @@ void Frame::OnCtagsOptions(wxCommandEvent &event)
 	TagsOptionsDlg *dlg = new TagsOptionsDlg(this, m_tagsOptionsData);
 	if(dlg->ShowModal() == wxID_OK)
 	{
+		TagsManager *tagsMgr = TagsManagerST::Get();
+		Manager *mgr = ManagerST::Get();
+
 		m_tagsOptionsData = dlg->GetData();
+		tagMgr->SetCtagsOptions(dlg->GetCtagsOptions());
+		tagsMgr->ParseComments(dlg->GetCtagsOptions().GetParseComments());
 	}
 	dlg->Destroy();
 }

@@ -189,6 +189,9 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath=".\archive.cpp">
+			</File>
+			<File
 				RelativePath=".\calltip.cpp">
 			</File>
 			<File
@@ -243,6 +246,9 @@
 				RelativePath=".\tags_database.cpp">
 			</File>
 			<File
+				RelativePath=".\tags_options_data.cpp">
+			</File>
+			<File
 				RelativePath=".\tokenizer.cpp">
 			</File>
 			<File
@@ -253,6 +259,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath=".\archive.h">
+			</File>
 			<File
 				RelativePath=".\calltip.h">
 			</File>
@@ -311,6 +320,9 @@
 				RelativePath=".\readtags.h">
 			</File>
 			<File
+				RelativePath=".\serialized_object.h">
+			</File>
+			<File
 				RelativePath=".\singleton.h">
 			</File>
 			<File
@@ -324,6 +336,9 @@
 			</File>
 			<File
 				RelativePath=".\tags_database.h">
+			</File>
+			<File
+				RelativePath=".\tags_options_data.h">
 			</File>
 			<File
 				RelativePath=".\tokenizer.h">

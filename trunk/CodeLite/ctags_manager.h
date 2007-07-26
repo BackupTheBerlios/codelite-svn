@@ -12,7 +12,9 @@
 #include "calltip.h"
 #include "comment.h"
 #include "language.h"
+#include "tags_options_data.h"
 
+#ifndef WXDLLIMPEXP_CL
 #ifdef WXMAKINGDLL_CODELITE
 #    define WXDLLIMPEXP_CL WXEXPORT
 #elif defined(WXUSINGDLL_CODELITE)
@@ -20,7 +22,7 @@
 #else /* not making nor using FNB as DLL */
 #    define WXDLLIMPEXP_CL
 #endif // WXMAKINGDLL_CODELITE
-
+#endif // WXDLLIMPEXP_CL
 
 #ifdef USE_TRACE
 #include <wx/stopwatch.h>
@@ -32,7 +34,6 @@ class DirTraverser;
 class Language;
 
 #define TagsGlobal 0
-#define TagsLocal  1
 
 /**
  * \ingroup CodeLite
@@ -114,7 +115,6 @@ public:
  * // 'this' is a pointer to the main frame or any other window that wishes to be notified 
  * // if ctags process died
  * TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
- * TagsManagerST::Get()->StartCtagsProcess(TagsLocal);
  * \endcode
  *
  * In the destructor of your main frame it is recommended to call Free() to avoid memory leaks:
@@ -151,7 +151,7 @@ class WXDLLIMPEXP_CL TagsManager : public wxEvtHandler
 	
 	wxStopWatch m_watch;
 	bool m_parseComments;
-	CtagsOptions m_options;
+	TagsOptionsData m_options;
 	std::map<int, clProcess*> m_processes;
 
 public:
@@ -159,15 +159,14 @@ public:
 	 * Return the CtagsOptions used by the tags manager
 	 * \return 
 	 */
-	const CtagsOptions& GetCtagsOptions() const { return m_options; }
+	const TagsOptionsData& GetCtagsOptions() const { return m_options; }
 
 	/**
 	 * Set Ctags Options
 	 * \param options options to use
 	 */
-	void SetCtagsOptions(const CtagsOptions &options) { 
+	void SetCtagsOptions(const TagsOptionsData &options) { 
 		m_options = options; 
-		RestartCtagsProcess(TagsLocal);
 		RestartCtagsProcess(TagsGlobal);
 	}
 

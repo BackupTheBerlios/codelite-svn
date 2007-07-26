@@ -11,6 +11,7 @@
 #include <wx/txtstrm.h>
 #include "cpp_comment_creator.h"
 
+
 #define PRINT_START_MESSAGE(msg)\
 	{\
 		m_watch = wxStopWatch();\
@@ -48,61 +49,6 @@ struct tagParseResult {
 	TagTreePtr tree;
 	std::vector<DbRecordPtr> *comments;
 };
-
-//------------------------------------------------------------------------------
-// CtagsOptions
-//------------------------------------------------------------------------------
-wxString CtagsOptions::ToString() const
-{
-	wxString options(wxEmptyString);
-	if(GetLanguage().IsEmpty() == false){
-		options += wxT(" --language-force=");
-		options += GetLanguage();
-		options += wxT(" ");
-	}
-
-	if(GetIgnoreMacros().IsEmpty() == false){
-		bool first = true;
-		options += wxT("-I");
-		wxStringTokenizer tkz(GetIgnoreMacros(), wxT(","));
-		while( tkz.HasMoreTokens() ){
-			wxString token = tkz.NextToken();
-			token = token.Trim();
-			token = token.Trim(false);
-
-			if(token.Find(wxT("=")) != wxNOT_FOUND){
-				// we found a MACRO=VALUE
-				wxString name = token.BeforeFirst(wxT('='));
-				wxString value = token.AfterFirst(wxT('='));
-
-				// construct new entry
-				if(!first) { 
-					options += wxT(","); 
-				}else{
-					first = false;
-				}
-
-				options += name;
-				options += wxT("=");
-				options += value;
-			} else if(token.Find(wxT(" "))!= wxNOT_FOUND){
-				// Skip macro with a space in its name
-				continue;
-			} else {
-				// add the entry as is
-				if(!first) { 
-					options += wxT(","); 
-				}else{
-					first = false;
-				}
-
-				options += token;
-			}
-		}
-	}
-
-	return options;
-}
 
 //------------------------------------------------------------------------------
 // CTAGS Manager

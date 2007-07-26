@@ -7,13 +7,23 @@
 
 class wxXmlNode;
 
+#ifndef WXDLLIMPEXP_CL
+#ifdef WXMAKINGDLL_CODELITE
+#    define WXDLLIMPEXP_CL WXEXPORT
+#elif defined(WXUSINGDLL_CODELITE)
+#    define WXDLLIMPEXP_CL WXIMPORT
+#else /* not making nor using FNB as DLL */
+#    define WXDLLIMPEXP_CL
+#endif // WXMAKINGDLL_CODELITE
+#endif // WXDLLIMPEXP_CL
+
 /**
  * \class Archive 
  * \brief an auxulariy class which serializes variables into XML format
  * \author Eran
  * \date 07/20/07
  */
-class Archive
+class WXDLLIMPEXP_CL Archive
 {
 	wxXmlNode *m_root;
 	
