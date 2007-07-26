@@ -14,7 +14,7 @@
   <Project Name="LiteEditor" Path="LiteEditor/LiteEditor.project" Active="Yes"/>
   <Project Name="sqlite3" Path="sqlite3/sqlite3.project"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Release Unicode" Selected="yes">
+    <WorkspaceConfiguration Name="Release Unicode" Selected="no">
       <Project Name="wxsqlite3" ConfigName="ReleaseUnicode"/>
       <Project Name="wxscintilla" ConfigName="ReleaseUnicode"/>
       <Project Name="wxflatnotebook" ConfigName="ReleaseUnicode"/>
@@ -23,7 +23,7 @@
       <Project Name="LiteEditor" ConfigName="ReleaseUnicode"/>
       <Project Name="CodeLite" ConfigName="ReleaseUnicode"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release ANSI (Windows)" Selected="no">
+    <WorkspaceConfiguration Name="Release ANSI (Windows)" Selected="yes">
       <Project Name="wxsqlite3" ConfigName="ReleaseANSIStaticLibrary"/>
       <Project Name="wxscintilla" ConfigName="ReleaseANSIStaticLibrary"/>
       <Project Name="wxflatnotebook" ConfigName="ReleaseANSIStaticLibrary"/>
@@ -36,6 +36,6 @@
   <Environment>
     <Variable Name="WXSTABLE" Value="D:/Projects/wxWidgets-2.8.4"/>
     <Variable Name="WorkspaceName" Value="LiteEditor"/>
-    <Variable Name="WorkspacePath" Value="/home/eran/development/lite_editor/trunk"/>
+    <Variable Name="WorkspacePath" Value="C:\Development\C++\LiteEditor"/>
   </Environment>
 </CodeLite_Workspace>

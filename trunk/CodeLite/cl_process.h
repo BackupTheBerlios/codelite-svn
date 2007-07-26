@@ -49,7 +49,7 @@ public:
 	 */
 	void SetPid(long pid);
 
-	//int GetId() { return m_id; }
+	//int GetId() { return m_id; } 
 
 	/**
 	 * Kill the process
