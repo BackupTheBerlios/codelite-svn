@@ -82,9 +82,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("new_project"), Frame::OnProjectNewProject)
 	EVT_MENU(XRCID("switch_to_workspace"), Frame::OnSwitchWorkspace)
 	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
-	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
-	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
-	EVT_UPDATE_UI(wxID_CLOSE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CLOSE_ALL, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_REFRESH, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(XRCID("save_all"), Frame::OnFileExistUpdateUI)
@@ -143,7 +140,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("stop_active_project_build"), Frame::OnStopBuild)
 	EVT_UPDATE_UI(XRCID("stop_active_project_build"), Frame::OnStopBuildUI)
 	EVT_UPDATE_UI(XRCID("clean_active_project"), Frame::OnCleanProjectUI)
-	EVT_UPDATE_UI(XRCID("build_active_project"), Frame::OnBuildProjectUI)
 	EVT_MENU(XRCID("execute_no_debug"), Frame::OnExecuteNoDebug)
 	EVT_UPDATE_UI(XRCID("execute_no_debug"), Frame::OnExecuteNoDebugUI)
 
@@ -162,6 +158,13 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_TIMER(wxID_ANY, Frame::OnTimer)
 	EVT_MENU_RANGE(RecentFilesSubMenuID, RecentFilesSubMenuID + 10, Frame::OnRecentFile)
 	EVT_MENU_RANGE(RecentWorkspaceSubMenuID, RecentWorkspaceSubMenuID + 10, Frame::OnRecentWorkspace)
+
+#ifdef __WXMSW__
+	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(wxID_CLOSE, Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(XRCID("build_active_project"), Frame::OnBuildProjectUI)
+#endif 	
 
 END_EVENT_TABLE()
 Frame* Frame::m_theFrame = NULL;
@@ -528,6 +531,9 @@ wxString Frame::GetStringFromUser(const wxString& msg)
 
 void Frame::OnSave(wxCommandEvent& WXUNUSED(event))
 {
+	if(!m_notebook->GetCurrentPage())
+		return;
+
 	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetCurrentPage());
 	if( !editor )
 		return;
@@ -538,6 +544,9 @@ void Frame::OnSave(wxCommandEvent& WXUNUSED(event))
 
 void Frame::OnSaveAs(wxCommandEvent& WXUNUSED(event))
 {
+	if(!m_notebook->GetCurrentPage())
+		return;
+
 	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetCurrentPage());
 	if( !editor )
 		return;
@@ -1077,7 +1086,10 @@ void Frame::OnOutputWindowEvent(wxCommandEvent &event)
 void Frame::OnBuildProject(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	ManagerST::Get()->BuildProject(ManagerST::Get()->GetActiveProjectName());
+	bool enable = !ManagerST::Get()->IsBuildInProgress() && !ManagerST::Get()->GetActiveProjectName().IsEmpty();
+	if(enable){
+		ManagerST::Get()->BuildProject(ManagerST::Get()->GetActiveProjectName());
+	}
 }
 
 void Frame::OnBuildProjectUI(wxUpdateUIEvent &event)
