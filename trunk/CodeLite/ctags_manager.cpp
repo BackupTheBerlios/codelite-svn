@@ -57,7 +57,6 @@ struct tagParseResult {
 TagsManager::TagsManager() : wxEvtHandler()
 , m_ctagsPath(wxT("ctags-le"))
 , m_ctags(NULL)
-, m_parseComments(false)
 {
 	m_pDb = new TagsDatabase();
 	m_pExternalDb = new TagsDatabase();
@@ -195,7 +194,7 @@ TagTreePtr TagsManager::ParseSourceFile(const wxFileName& fp, std::vector<DbReco
 	//	return ParseTagsFile(tags, project);
 	TagTreePtr ttp = TagTreePtr( TreeFromTags(tags) );
 
-	if( comments && m_parseComments )
+	if( comments && GetParseComments() )
 	{
 		// parse comments
 		LanguageST::Get()->ParseComments( fp, comments );
@@ -262,7 +261,7 @@ TagTreePtr TagsManager::ParseSourceFiles(const std::vector<wxFileName> &fpArr, s
 	}
 
 	for(i=0; i<fpArr.size(); i++){
-		if( comments && m_parseComments ){
+		if( comments && GetParseComments() ){
 			// parse comments
 			LanguageST::Get()->ParseComments( fpArr[i], comments );
 		}
@@ -990,12 +989,6 @@ void TagsManager::OpenExternalDatabase(const wxFileName &dbName)
 	m_pExternalDb->OpenDatabase(dbName);
 }
 
-void TagsManager::ParseComments(const bool parse)
-{
-	wxCriticalSectionLocker locker( m_cs );
-	m_parseComments = parse;
-}
-
 wxString TagsManager::GetComment(const wxString &file, const int line)
 {
 	wxString sql;
@@ -1150,7 +1143,7 @@ void TagsManager::TipsFromTags(const std::vector<TagEntryPtr> &tags, const wxStr
 		wxString comment;
 
 		//handle comments
-		if(GetParseComments()){
+		if(GetCtagsOptions().GetFlags() & CC_DISP_COMMENTS){
 			int      lineno   = tags.at(i)->GetLine();
 			wxString filename = tags.at(i)->GetFile();
 			if(lineno != wxNOT_FOUND && filename.IsEmpty() == false){
@@ -1233,3 +1226,19 @@ wxString TagsManager::DoCreateDoxygenComment(TagEntryPtr tag)
 	CppCommentCreator commentCreator(tag);
 	return commentCreator.CreateComment();
 }
+
+bool TagsManager::GetParseComments()
+{
+	wxCriticalSectionLocker lock(m_cs);
+	return m_parseComments;
+}
+
+void TagsManager::SetCtagsOptions(const TagsOptionsData &options)
+{
+	m_options = options; 
+	RestartCtagsProcess(TagsGlobal);
+	
+	wxCriticalSectionLocker locker(m_cs);
+	m_parseComments = m_options.GetFlags() & CC_PARSE_COMMENTS ? true : false;
+}
+

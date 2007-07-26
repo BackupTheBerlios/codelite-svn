@@ -57,11 +57,9 @@ class WXDLLIMPEXP_LE NewDlg : public wxDialog
 	// Buttons
 	wxButton *m_create;
 	wxButton *m_cancel;
-	wxButton *m_ctagsOptions;
 
 	int m_selection;
 	wxFlatNotebook *m_book;
-	CtagsOptions m_ctagsOptionsData;
 	std::list<ProjectPtr> m_list;
 
 public:
@@ -87,8 +85,7 @@ public:
  
 	const WorkspaceData& GetWorksapceData() const { return m_workspaceData; }
 	const ProjectData& GetProjectData() const { return m_projectData; }
-	const CtagsOptions& GetCtagsOptions() const { return m_ctagsOptionsData; }
-
+	
 	// return the selected notebook tab
 	int GetSelection() const;
 	ProjectPtr FindProject(const wxString &name);

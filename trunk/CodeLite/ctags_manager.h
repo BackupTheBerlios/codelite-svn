@@ -36,72 +36,6 @@ class Language;
 #define TagsGlobal 0
 
 /**
- * \ingroup CodeLite
- * \brief a wrapper around ctags options: --force-language and -I[macros]
- * see http://ctags.sourceforge.net/ctags.html for more details about the ctags options
- *
- * \version 1.0
- * first version
- *
- * \date 05-04-2007
- *
- * \author Eran
- *
- */
-class WXDLLIMPEXP_CL CtagsOptions{
-	wxString forceLanguage;
-	wxString fileSpec;
-	wxString ignoreMacros;
-	bool parseComments;
-
-public:
-	CtagsOptions() 
-		: forceLanguage(wxT("C++"))
-		, fileSpec(wxT("*.cpp;*.c;*.cxx;*.cc;*.h;*.hpp"))
-		, ignoreMacros(wxEmptyString)
-		, parseComments(false)
-	{}
-
-	~CtagsOptions(){}
-
-	/**
-	 * Format a single string from this class 
-	 * \return CTAGS options
-	 */
-	wxString ToString() const;
-
-	//----------------------------------
-	// setters / getters
-	//----------------------------------
-	void SetLanguage(const wxString &lang){
-		forceLanguage = lang;
-		forceLanguage = forceLanguage.Trim();
-		forceLanguage = forceLanguage.Trim(false);
-	}
-
-	void SetFileSpec(const wxString &spec){
-		fileSpec = spec;
-		fileSpec = fileSpec.Trim();
-		fileSpec = fileSpec.Trim(false);
-	}
-
-	void SetIgnoreMacros(const wxString &macros) {
-		ignoreMacros = macros;
-		ignoreMacros = ignoreMacros.Trim();
-		ignoreMacros = ignoreMacros.Trim(false);
-	}
-
-	void SetParseComments(bool parse){
-		parseComments = parse;
-	}
-
-	wxString GetLanguage() const { return forceLanguage; }
-	wxString GetFileSpec() const { return fileSpec; }
-	wxString GetIgnoreMacros() const { return ignoreMacros; }
-	bool GetParseComments() const { return parseComments; }
-};
-
-/**
  * This class is the interface to ctags and SQLite database. 
  * It contains various APIs that allows the caller to parse source file(s), 
  * store it into the database and return a symbol tree.
@@ -150,9 +84,9 @@ class WXDLLIMPEXP_CL TagsManager : public wxEvtHandler
 	std::map<int, wxString> m_ctagsCmd;
 	
 	wxStopWatch m_watch;
-	bool m_parseComments;
 	TagsOptionsData m_options;
 	std::map<int, clProcess*> m_processes;
+	bool m_parseComments;
 
 public:
 	/**
@@ -165,10 +99,7 @@ public:
 	 * Set Ctags Options
 	 * \param options options to use
 	 */
-	void SetCtagsOptions(const TagsOptionsData &options) { 
-		m_options = options; 
-		RestartCtagsProcess(TagsGlobal);
-	}
+	void SetCtagsOptions(const TagsOptionsData &options);
 
 	/**
 	 * Locate symbol by name in database
@@ -377,15 +308,9 @@ public:
 	clCallTipPtr GetFunctionTip(const wxString &expression, const wxString &text, const wxString &word);
 
 	/**
-	 * When parsing files, parse comments as well and store them into database
-	 * \param parse set to true to enable comments parsing
-	 */
-	void ParseComments(const bool parse);
-
-	/**
 	 * Return true if comment parsing is enabled, false otherwise
 	 */
-	bool GetParseComments() const { return m_parseComments; }
+	bool GetParseComments();
 
 	/**
 	 * Load comment from database by line and file

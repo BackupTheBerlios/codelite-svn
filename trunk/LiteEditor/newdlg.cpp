@@ -12,7 +12,6 @@
 #include "project.h"
 #include <map>
 #include "manager.h" 
-#include "ctags_dialog.h"
 #include "editor_config.h"
 #include "build_settings_config.h"
 
@@ -68,8 +67,6 @@ int NewDlg::GetSelection() const
 
 void NewDlg::CreateGUIControls()
 {
-	m_ctagsOptionsData = TagsManagerST::Get()->GetCtagsOptions();
-
 	wxBoxSizer *btnSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(mainSizer);
@@ -126,10 +123,6 @@ wxWindow *NewDlg::CreateWorkspacePage()
 
 	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("Set the workspace CTags options"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
 	vSz->Add(itemStaticText, 1, wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL, 5 );
-
-	m_ctagsOptions = new wxButton(panel, wxID_ANY, wxT("C&Tags Settings ..."));
-	vSz->Add(m_ctagsOptions, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTRE_VERTICAL, 5);
-
 	return panel;
 }
 
@@ -202,40 +195,28 @@ wxWindow *NewDlg::CreateProjectPage()
 
 void NewDlg::OnClick(wxCommandEvent & event)
 {
+	wxUnusedVar(event);
 	// pass data from controls to the m_data
 	if( m_book->GetSelection() == NEW_DLG_WORKSPACE )
 	{
-		if( event.GetEventObject() == m_ctagsOptions )
+		m_workspaceData.m_path = m_pathPicker->GetPath();
+		m_workspaceData.m_name = m_name->GetValue();
+
+		if( m_workspaceData.m_name.Trim().IsEmpty() )
 		{
-			CtagsOptionsDlg *dlg = new CtagsOptionsDlg(this);
-			if(dlg->ShowModal() == wxID_OK)
-			{
-				m_ctagsOptionsData = dlg->GetCtagsOptions();
-			}
-			dlg->Destroy();
+			wxMessageBox(wxT("Invalid workspace name"), wxT("Error"), wxOK | wxICON_HAND);
 			return;
 		}
-		else
+
+		if( !wxDirExists(m_workspaceData.m_path) )
 		{
-			m_workspaceData.m_path = m_pathPicker->GetPath();
-			m_workspaceData.m_name = m_name->GetValue();
-
-			if( m_workspaceData.m_name.Trim().IsEmpty() )
-			{
-				wxMessageBox(wxT("Invalid workspace name"), wxT("Error"), wxOK | wxICON_HAND);
-				return;
-			}
-
-			if( !wxDirExists(m_workspaceData.m_path) )
-			{
-				wxMessageBox(wxT("Invalid path"), wxT("Error"), wxOK | wxICON_HAND);
-				return;
-			}
-
-			wxCommandEvent event(wxEVT_NEW_DLG_CREATE_LE, GetId());
-			event.SetEventObject(this);
-			::wxPostEvent(GetParent()->GetEventHandler(), event);
+			wxMessageBox(wxT("Invalid path"), wxT("Error"), wxOK | wxICON_HAND);
+			return;
 		}
+
+		wxCommandEvent event(wxEVT_NEW_DLG_CREATE_LE, GetId());
+		event.SetEventObject(this);
+		::wxPostEvent(GetParent()->GetEventHandler(), event);
 	} 
 	else if( m_book->GetSelection() == NEW_DLG_PROJECT )
 	{
@@ -274,7 +255,6 @@ void NewDlg::ConnectEvents()
 	// Connect buttons
 	m_create->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(NewDlg::OnClick), NULL, this);
 	m_projTypes->Connect(wxID_ANY, wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler(NewDlg::OnListItemSelected), NULL, this);
-	m_ctagsOptions->Connect(wxID_ANY, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(NewDlg::OnClick), NULL, this);
 }
 
 ProjectPtr NewDlg::FindProject(const wxString &name)

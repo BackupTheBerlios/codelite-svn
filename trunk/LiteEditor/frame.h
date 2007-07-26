@@ -10,7 +10,6 @@
 #include "editor.h"
 #include "output_pane.h"
 #include "findinfilesdlg.h"
-#include "ctags_dialog.h"
 #include "cl_process.h"
 #include "envvar_table.h"
 #include "wx/choice.h"
@@ -132,7 +131,6 @@ protected:
 	void OnBuildExternalDatabase(wxCommandEvent& event);
 	void OnUseExternalDatabase(wxCommandEvent& event);
 	void OnCloseExternalDatabase(wxCommandEvent& event);
-	void OnParseComments(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
 	void OnFileNew(wxCommandEvent &event);
 	void OnFileOpen(wxCommandEvent &event);

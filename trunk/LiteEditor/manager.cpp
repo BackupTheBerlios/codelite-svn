@@ -160,7 +160,6 @@ void Manager::OpenFile(const wxString &file_name, const wxString &projectName, i
 
 	editor->SetProject( projName );
 	editor->SetActive();
-	Frame::Get()->SetFocus();
 }
 
 void Manager::SetPageTitle(wxWindow *page, const wxString &name)
@@ -250,16 +249,14 @@ void Manager::CreateEnvironmentVars(const wxString &path)
 	SetEnvironmentVariables(env);
 }
 
-void Manager::CreateWorkspace(const wxString &name, const wxString &path, const CtagsOptions &options)
+void Manager::CreateWorkspace(const wxString &name, const wxString &path)
 {
 	// make sure that the workspace pane is visible
 	ShowWorkspacePane(WorkspacePane::FILE_VIEW);
 
 	wxString errMsg;
-	TagsManagerST::Get()->SetCtagsOptions(options);
-	bool res = WorkspaceST::Get()->CreateWorkspace(name, path, options, errMsg);
+	bool res = WorkspaceST::Get()->CreateWorkspace(name, path, errMsg);
 	CHECK_MSGBOX(res);
-
 	OpenWorkspace(path + PATH_SEP + name + wxT(".workspace"));
 }
 
@@ -295,9 +292,6 @@ void Manager::OpenWorkspace(const wxString &path)
 	
 	// load ctags options
 	wxBusyCursor cursor;
-	CtagsOptions options = WorkspaceST::Get()->LoadCtagsOptions();
-	TagsManagerST::Get()->SetCtagsOptions( options );
-	TagsManagerST::Get()->ParseComments(options.GetParseComments());
 	
 	//initialize some environment variable to be available for this workspace
 	CreateEnvironmentVars(path);
@@ -703,17 +697,6 @@ void Manager::HideWorkspacePane()
 	}	
 }
 
-void Manager::SetWorkspaceCtagsOptions(const CtagsOptions &options)
-{
-	WorkspaceST::Get()->SaveCtagsOptions(options);
-}
-
-
-CtagsOptions Manager::GetWorkspaceCtagsOptions() const
-{
-	return WorkspaceST::Get()->LoadCtagsOptions();
-}
-
 ContextBasePtr Manager::NewContextByFileName(const wxFileName &fileName, LEditor *parent) const
 {
 	EditorConfig::ConstIterator iter = EditorConfigST::Get()->LexerBegin();
@@ -1087,7 +1070,7 @@ void Manager::DoRetagProject(const wxString &projectName)
 		DirSaver ds;
 		::wxSetWorkingDirectory(proj->GetFileName().GetPath());
 
-		proj->GetFiles(files);
+		proj->GetFiles(files, true);
 
 		bool parseComments = TagsManagerST::Get()->GetParseComments();
 		ttp = TagsManagerST::Get()->ParseSourceFiles(files, parseComments ? &comments : NULL);
@@ -1181,8 +1164,7 @@ void Manager::ImportFromMakefile(const wxString &path)
 	
 	TargetLexer lexer(parsed);
 	Targets lexed = lexer.getResult();
-	
-	CreateWorkspace(wxT("import_from_") + fileName.GetName(), fileName.GetPath(), CtagsOptions());
+	CreateWorkspace(wxT("import_from_") + fileName.GetName(), fileName.GetPath());
 	
 	wxArrayString extentions;
 	extentions.Add(wxT(".h"));

@@ -39,12 +39,13 @@ public:
 	void SetFileSpec(const wxString &filespec){m_fileSpec = filespec;}
 	void SetPreprocessorFilename(const wxFileName& fn){m_prepFile = fn;}
 	void SetLanguages(const wxArrayString &langs){m_languages = langs;}
+	void SetLanguageSelection(const wxString &lang);
 
 	const wxArrayString &GetLanguages() const {return m_languages;}
 	const wxFileName& GetPreprocessorFilename() const {return m_prepFile;}
 	const size_t& GetFlags() const {return m_ccFlags;}
 	const wxString &GetFileSpec() const{return m_fileSpec;}
-
+	
 	//Serialization API
 	void Serialize(Archive &arch);
 	void DeSerialize(Archive &arch);

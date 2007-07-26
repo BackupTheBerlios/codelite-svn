@@ -50,7 +50,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_COMMAND(wxID_ANY, wxEVT_NEW_DLG_CREATE_LE, Frame::OnNewDlgCreate)
 	EVT_MENU(wxID_CLOSE_ALL, Frame::OnFileCloseAll)
 	EVT_MENU(wxID_EXIT, Frame::OnQuit)
-	EVT_MENU(XRCID("save"), Frame::OnSave)
+	EVT_MENU(wxID_SAVE, Frame::OnSave)
 	EVT_MENU(wxID_SAVEAS, Frame::OnSaveAs)
 	EVT_MENU(XRCID("about"), Frame::OnAbout)
 	EVT_MENU(wxID_NEW, Frame::OnFileNew)
@@ -82,7 +82,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("new_project"), Frame::OnProjectNewProject)
 	EVT_MENU(XRCID("switch_to_workspace"), Frame::OnSwitchWorkspace)
 	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
-	EVT_UPDATE_UI(XRCID("save"), Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CLOSE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CLOSE_ALL, Frame::OnFileExistUpdateUI)
@@ -270,6 +270,10 @@ void Frame::CreateGUIControls(void)
 	//load dialog properties
 	EditorConfigST::Get()->ReadObject(wxT("FindInFilesData"), &m_data);
 	EditorConfigST::Get()->ReadObject(wxT("FindAndReplaceData"), &LEditor::GetFindReplaceData());
+	EditorConfigST::Get()->ReadObject(wxT("m_tagsOptionsData"), &m_tagsOptionsData);
+
+	//update ctags options
+	TagsManagerST::Get()->SetCtagsOptions(m_tagsOptionsData);
 
 	//start ctags process
 	TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
@@ -375,7 +379,7 @@ void Frame::CreateToolbars()
 	tb->AddTool(wxID_OPEN, wxT("Open"), wxXmlResource::Get()->LoadBitmap(wxT("page_open")), wxT("Open File (Ctrl+O)"));
 	tb->AddTool(wxID_REFRESH, wxT("Reload"), wxXmlResource::Get()->LoadBitmap(wxT("refresh")), wxT("Reload File (Ctrl+R)"));
 	tb->AddSeparator();
-	tb->AddTool(XRCID("save"), wxT("Save"), wxXmlResource::Get()->LoadBitmap(wxT("page_save")), wxT("Save (Ctrl+S)"));
+	tb->AddTool(wxID_SAVE, wxT("Save"), wxXmlResource::Get()->LoadBitmap(wxT("page_save")), wxT("Save (Ctrl+S)"));
 	tb->AddTool(wxID_SAVEAS, wxT("Save As"), wxXmlResource::Get()->LoadBitmap(wxT("save_as")), wxT("Save As"));
 	tb->AddTool(XRCID("save_all"), wxT("Save All"), wxXmlResource::Get()->LoadBitmap(wxT("save_all")), wxT("Save All"));
 	tb->AddSeparator();
@@ -639,11 +643,6 @@ void Frame::OnUseExternalDatabase(wxCommandEvent& WXUNUSED(event))
 		ManagerST::Get()->SetExternalDatabase(dbname);
 	}
 	dlg->Destroy();
-}
-
-void Frame::OnParseComments(wxCommandEvent &event)
-{
-	TagsManagerST::Get()->ParseComments( event.IsChecked() );
 }
 
 // Open new file
@@ -922,10 +921,7 @@ void Frame::OnNewDlgCreate(wxCommandEvent &event)
 	if( dlg ){
 		if( dlg->GetSelection() == NEW_DLG_WORKSPACE ){
 			WorkspaceData data = dlg->GetWorksapceData();
-			CtagsOptions ctagsOptions = dlg->GetCtagsOptions();
-
-			ManagerST::Get()->CreateWorkspace(data.m_name, data.m_path, ctagsOptions);
-
+			ManagerST::Get()->CreateWorkspace(data.m_name, data.m_path);
 		} else if( dlg->GetSelection() == NEW_DLG_PROJECT ) {
 			ProjectData data = dlg->GetProjectData();
 			ManagerST::Get()->CreateProject(data);
@@ -936,25 +932,13 @@ void Frame::OnNewDlgCreate(wxCommandEvent &event)
 void Frame::OnCtagsOptions(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	/*CtagsOptionsDlg *dlg = new CtagsOptionsDlg(this);
-
-	if(dlg->ShowModal() == wxID_OK){
-		// update the ctags options
-		TagsManagerST::Get()->SetCtagsOptions(dlg->GetCtagsOptions());
-		ManagerST::Get()->SetWorkspaceCtagsOptions(dlg->GetCtagsOptions());
-		TagsManagerST::Get()->ParseComments(dlg->GetCtagsOptions().GetParseComments());
-	}
-	dlg->Destroy();
-	*/
 	TagsOptionsDlg *dlg = new TagsOptionsDlg(this, m_tagsOptionsData);
 	if(dlg->ShowModal() == wxID_OK)
 	{
 		TagsManager *tagsMgr = TagsManagerST::Get();
-		Manager *mgr = ManagerST::Get();
-
 		m_tagsOptionsData = dlg->GetData();
-		tagMgr->SetCtagsOptions(dlg->GetCtagsOptions());
-		tagsMgr->ParseComments(dlg->GetCtagsOptions().GetParseComments());
+		tagsMgr->SetCtagsOptions(m_tagsOptionsData);
+		EditorConfigST::Get()->WriteObject(wxT("m_tagsOptionsData"), &m_tagsOptionsData);
 	}
 	dlg->Destroy();
 }

@@ -22,34 +22,6 @@
 
 //---------------------------------------------------------
 
-TagsOptionsData::TagsOptionsData() 
-: SerializedObject()
-, m_ccFlags(0)
-{
-}
-
-TagsOptionsData::~TagsOptionsData()
-{
-}
-
-void TagsOptionsData::Serialize(Archive &arch)
-{
-	arch.Write(wxT("m_ccFlags"), m_ccFlags);
-	arch.Write(wxT("m_prepFile"), m_prepFile);
-	arch.Write(wxT("m_fileSpec"), m_fileSpec);
-	arch.Write(wxT("m_languages"), m_languages);
-}
-
-void TagsOptionsData::DeSerialize(Archive &arch)
-{
-	arch.Read(wxT("m_ccFlags"), m_ccFlags);
-	arch.Read(wxT("m_prepFile"), m_prepFile);
-	arch.Read(wxT("m_fileSpec"), m_fileSpec);
-	arch.Read(wxT("m_languages"), m_languages);
-}
-
-//---------------------------------------------------------
-
 TagsOptionsDlg::TagsOptionsDlg( wxWindow* parent, const TagsOptionsData& data, int id, wxString title, wxPoint pos, wxSize size, int style ) 
 : wxDialog( parent, id, title, pos, size, style )
 , m_data(data)
@@ -116,9 +88,7 @@ TagsOptionsDlg::TagsOptionsDlg( wxWindow* parent, const TagsOptionsData& data, i
 	m_staticText5->Wrap( -1 );
 	fgSizer2->Add( m_staticText5, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_comboBoxLang = new wxComboBox( m_ctagsPage, wxID_ANY, wxT("C++"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
-	m_comboBoxLang->Append( wxT("C++") );
-	m_comboBoxLang->Append( wxT("Java") );
+	m_comboBoxLang = new wxComboBox( m_ctagsPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
 	fgSizer2->Add( m_comboBoxLang, 0, wxALL|wxEXPAND, 5 );
 	
 	bSizer6->Add( fgSizer2, 1, wxEXPAND, 5 );
@@ -164,18 +134,11 @@ void TagsOptionsDlg::InitValues()
 	//initialize the ctags page
 	m_filePicker->SetPath(m_data.GetPreprocessorFilename().GetFullPath());
 	m_textFileSpec->SetValue(m_data.GetFileSpec());
+	
 	m_comboBoxLang->Clear();
 	m_comboBoxLang->Append(m_data.GetLanguages());
-	
-	if(m_data.GetLanguages().GetCount() == 0)
-	{
-		wxArrayString arr;
-		arr.Add(wxT("C++"));
-		arr.Add(wxT("Java"));
-		m_comboBoxLang->Append(arr);
-		m_data.SetLanguages(arr);
-	}
-	m_comboBoxLang->SetSelection(0);
+	wxString lan = m_data.GetLanguages().Item(0);
+	m_comboBoxLang->SetStringSelection(lan);
 }
 
 void TagsOptionsDlg::OnButtonOK(wxCommandEvent &event)
@@ -196,6 +159,7 @@ void TagsOptionsDlg::CopyData()
 	m_data.SetFileSpec(m_textFileSpec->GetValue());
 	m_data.SetPreprocessorFilename(m_filePicker->GetPath());
 	m_data.SetLanguages(m_comboBoxLang->GetStrings());
+	m_data.SetLanguageSelection(m_comboBoxLang->GetStringSelection());
 }
 
 void TagsOptionsDlg::SetFlag(CodeCompletionOpts flag, bool set)

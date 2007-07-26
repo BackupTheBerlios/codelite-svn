@@ -59,7 +59,7 @@ public:
 	 * \returns
 	 * true on success false otherwise
 	 */
-	bool CreateWorkspace(const wxString &name, const wxString &path, const CtagsOptions &options, wxString &errMsg);
+	bool CreateWorkspace(const wxString &name, const wxString &path, wxString &errMsg);
 
 	/**
 	 * \brief
@@ -176,16 +176,6 @@ public:
 	 * Save workspace & projects settings
 	 */
 	void Save();
-
-	/**
-	 * Load ctags options from the configuration
-	 */
-	CtagsOptions LoadCtagsOptions() const;
-
-	/**
-	 * Save ctags options to the configuration
-	 */
-	void SaveCtagsOptions(const CtagsOptions &options);
 
 	/**
 	 * Return the configuration mapping for the workspace. 'Configuration Mapping' is 

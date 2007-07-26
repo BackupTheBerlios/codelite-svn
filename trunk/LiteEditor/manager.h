@@ -119,7 +119,7 @@ public:
 	 * workspace path
 	 * 
 	 */
-	void CreateWorkspace(const wxString &name, const wxString &path, const CtagsOptions &options);
+	void CreateWorkspace(const wxString &name, const wxString &path);
 	 
 	/**
 	 * \brief create an empty project
@@ -232,18 +232,6 @@ public:
 	 * Hide the output pane
 	 */
 	void HideWorkspacePane();
-
-	/**
-	 * Set ctags options for the current workspace
-	 * \param &options 
-	 */
-	void SetWorkspaceCtagsOptions(const CtagsOptions &options);
-
-	/**
-	 * get the ctags options associated with this workspace
-	 * \return 
-	 */
-	CtagsOptions GetWorkspaceCtagsOptions() const;
 
 	/**
 	 * Return the context by file name

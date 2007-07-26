@@ -30,7 +30,7 @@ EVT_SCI_DWELLEND(wxID_ANY, LEditor::OnDwellEnd)
 EVT_SCI_MODIFIED(wxID_ANY, LEditor::OnModified)
 EVT_SCI_UPDATEUI(wxID_ANY, LEditor::OnSciUpdateUI)
 EVT_CONTEXT_MENU(LEditor::OnContextMenu)
-EVT_MENU(XRCID("save"), LEditor::OnSave)
+EVT_MENU(wxID_SAVE, LEditor::OnSave)
 
 // Find and replace dialog
 EVT_COMMAND(wxID_ANY, wxEVT_FRD_FIND_NEXT, LEditor::OnFindDialog)
@@ -829,8 +829,8 @@ void LEditor::SetActive()
 		m_findReplaceDlg->SetEventOwner(GetEventHandler());
 	}
 
-	//SetFocus();
-	//SetSCIFocus(true);
+	SetFocus();
+	SetSCIFocus(true);
 }
 
 // Popup a Find/Replace dialog

@@ -383,12 +383,6 @@
 				RelativePath=".\configuration_manager_dlg.h">
 			</File>
 			<File
-				RelativePath=".\ctags_dialog.cpp">
-			</File>
-			<File
-				RelativePath=".\ctags_dialog.h">
-			</File>
-			<File
 				RelativePath=".\depend_dlg_page.cpp">
 			</File>
 			<File
