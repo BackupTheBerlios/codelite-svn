@@ -35,6 +35,11 @@ ContextText::ContextText(LEditor *container)
 		bool bold = (*iter).IsBold();
 
 		wxFont font(size, wxFONTFAMILY_TELETYPE, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
+		if((*iter).GetId() == 0){ //default
+			rCtrl.StyleSetFont(wxSCI_STYLE_DEFAULT, font);
+			rCtrl.StyleSetSize(wxSCI_STYLE_DEFAULT, (*iter).GetFontSize());
+			rCtrl.StyleSetForeground(wxSCI_STYLE_DEFAULT, (*iter).GetFgColour());
+		}
 
 		rCtrl.StyleSetFont((*iter).GetId(), font);
 		rCtrl.StyleSetSize((*iter).GetId(), (*iter).GetFontSize());

@@ -95,7 +95,7 @@ void LEditor::SetProperties()
 	m_rightClickMenu = m_context->GetMenu();
 	OptionsConfigPtr options = EditorConfigST::Get()->GetOptions();
 
-	SetMouseDwellTime(500);
+	SetMouseDwellTime(250);
 	SetProperty(wxT("fold"), wxT("1"));
 	SetProperty(wxT("fold.html"), wxT("1"));
 	SetProperty(wxT("styling.within.preprocessor"), wxT("1"));
@@ -252,8 +252,11 @@ void LEditor::SetProperties()
 	AutoCompSetCancelAtStart(false);
 	AutoCompSetDropRestOfWord(false);
 
-	SetTabWidth(8);
-	SetIndent(8);
+	SetTabWidth(4);
+	SetIndent(4);
+	SetTabIndents(true);
+	SetBackSpaceUnIndents (true);
+	SetUseTabs (true);
 
 	//if no right click menu is provided by the context, use scintilla default
 	//right click menu
@@ -362,6 +365,10 @@ void LEditor::OnSciUpdateUI(wxScintillaEvent &event)
 	{
 		wxScintilla::BraceHighlight(wxSCI_INVALID_POSITION, wxSCI_INVALID_POSITION);
 	}
+	//update line number
+	wxString message;
+	message << wxT("Ln ") << LineFromPosition(pos)+1 << wxT("    Col ") << GetColumn(pos);
+	ManagerST::Get()->SetStatusMessage(message, 3);
 	event.Skip();
 }
 

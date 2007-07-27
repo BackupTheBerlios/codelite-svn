@@ -296,7 +296,7 @@ void Frame::CreateGUIControls(void)
 
 	// And finally create a status bar
 	wxStatusBar* statusBar = new wxStatusBar(this, wxID_ANY);
-	statusBar->SetFieldsCount(3);
+	statusBar->SetFieldsCount(4);
 	SetStatusBar(statusBar);
 	
 	GetStatusBar()->SetStatusText(wxT("Ready"));

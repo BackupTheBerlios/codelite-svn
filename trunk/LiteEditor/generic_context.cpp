@@ -37,6 +37,12 @@ ContextGeneric::ContextGeneric(LEditor *container, const wxString &name)
 		
 		wxFont font(size, wxFONTFAMILY_TELETYPE, wxNORMAL, bold ? wxBOLD : wxNORMAL, false, face);
 
+		if(st.GetId() == 0){ //default
+			rCtrl.StyleSetFont(wxSCI_STYLE_DEFAULT, font);
+			rCtrl.StyleSetSize(wxSCI_STYLE_DEFAULT, (*iter).GetFontSize());
+			rCtrl.StyleSetForeground(wxSCI_STYLE_DEFAULT, (*iter).GetFgColour());
+		}
+
 		rCtrl.StyleSetFont(st.GetId(), font);
 		rCtrl.StyleSetSize(st.GetId(), (*iter).GetFontSize());
 		rCtrl.StyleSetForeground(st.GetId(), (*iter).GetFgColour());

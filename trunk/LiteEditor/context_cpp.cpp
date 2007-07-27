@@ -69,12 +69,18 @@ ContextCpp::ContextCpp(LEditor *container)
 		bool bold = st.IsBold();
 		
 		wxFont font(size, wxFONTFAMILY_TELETYPE, wxNORMAL, bold ? wxBOLD : wxNORMAL);
-		//font.SetFaceName(face);
+		if(st.GetId() == 0){ //default
+			rCtrl.StyleSetFont(wxSCI_STYLE_DEFAULT, font);
+			rCtrl.StyleSetSize(wxSCI_STYLE_DEFAULT, (*iter).GetFontSize());
+			rCtrl.StyleSetForeground(wxSCI_STYLE_DEFAULT, (*iter).GetFgColour());
+		}
+
 		rCtrl.StyleSetFont(st.GetId(), font);
 		rCtrl.StyleSetSize(st.GetId(), (*iter).GetFontSize());
 		rCtrl.StyleSetForeground(st.GetId(), (*iter).GetFgColour());
 	}
 
+	
 	//create all images used by the cpp context
 	wxImage img;
 	if(m_classBmp.IsOk() == false)

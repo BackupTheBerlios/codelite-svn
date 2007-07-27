@@ -288,7 +288,9 @@ void Manager::OpenWorkspace(const wxString &path)
 	
 	// update status bar
 	wxString dbfile = WorkspaceST::Get()->GetStringProperty(wxT("Database"), errMsg);
-	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("Workspace DB: '%s'"), dbfile.GetData()), 1);
+
+	wxFileName fn(dbfile);
+	SetStatusMessage(wxString::Format(wxT("Workspace DB: '%s'"), fn.GetFullName().GetData()), 1);
 	
 	// load ctags options
 	wxBusyCursor cursor;
@@ -1028,7 +1030,7 @@ void Manager::SetExternalDatabase(const wxFileName &dbname)
 {
 	// build the external database
 	TagsManagerST::Get()->OpenExternalDatabase(dbname);
-	Frame::Get()->GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), dbname.GetFullPath().GetData()), 2);
+	SetStatusMessage(wxString::Format(wxT("External DB: '%s'"), dbname.GetFullName().GetData()), 2);
 	EditorConfigST::Get()->SetTagsDatabase(dbname.GetFullPath());
 }
 
@@ -1253,9 +1255,13 @@ void Manager::AddToRecentlyOpenedFiles(const wxString &fileName)
 	if(files.Index(fileName) == wxNOT_FOUND){
 		//the file does not exist, add it and save the list
 		files.Add(fileName);
-		cfg->SetRecentlyOpenedFies(files);
 		m_recentFiles.AddFileToHistory(fileName);
-	} // if(files.Index(fileName) == wxNOT_FOUND)
+	}
+
+	files.Empty();
+	//sync between the history object and the configuration file
+	m_recentFiles.GetFiles(files);
+	cfg->SetRecentlyOpenedFies(files);
 }
 
 void Manager::AddToRecentlyOpenedWorkspaces(const wxString &fileName)
@@ -1268,9 +1274,12 @@ void Manager::AddToRecentlyOpenedWorkspaces(const wxString &fileName)
 	if(files.Index(fileName) == wxNOT_FOUND){
 		//the file does not exist, add it and save the list
 		files.Add(fileName);
-		cfg->SetRecentlyOpenedWorkspaces(files);
 		m_recentWorkspaces.AddFileToHistory(fileName);
-	} // if(files.Index(fileName) == wxNOT_FOUND)
+	}
+	files.Empty();
+	//sync between the history object and the configuration file
+	m_recentWorkspaces.GetFiles(files);
+	cfg->SetRecentlyOpenedWorkspaces(files);
 }
 
 void Manager::GetRecentlyOpenedFiles(wxArrayString &files)
@@ -1290,6 +1299,10 @@ void Manager::CloseExternalDatabase()
 	TagsManager *mgr = TagsManagerST::Get();
 	mgr->CloseExternalDatabase();
 	//remove the entry from the status bar
-	Frame::Get()->GetStatusBar()->SetStatusText(wxEmptyString, 2);
+	SetStatusMessage(wxEmptyString, 2);
+}
 
+void Manager::SetStatusMessage(const wxString &msg, int col)
+{
+	Frame::Get()->GetStatusBar()->SetStatusText(msg, col);
 }
