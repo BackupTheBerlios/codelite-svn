@@ -177,7 +177,7 @@
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
-      <General OutputFile="../Runtime/LiteEditorU" IntermediateDirectory="./ReleaseUnicode" Command="gdb LiteEditorU" CommandArguments="" WorkingDirectory="../Runtime"/>
+      <General OutputFile="../Runtime/LiteEditorU" IntermediateDirectory="/home/eran" Command="LiteEditorU" CommandArguments="" WorkingDirectory="../Runtime"/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --unicode=yes);">
         <IncludePath Value="."/>
         <IncludePath Value="../CodeLite"/>
