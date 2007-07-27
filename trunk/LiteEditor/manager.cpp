@@ -554,7 +554,7 @@ void Manager::AddFilesToProject(const wxArrayString &files, const wxString &vdFu
 	size_t i=0;
 	
 	//try to find this file in the workspace
-	for(size_t i=0; i<files.GetCount(); i++)
+	for(i=0; i<files.GetCount(); i++)
 	{
 		wxString projName = this->GetProjectNameByFile(files.Item(i));
 		if(projName.IsEmpty()){
@@ -562,7 +562,7 @@ void Manager::AddFilesToProject(const wxArrayString &files, const wxString &vdFu
 		}
 	}
 	
-	for(size_t i=0; i<actualAdded.GetCount(); i++)
+	for(i=0; i<actualAdded.GetCount(); i++)
 	{
 		Workspace *wsp = WorkspaceST::Get();
 		wsp->AddNewFile(vdFullPath, actualAdded.Item(i), errMsg);
@@ -570,7 +570,7 @@ void Manager::AddFilesToProject(const wxArrayString &files, const wxString &vdFu
 	
 	//convert wxArrayString to vector for the ctags api
 	std::vector<wxFileName> vFiles;
-	for(i=0; i<actualAdded.GetCount(); i++){
+	for(size_t i=0; i<actualAdded.GetCount(); i++){
 		vFiles.push_back(actualAdded.Item(i));
 	}
 
