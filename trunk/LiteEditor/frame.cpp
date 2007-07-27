@@ -1,5 +1,5 @@
 #include "precompiled_header.h"
-
+  
 #include "frame.h"
 #include <wx/xrc/xmlres.h>
 #include "symbol_tree.h"
@@ -83,7 +83,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("switch_to_workspace"), Frame::OnSwitchWorkspace)
 	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
 	EVT_UPDATE_UI(wxID_CLOSE_ALL, Frame::OnFileExistUpdateUI)
-	EVT_UPDATE_UI(wxID_REFRESH, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(XRCID("save_all"), Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CUT, Frame::DispatchUpdateUIEvent)
 	EVT_UPDATE_UI(wxID_COPY, Frame::DispatchUpdateUIEvent)
@@ -147,8 +146,6 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_MENU(XRCID("open_ext_database"), Frame::OnUseExternalDatabase)
 	EVT_MENU(XRCID("close_ext_database"), Frame::OnCloseExternalDatabase)
 	EVT_MENU(XRCID("find_resource"), Frame::OnFindResource)
-	EVT_UPDATE_UI(XRCID("find_resource"), Frame::OnWorkspaceOpen)
-	EVT_UPDATE_UI(XRCID("find_type"), Frame::OnWorkspaceOpen)
 	EVT_MENU(XRCID("find_type"), Frame::OnFindType)
 
 	EVT_MENU(XRCID("add_project"), Frame::OnProjectAddProject)
@@ -164,6 +161,9 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_CLOSE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(XRCID("build_active_project"), Frame::OnBuildProjectUI)
+	EVT_UPDATE_UI(wxID_REFRESH, Frame::OnFileExistUpdateUI)
+	EVT_UPDATE_UI(XRCID("find_type"), Frame::OnWorkspaceOpen)
+	EVT_UPDATE_UI(XRCID("find_resource"), Frame::OnWorkspaceOpen)
 #endif 	
 
 END_EVENT_TABLE()
@@ -557,6 +557,9 @@ void Frame::OnSaveAs(wxCommandEvent& WXUNUSED(event))
 void Frame::OnFileReload(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
+	if(!m_notebook->GetCurrentPage())
+		return;
+		
 	LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetCurrentPage());
 	if( !editor )
 		return;
@@ -1228,6 +1231,9 @@ void Frame::OnFileCloseAll(wxCommandEvent &event)
 void Frame::OnFindType(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
+	if(ManagerST::Get()->IsWorkspaceOpen() == false)
+		return;
+		
 	OpenTypeDlg *dlg = new OpenTypeDlg(this);
 	if(dlg->ShowModal() == wxID_OK)
 	{
@@ -1243,6 +1249,9 @@ void Frame::OnFindType(wxCommandEvent &event)
 void Frame::OnFindResource(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
+	if(ManagerST::Get()->IsWorkspaceOpen() == false)
+		return;
+
 	OpenResourceDlg *dlg = new OpenResourceDlg(this);
 	if(dlg->ShowModal() == wxID_OK)
 	{

@@ -118,9 +118,5 @@
       <PostBuild/>
     </Configuration>
   </Settings>
-  <VirtualDirectory Name="Commons">
-    <File Name="archive.cpp"/>
-    <File Name="archive.h"/>
-    <File Name="serialized_object.h"/>
-  </VirtualDirectory>
+  <VirtualDirectory Name="Commons"/>
 </CodeLite_Project>

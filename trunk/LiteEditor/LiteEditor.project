@@ -15,7 +15,6 @@
     <File Name="context_manager.cpp"/>
     <File Name="context_text.cpp"/>
     <File Name="cpp_symbol_tree.cpp"/>
-    <File Name="ctags_dialog.cpp"/>
     <File Name="depend_dlg_page.cpp"/>
     <File Name="depends_dlg.cpp"/>
     <File Name="dirpicker.cpp"/>
@@ -66,7 +65,6 @@
     <File Name="context_manager.h"/>
     <File Name="context_text.h"/>
     <File Name="cpp_symbol_tree.h"/>
-    <File Name="ctags_dialog.h"/>
     <File Name="depend_dlg_page.h"/>
     <File Name="depends_dlg.h"/>
     <File Name="dirpicker.h"/>
@@ -114,6 +112,8 @@
   <VirtualDirectory Name="Dialogs">
     <File Name="open_type_dlg.cpp"/>
     <File Name="open_type_dlg.h"/>
+    <File Name="tags_options_dlg.cpp"/>
+    <File Name="tags_options_dlg.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">

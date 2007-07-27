@@ -1229,7 +1229,7 @@ wxString TagsManager::DoCreateDoxygenComment(TagEntryPtr tag)
 
 bool TagsManager::GetParseComments()
 {
-	wxCriticalSectionLocker lock(m_cs);
+	//wxCriticalSectionLocker lock(m_cs);
 	return m_parseComments;
 }
 

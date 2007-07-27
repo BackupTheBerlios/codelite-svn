@@ -11,7 +11,7 @@
 #include <wx/wx.h>
 
 #include <wx/panel.h>
-#include <wx/notebook.h>
+#include <wx/notebook.h> 
 #include <wx/statline.h>
 #include <wx/button.h>
 #include "serialized_object.h"

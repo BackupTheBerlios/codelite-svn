@@ -86,6 +86,7 @@ OpenTypeDlg::OpenTypeDlg( wxWindow* parent, int id, wxString title, wxPoint pos,
 	this->SetSizer( mainSizer );
 	this->Layout();
 }
+
 OpenTypeDlg::~OpenTypeDlg()
 {
 	delete m_timer;
