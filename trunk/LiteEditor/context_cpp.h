@@ -76,7 +76,8 @@ public:
 	virtual void OnInsertDoxyComment(wxCommandEvent &event);
 	virtual void OnCommentSelection(wxCommandEvent &event);
 	virtual void OnCommentLine(wxCommandEvent &event);
-	
+	virtual void OnGenerateSettersGetters(wxCommandEvent &event);
+
 private:
 	wxString GetWordUnderCaret();
 	wxString GetImageString(const TagEntry &entry);

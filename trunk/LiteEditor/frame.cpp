@@ -154,7 +154,7 @@ BEGIN_EVENT_TABLE(Frame, wxFrame)
 	EVT_TIMER(wxID_ANY, Frame::OnTimer)
 	EVT_MENU_RANGE(RecentFilesSubMenuID, RecentFilesSubMenuID + 10, Frame::OnRecentFile)
 	EVT_MENU_RANGE(RecentWorkspaceSubMenuID, RecentWorkspaceSubMenuID + 10, Frame::OnRecentWorkspace)
-
+	
 #ifdef __WXMSW__
 	EVT_UPDATE_UI(wxID_SAVE, Frame::OnFileExistUpdateUI)
 	EVT_UPDATE_UI(wxID_SAVEAS, Frame::OnFileExistUpdateUI)

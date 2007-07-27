@@ -335,6 +335,10 @@
             <label>Insert Do&amp;xygen Comment</label>
         </object>
         <object class="wxMenuItem" name="wxID_SEPARATOR"/>
+        <object class="wxMenuItem" name="setters_getters">
+            <label>&amp;Generate Setters/Getters</label>
+        </object>
+        <object class="wxMenuItem" name="wxID_SEPARATOR"/>
         <object class="wxMenuItem" name="comment_selection">
             <label>Comment &amp;Selection</label>
         </object>

@@ -129,6 +129,7 @@ ContextCpp::ContextCpp(LEditor *container)
 	m_rclickMenu->Connect(XRCID("insert_doxy_comment"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(ContextCpp::OnInsertDoxyComment), NULL, this);
 	m_rclickMenu->Connect(XRCID("comment_selection"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(ContextCpp::OnCommentSelection), NULL, this);
 	m_rclickMenu->Connect(XRCID("comment_line"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(ContextCpp::OnCommentLine), NULL, this);
+	m_rclickMenu->Connect(XRCID("setters_getters"), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(ContextCpp::OnGenerateSettersGetters), NULL, this);
 }
 
 ContextCpp::ContextCpp()
@@ -590,11 +591,11 @@ void ContextCpp::DisplayCompletionBox(const std::vector<TagEntryPtr> &tags, cons
 	size_t i=0;
 	if( tags.empty() == false )
 	{
-		for(; i<tags.size()-1; i++)
+		for(; i<tags.size()-1; i++){
 			list.Append(tags[i]->GetName() + GetImageString(*tags[i]) + wxT("@"));
+		}
 		list.Append(tags[i]->GetName() + GetImageString(*tags[i]));
 		rCtrl.AutoCompSetAutoHide(false);
-		rCtrl.AutoCompSetIgnoreCase(true);
 		rCtrl.AutoCompShow(static_cast<int>(word.Length()), list);
 		rCtrl.AutoCompSetFillUps(wxT("("));
 	}
@@ -817,4 +818,13 @@ void ContextCpp::OnCommentLine(wxCommandEvent &event)
 	editor.BeginUndoAction();
 	editor.InsertText(start, wxT("//"));
 	editor.EndUndoAction();
+}
+
+void ContextCpp::OnGenerateSettersGetters(wxCommandEvent &event)
+{
+	wxUnusedVar(event);
+	LEditor &editor = GetCtrl();
+
+	VALIDATE_PROJECT(editor);
+
 }

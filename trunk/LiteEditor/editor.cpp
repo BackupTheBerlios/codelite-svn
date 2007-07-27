@@ -247,9 +247,7 @@ void LEditor::SetProperties()
 	//---------------------------------------------------
 
 	AutoCompSetSeparator(static_cast<int>('@'));	// set the separator to be non valid language wxChar
-	AutoCompSetChooseSingle(true);					// If only one match, insert it automatically
-	//AutoCompSetIgnoreCase(true);
-	//AutoCompSetCancelAtStart(false);
+	AutoCompSetChooseSingle(false);					// If only one match, insert it automatically
 	AutoCompSetDropRestOfWord(true);
 
 	SetTabWidth(4);
@@ -367,7 +365,7 @@ void LEditor::OnSciUpdateUI(wxScintillaEvent &event)
 	}
 	//update line number
 	wxString message;
-	message << wxT("Ln ") << LineFromPosition(pos)+1 << wxT("    Col ") << GetColumn(pos);
+	message << wxT("Ln ") << LineFromPosition(pos)+1 << wxT("    Col ") << GetColumn(pos) << wxT("    Pos ") << pos;
 	ManagerST::Get()->SetStatusMessage(message, 3);
 	event.Skip();
 }
