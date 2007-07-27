@@ -117,12 +117,6 @@ wxWindow *NewDlg::CreateWorkspacePage()
 
 	m_pathPicker = new DirPicker(panel);
 	panelSizer->Add(m_pathPicker, 0, wxEXPAND | wxALL, 5);
-	
-	wxStaticBoxSizer *vSz = new wxStaticBoxSizer( new wxStaticBox( panel, -1, wxT("CTags:") ), wxHORIZONTAL );
-	panelSizer->Add(vSz, 0, wxEXPAND | wxALL, 5);
-
-	itemStaticText = new wxStaticText( panel, wxID_STATIC, wxT("Set the workspace CTags options"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
-	vSz->Add(itemStaticText, 1, wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL, 5 );
 	return panel;
 }
 

@@ -266,6 +266,9 @@ void ProjectSettingsDlg::DisableCompilerPage(bool disable)
 	m_textAdditionalSearchPath->Enable(!disable);
 	m_buttonAddSearchPath->Enable(!disable);
 	m_textCompilerOptions->Enable(!disable);
+	m_textPreprocessor->Enable(!disable);
+	m_buttonAddPreprocessor->Enable(!disable);
+	m_buttonCompilerOptions->Enable(!disable);
 }
 
 void ProjectSettingsDlg::DisableLinkerPage(bool disable)
@@ -275,6 +278,7 @@ void ProjectSettingsDlg::DisableLinkerPage(bool disable)
 	m_textLinkerOptions->Enable(!disable);
 	m_buttonLibraries->Enable(!disable);
 	m_buttonLibraryPath->Enable(!disable);
+	m_buttonLinkerOptions->Enable(!disable);
 }
 
 void ProjectSettingsDlg::OnCheckCompilerNeeded(wxCommandEvent &event)

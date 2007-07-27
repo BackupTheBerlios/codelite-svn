@@ -100,7 +100,7 @@ class ProjectSettingsBaseDlg : public wxDialog
 		wxButton* m_buttonApply;
 	
 	public:
-		ProjectSettingsBaseDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Project Settings"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 576,415 ), int style = wxDEFAULT_DIALOG_STYLE );
+		ProjectSettingsBaseDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Project Settings"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 782,502 ), int style = wxDEFAULT_DIALOG_STYLE );
 	
 };
 

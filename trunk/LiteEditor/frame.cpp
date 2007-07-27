@@ -273,10 +273,7 @@ void Frame::CreateGUIControls(void)
 	EditorConfigST::Get()->ReadObject(wxT("FindInFilesData"), &m_data);
 	EditorConfigST::Get()->ReadObject(wxT("FindAndReplaceData"), &LEditor::GetFindReplaceData());
 	EditorConfigST::Get()->ReadObject(wxT("m_tagsOptionsData"), &m_tagsOptionsData);
-
-	//update ctags options
-	TagsManagerST::Get()->SetCtagsOptions(m_tagsOptionsData);
-
+	
 	//start ctags process
 	TagsManagerST::Get()->StartCtagsProcess(TagsGlobal);
 
@@ -299,6 +296,19 @@ void Frame::CreateGUIControls(void)
 	SetStatusBar(statusBar);
 	
 	GetStatusBar()->SetStatusText(wxT("Ready"));
+	
+	
+	//update ctags options
+	TagsManagerST::Get()->SetCtagsOptions(m_tagsOptionsData);
+	if(m_tagsOptionsData.GetFlags() & CC_LOAD_EXT_DB){
+		//load the recently opened external database
+		wxString tagDb = EditorConfigST::Get()->GetTagsDatabase();
+		if(tagDb.IsEmpty() == false){
+			TagsManagerST::Get()->OpenExternalDatabase(tagDb);
+			wxFileName dbname(tagDb);
+			GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), dbname.GetFullName().GetData()), 2);
+		}
+	}
 
 	//load windows perspective
 	wxString pers = EditorConfigST::Get()->LoadPerspective(wxT("Default"));

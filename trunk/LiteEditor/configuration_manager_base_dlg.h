@@ -27,6 +27,7 @@ class ConfigManagerBaseDlg : public wxDialog
 	protected:
 		wxStaticText* m_staticText2;
 		wxChoice* m_choiceConfigurations;
+		wxButton* m_buttonNewConfiguration;
 		wxStaticLine* m_staticline6;
 		wxStaticText* m_staticText20;
 		wxScrolledWindow* m_scrolledWindow;
@@ -36,7 +37,7 @@ class ConfigManagerBaseDlg : public wxDialog
 		wxButton* m_buttonApply;
 	
 	public:
-		ConfigManagerBaseDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Configuration Manager"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 499,276 ), int style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		ConfigManagerBaseDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Configuration Manager"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 726,425 ), int style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 	
 };
 

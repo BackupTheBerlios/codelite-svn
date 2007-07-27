@@ -38,6 +38,9 @@ ConfigManagerBaseDlg::ConfigManagerBaseDlg( wxWindow* parent, int id, wxString t
 	m_choiceConfigurations = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceConfigurationsChoices, 0 );
 	bSizer6->Add( m_choiceConfigurations, 1, wxALL|wxEXPAND, 5 );
 	
+	m_buttonNewConfiguration = new wxButton( this, wxID_ANY, wxT("New..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer6->Add( m_buttonNewConfiguration, 0, wxALL, 5 );
+	
 	bSizer1->Add( bSizer6, 0, wxEXPAND, 5 );
 	
 	m_staticline6 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );

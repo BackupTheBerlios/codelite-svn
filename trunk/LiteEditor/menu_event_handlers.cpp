@@ -124,6 +124,7 @@ void FindReplaceHandler::ProcessUpdateUIEvent(wxWindow *owner, wxUpdateUIEvent &
 
 void GotoHandler::ProcessCommandEvent(wxWindow *owner, wxCommandEvent &event)
 {
+	wxUnusedVar(event);
 	LEditor *editor = dynamic_cast<LEditor*>(owner);
 	if( !editor ){
 		return;
