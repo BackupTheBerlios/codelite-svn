@@ -26,7 +26,7 @@
 
 			<object class="wxMenuItem" name="wxID_SEPARATOR"/>
             
-            <object class="wxMenuItem" name="save">
+            <object class="wxMenuItem" name="wxID_SAVE">
                 <label>&amp;Save File\tCtrl+S</label>
                 <help>Save the existing file</help>
             </object>
