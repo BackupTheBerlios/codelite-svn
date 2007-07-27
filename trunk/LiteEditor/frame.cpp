@@ -25,7 +25,6 @@
 #include "macros.h"
 #include "editor_creator.h"
 #include "async_executable_cmd.h"
-#include "close_all_dlg.h"
 #include "open_resouce_dlg.h"
 #include "open_type_dlg.h"
 #include "workspace_pane.h"
@@ -514,6 +513,8 @@ void Frame::OnClose(wxCloseEvent& event)
 	if(LEditor::GetFindReplaceDialog()){
 		EditorConfigST::Get()->WriteObject(wxT("FindAndReplaceData"), &(LEditor::GetFindReplaceDialog()->GetData()));
 	}
+	//make sure there are no 'unsaved documents'
+	ManagerST::Get()->CloseAll();
 	event.Skip();
 }
 
@@ -1160,72 +1161,7 @@ void Frame::OnTimer(wxTimerEvent &event)
 void Frame::OnFileCloseAll(wxCommandEvent &event)
 {
 	wxUnusedVar(event);
-	bool modifyDetected = false;
-
-	//check if any of the files is modified
-	for(int i=0; i<m_notebook->GetPageCount(); i++)
-	{
-		LEditor *editor = dynamic_cast<LEditor*>(m_notebook->GetPage((size_t)i));
-		if(editor)
-		{
-			if(editor->GetModify())
-			{
-				modifyDetected = true;
-				break;
-			}
-		}
-	}
-
-	int retCode(CLOSEALL_DISCARDALL);
-	CloseAllDialog *dlg(NULL);
-
-	if(modifyDetected)
-	{
-		dlg = new CloseAllDialog(this);
-		retCode = dlg->ShowModal();
-	}
-
-	switch(retCode)
-	{
-		case CLOSEALL_SAVEALL:
-			{
-				ManagerST::Get()->SaveAll();
-				//and now close them all
-				m_notebook->DeleteAllPages();
-				m_notebook->Refresh();
-			}
-			break;
-		case CLOSEALL_DISCARDALL:
-			{
-				m_notebook->DeleteAllPages();
-				m_notebook->Refresh();
-			}
-			break;
-		case CLOSEALL_ASKFOREACHFILE:
-			{
-				int count = m_notebook->GetPageCount();
-				for(int i=0; i<count; i++)
-				{
-					LEditor* editor = dynamic_cast<LEditor*>(m_notebook->GetPage((size_t)i));
-					if( !editor )
-						continue;
-
-					bool veto;
-					ClosePage(editor, false, m_notebook->GetSelection(), true, veto);
-				}
-				//once all files have been prompted if needed, remove them all
-				m_notebook->DeleteAllPages();
-				m_notebook->Refresh();
-			}
-			break;
-		default:
-			break;
-	}
-	
-	if(dlg)
-	{
-		dlg->Destroy();	
-	}
+	ManagerST::Get()->CloseAll();
 }
 
 void Frame::OnFindType(wxCommandEvent &event)

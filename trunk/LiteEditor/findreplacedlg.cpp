@@ -144,8 +144,8 @@ void FindReplaceDialog::SetFindReplaceData(FindReplaceData &data)
 	m_searchUp->SetValue(data.GetFlags() & wxFRD_SEARCHUP ? true : false);
 
 	//set the focus to the find string text control
-	m_findString->SetSelection(-1, -1); // select all
 	m_findString->SetFocus();
+	m_findString->SetSelection(-1, -1); // select all
 }
 
 void FindReplaceDialog::OnClick(wxCommandEvent &event)

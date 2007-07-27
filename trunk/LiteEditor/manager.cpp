@@ -34,6 +34,7 @@
 #include "MakefileParser.h"
 #include "TargetLexer.h"
 #include "workspace_pane.h"
+#include "close_all_dlg.h"
 
 #define CHECK_MSGBOX(res)									\
 if( !res )													\
@@ -1305,4 +1306,75 @@ void Manager::CloseExternalDatabase()
 void Manager::SetStatusMessage(const wxString &msg, int col)
 {
 	Frame::Get()->GetStatusBar()->SetStatusText(msg, col);
+}
+
+void Manager::CloseAll()
+{
+	bool modifyDetected = false;
+	wxFlatNotebook *book = Frame::Get()->GetNotebook();
+
+	//check if any of the files is modified
+	for(int i=0; i<book->GetPageCount(); i++)
+	{
+		LEditor *editor = dynamic_cast<LEditor*>(book->GetPage((size_t)i));
+		if(editor)
+		{
+			if(editor->GetModify())
+			{
+				modifyDetected = true;
+				break;
+			}
+		}
+	}
+
+	int retCode(CLOSEALL_DISCARDALL);
+	CloseAllDialog *dlg(NULL);
+
+	if(modifyDetected)
+	{
+		dlg = new CloseAllDialog(Frame::Get());
+		retCode = dlg->ShowModal();
+	}
+
+	switch(retCode)
+	{
+		case CLOSEALL_SAVEALL:
+			{
+				ManagerST::Get()->SaveAll();
+				//and now close them all
+				book->DeleteAllPages();
+				book->Refresh();
+			}
+			break;
+		case CLOSEALL_DISCARDALL:
+			{
+				book->DeleteAllPages();
+				book->Refresh();
+			}
+			break;
+		case CLOSEALL_ASKFOREACHFILE:
+			{
+				int count = book->GetPageCount();
+				for(int i=0; i<count; i++)
+				{
+					LEditor* editor = dynamic_cast<LEditor*>(book->GetPage((size_t)i));
+					if( !editor )
+						continue;
+
+					bool veto;
+					Frame::Get()->ClosePage(editor, false, book->GetSelection(), true, veto);
+				}
+				//once all files have been prompted if needed, remove them all
+				book->DeleteAllPages();
+				book->Refresh();
+			}
+			break;
+		default:
+			break;
+	}
+	
+	if(dlg)
+	{
+		dlg->Destroy();	
+	}
 }

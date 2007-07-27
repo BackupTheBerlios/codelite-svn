@@ -86,6 +86,16 @@ public:
 	 * return the find in files dialog pointer
 	 */
 	FindInFilesDialog *GetFindInFilesDlg(){return m_findInFilesDlg;}
+	
+	/**
+	 * close editor's page
+	 * \param editor the notebook parent of the page
+	 * \param notify send notebook page closure event
+	 * \param index page index in the notebook
+	 * \param doDelete delete the page from the notebook as well
+	 * \param veto [output] set to true to veto the page closer
+	 */
+	void ClosePage(LEditor *editor, bool notify, int index, bool doDelete, bool &veto);
 
 private:
 	// make our frame's constructor private
@@ -103,7 +113,6 @@ private:
 	 * \return user's string or wxEmptyString if 'Cancel' pressed.
 	 */
 	wxString GetStringFromUser(const wxString& msg);
-	void ClosePage(LEditor *editor, bool notify, int index, bool doDelete, bool &veto);
 	void DispatchCommandEvent(wxCommandEvent &event);
 	void DispatchUpdateUIEvent(wxUpdateUIEvent &event);
 	void CreateToolbars();

@@ -494,6 +494,11 @@ public:
 	 */
 	void SetStatusMessage(const wxString &msg, int col);
 
+	/**
+	 * close all opened documents
+	 */
+	void CloseAll();
+
 protected:
 	Manager(void);
 	virtual ~Manager(void);
