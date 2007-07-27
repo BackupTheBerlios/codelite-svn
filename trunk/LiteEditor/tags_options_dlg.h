@@ -11,7 +11,7 @@
 #include <wx/wx.h>
 
 #include <wx/panel.h>
-#include <wx/notebook.h> 
+#include <wx/wxFlatNotebook/wxFlatNotebook.h> 
 #include <wx/statline.h>
 #include <wx/button.h>
 #include "serialized_object.h"
@@ -29,7 +29,7 @@ class TagsOptionsDlg : public wxDialog
 private:
 
 protected:
-	wxNotebook* m_mainBook;
+	wxFlatNotebook* m_mainBook;
 	wxPanel* m_generalPage;
 	wxCheckBox* m_checkParseComments;
 	wxCheckBox* m_checkDisplayComments;

@@ -79,7 +79,6 @@ ContextCpp::ContextCpp(LEditor *container)
 		rCtrl.StyleSetSize(st.GetId(), (*iter).GetFontSize());
 		rCtrl.StyleSetForeground(st.GetId(), (*iter).GetFgColour());
 	}
-
 	
 	//create all images used by the cpp context
 	wxImage img;
@@ -408,6 +407,10 @@ void ContextCpp::CodeComplete()
 		break;
 	case '(':
 		showFuncProto = true;
+		//is this setting is on?
+		if(!(TagsManagerST::Get()->GetCtagsOptions().GetFlags() & CC_DISP_FUNC_CALLTIP)){
+			return;
+		}
 		rCtrl.PreviousChar(pos1, end);
 		break;
 	default:

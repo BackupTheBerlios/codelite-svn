@@ -553,7 +553,8 @@ void LEditor::GotoPreviousDefintion()
 
 void LEditor::OnDwellStart(wxScintillaEvent & event)
 {
-	m_context->OnDwellStart(event);
+	if(TagsManagerST::Get()->GetCtagsOptions().GetFlags() & CC_DISP_TYPE_INFO)
+		m_context->OnDwellStart(event);
 }
 
 void LEditor::OnDwellEnd(wxScintillaEvent & event)
