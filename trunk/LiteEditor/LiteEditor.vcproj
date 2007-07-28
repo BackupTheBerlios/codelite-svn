@@ -491,6 +491,12 @@
 				RelativePath=".\project_settings_dlg.h">
 			</File>
 			<File
+				RelativePath=".\setters_getters_base_dlg.cpp">
+			</File>
+			<File
+				RelativePath=".\setters_getters_base_dlg.h">
+			</File>
+			<File
 				RelativePath=".\setters_getters_dlg.cpp">
 			</File>
 			<File
