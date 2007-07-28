@@ -147,7 +147,8 @@ void TagsOptionsDlg::InitValues()
 	m_checkLoadLastDB->SetValue(m_data.GetFlags() & CC_LOAD_EXT_DB ? true : false);
 	m_checkDisplayTypeInfo->SetValue(m_data.GetFlags() & CC_DISP_TYPE_INFO ? true : false);
 	m_checkDisplayComments->SetValue(m_data.GetFlags() & CC_DISP_COMMENTS ? true : false);
-
+	m_checkLoadToMemory->SetValue(m_data.GetFlags() & CC_LOAD_EXT_DB_TO_MEMORY ? true : false);
+	
 	//initialize the ctags page
 	m_filePicker->SetPath(m_data.GetPreprocessorFilename().GetFullPath());
 	m_textFileSpec->SetValue(m_data.GetFileSpec());
@@ -173,10 +174,13 @@ void TagsOptionsDlg::CopyData()
 	SetFlag(CC_DISP_TYPE_INFO, m_checkDisplayTypeInfo->IsChecked());
 	SetFlag(CC_LOAD_EXT_DB, m_checkLoadLastDB->IsChecked());
 	SetFlag(CC_PARSE_COMMENTS, m_checkParseComments->IsChecked());
+	SetFlag(CC_LOAD_EXT_DB_TO_MEMORY, m_checkLoadToMemory->IsChecked());
+	
 	m_data.SetFileSpec(m_textFileSpec->GetValue());
 	m_data.SetPreprocessorFilename(m_filePicker->GetPath());
 	m_data.SetLanguages(m_comboBoxLang->GetStrings());
 	m_data.SetLanguageSelection(m_comboBoxLang->GetStringSelection());
+	
 }
 
 void TagsOptionsDlg::SetFlag(CodeCompletionOpts flag, bool set)

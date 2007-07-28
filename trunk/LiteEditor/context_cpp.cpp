@@ -495,6 +495,7 @@ wxString ContextCpp::GetExpression(long pos)
 		case wxT('('):
 		case wxT('<'):
 		case wxT('['):
+		case wxT(','):
 			{
 				if(depth == 0)
 				{

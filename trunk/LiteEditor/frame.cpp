@@ -1166,10 +1166,20 @@ void Frame::OnTimer(wxTimerEvent &event)
 			{
 				wxString message;
 				wxFileName dbname(tagDb);
-				message << wxT("Attaching symbols database '") << dbname.GetFullName() << wxT("'...");
-				wxBusyInfo wait(message, this);
-				wxWindowDisabler disableAll;
-				TagsManagerST::Get()->OpenExternalDatabase(tagDb);
+
+				//if the database will be loaded to memory, display a busy dialog
+				if(m_tagsOptionsData.GetFlags() && CC_LOAD_EXT_DB_TO_MEMORY)
+				{
+					message << wxT("Attaching symbols database '") << dbname.GetFullName() << wxT("' to memory ...");
+					wxBusyInfo wait(message, this);
+					wxWindowDisabler disableAll;
+					wxBusyCursor cursor;
+					TagsManagerST::Get()->OpenExternalDatabase(tagDb);
+				}
+				else
+				{
+					TagsManagerST::Get()->OpenExternalDatabase(tagDb);
+				}
 				GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), dbname.GetFullName().GetData()), 2);
 			}
 		}
