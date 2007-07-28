@@ -181,19 +181,19 @@
       <PostBuild/>
     </Configuration>
     <Configuration Name="ReleaseUnicode" CompilerType="gnu g++">
-      <General OutputFile="../Runtime/LiteEditorU" IntermediateDirectory="/home/eran" Command="LiteEditorU" CommandArguments="" WorkingDirectory="../Runtime"/>
+      <General OutputFile="..\Runtime\LiteEditorU" IntermediateDirectory=".\ReleaseUnicode" Command="LiteEditorU" CommandArguments="" WorkingDirectory="..\Runtime"/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --unicode=yes);">
         <IncludePath Value="."/>
-        <IncludePath Value="../CodeLite"/>
-        <IncludePath Value="../sdk/wxsqlite3/include"/>
-        <IncludePath Value="../sdk/wxflatnotebook/include"/>
-        <IncludePath Value="../sdk/wxscintilla/include"/>
-        <IncludePath Value="../Plugin"/>
+        <IncludePath Value="..\CodeLite"/>
+        <IncludePath Value="..\sdk\wxsqlite3\include"/>
+        <IncludePath Value="..\sdk\wxflatnotebook\include"/>
+        <IncludePath Value="..\sdk\wxscintilla\include"/>
+        <IncludePath Value="..\Plugin"/>
         <Preprocessor Value="__WX__"/>
         <Preprocessor Value="WXUSINGDLL"/>
       </Compiler>
       <Linker Required="yes" Options="-O2;$(shell wx-config --libs --unicode=yes);">
-        <LibraryPath Value="../lib/gcc_lib"/>
+        <LibraryPath Value="..\lib\gcc_lib"/>
         <Library Value="libwxflatnotebooku.a"/>
         <Library Value="libCodeLiteu.a"/>
         <Library Value="libplugin_sdku.a"/>

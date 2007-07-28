@@ -16,11 +16,12 @@
 
 enum CodeCompletionOpts
 {
-	CC_PARSE_COMMENTS	= 1,
-	CC_DISP_COMMENTS	= 2,
-	CC_DISP_TYPE_INFO	= 4,
-	CC_DISP_FUNC_CALLTIP= 8,
-	CC_LOAD_EXT_DB		= 16
+	CC_PARSE_COMMENTS			= 1,
+	CC_DISP_COMMENTS			= 2,
+	CC_DISP_TYPE_INFO			= 4,
+	CC_DISP_FUNC_CALLTIP		= 8,
+	CC_LOAD_EXT_DB			= 16,
+	CC_LOAD_EXT_DB_TO_MEMORY	= 32
 };
 
 class WXDLLIMPEXP_CL TagsOptionsData : public SerializedObject

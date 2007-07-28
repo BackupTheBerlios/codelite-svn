@@ -10,7 +10,7 @@
 #include <wx/wfstream.h>
 #include <wx/txtstrm.h>
 #include "cpp_comment_creator.h"
-
+#include "tags_options_data.h"
 
 #define PRINT_START_MESSAGE(msg)\
 	{\
@@ -985,8 +985,11 @@ void TagsManager::OpenExternalDatabase(const wxFileName &dbName)
 		return;
 
 	// load it to memory
-	m_pExternalDb->LoadToMemory(dbName);
-	//m_pExternalDb->OpenDatabase(dbName);
+	if(GetCtagsOptions().GetFlags() & CC_LOAD_EXT_DB_TO_MEMORY){
+		m_pExternalDb->LoadToMemory(dbName);
+	}else{
+		m_pExternalDb->OpenDatabase(dbName);
+	}
 }
 
 wxString TagsManager::GetComment(const wxString &file, const int line)
