@@ -1153,13 +1153,13 @@ void Frame::OnWorkspaceConfigChanged(wxCommandEvent &event)
 
 void Frame::OnTimer(wxTimerEvent &event)
 {
+	static bool first(true);
 	//Attach external database symbol
-	if(m_tagsOptionsData.GetFlags() & CC_LOAD_EXT_DB)
+	if(first)
 	{
-		static bool first(false);
-		if(!first)
+		first = false;
+		if(m_tagsOptionsData.GetFlags() & CC_LOAD_EXT_DB)
 		{
-			first = true;
 			//load the recently opened external database
 			wxString tagDb = EditorConfigST::Get()->GetTagsDatabase();
 			if(tagDb.IsEmpty() == false)
