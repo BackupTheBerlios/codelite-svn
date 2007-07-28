@@ -562,7 +562,7 @@ void TagsManager::TagsByScope(const wxString& scope, std::vector<TagEntryPtr> &t
 		sql << wxT("select * from tags where scope='") << tmpScope << wxT("'");
 		DoExecuteQueury(sql, tags);
 		PRINT_END_MESSAGE(wxT("TagsByScope::Iterating ended"));
-	} // for(size_t i=0; i<derivationList.size(); i++)
+	}
 	// and finally sort the results
 
 	PRINT_START_MESSAGE(wxT("TagsByScope::Sorting"));
@@ -985,8 +985,8 @@ void TagsManager::OpenExternalDatabase(const wxFileName &dbName)
 		return;
 
 	// load it to memory
-	//m_pExternalDb->LoadToMemory(dbName);
-	m_pExternalDb->OpenDatabase(dbName);
+	m_pExternalDb->LoadToMemory(dbName);
+	//m_pExternalDb->OpenDatabase(dbName);
 }
 
 wxString TagsManager::GetComment(const wxString &file, const int line)
@@ -1242,3 +1242,42 @@ void TagsManager::SetCtagsOptions(const TagsOptionsData &options)
 	m_parseComments = m_options.GetFlags() & CC_PARSE_COMMENTS ? true : false;
 }
 
+void TagsManager::GenerateSettersGetters(const wxString &scope, const SettersGettersData &data, const std::vector<TagEntryPtr> &tags, wxString &impl, wxString *decl)
+{
+	wxUnusedVar(scope);
+	wxUnusedVar(data);
+	wxUnusedVar(tags);
+	wxUnusedVar(impl);
+	wxUnusedVar(decl);
+}
+
+void TagsManager::TagsByScope(const wxString &scopeName, const wxString &kind, std::vector<TagEntryPtr> &tags, bool includeInherits)
+{
+	wxString sql;
+	std::vector<wxString> derivationList;
+	//add this scope as well to the derivation list
+	derivationList.push_back(scopeName);
+
+	if(includeInherits){
+		GetDerivationList(scopeName, derivationList);
+	}
+
+	//make enough room for max of 500 elements in the vector
+	tags.reserve(500);
+
+	for(size_t i=0; i<derivationList.size(); i++)
+	{
+		sql.Empty();
+		wxString tmpScope(derivationList.at(i));
+		sql << wxT("select * from tags where scope='") << tmpScope << wxT("' and kind='") << kind << wxT("'");;
+		DoExecuteQueury(sql, tags);
+	}
+	// and finally sort the results
+	std::sort(tags.begin(), tags.end(), SAscendingSort());
+}
+
+wxString TagsManager::GetScopeName(const wxString &scope)
+{
+	Language *lang = LanguageST::Get();
+	return lang->GetScopeName(scope);
+}

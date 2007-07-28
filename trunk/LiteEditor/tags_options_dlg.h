@@ -35,6 +35,7 @@ protected:
 	wxCheckBox* m_checkDisplayComments;
 	wxCheckBox* m_checkDisplayTypeInfo;
 	wxCheckBox* m_checkDisplayFunctionTip;
+	wxCheckBox* m_checkLoadToMemory;
 	wxStaticText* m_staticTextHelp;
 	wxPanel* m_ctagsPage;
 	wxStaticText* m_staticText1;

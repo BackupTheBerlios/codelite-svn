@@ -237,6 +237,9 @@
 				RelativePath=".\readtags.cpp">
 			</File>
 			<File
+				RelativePath=".\setters_getters_data.cpp">
+			</File>
+			<File
 				RelativePath=".\symbol_tree.cpp">
 			</File>
 			<File
@@ -321,6 +324,9 @@
 			</File>
 			<File
 				RelativePath=".\serialized_object.h">
+			</File>
+			<File
+				RelativePath=".\setters_getters_data.h">
 			</File>
 			<File
 				RelativePath=".\singleton.h">

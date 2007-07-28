@@ -114,6 +114,10 @@
     <File Name="open_type_dlg.h"/>
     <File Name="tags_options_dlg.cpp"/>
     <File Name="tags_options_dlg.h"/>
+    <File Name="setters_getters_dlg.cpp"/>
+    <File Name="setters_getters_base_dlg.cpp"/>
+    <File Name="setters_getters_dlg.h"/>
+    <File Name="setters_getters_base_dlg.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">

@@ -62,7 +62,6 @@ class WXDLLIMPEXP_CL TagsDatabase
 {
 	wxSQLite3Database *m_db;
 	wxFileName m_fileName;
-	bool m_memDb;
 
 public:
 	/**

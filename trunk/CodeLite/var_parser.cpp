@@ -658,6 +658,7 @@ case 20:
 								curr_var.m_pattern = "/^";
 								curr_var.m_pattern += yyvsp[-4] + " " + yyvsp[-3] + " " + yyvsp[-2] + " " + yyvsp[-1] + "$/";
 								curr_var.m_isPtr = (yyvsp[-2].find("*") != (size_t)-1);
+								curr_var.m_starAmp = yyvsp[-2];
 								for(size_t i=0; i< gs_names.size(); i++)
 								{
 									/*create new variable for every variable name found*/

@@ -13,6 +13,7 @@
 #include "comment.h"
 #include "language.h"
 #include "tags_options_data.h"
+#include "setters_getters_data.h"
 
 #ifndef WXDLLIMPEXP_CL
 #ifdef WXMAKINGDLL_CODELITE
@@ -333,6 +334,35 @@ public:
 	 */
 	void OpenType(std::vector<TagEntryPtr> &tags);
 
+	/**
+	 * return string containing a code section to be inserted into the document. By providing 
+	 * decl which is not null, this function will split the generated code into two - decl & impl
+	 * \param scope the current text from begining of the document up to the cursor pos, this
+	 *        string will be parsed by CodeLite to determine the current scope
+	 * \param data user's settings for the generation of the getters/setters
+	 * \param tags list of members to create setters/getters for them. 
+	 * \param impl [output] the generated code - implementation, if 'decl' member is null,
+	          it will include the declaration as well
+     * \param decl [output] if not null, will contain the declaration part of the functions
+     */
+	void GenerateSettersGetters(const wxString &scope, const SettersGettersData &data, const std::vector<TagEntryPtr> &tags, wxString &impl, wxString *decl = NULL);
+
+	/**
+	 * return tags belongs to given scope and kind
+	 * \param scopeName the scope to search
+	 * \param kind tags's kind to return
+	 * \param tags [ouput] the result vector
+	 * \param inherits set to true if you want inherited members as well members 
+	 */
+	void TagsByScope(const wxString &scopeName, const wxString &kind, std::vector<TagEntryPtr> &tags, bool includeInherits = false);
+
+	/**
+	 * \brief get the scope name. CodeLite assumes that the caret is placed at the end of the 'scope'
+	 * \param scope the input string 
+	 * \return scope name or '<global>' if non found
+	 */
+	wxString GetScopeName(const wxString &scope);
+	
 protected:
 
 	/**

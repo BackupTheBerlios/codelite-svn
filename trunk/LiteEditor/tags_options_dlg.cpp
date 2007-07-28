@@ -26,36 +26,50 @@ TagsOptionsDlg::TagsOptionsDlg( wxWindow* parent, const TagsOptionsData& data, i
 : wxDialog( parent, id, title, pos, size, style )
 , m_data(data)
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
 	
-	long book_style = wxFNB_NO_NAV_BUTTONS | wxFNB_NO_X_BUTTON | wxFNB_FF2 | wxFNB_BACKGROUND_GRADIENT;
-	m_mainBook = new wxFlatNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, book_style);
+	long booKkStyle = wxFNB_FF2 | wxFNB_NO_NAV_BUTTONS | wxFNB_NO_X_BUTTON | wxFNB_BACKGROUND_GRADIENT;
+	m_mainBook = new wxFlatNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, booKkStyle);
 	m_generalPage = new wxPanel( m_mainBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
 	wxStaticBoxSizer* sbSizer2;
 	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( m_generalPage, -1, wxT("General:") ), wxVERTICAL );
+	
 	m_checkParseComments = new wxCheckBox( m_generalPage, wxID_ANY, wxT("Parse comments"), wxDefaultPosition, wxDefaultSize, 0 );
+	
 	sbSizer2->Add( m_checkParseComments, 0, wxALL, 5 );
 	
 	m_checkDisplayComments = new wxCheckBox( m_generalPage, wxID_ANY, wxT("Display comments in tooltip"), wxDefaultPosition, wxDefaultSize, 0 );
+	
 	sbSizer2->Add( m_checkDisplayComments, 0, wxALL, 5 );
 	
 	m_checkDisplayTypeInfo = new wxCheckBox( m_generalPage, wxID_ANY, wxT("Display type info tooltips"), wxDefaultPosition, wxDefaultSize, 0 );
+	
 	sbSizer2->Add( m_checkDisplayTypeInfo, 0, wxALL, 5 );
 	
-	m_checkDisplayFunctionTip = new wxCheckBox( m_generalPage, wxID_ANY, wxT("Display function calltip "), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkDisplayFunctionTip = new wxCheckBox( m_generalPage, wxID_ANY, wxT("Display function calltip"), wxDefaultPosition, wxDefaultSize, 0 );
+	
 	sbSizer2->Add( m_checkDisplayFunctionTip, 0, wxALL, 5 );
+	
+	bSizer4->Add( sbSizer2, 0, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer21;
+	sbSizer21 = new wxStaticBoxSizer( new wxStaticBox( m_generalPage, -1, wxT("External Symbols Database:") ), wxVERTICAL );
 	
 	m_checkLoadLastDB = new wxCheckBox( m_generalPage, wxID_ANY, wxT("Automatically load the recently used additional symbols database"), wxDefaultPosition, wxDefaultSize, 0 );
 	
-	sbSizer2->Add( m_checkLoadLastDB, 0, wxALL, 5 );
+	sbSizer21->Add( m_checkLoadLastDB, 0, wxALL, 5 );
 	
-	bSizer4->Add( sbSizer2, 1, wxEXPAND, 5 );
+	m_checkLoadToMemory = new wxCheckBox( m_generalPage, wxID_ANY, wxT("Load external database symbols to memory"), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	sbSizer21->Add( m_checkLoadToMemory, 0, wxALL, 5 );
+	
+	bSizer4->Add( sbSizer21, 0, wxEXPAND, 5 );
 	
 	m_generalPage->SetSizer( bSizer4 );
 	m_generalPage->Layout();
@@ -75,7 +89,7 @@ TagsOptionsDlg::TagsOptionsDlg( wxWindow* parent, const TagsOptionsData& data, i
 	m_staticText1->Wrap( -1 );
 	fgSizer2->Add( m_staticText1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_filePicker = new FilePicker(m_ctagsPage, wxID_ANY);
+	m_filePicker = new FilePicker(m_ctagsPage);
 	fgSizer2->Add( m_filePicker, 0, wxEXPAND|wxALL, 5 );
 	
 	m_staticText3 = new wxStaticText( m_ctagsPage, wxID_ANY, wxT("File Types:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -89,7 +103,9 @@ TagsOptionsDlg::TagsOptionsDlg( wxWindow* parent, const TagsOptionsData& data, i
 	m_staticText5->Wrap( -1 );
 	fgSizer2->Add( m_staticText5, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_comboBoxLang = new wxComboBox( m_ctagsPage, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
+	m_comboBoxLang = new wxComboBox( m_ctagsPage, wxID_ANY, wxT("C++"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
+	m_comboBoxLang->Append( wxT("C++") );
+	m_comboBoxLang->Append( wxT("Java") );
 	fgSizer2->Add( m_comboBoxLang, 0, wxALL|wxEXPAND, 5 );
 	
 	bSizer6->Add( fgSizer2, 1, wxEXPAND, 5 );

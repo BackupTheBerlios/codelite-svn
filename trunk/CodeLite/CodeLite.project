@@ -25,6 +25,7 @@
     <File Name="cpp_comment_creator.cpp"/>
     <File Name="archive.cpp"/>
     <File Name="tags_options_data.cpp"/>
+    <File Name="setters_getters_data.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Header Files">
     <File Name="y.tab.h"/>
@@ -61,6 +62,7 @@
     <File Name="archive.h"/>
     <File Name="serialized_object.h"/>
     <File Name="tags_options_data.h"/>
+    <File Name="setters_getters_data.h"/>
   </VirtualDirectory>
   <Dependencies/>
   <VirtualDirectory Name="GeneratedFiles">

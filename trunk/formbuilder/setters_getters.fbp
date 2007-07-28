@@ -6,6 +6,7 @@
         <property name="class_decoration"></property>
         <property name="code_generation">C++</property>
         <property name="encoding">UTF-8</property>
+        <property name="event_generation">connect</property>
         <property name="file">setters_getters_base_dlg</property>
         <property name="first_id">1000</property>
         <property name="icons"></property>
@@ -31,7 +32,7 @@
             <property name="name">SettersGettersBaseDlg</property>
             <property name="pos"></property>
             <property name="size">479,398</property>
-            <property name="style">wxDEFAULT_DIALOG_STYLE</property>
+            <property name="style">wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</property>
             <property name="subclass"></property>
             <property name="title">Generate Setters/Getters for class</property>
             <property name="tooltip"></property>
@@ -104,6 +105,7 @@
                                 <property name="tooltip"></property>
                                 <property name="window_extra_style"></property>
                                 <property name="window_style"></property>
+                                <property name="wrap">-1</property>
                                 <event name="OnUpdateUI"></event>
                             </object>
                         </object>
@@ -161,6 +163,7 @@
                                 <property name="tooltip"></property>
                                 <property name="window_extra_style"></property>
                                 <property name="window_style"></property>
+                                <property name="wrap">-1</property>
                                 <event name="OnUpdateUI"></event>
                             </object>
                         </object>
@@ -196,7 +199,7 @@
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
                             <property name="flag">wxALL|wxEXPAND</property>
-                            <property name="proportion">1</property>
+                            <property name="proportion">0</property>
                             <object class="wxStaticBoxSizer" expanded="1">
                                 <property name="label">Options:</property>
                                 <property name="minimum_size"></property>

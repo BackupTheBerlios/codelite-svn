@@ -28,6 +28,7 @@
 #include "open_resouce_dlg.h"
 #include "open_type_dlg.h"
 #include "workspace_pane.h"
+#include <wx/busyinfo.h>
 
 //----------------------------------------------------------------
 // Our main frame
@@ -300,15 +301,6 @@ void Frame::CreateGUIControls(void)
 	
 	//update ctags options
 	TagsManagerST::Get()->SetCtagsOptions(m_tagsOptionsData);
-	if(m_tagsOptionsData.GetFlags() & CC_LOAD_EXT_DB){
-		//load the recently opened external database
-		wxString tagDb = EditorConfigST::Get()->GetTagsDatabase();
-		if(tagDb.IsEmpty() == false){
-			TagsManagerST::Get()->OpenExternalDatabase(tagDb);
-			wxFileName dbname(tagDb);
-			GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), dbname.GetFullName().GetData()), 2);
-		}
-	}
 
 	//load windows perspective
 	wxString pers = EditorConfigST::Get()->LoadPerspective(wxT("Default"));
@@ -1161,6 +1153,28 @@ void Frame::OnWorkspaceConfigChanged(wxCommandEvent &event)
 
 void Frame::OnTimer(wxTimerEvent &event)
 {
+	//Attach external database symbol
+	if(m_tagsOptionsData.GetFlags() & CC_LOAD_EXT_DB)
+	{
+		static bool first(false);
+		if(!first)
+		{
+			first = true;
+			//load the recently opened external database
+			wxString tagDb = EditorConfigST::Get()->GetTagsDatabase();
+			if(tagDb.IsEmpty() == false)
+			{
+				wxString message;
+				wxFileName dbname(tagDb);
+				message << wxT("Attaching symbols database '") << dbname.GetFullName() << wxT("'...");
+				wxBusyInfo wait(message, this);
+				wxWindowDisabler disableAll;
+				TagsManagerST::Get()->OpenExternalDatabase(tagDb);
+				GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), dbname.GetFullName().GetData()), 2);
+			}
+		}
+	}
+
 	//increase pool size if needed
 	if(EditorCreatorST::Get()->GetQueueCount() == 0){
 		EditorCreatorST::Get()->Add(new LEditor(m_notebook, wxID_ANY, wxSize(1, 1), wxEmptyString, wxEmptyString, true)); 

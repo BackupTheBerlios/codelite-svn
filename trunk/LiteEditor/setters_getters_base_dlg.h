@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version May  5 2007)
+// C++ code generated with wxFormBuilder (version Jun  6 2007)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -37,7 +37,7 @@ class SettersGettersBaseDlg : public wxDialog
 		wxButton* m_buttonCancel;
 	
 	public:
-		SettersGettersBaseDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Generate Setters/Getters for class"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 479,398 ), int style = wxDEFAULT_DIALOG_STYLE );
+		SettersGettersBaseDlg( wxWindow* parent, int id = wxID_ANY, wxString title = wxT("Generate Setters/Getters for class"), wxPoint pos = wxDefaultPosition, wxSize size = wxSize( 479,398 ), int style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 	
 };
 

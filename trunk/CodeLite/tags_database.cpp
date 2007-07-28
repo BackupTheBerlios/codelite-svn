@@ -12,7 +12,6 @@
 // Tags database class implementation
 //-------------------------------------------------
 TagsDatabase::TagsDatabase(bool memDb)
-: m_memDb(memDb)
 {
 	m_db = new wxSQLite3Database();
 }
@@ -30,9 +29,6 @@ TagsDatabase::~TagsDatabase()
 
 void TagsDatabase::OpenDatabase(const wxFileName& fileName)
 {
-//	if(m_memDb)
-//		return;
-
 	if(m_fileName == fileName)
 		return;
 
@@ -151,7 +147,7 @@ wxString TagsDatabase::GetSchemaVersion() const
 
 void TagsDatabase::Store(const std::vector<DbRecordPtr> &records, const wxFileName& path, bool autoCommit)
 {
-	if(!path.IsOk() && !m_fileName.IsOk() && !m_memDb)
+	if(!path.IsOk() && !m_fileName.IsOk())
 	{
 		// An attempt is made to save the tree into db but no database
 		// is provided and none is currently opened to use
@@ -229,7 +225,7 @@ void TagsDatabase::Store(const std::vector<DbRecordPtr> &records, const wxFileNa
 
 void TagsDatabase::Store(TagTreePtr tree, const wxFileName& path, bool autoCommit)
 {
-	if(!path.IsOk() && !m_fileName.IsOk() && !m_memDb)
+	if(!path.IsOk() && !m_fileName.IsOk())
 	{
 		// An attempt is made to save the tree into db but no database
 		// is provided and none is currently opened to use
@@ -371,12 +367,12 @@ void TagsDatabase::LoadToMemory(const wxFileName& fn)
 	// - attach to the file database and copy its schema to our memory
 	// - copy the whole database content to our memory
 	// - dettach the file database
-	if(m_db->IsOpen() && !m_memDb)
+	if(m_db->IsOpen())
 	{
 		// close any opened database and reopen it as in-memory
 		wxLogMessage(wxT("closing database..."));
 		m_db->Close();
-	} // if(m_db->IsOpen() && !m_memDb)
+	}
 
 	try
 	{

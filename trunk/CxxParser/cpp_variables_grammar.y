@@ -138,7 +138,10 @@ template_parameter	:	const_spec nested_scope_specifier LE_IDENTIFIER special_sta
 							|  const_spec nested_scope_specifier basic_type_name special_star_amp 
 								{$$ = $1 + " " + $2 + " " + $3 +$4;}
 							;
-
+							
+//the main rule for finding variables
+//in the code. if this rule succeeded, the variables 
+//is added to the gs_vars vriable
 variables			: stmnt_starter variable_decl special_star_amp variable_name_list postfix 
 						{
 							if(gs_vars)
@@ -148,6 +151,7 @@ variables			: stmnt_starter variable_decl special_star_amp variable_name_list po
 								curr_var.m_pattern = "/^";
 								curr_var.m_pattern += $1 + " " + $2 + " " + $3 + " " + $4 + "$/";
 								curr_var.m_isPtr = ($3.find("*") != (size_t)-1);
+								curr_var.m_starAmp = $3;
 								for(size_t i=0; i< gs_names.size(); i++)
 								{
 									//create new variable for every variable name found

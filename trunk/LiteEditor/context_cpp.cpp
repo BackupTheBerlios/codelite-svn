@@ -11,6 +11,7 @@
 #include "language.h"
 #include "browse_record.h"
 #include "wx/tokenzr.h"
+#include "setters_getters_dlg.h"
 
 #define VALIDATE_PROJECT(ctrl)\
 	if(ctrl.GetProject().IsEmpty())\
@@ -171,13 +172,8 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 		wxLogMessage(wxT("OnDwellStart cancelled - we are no longer the active tab"));
 		event.Skip();
 		return;
-	} // if(mgr->GetActiveEditor() != &rCtrl)
+	}
 
-	// Handle dewell only if a project is opened
-	if(rCtrl.GetProjectName().IsEmpty())
-		return;
-
-	wxLogMessage(wxT("OnDwellStart - BEGIN"));
 	long pos = event.GetPosition();
 	int  end = rCtrl.WordEndPosition(pos, true);
 	int  word_start = rCtrl.WordStartPosition(pos, true);
@@ -189,9 +185,8 @@ void ContextCpp::OnDwellStart(wxScintillaEvent &event)
 	// get the token
 	wxString word = rCtrl.GetTextRange(word_start, end);
 	if(word.IsEmpty()){
-		wxLogMessage(wxT("OnDwellStart - CANCELLED"));
 		return;
-	} // if(word.IsEmpty())
+	}
 
 	//get the expression we are hovering over
 	wxString expr = GetExpression(end);	
@@ -826,5 +821,26 @@ void ContextCpp::OnGenerateSettersGetters(wxCommandEvent &event)
 	LEditor &editor = GetCtrl();
 
 	VALIDATE_PROJECT(editor);
+	long pos = editor.GetCurrentPos();
 
+	if(IsCommentOrString(pos)){
+		return;
+	}
+	
+	TagsManager *tagmgr = TagsManagerST::Get();
+	std::vector<TagEntryPtr> tags;
+	//get the scope name that the caret is currently at
+	
+	wxString text = editor.GetTextRange(0, pos);
+	wxString scopeName = tagmgr->GetScopeName(text);
+	tagmgr->TagsByScope(scopeName, wxT("member"), tags);
+	if(tags.empty()){
+		return;
+	}
+	
+	SettersGettersDlg *dlg = new SettersGettersDlg(ManagerST::Get()->GetMainFrame(), tags);
+	if(dlg->ShowModal() == wxID_OK){
+		
+	}
+	dlg->Destroy();
 }

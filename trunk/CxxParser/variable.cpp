@@ -23,6 +23,7 @@ Variable & Variable::operator =(const Variable &src)
 	m_isPtr = src.m_isPtr;
 	m_typeScope = src.m_typeScope;
 	m_pattern = src.m_pattern;
+	m_starAmp = src.m_starAmp;
 	return *this;
 }
 
@@ -35,12 +36,13 @@ void Variable::Reset()
 	m_isPtr = false;
 	m_typeScope = "";
 	m_pattern = "";
+	m_starAmp = "";
 }
 
 void Variable::Print()
 {
-	fprintf(	stdout, "{m_name=%s, m_type=%s, m_typeScope=%s, m_templateDecl=%s, m_isPtr=%s, m_isTemplate=%s}\n", 
-				m_name.c_str(), m_type.c_str(), m_typeScope.c_str(), m_templateDecl.c_str(),
+	fprintf(	stdout, "{m_name=%s, m_starAmp=%s, m_type=%s, m_typeScope=%s, m_templateDecl=%s, m_isPtr=%s, m_isTemplate=%s}\n", 
+				m_name.c_str(), m_starAmp.c_str(), m_type.c_str(), m_typeScope.c_str(), m_templateDecl.c_str(),
 				m_isPtr ? "true" : "false", 
 				m_isTemplate ? "true" : "false");
 	fprintf( stdout, "Pattern: %s\n", m_pattern.c_str());
