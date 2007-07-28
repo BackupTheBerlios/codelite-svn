@@ -28,7 +28,7 @@
 #include "open_resouce_dlg.h"
 #include "open_type_dlg.h"
 #include "workspace_pane.h"
-#include <wx/busyinfo.h>
+
 
 //----------------------------------------------------------------
 // Our main frame
@@ -1164,22 +1164,9 @@ void Frame::OnTimer(wxTimerEvent &event)
 			wxString tagDb = EditorConfigST::Get()->GetTagsDatabase();
 			if(tagDb.IsEmpty() == false)
 			{
-				wxString message;
 				wxFileName dbname(tagDb);
-
 				//if the database will be loaded to memory, display a busy dialog
-				if(m_tagsOptionsData.GetFlags() && CC_LOAD_EXT_DB_TO_MEMORY)
-				{
-					message << wxT("Attaching symbols database '") << dbname.GetFullName() << wxT("' to memory ...");
-					wxBusyInfo wait(message, this);
-					wxWindowDisabler disableAll;
-					wxBusyCursor cursor;
-					TagsManagerST::Get()->OpenExternalDatabase(tagDb);
-				}
-				else
-				{
-					TagsManagerST::Get()->OpenExternalDatabase(tagDb);
-				}
+				TagsManagerST::Get()->OpenExternalDatabase(tagDb);
 				GetStatusBar()->SetStatusText(wxString::Format(wxT("External DB: '%s'"), dbname.GetFullName().GetData()), 2);
 			}
 		}

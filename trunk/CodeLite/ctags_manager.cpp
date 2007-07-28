@@ -11,6 +11,7 @@
 #include <wx/txtstrm.h>
 #include "cpp_comment_creator.h"
 #include "tags_options_data.h"
+#include <wx/busyinfo.h>
 
 #define PRINT_START_MESSAGE(msg)\
 	{\
@@ -983,9 +984,15 @@ void TagsManager::OpenExternalDatabase(const wxFileName &dbName)
 	// check that the database exist
 	if(!wxFile::Exists(dbName.GetFullPath()))
 		return;
-
+	
+	wxString message;
+				
 	// load it to memory
 	if(GetCtagsOptions().GetFlags() & CC_LOAD_EXT_DB_TO_MEMORY){
+		message << wxT("Attaching symbols database '") << dbName.GetFullName() << wxT("' to memory ...");
+		wxBusyInfo wait(message);
+		wxWindowDisabler disableAll;
+		wxBusyCursor cursor;
 		m_pExternalDb->LoadToMemory(dbName);
 	}else{
 		m_pExternalDb->OpenDatabase(dbName);
