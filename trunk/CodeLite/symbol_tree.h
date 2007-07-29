@@ -59,7 +59,7 @@ protected:
 	std::map<void*, bool> m_sortItems;
 	std::map<wxString, bool> m_globalsKind;
 	wxFileName m_fileName;
-	std::map<wxString, wxTreeItemId> m_items;
+	std::map<wxString, void*> m_items;
 	TagTreePtr m_tree;
 public:
 	/**
@@ -135,6 +135,8 @@ public:
 	const wxFileName &GetFilename() const {return m_fileName;}
 
 protected:
+
+	void GetItemChildrenRecursive(wxTreeItemId& parent, std::map<void*, bool> &deletedMap);
 
 	/**
 	 * Add an item to the gui tree.

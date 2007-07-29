@@ -203,7 +203,7 @@ void SymbolTree::AddItem(TagNode* node)
 						new MyTreeItemData(node->GetData().GetFile(), node->GetData().GetLine()));
 		node->GetData().SetTreeItemId( hti );
 		m_sortItems[parentHti.m_pItem] = true;
-		m_items[nodeData.Key()] = hti;
+		m_items[nodeData.Key()] = hti.m_pItem;
 	}
 }
 
@@ -261,6 +261,7 @@ void SymbolTree::UpdateSymbols(SymbolTreeEvent& event)
 
 	std::vector<std::pair<wxString, TagEntry> > items = event.GetItems();
 
+
 	size_t i=0;
 	Freeze();
 	for(; i<items.size(); i++)
@@ -313,24 +314,48 @@ void SymbolTree::DeleteSymbols(SymbolTreeEvent& event)
 	if(!m_tree)
 		return;
 
+	std::map<void*, bool> deletedMap;
 	std::vector<std::pair<wxString, TagEntry> > items = event.GetItems();
+
 	Freeze();
 	for(size_t i=0; i<items.size(); i++)
 	{
 		wxString key  = items.at(i).first;
 		TagEntry data = items.at(i).second;
 
-		std::map<wxString, wxTreeItemId>::iterator iter = m_items.find(key);
-		if(iter != m_items.end() && iter->second.IsOk())
+		std::map<wxString, void*>::iterator iter = m_items.find(key);
+		if(iter != m_items.end() && iter->second)
 		{
 			wxTreeItemId hti = iter->second;
-			Delete(hti);
+			//if this note was already deleted, dont delete it again
+			if(deletedMap.find(hti.m_pItem) == deletedMap.end())
+			{
+				GetItemChildrenRecursive(hti, deletedMap);
+				//remove just the parent
+				Delete(hti);
+			}
 			m_items.erase(iter);
 		}
-	} // for(size_t i=0; i<items.size(); i++)
+	}
 	Thaw();
 }
 
+void SymbolTree::GetItemChildrenRecursive(wxTreeItemId &parent, std::map<void*, bool> &deletedMap)
+{
+	//delete the item's children
+	wxTreeItemIdValue cookie;
+	wxTreeItemId child = GetFirstChild(parent, cookie);
+	while(child.IsOk())
+	{
+		if(ItemHasChildren(child)){
+			GetItemChildrenRecursive(child, deletedMap);
+		}else{
+			deletedMap[child.m_pItem] = child;
+		}
+		child = GetNextChild(parent, cookie);
+	}
+	deletedMap[parent.m_pItem] = true;
+}
 
 void SymbolTree::AddSymbols(SymbolTreeEvent& event)
 {
