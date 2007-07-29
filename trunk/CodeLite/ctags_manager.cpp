@@ -1081,6 +1081,13 @@ void TagsManager::FindByNameAndScope(const wxString &name, const wxString &scope
 	std::sort(tags.begin(), tags.end(), SDescendingSort());	
 }
 
+void TagsManager::FindByPath(const wxString &path, std::vector<TagEntryPtr> &tags)
+{
+	wxString sql;
+	sql << wxT("select * from tags where path='") << path << wxT("'");
+	DoExecuteQueury(sql, tags);
+}
+
 void TagsManager::DoFindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags)
 {
 	wxString sql;

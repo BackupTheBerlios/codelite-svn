@@ -123,7 +123,7 @@ void FindInFilesDialog::CreateGUIControls()
 	m_stop = new wxButton(this, wxID_ANY, wxT("&Stop Search"));
 	btnSizer->Add(m_stop, 1, wxALL | wxEXPAND, 5 ); 
 
-	m_cancel = new wxButton(this, wxID_ANY, wxT("Cancel"));
+	m_cancel = new wxButton(this, wxID_ANY, wxT("Close"));
 	btnSizer->Add(m_cancel, 1, wxALL | wxEXPAND, 5 ); 
 
 	mainSizer->Add(new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL), 0, wxEXPAND );

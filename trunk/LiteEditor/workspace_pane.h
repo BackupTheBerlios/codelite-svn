@@ -38,6 +38,7 @@ public:
 	void BuildFileTree();
 	void DisplaySymbolTree(const wxFileName &filename);
 	void DeleteSymbolTree(const wxFileName &filename);
+	void DeleteAllSymbolTrees();
 
 	// Return the index of the given tab by name
 	int CaptionToIndex(const wxString &caption);

@@ -838,8 +838,16 @@ void ContextCpp::OnGenerateSettersGetters(wxCommandEvent &event)
 	if(tags.empty()){
 		return;
 	}
+
+	std::vector<TagEntryPtr> classtags;
+	tagmgr->FindByPath(scopeName, classtags);
+	if(classtags.empty() || classtags.size() > 1)
+		return;	
 	
-	SettersGettersDlg *dlg = new SettersGettersDlg(ManagerST::Get()->GetMainFrame(), tags);
+	TagEntryPtr tag = classtags.at(0);
+
+	//get the file name and line where to insert the setters getters
+	SettersGettersDlg *dlg = new SettersGettersDlg(ManagerST::Get()->GetMainFrame(), tags, wxFileName(), -1);
 	if(dlg->ShowModal() == wxID_OK){
 		
 	}

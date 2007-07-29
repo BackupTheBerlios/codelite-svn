@@ -134,7 +134,12 @@ void WorkspacePane::DeleteSymbolTree(const wxFileName &filename)
 			{
 				m_treeBook->DeletePage(i);
 				return;
-			} // if(tree->GetFilename() == filename)
-		} // if(tree)
-	} // for(size_t i=0; i<count; i++)
+			}
+		}
+	}
+}
+
+void WorkspacePane::DeleteAllSymbolTrees()
+{
+	m_treeBook->DeleteAllPages();
 }

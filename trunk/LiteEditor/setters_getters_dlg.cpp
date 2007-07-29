@@ -1,8 +1,10 @@
 #include "setters_getters_dlg.h"
 
-SettersGettersDlg::SettersGettersDlg(wxWindow* parent, const std::vector<TagEntryPtr> &tags)
+SettersGettersDlg::SettersGettersDlg(wxWindow* parent, const std::vector<TagEntryPtr> &tags, const wxFileName &file, int lineno)
 : SettersGettersBaseDlg(parent)
 , m_members(tags)
+, m_file(file)
+, m_lineno(lineno)
 {
 	//convert the tags to string array
 	wxArrayString members;

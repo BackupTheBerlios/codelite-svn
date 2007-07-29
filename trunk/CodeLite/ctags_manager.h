@@ -227,6 +227,13 @@ public:
 	void FindByNameAndScope(const wxString &name, const wxString &scope, std::vector<TagEntryPtr> &tags);
 
 	/**
+	 * Find tags with given path
+	 * \param path path to search
+	 * \param tags [output] output tags
+	 */
+	void FindByPath(const wxString &path, std::vector<TagEntryPtr> &tags);
+
+	/**
 	 * Get tags related to a scope.
 	 * \param scope scope to search for members
 	 * \param tags [output] vector of tags

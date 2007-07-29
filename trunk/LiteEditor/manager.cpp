@@ -298,8 +298,6 @@ void Manager::OpenWorkspace(const wxString &path)
 	
 	//initialize some environment variable to be available for this workspace
 	CreateEnvironmentVars(path);
-
-	TagTreePtr dummy;
 	Frame::Get()->GetWorkspacePane()->BuildFileTree();
 
 	//Update the configuration choice on the toolbar
@@ -1362,4 +1360,7 @@ void Manager::CloseAll()
 	{
 		dlg->Destroy();	
 	}
+
+	//remove all symbol trees from the outline view
+	Frame::Get()->GetWorkspacePane()->DeleteAllSymbolTrees();
 }
