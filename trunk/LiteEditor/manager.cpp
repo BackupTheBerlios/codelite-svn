@@ -423,7 +423,7 @@ bool Manager::RemoveProject(const wxString &name)
 		//remove symbols from the database
 		std::vector<wxFileName> projectFiles;
 		proj->GetFiles(projectFiles, true);
-		TagsManagerST::Get()->DeleteProject(projectFiles);
+		TagsManagerST::Get()->DeleteFilesTags(projectFiles);
 		RemoveProjectNameFromOpenFiles(projectFiles);
 	} // if(proj)
 	
@@ -1058,50 +1058,35 @@ bool Manager::IsFileInWorkspace(const wxString &fileName)
 
 void Manager::RetagProject(const wxString &projectName)
 {
-	DoRetagProject(projectName);	
-}
- 
-void Manager::DoRetagProject(const wxString &projectName)
-{
-	//now rebuild the project
+	//get the project file list
 	ProjectPtr proj = GetProject(projectName);
-	if( proj ){
-		//remove project from database
+	if( proj )
+	{
+		//change the directory to the project dir
 		std::vector<wxFileName> projectFiles;
 		proj->GetFiles(projectFiles, true);
-		TagsManagerST::Get()->DeleteProject(projectFiles);
-
-		//set cursor to busy
-		wxBusyCursor cursor;
-
-		std::vector<wxFileName> files;
-		std::vector<DbRecordPtr> comments;
-		TagTreePtr ttp;
-
-		//change the directory to the project dir
-		DirSaver ds;
-		::wxSetWorkingDirectory(proj->GetFileName().GetPath());
-
-		proj->GetFiles(files, true);
-
-		bool parseComments = TagsManagerST::Get()->GetParseComments();
-		ttp = TagsManagerST::Get()->ParseSourceFiles(files, parseComments ? &comments : NULL);
-
-		TagsManagerST::Get()->Store(ttp);
-		if(parseComments){
-			TagsManagerST::Get()->StoreComments(comments);
-		}
-	} // if( proj )
+		
+		//call tags manager for retagging
+		TagsManagerST::Get()->RetagFiles(projectFiles, Frame::Get());
+	}
 }
 
 void Manager::RetagWorkspace()
 {
 	wxArrayString projects;
 	GetProjectList(projects);
+	std::vector<wxFileName> projectFiles;
 
 	for(size_t i=0; i<projects.GetCount(); i++){
-		DoRetagProject(projects.Item(i));
+		ProjectPtr proj = GetProject(projects.Item(i));
+		if( proj )
+		{
+			//change the directory to the project dir
+			proj->GetFiles(projectFiles, true);
+		}
 	}
+	//call tags manager for retagging
+	TagsManagerST::Get()->RetagFiles(projectFiles, Frame::Get());
 }
 
 void Manager::WriteProgram(const wxString &line)

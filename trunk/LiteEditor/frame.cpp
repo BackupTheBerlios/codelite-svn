@@ -624,7 +624,7 @@ void Frame::OnBuildExternalDatabase(wxCommandEvent& WXUNUSED(event))
 			wxBusyCursor busy;
 
 			// build the external database
-			TagsManagerST::Get()->BuildExternalDatabase(fn, dbname, wxEmptyString, this);
+			TagsManagerST::Get()->BuildExternalDatabase(fn, dbname, this);
 		}
 	}
 

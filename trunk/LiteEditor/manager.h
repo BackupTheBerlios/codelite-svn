@@ -505,7 +505,6 @@ protected:
 	void OnProcessEnd(wxProcessEvent &event);
 	
 private:
-	void DoRetagProject(const wxString &projectName);
 	void RemoveProjectNameFromOpenFiles(const std::vector<wxFileName> &project_files);
 
 	/**

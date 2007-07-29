@@ -261,10 +261,10 @@ public:
 	bool WordCompletionCandidates(const wxString& expr, const wxString& text, const wxString &word, std::vector<TagEntryPtr> &candidates);
 
 	/**
-	 * Delete all tags related to project
-	 * \param projectName project name
+	 * Delete all tags related to these files
+	 * \param files list of files, in absolute path
 	 */
-	void DeleteProject(const std::vector<wxFileName> &projectFiles);
+	void DeleteFilesTags(const std::vector<wxFileName> &files);
 
 	/**
 	 * Build a secondary database that will be used for searching (e.g. database containing C/C++ header files)
@@ -274,7 +274,18 @@ public:
 	 * \param FFU
 	 * \param updateDlgParent when set to non-null, TagsManager will popup a modal dialog to report its progress
 	 */
-	void BuildExternalDatabase(const wxFileName & rootDir, const wxFileName &dbName, const wxString& WXUNUSED(language), wxWindow* updateDlgParent = NULL);
+	void BuildExternalDatabase(const wxFileName & rootDir, const wxFileName &dbName, wxWindow* updateDlgParent = NULL);
+	
+	/**
+	 * Retag files in the database. 'Retagging' means:
+	 * - delete all entries from the database that belongs to one of these files
+	 * - parse the files
+	 * - update the database again
+	 * \param files list of files, in absolute path, to retag
+	 * \param parentWin parent window - when provided, the library will also create a progress dialog
+	 *		  to report its status
+	 */
+	void RetagFiles(const std::vector<wxFileName> &files, wxWindow *parentWin = NULL); 
 
 	/**
 	 * Open a an existing external database that will be used for searching (e.g. database containing C/C++ header files)
@@ -425,6 +436,7 @@ protected:
 	void TipsFromTags(const std::vector<TagEntryPtr> &tags, const wxString &word, std::vector<wxString> &tips);
 	void GetFunctionTipFromTags(const std::vector<TagEntryPtr> &tags, const wxString &word, std::vector<wxString> &tips);
 	wxString DoCreateDoxygenComment(TagEntryPtr tag);
+	void DoBuildDatabase(const wxArrayString &files, TagsDatabase &db, wxWindow *parent = NULL);
 };
 
 /// create the singleton typedef

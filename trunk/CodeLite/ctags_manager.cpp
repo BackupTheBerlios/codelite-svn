@@ -437,6 +437,9 @@ void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, clProce
 		return;
 	}
 	
+	static int maxPeeks = 10000;	//10 seconds
+	int count = 0;
+
 	// Read ctags output
 	while( true )
 	{
@@ -448,9 +451,23 @@ void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, clProce
 			if( msg.Contains(wxT("<<EOF>>")) )
 				break;
 			tags += msg;
+			count = 0;
 		}
 		else
+		{
 			wxMilliSleep( 1 );
+			count++;
+		}
+
+		//if maximum peeks reached - restart ctags & bail out from this
+		//loop
+		if(count == maxPeeks)
+		{
+			tags.Clear();
+			RestartCtagsProcess(TagsGlobal);
+			wxMilliSleep(1000); //wait for it 1 second to start
+			break;
+		}
 	}
 }
 
@@ -869,7 +886,7 @@ void TagsManager::FindSymbol(const wxString& name, std::vector<TagEntryPtr> &tag
 	}
 }
 
-void TagsManager::DeleteProject(const std::vector<wxFileName> &projectFiles)
+void TagsManager::DeleteFilesTags(const std::vector<wxFileName> &projectFiles)
 {
 	wxString query;
 	wxString filelist;
@@ -888,32 +905,46 @@ void TagsManager::DeleteProject(const std::vector<wxFileName> &projectFiles)
 
 void TagsManager::BuildExternalDatabase(const wxFileName& rootDir, 
 										const wxFileName &dbName, 
-										const wxString& WXUNUSED(language), 
-										wxWindow* updateDlgParent/** null */)
+										wxWindow* updateDlgParent)
 {
 	// check that root dir exist
 	if(!wxDir::Exists(rootDir.GetFullPath()))
 		return;
 
-	// Find all files under this directory
+	// Find all files under the rootDir
 	DirTraverser traverser(m_options.GetFileSpec());
-	
-	wxString tags;
-	wxProgressDialog* prgDlg = NULL;
-
 	wxDir dir(rootDir.GetFullPath());
 	dir.Traverse(traverser);
+	TagsDatabase db;
+	db.OpenDatabase(dbName);
+	DoBuildDatabase(traverser.GetFiles(), db, updateDlgParent);
+}
 
+void TagsManager::RetagFiles(const std::vector<wxFileName> &files, wxWindow *parentWin)
+{
+	DeleteFilesTags(files);
+	wxArrayString strFiles;
+	for(size_t i=0; i<files.size(); i++){
+		strFiles.Add(files.at(i).GetFullPath());
+	}
+	DoBuildDatabase(strFiles, *m_pDb, parentWin);
+}
+
+void TagsManager::DoBuildDatabase(const wxArrayString &files, TagsDatabase &db, wxWindow *parent)
+{
+	wxString tags;
+	wxProgressDialog* prgDlg = NULL;
+	
 	// Create a progress dialog
-	if( updateDlgParent )
+	if( parent )
 	{
-		prgDlg = new wxProgressDialog (wxT("Building tags database ..."), wxEmptyString, static_cast<int>(traverser.GetFiles().size())+10, updateDlgParent, wxPD_APP_MODAL |	wxPD_SMOOTH | wxPD_AUTO_HIDE);
+		prgDlg = new wxProgressDialog (wxT("Building tags database ..."), wxEmptyString, (int)files.GetCount()+10, parent, wxPD_APP_MODAL | wxPD_SMOOTH | wxPD_AUTO_HIDE);
 		prgDlg->SetSize(wxSize(800, -1));
 		prgDlg->Layout();
 		prgDlg->Centre();
 	}
 	
-	int maxVal = static_cast<int>(traverser.GetFiles().size());
+	int maxVal = (int)files.GetCount();
 	int i = 0;
 
 	std::list<tagParseResult> trees;
@@ -921,7 +952,7 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 	{
 		// Parse all source file, and concatenate them into one big string
 		wxString fileTags;
-		wxFileName curFile((traverser.GetFiles())[i]);
+		wxFileName curFile(files.Item(i));
 		
 		// update the progress bar
 		if( prgDlg ){
@@ -948,7 +979,7 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 		prgDlg->Update(maxVal, wxT("Saving symbols to database..."));
 	}
 
-	TagsDatabase db;
+	
 	unsigned int cur = 1;
 	for(std::list<tagParseResult>::iterator iter = trees.begin(); iter != trees.end(); iter++)
 	{
@@ -957,13 +988,13 @@ void TagsManager::BuildExternalDatabase(const wxFileName& rootDir,
 			msg << wxT("Saving file status: ") << cur << wxT("/") << (unsigned int)trees.size();
 			prgDlg->Update(maxVal, msg);
 		}
-		db.Store((*iter).tree, dbName, true);
+		db.Store((*iter).tree, wxFileName());
 		if(GetParseComments())
 		{
 			// drop all old entries from this file
 			try
 			{
-				db.Store(*(*iter).comments, dbName, true);
+				db.Store(*(*iter).comments, wxFileName());
 			}
 			catch( wxSQLite3Exception & e)
 			{
