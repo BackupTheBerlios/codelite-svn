@@ -621,7 +621,7 @@ bool TagsManager::WordCompletionCandidates(const wxString& expr, const wxString&
 		RemoveDuplicates(tmpCandidates, candidates);
 	}else{
 		wxString typeName, typeScope;
-		bool res = LanguageST::Get()->ProcessExpression(expression, text, typeName, typeScope);
+		bool res = ProcessExpression(expression, text, typeName, typeScope);
 		if(!res){
 			return false;
 		}
@@ -652,7 +652,7 @@ bool TagsManager::AutoCompleteCandidates(const wxString& expr, const wxString& t
 	expression.erase(expression.find_last_not_of(trimString)+1);
 	
 	PRINT_START_MESSAGE(wxT("ProcessExpression started..."));
-	bool res = LanguageST::Get()->ProcessExpression(expression, text, typeName, typeScope);
+	bool res = ProcessExpression(expression, text, typeName, typeScope);
 	if(!res){
 		return false;
 	}
@@ -758,7 +758,7 @@ void TagsManager::GetHoverTip(const wxString & expr, const wxString &word, const
 		TipsFromTags(candidates, word, tips);
 	}else{
 		wxString typeName, typeScope;
-		bool res = LanguageST::Get()->ProcessExpression(expression, text, typeName, typeScope);
+		bool res = ProcessExpression(expression, text, typeName, typeScope);
 		if(!res){
 			return;
 		}
@@ -812,7 +812,7 @@ clCallTipPtr TagsManager::GetFunctionTip(const wxString &expr, const wxString &t
 	else
 	{
 		PRINT_START_MESSAGE(wxT("ProcessExpression started..."));
-		bool res = LanguageST::Get()->ProcessExpression(expression, text, typeName, typeScope);
+		bool res = ProcessExpression(expression, text, typeName, typeScope);
 		if(!res){
 			return false;
 		}
@@ -1328,4 +1328,38 @@ wxString TagsManager::GetScopeName(const wxString &scope)
 {
 	Language *lang = LanguageST::Get();
 	return lang->GetScopeName(scope);
+}
+
+bool TagsManager::ProcessExpression(const wxString &expr, const wxString &scopeText, wxString &typeName, wxString &typeScope)
+{
+	bool res = LanguageST::Get()->ProcessExpression(expr, scopeText, typeName, typeScope);
+	if(res)
+	{
+		//if the match is typedef, try to replace it with the actual
+		//typename
+		std::vector<TagEntryPtr> tags;
+		wxString path;
+		if(typeScope == wxT("<global>")){
+			path << typeName;
+		}else{
+			path << typeScope << wxT("::") << typeName;
+		}
+
+		FindByPath(path, tags);
+		if(tags.size() == 1)
+		{
+			//we have a single match, test to see if it a typedef
+			TagEntryPtr tag = tags.at(0);
+			if(tag->GetKind() == wxT("typedef"))
+			{
+				wxString realName = tag->NameFromTyperef();
+				if(realName.IsEmpty() == false)
+				{
+					typeName  = realName;
+					typeScope = tag->GetScope();
+				}
+			}
+		}
+	}
+	return res;
 }

@@ -79,6 +79,7 @@ void ParseThread::ProcessRequest(ThreadRequest * request)
 	// Compare old tree vs new tree
 	std::vector<std::pair<wxString, TagEntry> >  deletedItems;
 	std::vector<std::pair<wxString, TagEntry> >  newItems;
+	std::vector<std::pair<wxString, TagEntry> >  goodNewItems;
 	std::vector<std::pair<wxString, TagEntry> >  modifiedItems;
 
 	oldTree->Compare(newTree.Get(), deletedItems, modifiedItems, newItems);
@@ -114,11 +115,8 @@ void ParseThread::ProcessRequest(ThreadRequest * request)
 
 	for(i=0; i<newItems.size(); i++)
 	{
-		if(newItems[i].second.Store(insertStmt) == TagExist){
-			//dont try add it to the gui tree, since we failed to add it to the 
-			//database, this means that it will probably always appear as new item
-			//and will cause a bug in the symbol tree
-			newItems[i].second.SetKind(wxT("<unknown>")); //this will mark this item as not valid
+		if(newItems[i].second.Store(insertStmt) == TagOk){
+			goodNewItems.push_back(newItems[i]);
 		}
 	}
 
@@ -141,7 +139,7 @@ void ParseThread::ProcessRequest(ThreadRequest * request)
 		SendEvent(wxEVT_COMMAND_SYMBOL_TREE_DELETE_ITEM, deletedItems);
 
 	if( !newItems.empty() )
-		SendEvent(wxEVT_COMMAND_SYMBOL_TREE_ADD_ITEM, newItems);
+		SendEvent(wxEVT_COMMAND_SYMBOL_TREE_ADD_ITEM, goodNewItems);
 
 	if( !modifiedItems.empty() )
 		SendEvent(wxEVT_COMMAND_SYMBOL_TREE_UPDATE_ITEM, modifiedItems);

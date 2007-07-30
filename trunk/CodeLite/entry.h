@@ -26,7 +26,7 @@
  *
  * \ingroup CodeLite
  * \version 1.0
- * first version
+ * first version	
  *
  * \date 11-11-2006
  * \author Eran
@@ -198,7 +198,7 @@ public:
 	 * Return the actual name as described in the 'typeref' field
 	 * \return real name or wxEmptyString
 	 */
-	wxString NameFromTyperef() const;
+	wxString NameFromTyperef();
 
 	/**
 	 * Return the actual type as described in the 'typeref' field
@@ -268,6 +268,7 @@ private:
 	 * \param path path to add
 	 */
 	void UpdatePath(wxString & path);
+	bool TypedefFromPattern(const wxString &tagPattern, const wxString &typedefName, wxString &name);
 };
 
 typedef SmartPtr<TagEntry> TagEntryPtr;

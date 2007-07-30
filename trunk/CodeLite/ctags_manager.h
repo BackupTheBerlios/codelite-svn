@@ -444,6 +444,7 @@ protected:
 	void GetFunctionTipFromTags(const std::vector<TagEntryPtr> &tags, const wxString &word, std::vector<wxString> &tips);
 	wxString DoCreateDoxygenComment(TagEntryPtr tag);
 	void DoBuildDatabase(const wxArrayString &files, TagsDatabase &db, wxWindow *parent = NULL);
+	bool ProcessExpression(const wxString &expr, const wxString &scopeText, wxString &typeName, wxString &typeScope);
 };
 
 /// create the singleton typedef

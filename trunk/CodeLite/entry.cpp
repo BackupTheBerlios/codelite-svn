@@ -95,7 +95,7 @@ void TagEntry::Create(const wxString &fileName,
 
 	m_extFields = extFields;
 	wxString path;
-	
+
 	// Check if we can get full name (including path)
 	path = GetExtField(wxT("class"));
 	if(!path.IsEmpty()){
@@ -111,15 +111,15 @@ void TagEntry::Create(const wxString &fileName,
 			}else{
 				path = GetExtField(wxT("interface"));
 				if(!path.IsEmpty()){
-                    UpdatePath( path ) ;
+					UpdatePath( path ) ;
 				}else{
 					path = GetExtField(wxT("enum"));
 					if(!path.IsEmpty()){
-                        UpdatePath( path ) ;
+						UpdatePath( path ) ;
 					}else{
-                        path = GetExtField(wxT("union"));
+						path = GetExtField(wxT("union"));
 						if(!path.IsEmpty()){
-                            UpdatePath( path ) ;
+							UpdatePath( path ) ;
 						}
 					}
 				}
@@ -132,7 +132,7 @@ void TagEntry::Create(const wxString &fileName,
 	}else{
 		SetScope(wxT("<global>"));
 	}
-	
+
 	// If there is no path, path is set to name
 	if( GetPath().IsEmpty() )
 		SetPath( GetName() );
@@ -155,11 +155,11 @@ void TagEntry::Create(const tagEntry& entry)
 		m_extFields[key] = _U(value);
 	}
 	Create(	_U(entry.file), 
-			_U(entry.name), 
-			entry.address.lineNumber, 
-			_U(entry.address.pattern), 
-			_U(entry.kind), 
-			m_extFields);
+		_U(entry.name), 
+		entry.address.lineNumber, 
+		_U(entry.address.pattern), 
+		_U(entry.kind), 
+		m_extFields);
 }
 
 void TagEntry::Print()
@@ -171,7 +171,7 @@ void TagEntry::Print()
 	std::cout << "Pattern\t\t" << GetPattern() << std::endl;
 	std::cout << "Kind:\t\t" << GetKind() << std::endl;
 	std::cout << "Parent:\t\t" << GetParent() << std::endl;
-	
+
 	std::cout << " ---- Ext fields: ---- " << std::endl;
 	std::map<wxString, wxString>::const_iterator iter = m_extFields.begin();
 	for(; iter != m_extFields.end(); iter++)
@@ -208,7 +208,7 @@ wxString TagEntry::GetFullDisplayName() const
 	} else {
 		name << GetParent() << wxT("::") << GetName() << GetSignature();
 	}
-		
+
 	return name;
 }
 
@@ -328,47 +328,20 @@ int TagEntry::Delete(wxSQLite3Statement &deletePreparedStmnt)
 wxString TagEntry::GetScopeName() const
 {
 	return GetScope();
-/*	wxString path(GetPath());
-
-	// Is this is a global tag?
-	if(GetParent() == wxT("<global>"))
-		return wxT("<global>");
-
-	// Get the scope name (if we have one)
-	if(path.IsEmpty())
-		return wxEmptyString;
-	else
-	{
-		// Remove the last token
-		wxString suffix, scopeName;
-		suffix << wxT("::") << GetName();
-
-		if(path.EndsWith(suffix, &scopeName))
-		{
-			return scopeName;
-		}
-		return wxEmptyString;
-	}*/
 }
 
 wxString TagEntry::GetKind() const {
-	 // if the tree element is a typeref, use the actual type
-	// and not the kind that ctags thinks it is
-	wxString kind = TypeFromTyperef();
-	if( kind.IsEmpty() ){
-		kind = m_kind;
-	}
-	return kind;
+	return m_kind;
 }
 
 
 const bool TagEntry::IsContainer() const
 {
 	return	GetKind() == wxT("class")  || 
-			GetKind() == wxT("struct") || 
-			GetKind() == wxT("union")  || 
-			GetKind() == wxT("namespace") ||
-			GetKind() == wxT("project");
+		GetKind() == wxT("struct") || 
+		GetKind() == wxT("union")  || 
+		GetKind() == wxT("namespace") ||
+		GetKind() == wxT("project");
 }
 
 void TagEntry::UpdatePath(wxString & path)
@@ -394,7 +367,7 @@ wxString TagEntry::TypeFromTyperef() const
 }
 
 
-wxString TagEntry::NameFromTyperef() const
+wxString TagEntry::NameFromTyperef()
 {
 	wxString typeref = GetTyperef();
 	if( typeref.IsEmpty() == false )
@@ -407,28 +380,74 @@ wxString TagEntry::NameFromTyperef() const
 	// try to get the real name from the pattern
 	if( GetKind() == wxT("typedef"))
 	{
-		CppScanner sc;
-		sc.SetText( _C(GetPattern()) );
-		
-		// search for the 'typedef' keyword
-		int type = 0;
-		while( (type = sc.yylex()) != 0 )
-		{
-			wxString token = _U(sc.YYText());
-			if( token == wxT("typedef") )
-			{
-				// the real name is the next token
-				if( sc.yylex() == 0 )
-					return wxEmptyString;
-				token = _U(sc.YYText());
-
-				// remove any template sepcialization (if any)
-				wxString name = token.BeforeFirst(wxT('<'));
-				return name;
-			}
-		}
+		wxString name;
+		if(TypedefFromPattern(GetPattern(), GetName(),name))
+			return name;
 	}
 	return wxEmptyString;
+}
+
+bool TagEntry::TypedefFromPattern(const wxString &tagPattern, const wxString &typedefName, wxString &name)
+{
+	CppScanner sc;
+	//remove the pattern prefix & suffix
+	wxString pattern(tagPattern);
+	pattern.StartsWith(wxT("/^"), &pattern);
+	sc.SetText( _C(pattern) );
+
+	int type(0);
+	int depth(0);
+	bool found(false);
+	wxString token;
+	while((type = sc.yylex()) != 0)
+	{
+		if(type == 0)
+			return false;
+
+		if(!found){
+			if(type != TYPEDEF){
+				continue;
+			}else{
+				found = true;
+				continue;
+			}
+		}
+
+		token = _U(sc.YYText());
+		if(token == typedefName){
+			//we found the end token, break
+			break;
+		}
+
+		switch(type)
+		{
+		case CLCL:
+			if(depth == 0){
+				name << token;
+			}
+			break;
+		case IDENTIFIER:
+			if(depth == 0){
+				name << token;
+			}
+			break;
+		case wxT('<'):
+		case wxT('{'):
+		case wxT('('):
+		case wxT('['):
+			depth++;
+			break;
+		case wxT('>'):
+		case wxT('}'):
+		case wxT(')'):
+		case wxT(']'):
+			depth--;
+			break;
+		default:
+			break;
+		}
+	}
+	return true;
 }
 
 wxString TagEntry::GetDeleteOneStatement()
