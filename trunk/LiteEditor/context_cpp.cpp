@@ -832,8 +832,15 @@ void ContextCpp::OnGenerateSettersGetters(wxCommandEvent &event)
 	TagEntryPtr tag = classtags.at(0);
 	if(tag->GetFile() != editor.GetFileName().GetFullPath())
 	{
-		wxMessageBox(wxT("Place the cursor at the line where you want LiteEditor will generate functions for you"),
-					 wxT("Genereate setters/getters"), wxOK);
+		wxString msg;
+		msg << wxT("This class does not seem to contain the declaration for '") << tag->GetName() << wxT("'\n");
+		msg << wxT("The declaration of '") << tag->GetName() << wxT("' is located at '") << tag->GetFile() << wxT("'\n");
+		msg << wxT("Would you like LiteEditor to open this file for you?");
+
+		if(wxMessageBox(msg,	wxT("Lite Editor"), wxYES_NO) == wxYES){
+			wxString projectName = ManagerST::Get()->GetProjectNameByFile(tag->GetFile());
+			ManagerST::Get()->OpenFile(tag->GetFile(), projectName, tag->GetLine());
+		}
 		return;
 	}
 

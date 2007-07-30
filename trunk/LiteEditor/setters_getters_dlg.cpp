@@ -24,10 +24,10 @@ SettersGettersDlg::SettersGettersDlg(wxWindow* parent, const std::vector<TagEntr
 	m_checkListMembers->Clear();
 	m_checkListMembers->Append(members);
 	
-	//check all items
+	//uncheck all items
 	for(unsigned int i=0; i<m_checkListMembers->GetCount(); i++)
 	{
-		m_checkListMembers->Check(i, true);
+		m_checkListMembers->Check(i, false);
 	}
 	
 	if(tags.empty() == false){
