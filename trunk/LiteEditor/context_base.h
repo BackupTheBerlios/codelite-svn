@@ -58,6 +58,7 @@ public:
 	virtual void OnDwellEnd(wxScintillaEvent & WXUNUSED(event)) = 0;
 	virtual void OnCallTipClick(wxScintillaEvent& WXUNUSED(event)) = 0;
 	virtual void OnDwellStart(wxScintillaEvent & WXUNUSED(event)) = 0;
+	virtual void OnKeyDown(wxKeyEvent &event) {event.Skip();}
 
 	//override this method if you wish to provide context based right click menu
 	virtual wxMenu *GetMenu() {return NULL;}

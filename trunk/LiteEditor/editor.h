@@ -252,6 +252,7 @@ private:
 	void OnFindDialog(wxCommandEvent &event);
 	void OnContextMenu(wxContextMenuEvent &event);
 	void OnSave(wxCommandEvent &event);
+	void OnKeyDown(wxKeyEvent &event);
 };
 
 #endif // LITEEDITOR_EDITOR_H

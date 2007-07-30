@@ -437,6 +437,7 @@ void ContextCpp::CodeComplete()
 		if(m_ct && m_ct->Count() > 0){
 			rCtrl.CallTipCancel();
 			rCtrl.CallTipShow(rCtrl.GetCurrentPos(), m_ct->First());
+			m_tipKind = TipFuncProto;
 		}
 	}
 	else
@@ -852,4 +853,30 @@ void ContextCpp::OnGenerateSettersGetters(wxCommandEvent &event)
 		
 	}
 	dlg->Destroy();
+}
+
+void ContextCpp::OnKeyDown(wxKeyEvent &event)
+{
+	//validate project is open for the container editor
+	if(GetCtrl().GetProject().IsEmpty()){
+		event.Skip();
+		return;
+	}
+
+	if(m_tipKind == TipFuncProto && GetCtrl().CallTipActive() && m_ct)
+	{
+		if(event.GetKeyCode() == WXK_DOWN)
+		{
+			GetCtrl().CallTipCancel();
+			GetCtrl().CallTipShow(GetCtrl().GetCurrentPos(), m_ct->Next());
+			return;	
+		}
+		else if(event.GetKeyCode() == WXK_UP)
+		{
+			GetCtrl().CallTipCancel();
+			GetCtrl().CallTipShow(GetCtrl().GetCurrentPos(), m_ct->Prev());
+			return;
+		}
+	}
+	event.Skip();
 }

@@ -30,6 +30,7 @@ EVT_SCI_DWELLEND(wxID_ANY, LEditor::OnDwellEnd)
 EVT_SCI_MODIFIED(wxID_ANY, LEditor::OnModified)
 EVT_SCI_UPDATEUI(wxID_ANY, LEditor::OnSciUpdateUI)
 EVT_CONTEXT_MENU(LEditor::OnContextMenu)
+EVT_KEY_DOWN(LEditor::OnKeyDown)
 EVT_MENU(wxID_SAVE, LEditor::OnSave)
 
 // Find and replace dialog
@@ -1190,3 +1191,7 @@ void LEditor::OnSave(wxCommandEvent &event)
 	event.Skip();
 }
 
+void LEditor::OnKeyDown(wxKeyEvent &event)
+{
+	m_context->OnKeyDown(event);
+}

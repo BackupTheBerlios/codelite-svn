@@ -77,6 +77,7 @@ public:
 	virtual void OnCommentSelection(wxCommandEvent &event);
 	virtual void OnCommentLine(wxCommandEvent &event);
 	virtual void OnGenerateSettersGetters(wxCommandEvent &event);
+	virtual void OnKeyDown(wxKeyEvent &event);
 
 private:
 	wxString GetWordUnderCaret();
