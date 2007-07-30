@@ -935,13 +935,15 @@ void TagsManager::DoBuildDatabase(const wxArrayString &files, TagsDatabase &db, 
 	wxString tags;
 	wxProgressDialog* prgDlg = NULL;
 	
+	if(files.IsEmpty())
+		return;
+
 	// Create a progress dialog
 	if( parent )
 	{
-		prgDlg = new wxProgressDialog (wxT("Building tags database ..."), wxEmptyString, (int)files.GetCount()+10, parent, wxPD_APP_MODAL | wxPD_SMOOTH | wxPD_AUTO_HIDE);
-		prgDlg->SetSize(wxSize(800, -1));
-		prgDlg->Layout();
-		prgDlg->Centre();
+		wxString msg;
+		msg << wxT("Parsing file:\n") << files.Item(0);
+		prgDlg = new wxProgressDialog (wxT("Building tags database ..."), msg, (int)files.GetCount()+10, parent, wxPD_APP_MODAL | wxPD_SMOOTH | wxPD_AUTO_HIDE);
 	}
 	
 	int maxVal = (int)files.GetCount();

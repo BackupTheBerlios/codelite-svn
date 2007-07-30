@@ -1994,7 +1994,7 @@ int yyFlexLexer::yy_get_next_buffer()
 
 		while ( num_to_read <= 0 )
 		{ /* Not enough room in the buffer - grow it. */
-#ifdef YY_USES_REJECT
+#if	0
 			YY_FATAL_ERROR(
 			    "input buffer overflow, can't enlarge buffer because scanner uses REJECT" );
 #else

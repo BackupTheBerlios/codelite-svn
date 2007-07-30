@@ -228,6 +228,13 @@ public:
 	 */
 	static std::stack<BrowseRecord> &GetHistory() { return m_history; }
 
+	/**
+	 * Insert text to the editor and keeping the page indentation
+	 * \param text text to enter
+	 * \param pos position to insert the text
+	 */
+	void InsertTextWithIndentation(const wxString &text, int pos);
+
 private:
 
 	void SetProperties();

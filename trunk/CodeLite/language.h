@@ -146,6 +146,9 @@ public:
 	 */
 	void GetLocalVariables(const wxString &in, std::vector<TagEntryPtr> &tags, const wxString &name = wxEmptyString, SearchFlags flag = PartialMatch);
 
+	bool VariableFromPattern(const wxString &pattern, Variable &var);
+	bool FunctionFromPattern(const wxString &pattern, Function &foo);
+
 private:
 	/**
 	 * Private constructor
@@ -166,9 +169,7 @@ private:
 	 */
 	bool NextToken(wxString &token, wxString &delim);
 
-	bool VariableFromPattern(const wxString &pattern, Variable &var);
-	bool FunctionFromPattern(const wxString &pattern, Function &foo);
-
+	
 private:
 	std::map<char, char>    m_braces;
 	std::vector<wxString>	m_delimArr;

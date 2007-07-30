@@ -14,6 +14,7 @@
 #include "editor_config.h"
 #include "filedroptarget.h"
 #include "fileutils.h"
+#include "wx/tokenzr.h"
 
 // fix bug in wxscintilla.h
 #ifdef EVT_SCI_CALLTIP_CLICK
@@ -1175,6 +1176,28 @@ void LEditor::Create(const wxFileName &fileName, const wxString &project)
 	// mark this editor as non-modified to avoid non-needed confirm dialogs
 	SetSavePoint();
 	EmptyUndoBuffer();
+}
+
+void LEditor::InsertTextWithIndentation(const wxString &text, int lineno)
+{
+	//keep the page idnetation level
+	wxString textToInsert(text);
+	int lineStartPos = PositionFromLine(lineno);
+	int indentSize = GetIndent();
+	int indent = GetLineIndentation(lineno);
+	if(GetTabIndents()){
+		indent = indent / indentSize;
+	}
+
+	wxStringTokenizer tkz(textToInsert, wxT("\n"));
+	textToInsert.Clear();
+	while(tkz.HasMoreTokens())
+	{
+		for(int i=0; i<indent; i++)
+			textToInsert << wxT("\t");
+		textToInsert << tkz.NextToken() << wxT("\n");
+	}
+	InsertText(lineStartPos, textToInsert);
 }
 
 void LEditor::OnContextMenu(wxContextMenuEvent &event)

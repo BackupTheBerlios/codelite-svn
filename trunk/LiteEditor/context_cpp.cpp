@@ -758,24 +758,8 @@ void ContextCpp::OnInsertDoxyComment(wxCommandEvent &event)
 	if(comment.IsEmpty())
 		return;
 
-	int lineStartPos = editor.PositionFromLine(lineno);
+	editor.InsertTextWithIndentation(comment, lineno);
 
-	//keep the page idnetation level
-	int indentSize = editor.GetIndent();
-	int indent = editor.GetLineIndentation(lineno);
-	if(editor.GetTabIndents()){
-		indent = indent / indentSize;
-	}
-
-	wxStringTokenizer tkz(comment, wxT("\n"));
-	comment.Clear();
-	while(tkz.HasMoreTokens())
-	{
-		for(int i=0; i<indent; i++)
-			comment << wxT("\t");
-		comment << tkz.NextToken() << wxT("\n");
-	}
-	editor.InsertText(lineStartPos, comment);
 	//since we just inserted a text to the document, we force a save on the 
 	//document, or else the parser will lose sync with the database
 	//but avoid saving it, if it not part of the workspace
@@ -846,11 +830,22 @@ void ContextCpp::OnGenerateSettersGetters(wxCommandEvent &event)
 		return;	
 	
 	TagEntryPtr tag = classtags.at(0);
+	if(tag->GetFile() != editor.GetFileName().GetFullPath())
+	{
+		wxMessageBox(wxT("Place the cursor at the line where you want LiteEditor will generate functions for you"),
+					 wxT("Genereate setters/getters"), wxOK);
+		return;
+	}
+
+	int lineno = editor.LineFromPosition(editor.GetCurrentPos()) + 1;
 
 	//get the file name and line where to insert the setters getters
-	SettersGettersDlg *dlg = new SettersGettersDlg(ManagerST::Get()->GetMainFrame(), tags, wxFileName(), -1);
+	SettersGettersDlg *dlg = new SettersGettersDlg(ManagerST::Get()->GetMainFrame(), tags, tag->GetFile(), lineno);
 	if(dlg->ShowModal() == wxID_OK){
-		
+		wxString code = dlg->GetGenCode();
+		if(code.IsEmpty() == false){
+			editor.InsertTextWithIndentation(code, lineno);
+		}
 	}
 	dlg->Destroy();
 }

@@ -47,26 +47,15 @@ SettersGettersBaseDlg::SettersGettersBaseDlg( wxWindow* parent, int id, wxString
 	m_staticText31 = new wxStaticText( this, wxID_ANY, wxT("Preview:"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer3->Add( m_staticText31, 0, wxALL, 5 );
 	
-	m_textPreview = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textPreview = new LEditor(this, wxID_ANY, wxDefaultSize, wxEmptyString, wxEmptyString, false);
 	bSizer3->Add( m_textPreview, 1, wxALL|wxEXPAND, 5 );
 	
 	wxStaticBoxSizer* sbSizer1;
 	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, -1, wxT("Options:") ), wxVERTICAL );
 	
-	m_checkKeepUnderscope = new wxCheckBox( this, wxID_ANY, wxT("Preserve underscores in member name"), wxDefaultPosition, wxDefaultSize, 0 );
-	
-	sbSizer1->Add( m_checkKeepUnderscope, 0, wxALL, 5 );
-	
 	m_checkStartWithUppercase = new wxCheckBox( this, wxID_ANY, wxT("Function name starts with upper case letter"), wxDefaultPosition, wxDefaultSize, 0 );
-	
 	sbSizer1->Add( m_checkStartWithUppercase, 0, wxALL, 5 );
-	
-	m_checkRemoveMUnderscore = new wxCheckBox( this, wxID_ANY, wxT("Remove 'm_' member prefix from function name"), wxDefaultPosition, wxDefaultSize, 0 );
-	
-	sbSizer1->Add( m_checkRemoveMUnderscore, 0, wxALL, 5 );
-	
 	bSizer3->Add( sbSizer1, 0, wxALL|wxEXPAND, 5 );
-	
 	bSizer1->Add( bSizer3, 1, wxEXPAND, 5 );
 	
 	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
