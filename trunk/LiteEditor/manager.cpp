@@ -362,38 +362,10 @@ void Manager::AddProject(const wxString & path)
 	wxString errMsg;
 	bool res = WorkspaceST::Get()->AddProject(path, errMsg);
 	CHECK_MSGBOX(res);
-
-	// Create an entry in the CodeLite database
+	
+	//retag the newly added project
 	wxFileName fn(path);
-	ProjectPtr p = WorkspaceST::Get()->FindProjectByName(fn.GetName(), errMsg);
-	if( !p ){
-		return;
-	}
-
-	// Get list of all files from the project and parse them
-	std::vector<wxFileName> vList;
-	p->GetFiles(vList);
-
-	// Parse & Store
-	TagTreePtr ttp;
-	std::vector<DbRecordPtr> comments;
-	//in order to add files properly to the project
-	//the application must set its working directory
-	//to the project path
-	DirSaver ds;
-
-	wxString new_cwd = p->GetFileName().GetPath();
-	::wxSetWorkingDirectory(new_cwd);
-
-	wxBusyCursor cursor;
-	if (TagsManagerST::Get()->GetParseComments()) {
-		ttp = TagsManagerST::Get()->ParseSourceFiles(vList, &comments);
-		TagsManagerST::Get()->StoreComments(comments);
-	} else {
-		ttp = TagsManagerST::Get()->ParseSourceFiles(vList);
-	}
-
-	TagsManagerST::Get()->Store(ttp);
+	RetagProject(fn.GetName());
 	RebuildFileView();
 }
 
@@ -448,8 +420,8 @@ void Manager::RemoveProjectNameFromOpenFiles(const std::vector<wxFileName> &proj
 				{
 					editor->SetProject(wxEmptyString);
 					break;
-				} // if(openFileFP == project_files.at(j).GetFullPath())
-			} // for(size_t j=0; j<project_files.size(); j++)
+				}
+			}
 		}
 	}
 }

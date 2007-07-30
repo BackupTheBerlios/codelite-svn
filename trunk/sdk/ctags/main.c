@@ -369,6 +369,7 @@ static boolean createTagsFromFileInput (FILE *const fp, const boolean filter)
 				if (Option.filterTerminator != NULL)
 				{
 					fputs (Option.filterTerminator, stdout);
+					/** Eran Ifrah **/
 					fputs ("\n", stdout);
 				}
 				fflush (stdout);
