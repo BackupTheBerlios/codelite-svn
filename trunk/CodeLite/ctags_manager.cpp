@@ -942,8 +942,11 @@ void TagsManager::DoBuildDatabase(const wxArrayString &files, TagsDatabase &db, 
 	if( parent )
 	{
 		wxString msg;
-		msg << wxT("Parsing file:\n") << files.Item(0);
+		msg << wxT("Parsing file:\t\t\t\t\t\t\t\t\t\t\t\t") << files.Item(0);
 		prgDlg = new wxProgressDialog (wxT("Building tags database ..."), msg, (int)files.GetCount()+10, parent, wxPD_APP_MODAL | wxPD_SMOOTH | wxPD_AUTO_HIDE);
+		prgDlg->GetSizer()->Fit(prgDlg);
+		prgDlg->Layout();
+		prgDlg->Centre();
 	}
 	
 	int maxVal = (int)files.GetCount();
