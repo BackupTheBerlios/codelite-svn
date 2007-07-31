@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version May  5 2007)
+// C++ code generated with wxFormBuilder (version Jul 28 2007)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -11,10 +11,9 @@
 #include <wx/wx.h>
 
 #include <wx/checklst.h>
+#include <wx/wxscintilla.h>
 #include <wx/statline.h>
 #include <wx/button.h>
-#include "editor.h"
-#include "editor_creator.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +31,7 @@ class SettersGettersBaseDlg : public wxDialog
 		wxStaticText* m_staticText3;
 		wxCheckListBox* m_checkListMembers;
 		wxStaticText* m_staticText31;
-		LEditor* m_textPreview;
+		wxScintilla* m_textPreview;
 		wxCheckBox* m_checkStartWithUppercase;
 		wxStaticLine* m_staticline1;
 		wxButton* m_buttonOK;
