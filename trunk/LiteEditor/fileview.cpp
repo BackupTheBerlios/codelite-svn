@@ -295,6 +295,10 @@ void FileViewTree::DoItemActivated(wxTreeItemId &item, wxEvent &event)
 		ManagerST::Get()->OpenFile(fn.GetFullPath(), project, -1);
 		return;
 	}
+	else// if(itemData->GetData().GetKind() == ProjectItem::TypeVirtualDirectory)
+	{
+		event.Skip();
+	}
 }
 
 void FileViewTree::OnExportMakefile(wxCommandEvent &event)

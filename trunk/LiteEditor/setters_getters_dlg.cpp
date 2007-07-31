@@ -53,6 +53,13 @@ void SettersGettersDlg::OnCheckStartWithUpperCase(wxCommandEvent &event)
 wxString SettersGettersDlg::GenerateFunctions()
 {
 	wxString code;
+	GenerateSetters(code);
+	GenerateGetters(code);
+	return code;
+}
+
+void SettersGettersDlg::GenerateGetters(wxString &code)
+{
 	for(size_t i=0; i<m_checkListMembers->GetCount(); i++)
 	{
 		TagEntryPtr tag;
@@ -65,13 +72,30 @@ wxString SettersGettersDlg::GenerateFunctions()
 				//geenerate function for this tag
 				if(item.EndsWith(wxT("[Getter]"))){
 					code << GenerateGetter(tag) << wxT("\n");
-				}else{
+				}
+			}
+		}
+	}
+}
+
+void SettersGettersDlg::GenerateSetters(wxString &code)
+{
+	for(size_t i=0; i<m_checkListMembers->GetCount(); i++)
+	{
+		TagEntryPtr tag;
+		if(m_checkListMembers->IsChecked((unsigned int)i)){
+			wxString item = m_checkListMembers->GetString((unsigned int)i);
+			//get the tag for this
+			std::map<wxString, TagEntryPtr>::iterator iter = m_tagsMap.find(item);
+			if(iter != m_tagsMap.end()){
+				tag = iter->second;
+				//geenerate function for this tag
+				if(item.EndsWith(wxT("[Setter]"))){
 					code << GenerateSetter(tag) << wxT("\n");;
 				}
 			}
 		}
 	}
-	return code;
 }
 
 wxString SettersGettersDlg::GenerateSetter(TagEntryPtr tag)

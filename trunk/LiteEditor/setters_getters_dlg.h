@@ -27,6 +27,8 @@ protected:
 	wxString GenerateGetter(TagEntryPtr tag);
 	void FormatName(wxString &name);
 	void UpdatePreview();
+	void GenerateGetters(wxString &code);
+	void GenerateSetters(wxString &code);
 
 public:
 	/** Constructor */
