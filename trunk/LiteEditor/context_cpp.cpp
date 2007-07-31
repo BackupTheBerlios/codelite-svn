@@ -604,9 +604,6 @@ void ContextCpp::DisplayCompletionBox(const std::vector<TagEntryPtr> &tags, cons
 
 void ContextCpp::GotoPreviousDefintion()
 {
-	LEditor &rCtrl = GetCtrl();
-	VALIDATE_PROJECT(rCtrl);
-
 	if(LEditor::GetHistory().empty())
 		return;
 
