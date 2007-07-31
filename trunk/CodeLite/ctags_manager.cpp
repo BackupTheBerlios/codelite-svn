@@ -49,6 +49,7 @@ struct SAscendingSort
 struct tagParseResult {
 	TagTreePtr tree;
 	std::vector<DbRecordPtr> *comments;
+	wxString fileName;
 };
 
 //------------------------------------------------------------------------------
@@ -942,13 +943,15 @@ void TagsManager::DoBuildDatabase(const wxArrayString &files, TagsDatabase &db, 
 	if( parent )
 	{
 		wxString msg;
-		msg << wxT("Parsing file:\t\t\t\t\t\t\t\t\t\t\t\t") << files.Item(0);
-		prgDlg = new wxProgressDialog (wxT("Building tags database ..."), msg, (int)files.GetCount()+10, parent, wxPD_APP_MODAL | wxPD_SMOOTH | wxPD_AUTO_HIDE);
+		//set dummy message so the dialog will have proper length
+		msg << wxT("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+		prgDlg = new wxProgressDialog (wxT("Building tags database ..."), msg, (int)files.GetCount()*2, parent, wxPD_APP_MODAL | wxPD_SMOOTH | wxPD_AUTO_HIDE);
 		prgDlg->GetSizer()->Fit(prgDlg);
 		prgDlg->Layout();
 		prgDlg->Centre();
 	}
 	
+	prgDlg->Update(0, wxT("Parsing..."));
 	int maxVal = (int)files.GetCount();
 	int i = 0;
 
@@ -962,12 +965,13 @@ void TagsManager::DoBuildDatabase(const wxArrayString &files, TagsDatabase &db, 
 		// update the progress bar
 		if( prgDlg ){
 			wxString msg;
-			msg << wxT("Parsing file:\n") << curFile.GetFullPath();
+			msg << wxT("Parsing file: ") << curFile.GetFullName();
 			prgDlg->Update(i, msg);
 		}
 
 		tags.Clear();
 		tagParseResult result;
+		result.fileName = curFile.GetFullName();
 		if(GetParseComments())
 		{
 			result.comments = new std::vector<DbRecordPtr>();
@@ -980,18 +984,13 @@ void TagsManager::DoBuildDatabase(const wxArrayString &files, TagsDatabase &db, 
 		trees.push_back(result);
 	}
 
-	if( prgDlg ){
-		prgDlg->Update(maxVal, wxT("Saving symbols to database..."));
-	}
-
-	
-	unsigned int cur = 1;
+	unsigned int cur = 0;
 	for(std::list<tagParseResult>::iterator iter = trees.begin(); iter != trees.end(); iter++)
 	{
 		if(prgDlg){
 			wxString msg;
-			msg << wxT("Saving file status: ") << cur << wxT("/") << (unsigned int)trees.size();
-			prgDlg->Update(maxVal, msg);
+			msg << wxT("Saving file's symbols: ") << (*iter).fileName;
+			prgDlg->Update(maxVal + cur, msg);
 		}
 		db.Store((*iter).tree, wxFileName());
 		if(GetParseComments())
@@ -1010,7 +1009,7 @@ void TagsManager::DoBuildDatabase(const wxArrayString &files, TagsDatabase &db, 
 			delete (*iter).comments;
 		}
 		cur++;
-	} // for(std::list<TagTreePtr>::iterator iter = trees.begin(); iter != trees.end(); iter++)
+	}
 	if(prgDlg)
 		prgDlg->Destroy();
 }
