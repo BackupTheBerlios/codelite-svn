@@ -847,14 +847,18 @@ void ContextCpp::OnGenerateSettersGetters(wxCommandEvent &event)
 	int lineno = editor.LineFromPosition(editor.GetCurrentPos()) + 1;
 
 	//get the file name and line where to insert the setters getters
-	SettersGettersDlg *dlg = new SettersGettersDlg(ManagerST::Get()->GetMainFrame(), tags, tag->GetFile(), lineno);
-	if(dlg->ShowModal() == wxID_OK){
-		wxString code = dlg->GetGenCode();
+	static SettersGettersDlg *s_dlg = NULL;
+	if(!s_dlg){
+		s_dlg = new SettersGettersDlg(ManagerST::Get()->GetMainFrame());
+	}
+	
+	s_dlg->Init(tags, tag->GetFile(), lineno);
+	if(s_dlg->ShowModal() == wxID_OK){
+		wxString code = s_dlg->GetGenCode();
 		if(code.IsEmpty() == false){
 			editor.InsertTextWithIndentation(code, lineno);
 		}
 	}
-	dlg->Destroy();
 }
 
 void ContextCpp::OnKeyDown(wxKeyEvent &event)

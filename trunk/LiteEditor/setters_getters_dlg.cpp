@@ -3,15 +3,21 @@
 #include "macros.h"
 #include "language.h"
 #include "wx/tokenzr.h"
-#include "editor.h"
 
-SettersGettersDlg::SettersGettersDlg(wxWindow* parent, const std::vector<TagEntryPtr> &tags, const wxFileName &file, int lineno)
+SettersGettersDlg::SettersGettersDlg(wxWindow* parent)
 : SettersGettersBaseDlg(parent)
-, m_members(tags)
-, m_file(file)
-, m_lineno(lineno)
+{
+	ConnectCheckBox(m_checkStartWithUppercase, SettersGettersDlg::OnCheckStartWithUpperCase);
+	ConnectCheckList(m_checkListMembers, SettersGettersDlg::OnCheckStartWithUpperCase);
+}
+
+void SettersGettersDlg::Init(const std::vector<TagEntryPtr> &tags, const wxFileName &file, int lineno)
 {
 	//convert the tags to string array
+	m_file = file;
+	m_lineno = lineno;
+	m_members = tags;
+
 	wxArrayString members;
 	for(size_t i=0; i<tags.size() ; i++){
 		members.Add(tags.at(i)->GetName() + wxT(" : [Getter]"));
@@ -36,17 +42,9 @@ SettersGettersDlg::SettersGettersDlg(wxWindow* parent, const std::vector<TagEntr
 	}
 
 	//set the preview
-	m_previewWin = new LEditor(this, wxID_ANY, wxDefaultSize, wxEmptyString, wxEmptyString);
-	GetSizer()->Replace(m_textPreview, m_previewWin, true);
-	m_textPreview->Destroy();
-	Layout();
-
-	m_previewWin->Create(m_file, wxEmptyString);
-	m_previewWin->GotoLine(m_lineno);
-	m_previewWin->SetReadOnly(true);
-
-	ConnectCheckBox(m_checkStartWithUppercase, SettersGettersDlg::OnCheckStartWithUpperCase);
-	ConnectCheckList(m_checkListMembers, SettersGettersDlg::OnCheckStartWithUpperCase);
+	m_textPreview->Create(m_file, wxEmptyString);
+	m_textPreview->GotoLine(m_lineno);
+	m_textPreview->SetReadOnly(true);
 	UpdatePreview();
 }
 
@@ -202,12 +200,12 @@ void SettersGettersDlg::UpdatePreview()
 {
 	m_code.Clear();
 	m_code = GenerateFunctions();
-	m_previewWin->SetReadOnly(false);
+	m_textPreview->SetReadOnly(false);
 	//remove previous preview
-	if(m_previewWin->CanUndo()) m_previewWin->Undo();
-	m_previewWin->BeginUndoAction();
-	m_previewWin->InsertTextWithIndentation(m_code, m_lineno);
-	m_previewWin->EndUndoAction();
-	m_previewWin->SetReadOnly(true);
+	if(m_textPreview->CanUndo()) m_textPreview->Undo();
+	m_textPreview->BeginUndoAction();
+	m_textPreview->InsertTextWithIndentation(m_code, m_lineno);
+	m_textPreview->EndUndoAction();
+	m_textPreview->SetReadOnly(true);
 }
 
