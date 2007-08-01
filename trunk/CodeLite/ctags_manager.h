@@ -33,6 +33,7 @@
 class clProcess;
 class DirTraverser;
 class Language;
+class wxTimer;
 
 #define TagsGlobal 0
 
@@ -88,6 +89,9 @@ class WXDLLIMPEXP_CL TagsManager : public wxEvtHandler
 	TagsOptionsData m_options;
 	std::map<int, clProcess*> m_processes;
 	bool m_parseComments;
+	bool m_canDeleteCtags;
+	std::list<clProcess*> m_gargabeCollector;
+	wxTimer *m_timer;
 
 public:
 	/**
@@ -387,6 +391,8 @@ protected:
 	 * Handler ctags process termination
 	 */
 	void OnCtagsEnd(wxProcessEvent& event);
+	void OnTimer(wxTimerEvent &event);
+	DECLARE_EVENT_TABLE()
 
 private: 
 	/**

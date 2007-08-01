@@ -12,6 +12,7 @@
 #include "cpp_comment_creator.h"
 #include "tags_options_data.h"
 #include <wx/busyinfo.h>
+#include "wx/timer.h"
 
 #define PRINT_START_MESSAGE(msg)\
 	{\
@@ -56,13 +57,23 @@ struct tagParseResult {
 // CTAGS Manager
 //------------------------------------------------------------------------------
 
+BEGIN_EVENT_TABLE(TagsManager, wxEvtHandler)
+EVT_TIMER(wxID_ANY, TagsManager::OnTimer)
+END_EVENT_TABLE()
+
 TagsManager::TagsManager() : wxEvtHandler()
 , m_ctagsPath(wxT("ctags-le"))
 , m_ctags(NULL)
+, m_canDeleteCtags(true)
+, m_timer(NULL)
 {
 	m_pDb = new TagsDatabase();
 	m_pExternalDb = new TagsDatabase();
 	m_ctagsCmd[TagsGlobal] =  wxT("  --fields=aKmSsnit --c-kinds=+p --C++-kinds=+p --filter=yes --filter-terminator=\"<<EOF>>\"  ");
+
+	//call timer per 10 seconds
+	m_timer = new wxTimer(this);
+	m_timer->Start(100);
 }  
 
 TagsManager::~TagsManager()
@@ -70,9 +81,43 @@ TagsManager::~TagsManager()
 	delete m_pDb;
 	delete m_pExternalDb;
 
-	if(m_ctags)	m_ctags->Disconnect(m_ctags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
-	// terminate ctags process
-	if(m_ctags) m_ctags->Terminate();
+	wxCriticalSectionLocker locker(m_cs);
+	if(m_canDeleteCtags){
+		if(m_ctags)	m_ctags->Disconnect(m_ctags->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
+		// terminate ctags process
+		if(m_ctags) m_ctags->Terminate();
+
+		std::list<clProcess*>::iterator it = m_gargabeCollector.begin();
+		for(; it != m_gargabeCollector.end(); it++){
+			delete (*it);
+		}
+
+		if(m_gargabeCollector.empty() == false){
+			wxLogMessage(wxT("Garbage collector called for ctags process"));
+		}
+		m_gargabeCollector.clear();
+	}
+}
+
+void TagsManager::OnTimer(wxTimerEvent &event)
+{
+	//clean the garbage collector
+	wxUnusedVar(event);
+	{
+		wxCriticalSectionLocker locker(m_cs);
+		if(m_canDeleteCtags){
+
+			std::list<clProcess*>::iterator it = m_gargabeCollector.begin();
+			for(; it != m_gargabeCollector.end(); it++){
+				delete (*it);
+			}
+
+			if(m_gargabeCollector.empty() == false){
+				wxLogMessage(wxT("Garbage collector called for ctags process"));
+			}
+			m_gargabeCollector.clear();
+		}
+	}
 }
 
 void TagsManager::OpenDatabase(const wxFileName& fileName){
@@ -411,8 +456,24 @@ void TagsManager::OnCtagsEnd(wxProcessEvent& event)
 		proc->Disconnect(proc->GetUid(), wxEVT_END_PROCESS, wxProcessEventHandler(TagsManager::OnCtagsEnd), NULL, this);
 		// start new process
 		StartCtagsProcess((int)proc->GetType());
-		// delete the one that just terminated
-		delete proc;
+		
+		{
+			wxCriticalSectionLocker locker(m_cs);
+			// delete the one that just terminated
+			if(m_canDeleteCtags)
+			{
+				delete proc;
+				//also delete all old ctags that might be in the garbage collector
+				std::list<clProcess*>::iterator it = m_gargabeCollector.begin();
+				for(; it != m_gargabeCollector.end(); it++){
+					delete (*it);
+				}
+				m_gargabeCollector.clear();
+			}
+			else
+				m_gargabeCollector.push_back(proc);
+		}
+
 		// remove it from the map
 		m_processes.erase(iter);
 	}
@@ -424,6 +485,14 @@ void TagsManager::OnCtagsEnd(wxProcessEvent& event)
 void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, clProcess *ctags)
 {
 	// Send the command to ctags
+	{
+		wxCriticalSectionLocker locker(m_cs);
+		if(!ctags){
+			return;
+		}
+		m_canDeleteCtags = false;
+	}
+
 	wxOutputStream *out = ctags->GetOutputStream();
 	if( out ) 
 	{
@@ -469,6 +538,12 @@ void TagsManager::SourceToTags(const wxFileName& source, wxString& tags, clProce
 			wxMilliSleep(1000); //wait for it 1 second to start
 			break;
 		}
+	}
+
+	{
+		wxCriticalSectionLocker locker(m_cs);
+		// set the deletion flag to true
+		m_canDeleteCtags = true;
 	}
 }
 
