@@ -26,13 +26,13 @@ TagsOptionsDlg::TagsOptionsDlg( wxWindow* parent, const TagsOptionsData& data, i
 : wxDialog( parent, id, title, pos, size, style )
 , m_data(data)
 {
-this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
 	
-	long booKkStyle = wxFNB_FF2 | wxFNB_NO_NAV_BUTTONS | wxFNB_NO_X_BUTTON | wxFNB_BACKGROUND_GRADIENT;
-	m_mainBook = new wxFlatNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, booKkStyle);
+	long bookStyle = wxFNB_FF2 | wxFNB_NO_NAV_BUTTONS | wxFNB_NO_X_BUTTON | wxFNB_BACKGROUND_GRADIENT;
+	m_mainBook = new wxFlatNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, bookStyle);
 	m_generalPage = new wxPanel( m_mainBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -74,7 +74,7 @@ this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	m_generalPage->SetSizer( bSizer4 );
 	m_generalPage->Layout();
 	bSizer4->Fit( m_generalPage );
-	m_mainBook->AddPage( m_generalPage, wxT("CodeLite"), true );
+	m_mainBook->AddPage( m_generalPage, wxT("CodeLite"), false );
 	m_ctagsPage = new wxPanel( m_mainBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
@@ -89,7 +89,7 @@ this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	m_staticText1->Wrap( -1 );
 	fgSizer2->Add( m_staticText1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_filePicker = new FilePicker(m_ctagsPage);
+	m_filePicker = new FilePicker(m_ctagsPage, wxID_ANY);
 	fgSizer2->Add( m_filePicker, 0, wxEXPAND|wxALL, 5 );
 	
 	m_staticText3 = new wxStaticText( m_ctagsPage, wxID_ANY, wxT("File Types:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -108,12 +108,16 @@ this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	m_comboBoxLang->Append( wxT("Java") );
 	fgSizer2->Add( m_comboBoxLang, 0, wxALL|wxEXPAND, 5 );
 	
-	bSizer6->Add( fgSizer2, 1, wxEXPAND, 5 );
+	bSizer6->Add( fgSizer2, 0, wxEXPAND, 5 );
+	
+	m_checkFilesWithoutExt = new wxCheckBox( m_ctagsPage, wxID_ANY, wxT("Parse files without extension"), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	bSizer6->Add( m_checkFilesWithoutExt, 0, wxALL, 5 );
 	
 	m_ctagsPage->SetSizer( bSizer6 );
 	m_ctagsPage->Layout();
 	bSizer6->Fit( m_ctagsPage );
-	m_mainBook->AddPage( m_ctagsPage, wxT("ctags"), false );
+	m_mainBook->AddPage( m_ctagsPage, wxT("ctags"), true );
 	
 	mainSizer->Add( m_mainBook, 1, wxEXPAND | wxALL, 5 );
 	

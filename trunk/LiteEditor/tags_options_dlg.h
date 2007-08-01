@@ -49,6 +49,7 @@ protected:
 	wxButton* m_buttonCancel;
 	wxCheckBox* m_checkLoadLastDB;
 	TagsOptionsData m_data;
+	wxCheckBox* m_checkFilesWithoutExt;
 
 protected:
 	void SetFlag(CodeCompletionOpts flag, bool set);
