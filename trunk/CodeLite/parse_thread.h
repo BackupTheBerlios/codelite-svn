@@ -1,4 +1,4 @@
-#ifndef CODELITE_PARSE_THREAD_H
+#ifndef CODELITE_PARSE_THREAD_H 
 #define CODELITE_PARSE_THREAD_H
 
 #include "entry.h"

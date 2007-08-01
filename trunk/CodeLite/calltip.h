@@ -3,7 +3,7 @@
 
 #include "tokenizer.h"
 #include "smart_ptr.h"
-
+ 
 #ifdef WXMAKINGDLL_CODELITE
 #    define WXDLLIMPEXP_CL WXEXPORT
 #elif defined(WXUSINGDLL_CODELITE)

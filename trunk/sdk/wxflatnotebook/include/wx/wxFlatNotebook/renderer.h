@@ -8,7 +8,7 @@
 #include <map>
 #include <vector>
 #include <wx/event.h>
-
+ 
 class wxFNBRenderer
 {
 protected:
