@@ -45,6 +45,7 @@ bool BuilderGnuMake::Export(const wxString &project, wxString &errMsg)
 		wxString projectSelConf = matrix->GetProjectSelectedConf(workspaceSelConf, dependProj->GetName());
 		args = wxT("type=");
 		args << NormalizeConfigName(projectSelConf) << wxT(" ");
+		text << wxT("\t@echo ----------Building project:[ ") << dependProj->GetName() << wxT(" - ") << projectSelConf << wxT(" ]----------\n");
 		text << wxT("\t@cd \"") << dependProj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << dependProj->GetName() << wxT(".mk ") << args << wxT("\n");
 	}
 	//generate makefile for the project itself
@@ -52,6 +53,7 @@ bool BuilderGnuMake::Export(const wxString &project, wxString &errMsg)
 	wxString projectSelConf = matrix->GetProjectSelectedConf(workspaceSelConf, project);
 	args = wxT("type=");
 	args << NormalizeConfigName(projectSelConf) << wxT(" ");
+	text << wxT("\t@echo ----------Building project:[ ") << project << wxT(" - ") << projectSelConf << wxT(" ]----------\n");
 	text << wxT("\t@cd \"") << proj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << proj->GetName() << wxT(".mk ") << args << wxT("\n");
 
 	//create the clean target
@@ -61,6 +63,7 @@ bool BuilderGnuMake::Export(const wxString &project, wxString &errMsg)
 		args = wxT("type=");
 		args << NormalizeConfigName(projectSelConf) << wxT(" ");
 		ProjectPtr dependProj = WorkspaceST::Get()->FindProjectByName(depsArr.Item(i), errMsg);
+		text << wxT("\t@echo ----------Building project:[ ") << dependProj->GetName() << wxT(" - ") << projectSelConf << wxT(" ]----------\n");
 		text << wxT("\t@cd \"") << dependProj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << dependProj->GetName() << wxT(".mk ") << args << wxT(" clean\n") ;
 	}
 
@@ -68,6 +71,7 @@ bool BuilderGnuMake::Export(const wxString &project, wxString &errMsg)
 	projectSelConf = matrix->GetProjectSelectedConf(workspaceSelConf, project);
 	args = wxT("type=");
 	args << NormalizeConfigName(projectSelConf) << wxT(" ");
+	text << wxT("\t@echo ----------Building project:[ ") << project << wxT(" - ") << projectSelConf << wxT(" ]----------\n");
 	text << wxT("\t@cd \"") << proj->GetFileName().GetPath() << wxT("\" && ") << buildTool << wxT(" ") << proj->GetName() << wxT(".mk ") << args << wxT(" clean\n") ;
 	return true;
 }
@@ -126,7 +130,6 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 	text << wxT("##\n");
 	text << wxT("$(OutputFile): $(Objects)\n");
 	//print build start message
-	text << wxT("\t@echo ----------Building project:[ ") << proj->GetName() << wxT(" - ") << bldConf->GetName() << wxT(" ]----------\n");
 	CreatePreBuildEvents(bldConf, text);
 	CreateTargets(proj->GetSettings()->GetProjectType(), bldConf, text);
 	CreatePostBuildEvents(bldConf, text);
@@ -142,7 +145,6 @@ void BuilderGnuMake::CreateObjectList(ProjectPtr proj, wxTextOutputStream &text)
 {
 	std::vector<wxFileName> files;
 	proj->GetFiles(files);
-
 	text << wxT("Objects=");
 
 	int counter = 1;
@@ -161,6 +163,21 @@ void BuilderGnuMake::CreateObjectList(ProjectPtr proj, wxTextOutputStream &text)
 
 void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text)
 {
+	//get the project specific build configuration for the workspace active 
+	//configuration
+	BuildConfigPtr bldConf = WorkspaceST::Get()->GetProjSelBuildConf(proj->GetName());
+	wxString cmpType = bldConf->GetCompilerType();
+	//get the compiler settings 
+	CompilerPtr cmp = BuildSettingsConfigST::Get()->GetCompiler(cmpType);
+	bool isGnu(false);
+	if(	cmp->GetTool(wxT("CompilerName")).Contains(wxT("gcc")) ||
+		cmp->GetTool(wxT("CompilerName")).Contains(wxT("g++")))
+	{
+		//for g++/gcc compilers, we use a special feature that allows automatic generation of the 
+		//objects along with their dependenices
+		isGnu = true;
+	}
+
 	std::vector<wxFileName> files;
 	proj->GetFiles(files);
 
@@ -173,11 +190,30 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 	for(size_t i=0; i<files.size(); i++){
 		if( !IsSourceFile(files[i].GetExt()) )
 			continue;
+		
+		if(isGnu){
+			wxString objectName;
+			objectName << wxT("$(IntermediateDirectory)") << PATH_SEP << files[i].GetName() << wxT("$(ObjectSuffix)");
 
-		wxString objectName = files[i].GetName() << wxT("$(ObjectSuffix)");
-		wxString fileName   = files[i].GetFullPath();
-		text << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(": ") << fileName << wxT("\n");
-		text << wxT("\t") << wxT("$(CompilerName) $(SourceSwitch) ") << fileName << wxT(" $(CmpOptions)  ") << wxT(" $(OutputSwitch) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(" $(IncludePath) \n\n");
+			wxString fileName   = files[i].GetFullPath();
+			wxString dependFile;
+			dependFile << wxT("$(IntermediateDirectory)") << PATH_SEP << files[i].GetName() << wxT("$(ObjectSuffix)") << wxT(".d");
+
+			text << objectName << wxT(": ") << fileName << wxT(" ") << dependFile << wxT("\n");
+			text << wxT("\t") << wxT("$(CompilerName) $(SourceSwitch) ") << fileName << wxT(" $(CmpOptions)  ") << wxT(" $(OutputSwitch) ") << objectName << wxT(" $(IncludePath)\n");
+			
+			//add the dependencie rule
+			text << dependFile << wxT(":") << wxT("\n");
+			text << wxT("\t") << wxT("@$(CompilerName) $(CmpOptions) $(IncludePath) -MT") << objectName <<wxT(" -MF") << dependFile << wxT(" -MM ") << fileName << wxT("\n\n");
+
+		}else{
+			wxString objectName;
+			objectName << wxT("$(IntermediateDirectory)") << PATH_SEP << files[i].GetName() << wxT("$(ObjectSuffix)");
+
+			wxString fileName   = files[i].GetFullPath();
+			text << objectName << wxT(": ") << fileName << wxT("\n");
+			text << wxT("\t") << wxT("$(CompilerName) $(SourceSwitch) ") << fileName << wxT(" $(CmpOptions)  ") << wxT(" $(OutputSwitch) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(" $(IncludePath) \n\n");
+		}
 	}
 
 	//add clean target
@@ -193,7 +229,9 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 				continue;
 
 			wxString objectName = files[i].GetName() << wxT("$(ObjectSuffix)");
+			wxString dependFile = files[i].GetName() << wxT("$(ObjectSuffix)") << wxT(".d");
 			text << wxT("\t") << wxT("-if exist ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT(" del ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT("\n");
+			text << wxT("\t") << wxT("-if exist ") << wxT("$(IntermediateDirectory)") << PATH_SEP << dependFile << wxT(" del ") << wxT("$(IntermediateDirectory)") << PATH_SEP << dependFile << wxT("\n");
 		}
 		//delete the output file as well
 		wxString exeExt(wxEmptyString);
@@ -211,10 +249,17 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 				continue;
 
 			wxString objectName = files[i].GetName() << wxT("$(ObjectSuffix)");
+			wxString dependFile = files[i].GetName() << wxT("$(ObjectSuffix)") << wxT(".d");
+
 			text << wxT("\t") << wxT("$(RM) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << objectName << wxT("\n");
+			text << wxT("\t") << wxT("$(RM) ") << wxT("$(IntermediateDirectory)") << PATH_SEP << dependFile << wxT("\n");
 		}
 		//delete the output file as well
 		text << wxT("\t") << wxT("$(RM) ") << wxT("$(OutputFile)\n");
+	}
+
+	if(isGnu){
+		text << wxT("\n-include $(IntermediateDirectory)/*.d\n");
 	}
 	text << wxT("\n");
 }
