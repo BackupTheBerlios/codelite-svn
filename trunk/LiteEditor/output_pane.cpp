@@ -200,7 +200,7 @@ void OutputPane::AppendText(const wxString &winName, const wxString &text)
 			{
 				//set new project name for the coming lines
 				m_project = text.AfterFirst(wxT('['));
-				m_project = m_project.BeforeFirst(wxT(']'));
+				m_project = m_project.BeforeFirst(wxT('-'));
 				TrimString(m_project);
 			}
 			m_buildLineInfo.Add(m_project);
