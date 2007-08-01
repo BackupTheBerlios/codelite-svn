@@ -50,6 +50,8 @@ if( !res )													\
 	return res;												\
 }
 
+typedef std::vector<std::string> MyStringArr;
+
 Manager::Manager(void)
 : m_cleanRequest(NULL)
 , m_compileRequest(NULL)

@@ -76,6 +76,13 @@ public:
 	 * \param vdFullPath path of the virtual directory
 	 */
 	bool AddFileToProject(const wxString &fileName, const wxString &vdFullPath, bool openIt = false);
+	/**
+	 * \brief 
+	 * \param files
+	 * \param vdFullPath
+	 * \param actualAdded
+	 * \return 
+	 */
 	void AddFilesToProject(const wxArrayString &files, const wxString &vdFullPath, wxArrayString &actualAdded);
 
 	/*!

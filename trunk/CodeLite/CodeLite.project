@@ -79,7 +79,7 @@
   </VirtualDirectory>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
-      <General OutputFile="..\lib\gcc\libCodeLite.a" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
+      <General OutputFile="..\lib\gcc_lib\libCodeLite.a" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
       <Compiler Required="yes" Options="$(shell wx-config --cxxflags --debug=no);">
         <IncludePath Value="."/>
         <IncludePath Value=".\include"/>
