@@ -101,14 +101,6 @@
     <File Name="open_resouce_dlg.h"/>
     <File Name="filehistory.h"/>
   </VirtualDirectory>
-  <Dependencies>
-    <Project Name="sqlite3"/>
-    <Project Name="wxsqlite3"/>
-    <Project Name="CodeLite"/>
-    <Project Name="wxflatnotebook"/>
-    <Project Name="wxscintilla"/>
-    <Project Name="plugin_sdk"/>
-  </Dependencies>
   <VirtualDirectory Name="Dialogs">
     <File Name="open_type_dlg.cpp"/>
     <File Name="open_type_dlg.h"/>
@@ -207,4 +199,12 @@
       <PostBuild/>
     </Configuration>
   </Settings>
+  <Dependencies>
+    <Project Name="sqlite3"/>
+    <Project Name="wxflatnotebook"/>
+    <Project Name="wxscintilla"/>
+    <Project Name="wxsqlite3"/>
+    <Project Name="CodeLite"/>
+    <Project Name="plugin_sdk"/>
+  </Dependencies>
 </CodeLite_Project>

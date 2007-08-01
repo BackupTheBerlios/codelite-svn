@@ -64,7 +64,6 @@
     <File Name="VariableLexer.h"/>
     <File Name="variable.yy.h"/>
   </VirtualDirectory>
-  <Dependencies/>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
       <General OutputFile="..\lib\gcc\libplugin_sdk.a" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
@@ -119,4 +118,5 @@
     </Configuration>
   </Settings>
   <VirtualDirectory Name="Commons"/>
+  <Dependencies/>
 </CodeLite_Project>

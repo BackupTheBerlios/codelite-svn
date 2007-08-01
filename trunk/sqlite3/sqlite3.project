@@ -5,7 +5,6 @@
     <File Name="sqlite3.c"/>
     <File Name="sqlite3.h"/>
   </VirtualDirectory>
-  <Dependencies/>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu gcc">
       <General OutputFile="../lib/gcc_lib/libsqlite3.a" IntermediateDirectory="./Release" Command="" CommandArguments="" WorkingDirectory="./Release"/>
@@ -28,4 +27,5 @@
       <PostBuild/>
     </Configuration>
   </Settings>
+  <Dependencies/>
 </CodeLite_Project>

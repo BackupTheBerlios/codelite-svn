@@ -124,11 +124,13 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 	text << wxT("##\n");
 	text << wxT("## Main Build Tragets \n");
 	text << wxT("##\n");
-	text << wxT("$(OutputFile): $(Objects)\n\n");
+	text << wxT("$(OutputFile): $(Objects)\n");
+	//print build start message
+	text << wxT("\t@echo ----------Building project:[ ") << proj->GetName() << wxT(" - ") << bldConf->GetName() << wxT(" ]----------\n");
 	CreatePreBuildEvents(bldConf, text);
 	CreateTargets(proj->GetSettings()->GetProjectType(), bldConf, text);
 	CreatePostBuildEvents(bldConf, text);
-
+	
 	//-----------------------------------------------------------
 	// Create a list of targets that should be built according to 
 	// projects' file list 
@@ -161,15 +163,8 @@ void BuilderGnuMake::CreateFileTargets(ProjectPtr proj, wxTextOutputStream &text
 {
 	std::vector<wxFileName> files;
 	proj->GetFiles(files);
-	
-	//create a nice start message to user
-	text << wxT("##\n");
-	text << wxT("## Startup message \n");
-	text << wxT("##\n");
-	text << wxT("StartMsg:\n");
-	text << wxT("\t@echo ----------Building project:[ ") << proj->GetName() << wxT(" ]----------\n");
-	text << wxT("\n\n");
 
+	text << wxT("\n\n");
 	//create rule per object
 	text << wxT("##\n");
 	text << wxT("## Objects\n");
@@ -229,14 +224,21 @@ void BuilderGnuMake::CreateTargets(const wxString &type, BuildConfigPtr bldConf,
 	//create the main target
 	wxString name = bldConf->GetName();
 	name = NormalizeConfigName(name);
-
-	if(type == Project::STATIC_LIBRARY){
+	
+	if(type == Project::STATIC_LIBRARY)
+	{
 		//create a static library
 		text << wxT("\t") << wxT("$(ArchiveTool) $(OutputFile) $(Objects)\n");
-	}else if(type == Project::DYNAMIC_LIBRARY){
+	}
+	else 
+	if(type == Project::DYNAMIC_LIBRARY)
+	{
 		//create a shared library
 		text << wxT("\t") << wxT("$(SharedObjectLinkerName) $(OutputSwitch) $(OutputFile) $(LinkOptions) $(Objects) $(LibPath) $(Libs)\n");
-	}else if(type == Project::EXECUTABLE){
+	}
+	else 
+	if(type == Project::EXECUTABLE)
+	{
 		//create an executable
 		text << wxT("\t") << wxT("$(LinkerName) $(OutputSwitch) $(OutputFile) $(LinkOptions) $(Objects) $(LibPath) $(Libs)\n");
 	}

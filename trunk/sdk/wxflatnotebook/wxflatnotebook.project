@@ -19,7 +19,6 @@
     <File Name="include/wx/wxFlatNotebook/wxFlatNotebook.h"/>
     <File Name="include/wx/wxFlatNotebook/wxFNBDropTarget.h"/>
   </VirtualDirectory>
-  <Dependencies/>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
       <General OutputFile="..\..\lib\gcc\libwxflatnotebook.a" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
@@ -65,4 +64,5 @@
       <PostBuild/>
     </Configuration>
   </Settings>
+  <Dependencies/>
 </CodeLite_Project>

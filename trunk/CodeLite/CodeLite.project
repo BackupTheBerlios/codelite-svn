@@ -64,7 +64,6 @@
     <File Name="tags_options_data.h"/>
     <File Name="setters_getters_data.h"/>
   </VirtualDirectory>
-  <Dependencies/>
   <VirtualDirectory Name="GeneratedFiles">
     <File Name="expression_result.h"/>
     <File Name="function.h"/>
@@ -124,4 +123,5 @@
       <PostBuild/>
     </Configuration>
   </Settings>
+  <Dependencies/>
 </CodeLite_Project>

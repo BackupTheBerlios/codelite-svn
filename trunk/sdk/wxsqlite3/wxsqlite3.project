@@ -9,9 +9,6 @@
     <File Name="include/wx/wxsqlite3def.h"/>
     <File Name="include/wx/wxsqlite3dyn.h"/>
   </VirtualDirectory>
-  <Dependencies>
-    <Project Name="sqlite3"/>
-  </Dependencies>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
       <General OutputFile="..\..\lib\gcc\libwxsqlite3.a" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
@@ -59,4 +56,7 @@
       <PostBuild/>
     </Configuration>
   </Settings>
+  <Dependencies>
+    <Project Name="sqlite3"/>
+  </Dependencies>
 </CodeLite_Project>

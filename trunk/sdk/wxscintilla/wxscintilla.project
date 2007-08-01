@@ -132,7 +132,6 @@
       <File Name="src/scintilla/include/WindowAccessor.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
-  <Dependencies/>
   <Settings Type="Static Library">
     <Configuration Name="ReleaseANSI" CompilerType="gnu g++">
       <General OutputFile="..\..\lib\gcc\libwxscintilla.a" IntermediateDirectory=".\Release" Command="" CommandArguments="" WorkingDirectory=""/>
@@ -190,4 +189,5 @@
       <PostBuild/>
     </Configuration>
   </Settings>
+  <Dependencies/>
 </CodeLite_Project>

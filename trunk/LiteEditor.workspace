@@ -21,7 +21,7 @@
       <Project Name="sqlite3" ConfigName="ReleaseANSIStaticLibrary"/>
       <Project Name="plugin_sdk" ConfigName="ReleaseUnicode"/>
       <Project Name="LiteEditor" ConfigName="ReleaseUnicode"/>
-      <Project Name="CodeLite" ConfigName="ReleaseANSI"/>
+      <Project Name="CodeLite" ConfigName="ReleaseUnicode"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release ANSI (Windows)" Selected="yes">
       <Project Name="wxsqlite3" ConfigName="ReleaseANSIStaticLibrary"/>
