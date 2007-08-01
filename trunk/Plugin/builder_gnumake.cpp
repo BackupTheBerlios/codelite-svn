@@ -92,9 +92,9 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 	if(!output.IsOk())
 		return;
 
-	//generate all configurations for this project
+	//generate the selected configuration for this project
 	wxTextOutputStream text(output);
-
+	
 	text << wxT("##") << wxT("\n");
 	text << wxT("## Auto Generated makefile, please do not edit") << wxT("\n");;
 	text << wxT("##") << wxT("\n");
@@ -111,15 +111,9 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 	}
 	text << wxT("\n");
 
-	//----------------------------------------------------------
-	// Create entry for each configuration type
-	//----------------------------------------------------------
-	ProjectSettingsCookie cookie;
-	BuildConfigPtr bldConf = settings->GetFirstBuildConfiguration(cookie);
-	while(bldConf){
-		CreateConfigsVariables(bldConf, text);
-		bldConf = settings->GetNextBuildConfiguration(cookie);
-	}
+	//get the selected buikd configuration for this project
+	BuildConfigPtr bldConf = WorkspaceST::Get()->GetProjSelBuildConf(proj->GetName());
+	CreateConfigsVariables(bldConf, text);
 	
 	// create a list of objects
 	CreateObjectList(proj, text);
@@ -130,29 +124,18 @@ void BuilderGnuMake::GenerateMakefile(ProjectPtr proj)
 	text << wxT("##\n");
 	text << wxT("## Main Build Tragets \n");
 	text << wxT("##\n");
-	text << wxT("BuildTarget: $(Target)\n\n");
+	text << wxT("$(OutputFile): $(Objects)\n\n");
+	CreatePreBuildEvents(bldConf, text);
+	CreateTargets(proj->GetSettings()->GetProjectType(), bldConf, text);
+	CreatePostBuildEvents(bldConf, text);
 
-	bldConf = settings->GetFirstBuildConfiguration(cookie);
-	while(bldConf){
-		CreateTargets(settings->GetProjectType(), bldConf, text);
-		bldConf = settings->GetNextBuildConfiguration(cookie);
-	}
-	
 	//-----------------------------------------------------------
 	// Create a list of targets that should be built according to 
 	// projects' file list 
 	//-----------------------------------------------------------
 	CreateFileTargets(proj, text);
-
-	//-----------------------------------------------------------
-	// Create build events per configuration type
-	//-----------------------------------------------------------
-	bldConf = settings->GetFirstBuildConfiguration(cookie);
-	while(bldConf){
-		CreateBuildEventRules(bldConf, text);
-		bldConf = settings->GetNextBuildConfiguration(cookie);
-	}
 }
+
 void BuilderGnuMake::CreateObjectList(ProjectPtr proj, wxTextOutputStream &text)
 {
 	std::vector<wxFileName> files;
@@ -247,8 +230,6 @@ void BuilderGnuMake::CreateTargets(const wxString &type, BuildConfigPtr bldConf,
 	wxString name = bldConf->GetName();
 	name = NormalizeConfigName(name);
 
-	text << name << wxT(": StartMsg PreBuild_") << name << wxT(" ") << wxT("$(Objects) ") << name << wxT("_link ") << wxT("PostBuild_") << name << wxT("\n\n");
-	text << name << wxT("_link:\n");
 	if(type == Project::STATIC_LIBRARY){
 		//create a static library
 		text << wxT("\t") << wxT("$(ArchiveTool) $(OutputFile) $(Objects)\n");
@@ -259,41 +240,18 @@ void BuilderGnuMake::CreateTargets(const wxString &type, BuildConfigPtr bldConf,
 		//create an executable
 		text << wxT("\t") << wxT("$(LinkerName) $(OutputSwitch) $(OutputFile) $(LinkOptions) $(Objects) $(LibPath) $(Libs)\n");
 	}
-	text << wxT("\n\n");
 }
 
-void BuilderGnuMake::CreateBuildEventRules(BuildConfigPtr bldConf, wxTextOutputStream &text)
+void BuilderGnuMake::CreatePostBuildEvents(BuildConfigPtr bldConf, wxTextOutputStream &text)
 {
 	BuildCommandList cmds;
 	BuildCommandList::iterator iter;
 	wxString name = bldConf->GetName();
 	name = NormalizeConfigName(name);
 
-	//generate prebuild commands
-	text << wxT("## ") <<wxT("\n");
-	text << wxT("## Build Events: (Post & Pre build commands)\n");
-	text << wxT("## ") << wxT("\n");
-
-	cmds.clear();
-	bldConf->GetPreBuildCommands(cmds);
-	text << wxT("PreBuild_") << name << wxT(":\n");
-	if(!cmds.empty()){
-		text << wxT("\t@echo Executing Pre Build commands ...\n");
-		iter = cmds.begin();
-		for(; iter != cmds.end(); iter++){
-			if(iter->GetEnabled()){
-				text << wxT("\t") << iter->GetCommand() << wxT("\n");
-			}
-		}
-		text << wxT("\t@echo Done\n");
-	}
-	text << wxT("\n");
-
 	//generate postbuild commands
 	cmds.clear();
 	bldConf->GetPostBuildCommands(cmds);
-	
-	text << wxT("PostBuild_") << name << wxT(":\n");
 	if(!cmds.empty()){
 		text << wxT("\t@echo Executing Post Build commands ...\n");
 		iter = cmds.begin();
@@ -304,7 +262,27 @@ void BuilderGnuMake::CreateBuildEventRules(BuildConfigPtr bldConf, wxTextOutputS
 		}
 		text << wxT("\t@echo Done\n");
 	}
-	text << wxT("\n");
+}	
+
+void BuilderGnuMake::CreatePreBuildEvents(BuildConfigPtr bldConf, wxTextOutputStream &text)
+{
+	BuildCommandList cmds;
+	BuildCommandList::iterator iter;
+	wxString name = bldConf->GetName();
+	name = NormalizeConfigName(name);
+
+	cmds.clear();
+	bldConf->GetPreBuildCommands(cmds);
+	if(!cmds.empty()){
+		text << wxT("\t@echo Executing Pre Build commands ...\n");
+		iter = cmds.begin();
+		for(; iter != cmds.end(); iter++){
+			if(iter->GetEnabled()){
+				text << wxT("\t") << iter->GetCommand() << wxT("\n");
+			}
+		}
+		text << wxT("\t@echo Done\n");
+	}
 }	
 
 void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutputStream &text)
@@ -345,7 +323,6 @@ void BuilderGnuMake::CreateConfigsVariables(BuildConfigPtr bldConf, wxTextOutput
 	text << wxT("IncludePath=") << ParseIncludePath(bldConf->GetIncludePath()) << wxT("\n");
 	text << wxT("Libs=") << ParseLibs(bldConf->GetLibraries()) << wxT("\n");
 	text << wxT("LibPath=") << ParseLibPath(bldConf->GetLibPath()) << wxT("\n");
-	text << wxT("Target=") << NormalizeConfigName(bldConf->GetName()) << wxT("\n");
 	text << wxT("endif\n\n");
 
 	//create the intermediate directories
