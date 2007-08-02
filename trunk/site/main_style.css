@@ -14,25 +14,38 @@ table.main-table {
 	z-index: 99
 }
 
-div.top-bar {
-	font-family: verdana,arial,helvetica,sans-serif;
-	border: 1px solid ButtonShadow;
-	margin: 2px;
+div.top-bar
+{
+	border-right: buttonshadow 1px solid;
+	padding-right: 11px;
+	border-top: buttonshadow 1px solid;
+	padding-left: 11px;
 	font-size: 11px;
-	background-color: #ADBAD6; 
-	color: ButtonText ;
-	padding: 11px 11px 11px 11px;
-	
+	padding-bottom: 11px;
+	margin: 2px;
+	border-left: buttonshadow 1px solid;
+	color: buttontext;
+	padding-top: 11px;
+	border-bottom: buttonshadow 1px solid;
+	font-family: verdana,arial,helvetica,sans-serif;
+	background-color: #ffcc66;
 }
 
-a.toolbar-item {
-	font-family: verdana,arial,helvetica,sans-serif;
+a.toolbar-item
+{
+	border-right: #ffcc66 1px solid;
+	padding-right: 8px;
+	border-top: #ffcc66 1px solid;
+	padding-left: 8px;
 	font-size: 11px;
-	text-decoration: none; 
+	padding-bottom: 8px;
 	margin: 11px;
-	color: ButtonText;
-	padding: 8px 8px 8px 8px;
-	border: 1px solid #ADBAD6;
+	border-left: #ffcc66 1px solid;
+	color: buttontext;
+	padding-top: 8px;
+	border-bottom: #ffcc66 1px solid;
+	font-family: verdana,arial,helvetica,sans-serif;
+	text-decoration: none;
 }
 
 a.toolbar-item:hover {
