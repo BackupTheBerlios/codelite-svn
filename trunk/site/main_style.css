@@ -1,33 +1,35 @@
 body { 
+	background:  url('images/site_bg.png')  no-repeat fixed left;
 	font-family: verdana,arial,helvetica,sans-serif;
-	font-size: 12px;
+	font-size: 11px;
 	color: #E4F1E9; 
 	margin: 0px; 
 }
 
 table.main-table {
-	width: 80%;
+	width: 60%;
 	height: 100%;
-	border: 1px solid ButtonShadow;
+	border: 0px solid ButtonShadow;
 	border-collapse: collapse;
+	z-index: 99
 }
 
 div.top-bar {
 	font-family: verdana,arial,helvetica,sans-serif;
 	border: 1px solid ButtonShadow;
 	margin: 2px;
-	font-size: 12px;
+	font-size: 11px;
 	background-color: #ADBAD6; 
 	color: ButtonText ;
-	padding: 10px 10px 10px 10px;
+	padding: 11px 11px 11px 11px;
 	
 }
 
 a.toolbar-item {
 	font-family: verdana,arial,helvetica,sans-serif;
-	font-size: 12px;
+	font-size: 11px;
 	text-decoration: none; 
-	margin: 10px;
+	margin: 11px;
 	color: ButtonText;
 	padding: 8px 8px 8px 8px;
 	border: 1px solid #ADBAD6;
@@ -35,10 +37,10 @@ a.toolbar-item {
 
 a.toolbar-item:hover {
 	font-family: verdana,arial,helvetica,sans-serif;
-	font-size: 12px;
+	font-size: 11px;
 	background-color: #E8E8FF; 
 	text-decoration: none; 
-	margin: 10px; 
+	margin: 11px; 
 	color: ButtonText;
 	padding: 8px 8px 8px 8px;
 	border-right: 1px solid ButtonShadow;
@@ -49,27 +51,28 @@ a.toolbar-item:hover {
 
 a.toolbar-item:visited {
 	font-family: verdana,arial,helvetica,sans-serif;
-	font-size: 12px;
+	font-size: 11px;
 	text-decoration: none; 
-	margin: 10px;
+	margin: 11px;
 	color: ButtonText;
 	padding: 9px 9px 9px 9px;
 	border-top: 1px black;
 }
 
 div.main-panel {
-	margin: 10px;
-	background-color: white; 
+	margin: 11px;
 	color: ButtonText ;
 	height: 100%;
+	font-size: 11px;
 }
 
 div.code-section {
 	margin: 5px;
-	font-size: 12px;
+	font-size: 11px;
 	background-color: #E8E8FF; 
 	color: ButtonText ;
 	font-family: Courier New;
+	z-index: 98
 }
 
 ul.one {
@@ -97,4 +100,29 @@ div.image-container {
 	background-color: white; 
 	color: ButtonText ;
 	overflow: hidden;
+}
+
+div.img{
+	margin: 2px;
+	border: 1px solid ButtonShadow;
+	height: auto;
+	width: auto;
+	float: left;
+	text-align: center;
+}
+div.img img {
+	display: inline;
+	margin: 3px;
+	border: 1px solid #ffffff;
+}
+
+div.img a:hover img {
+	border: 1px solid #0000ff;
+}
+
+div.desc {
+	text-align: center;
+	font-weight: normal;
+	width: 120px;
+	margin: 2px;
 }
